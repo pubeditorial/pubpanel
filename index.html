@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="color-scheme" content="light" />
-  <title>PUBPANEL | Painel operacional | PUB Editorial</title>
+  <title>PUBPANEL | Painel Operacional | PUB Editorial</title>
   <style>
     :root{
       --bg:#f8fafc;
@@ -21,8 +21,9 @@
       --green:#059669;
       --amber:#d97706;
       --red:#dc2626;
-      --surface-1:rgba(255,255,255,.92);
-      --surface-2:rgba(255,255,255,.76);
+      --slate:#334155;
+      --surface-1:rgba(255,255,255,.94);
+      --surface-2:rgba(255,255,255,.80);
       --border:rgba(15,23,42,.08);
       --line:#e2e8f0;
       --focus:rgba(96,165,250,.46);
@@ -269,7 +270,7 @@
       color:rgba(226,232,240,.90);
       font-size:14px;
       line-height:1.65;
-      max-width:52ch;
+      max-width:58ch;
     }
 
     .hero-box{
@@ -441,7 +442,7 @@
     .pill--warn{color:var(--amber);background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.16)}
     .pill--error{color:var(--red);background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.16)}
     .pill--info{color:#1d4ed8;background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.16)}
-    .pill--unavailable{color:#6b21a8;background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.18)}
+    .pill--unavailable{color:var(--slate);background:rgba(51,65,85,.08);border-color:rgba(51,65,85,.16)}
 
     .section-state{
       display:flex;
@@ -466,7 +467,6 @@
       line-height:1;
       white-space:nowrap;
     }
-
     .state-badge::before{
       content:"";
       width:10px;
@@ -475,29 +475,30 @@
       background:currentColor;
       opacity:.92;
     }
-
     .state-badge--ok{
       color:#047857;
       background:rgba(5,150,105,.08);
       border-color:rgba(5,150,105,.18);
     }
-
     .state-badge--warn{
       color:#b45309;
       background:rgba(217,119,6,.08);
       border-color:rgba(217,119,6,.18);
     }
-
-    .state-badge--unavailable{
-      color:#7c3aed;
-      background:rgba(124,58,237,.08);
-      border-color:rgba(124,58,237,.18);
-    }
-
     .state-badge--error{
       color:#b91c1c;
       background:rgba(220,38,38,.08);
       border-color:rgba(220,38,38,.18);
+    }
+    .state-badge--unavailable{
+      color:#475569;
+      background:rgba(148,163,184,.12);
+      border-color:rgba(148,163,184,.22);
+    }
+    .state-badge--info{
+      color:#1d4ed8;
+      background:rgba(37,99,235,.08);
+      border-color:rgba(37,99,235,.16);
     }
 
     .availability-card{
@@ -505,68 +506,35 @@
       display:grid;
       gap:14px;
     }
-
     .availability-grid{
       display:grid;
       gap:12px;
       grid-template-columns:repeat(3,minmax(0,1fr));
     }
-
     @media (max-width:1100px){
-      .availability-grid{
-        grid-template-columns:1fr;
-      }
+      .availability-grid{grid-template-columns:1fr}
     }
 
     .availability-item{
       border:1px solid var(--border);
       border-radius:18px;
       background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
-      padding:12px;
+      padding:14px;
       display:grid;
       gap:6px;
     }
-
     .availability-item strong{
       font-size:14px;
       line-height:1.2;
     }
-
-    .availability-item .tiny{
-      margin:0;
-    }
-
-    .section-note{
-      padding:16px 18px;
-      border-radius:18px;
-      border:1px solid rgba(15,23,42,.08);
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
-      font-size:14px;
-      line-height:1.6;
-      color:var(--muted);
-    }
+    .availability-item .tiny{margin:0}
 
     .compact-actions{
       display:grid;
       gap:10px;
     }
-
-    .compact-actions .tiny{
-      margin:0;
-    }
-    .compact-actions .toolbar{
-      margin-bottom:0;
-    }
-
-    .compact-actions .filters{
-      grid-template-columns:1fr;
-    }
-
-    @media (min-width:860px){
-      .compact-actions .filters{
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-    }
+    .compact-actions .tiny{margin:0}
+    .compact-actions .toolbar{margin-bottom:0}
 
     .sep{height:1px;background:var(--line)}
     .mini-grid{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -585,13 +553,13 @@
     .status-banner.error{border-color:rgba(220,38,38,.18);background:rgba(220,38,38,.05)}
     .status-banner.success{border-color:rgba(5,150,105,.18);background:rgba(5,150,105,.05)}
     .status-banner.warn{border-color:rgba(217,119,6,.18);background:rgba(217,119,6,.05)}
-    .status-banner.unavailable{border-color:rgba(124,58,237,.18);background:rgba(124,58,237,.05)}
+    .status-banner.unavailable{border-color:rgba(51,65,85,.18);background:rgba(148,163,184,.10)}
 
     .drawer{
       position:fixed;
       right:18px;
       bottom:18px;
-      width:min(460px,calc(100vw - 36px));
+      width:min(540px,calc(100vw - 36px));
       z-index:50;
       display:grid;
       gap:12px;
@@ -610,13 +578,11 @@
       line-height:1.5;
       background:rgba(248,250,252,.8);
     }
-
     .empty-meta{
       margin-top:14px;
       display:grid;
       gap:8px;
     }
-
     .empty-meta-row{
       display:flex;
       align-items:flex-start;
@@ -626,14 +592,12 @@
       border-radius:14px;
       background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
     }
-
     .empty-meta-row strong{
-      min-width:90px;
+      min-width:98px;
       font-size:12px;
       line-height:1.45;
       color:#0f172a;
     }
-
     .empty-meta-row span{
       font-size:13px;
       line-height:1.5;
@@ -708,6 +672,9 @@
     }
 
     .mobile-show{display:none}
+
+    body[data-ui-mode="simple"] .tech-only{display:none!important}
+
     @media (max-width:1020px){
       .app{grid-template-columns:1fr}
       .sidebar{
@@ -726,28 +693,22 @@
       min-height:42px;
     }
 
-    .tech-only{}
-    body[data-ui-mode="simple"] .tech-only{display:none !important;}
-    body[data-ui-mode="technical"] .tech-only{display:block;}
-
     @media (max-width:640px){
       .topbar{
         align-items:flex-start;
         flex-direction:column;
       }
-
       .top-actions{
         width:100%;
         justify-content:flex-start;
       }
-
       .top-actions .btn{
         flex:1 1 auto;
       }
     }
   </style>
 </head>
-<body data-ui-mode="simple">
+<body>
   <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
   <div class="app">
@@ -755,32 +716,33 @@
       <div class="sidebar-inner">
         <div class="brand">
           <div class="logo">PUB<span class="grad">PANEL</span></div>
-          <div class="sub">Painel operacional</div>
+          <div class="sub">Operação e acompanhamento</div>
         </div>
 
-        <div class="side-chip">CRM + envios + dados</div>
+        <div class="side-chip">crm + comunicação + dados</div>
 
         <nav class="nav" id="nav">
-          <a href="#overview" class="active"><span>Painel</span><small>01</small></a>
-          <a href="#summary"><span>Situação atual</span><small>02</small></a>
-          <a href="#connection"><span>Conexão</span><small>03</small></a>
-          <a href="#system-health"><span>Saúde do sistema</span><small>04</small></a>
-          <a href="#crm"><span>Atendimento e contatos</span><small>05</small></a>
-          <a href="#activity"><span>Atividade recente</span><small>06</small></a>
-          <a href="#mail"><span>Envios</span><small>07</small></a>
-          <a href="#data-ops"><span>Importar e exportar</span><small>08</small></a>
-          <a href="#diagnostics"><span>Diagnóstico</span><small>09</small></a>
-          <a href="#history"><span>Ações recentes</span><small>10</small></a>
-          <a href="#preferences"><span>Preferências</span><small>11</small></a>
+          <a href="#overview" class="active"><span>Visão geral</span><small>01</small></a>
+          <a href="#summary"><span>Resumo</span><small>02</small></a>
+          <a href="#module-map"><span>Arquitetura</span><small>03</small></a>
+          <a href="#connection"><span>Conexão</span><small>04</small></a>
+          <a href="#system-health"><span>Saúde do sistema</span><small>05</small></a>
+          <a href="#crm"><span>Pessoas e atendimento</span><small>06</small></a>
+          <a href="#activity"><span>Atividade</span><small>07</small></a>
+          <a href="#communication"><span>Comunicação</span><small>08</small></a>
+          <a href="#data-ops"><span>Operações com dados</span><small>09</small></a>
+          <a href="#diagnostics"><span>Diagnóstico</span><small>10</small></a>
+          <a href="#history"><span>Ações recentes</span><small>11</small></a>
+          <a href="#preferences"><span>Preferências</span><small>12</small></a>
         </nav>
 
         <div class="side-meta">
-          <div class="meta-row"><span>Painel</span><strong id="meta-front-version">PUBPANEL 2.0.1</strong></div>
+          <div class="meta-row"><span>Painel</span><strong id="meta-front-version">PUBPANEL 2.1.0</strong></div>
           <div class="meta-row"><span>CRM</span><strong id="meta-crm-version">—</strong></div>
-          <div class="meta-row"><span>Envios</span><strong id="meta-mail-version">ainda não disponível aqui</strong></div>
-          <div class="meta-row"><span>Dados</span><strong id="meta-io-version">ainda não disponível aqui</strong></div>
+          <div class="meta-row"><span>Comunicação</span><strong id="meta-mail-version">não exposto aqui</strong></div>
+          <div class="meta-row"><span>Dados</span><strong id="meta-io-version">não exposto aqui</strong></div>
           <div class="meta-row"><span>Conexão</span><strong id="meta-status">não configurada</strong></div>
-          <div class="meta-row"><span>URL salva</span><strong id="meta-api-base">não definida</strong></div>
+          <div class="meta-row"><span>URL</span><strong id="meta-api-base">não definida</strong></div>
         </div>
       </div>
     </aside>
@@ -791,15 +753,15 @@
           <button class="btn mobile-show" id="open-sidebar">Menu</button>
           <div>
             <div class="top-title">PUBPANEL</div>
-            <div class="top-sub">Acompanhe a conexão, a saúde do sistema e os recursos disponíveis.</div>
+            <div class="top-sub">Painel operacional para acompanhar conexão, atendimento, atividade, comunicação e dados.</div>
           </div>
         </div>
         <div class="top-actions">
-          <button class="btn btn--soft" id="toggle-ui-mode">Modo técnico</button>
           <button class="btn btn--soft" id="btn-status">Testar conexão</button>
+          <button class="btn btn--soft" id="btn-contract">Ver detalhes</button>
           <button class="btn btn--soft" id="btn-health">Verificação rápida</button>
           <button class="btn btn--violet" id="btn-health-deep">Verificação completa</button>
-          <button class="btn btn--soft tech-only" id="btn-contract">Ver detalhes</button>
+          <button class="btn btn--soft" id="toggle-ui-mode">Modo técnico</button>
         </div>
       </header>
 
@@ -811,19 +773,20 @@
               <div class="hero-grid">
                 <div class="grid">
                   <span class="tag">Painel central</span>
-                  <h1 class="h1">Acompanhe o sistema em um só lugar</h1>
-                  <p class="lead">Veja se a conexão está funcionando, quais recursos estão disponíveis e onde é preciso agir.</p>
+                  <h1 class="h1">PUBPANEL</h1>
+                  <p class="lead">Veja rapidamente se o sistema está acessível, acompanhe o atendimento, monitore a atividade do ecossistema e consulte a liberação das áreas de comunicação e operações com dados.</p>
                 </div>
 
                 <aside class="hero-box">
-                  <h3>Disponível neste painel</h3>
+                  <h3>O que você pode fazer aqui</h3>
                   <ul class="trust">
-                    <li>Testar a conexão com o sistema</li>
-                    <li>Atualizar o resumo operacional</li>
-                    <li>Instalar ou atualizar o CRM</li>
-                    <li>Consultar verificações públicas</li>
+                    <li>Configurar a URL de conexão e testar acesso</li>
+                    <li>Ver o estado geral do sistema em poucos segundos</li>
+                    <li>Consultar leituras públicas já expostas</li>
+                    <li>Executar a única ação administrativa já publicada nesta interface: a instalação principal do CRM</li>
+                    <li>Consultar a liberação de comunicação e dados sem expor linguagem técnica na camada principal</li>
                   </ul>
-                  <div class="tiny">Os detalhes técnicos ficam disponíveis em camadas secundárias.</div>
+                  <div class="tiny">Os detalhes internos ficam restritos ao modo técnico e ao painel de detalhes.</div>
                 </aside>
               </div>
             </div>
@@ -833,15 +796,14 @@
 
           <section class="panel" id="summary">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Situação atual</span>
-              <h2 class="h2">Resumo rápido</h2>
-              <div class="muted">Entenda em poucos segundos se está tudo certo, se existe algo a corrigir e o que já pode ser usado aqui.</div>
+              <span class="tag" style="color:#1d4ed8">Resumo</span>
+              <h2 class="h2">Leitura rápida</h2>
+              <div class="muted">Entenda em poucos segundos se a conexão está pronta, se existe algo que exige atenção e quais áreas já podem ser usadas.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--ok">OK</span>
-                <span class="state-badge state-badge--warn">Atenção</span>
-                <span class="state-badge state-badge--unavailable">Indisponível</span>
-                <span class="state-badge state-badge--error">Erro</span>
+                <span class="state-badge state-badge--ok">Leitura principal disponível</span>
+                <span class="state-badge state-badge--warn">Ação necessária quando houver alerta</span>
+                <span class="state-badge state-badge--unavailable">Áreas futuras preservadas</span>
               </div>
             </div>
 
@@ -849,57 +811,57 @@
               <div class="metric">
                 <div class="eyebrow">Conexão</div>
                 <div class="value" id="sum-status">—</div>
-                <div class="note">Situação atual do acesso</div>
+                <div class="note">URL configurada e resposta do sistema</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Sistema</div>
+                <div class="eyebrow">Estrutura</div>
                 <div class="value" id="sum-schema">—</div>
-                <div class="note">Leitura mais recente</div>
+                <div class="note">Leitura rápida da estrutura principal</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Contatos</div>
-                <div class="value" id="sum-contacts">0</div>
-                <div class="note">Itens visíveis</div>
+                <div class="value" id="sum-contacts">—</div>
+                <div class="note">Resultados visíveis quando a lista estiver liberada</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Leads</div>
-                <div class="value" id="sum-leads">0</div>
-                <div class="note">Itens visíveis</div>
+                <div class="value" id="sum-leads">—</div>
+                <div class="note">Resultados visíveis quando a lista estiver liberada</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Tickets</div>
-                <div class="value" id="sum-tickets">0</div>
-                <div class="note">Itens visíveis</div>
+                <div class="value" id="sum-tickets">—</div>
+                <div class="note">Resultados visíveis quando a lista estiver liberada</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Atividade</div>
-                <div class="value" id="sum-timeline">0</div>
-                <div class="note">Eventos visíveis</div>
+                <div class="value" id="sum-timeline">—</div>
+                <div class="note">Eventos visíveis quando a leitura estiver liberada</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Envios</div>
-                <div class="value" id="sum-mail">0</div>
-                <div class="note">Itens visíveis</div>
+                <div class="eyebrow">Comunicação</div>
+                <div class="value" id="sum-mail">—</div>
+                <div class="note">Fila visível quando a área for publicada</div>
               </div>
             </div>
 
             <div class="availability-card" style="margin-top:18px">
-              <strong>O que já está disponível</strong>
+              <strong>Disponibilidade neste painel</strong>
 
               <div class="availability-grid">
                 <div class="availability-item">
-                  <strong>Conexão e leitura do sistema</strong>
-                  <div class="tiny">Teste de conexão e verificações públicas do serviço.</div>
+                  <strong>Disponível agora</strong>
+                  <div class="tiny">Conexão, leituras públicas principais e instalação do CRM.</div>
                 </div>
 
                 <div class="availability-item">
-                  <strong>Instalação do CRM</strong>
-                  <div class="tiny">A instalação ou atualização do CRM pode ser executada neste painel.</div>
+                  <strong>Leitura técnica</strong>
+                  <div class="tiny">Detalhes completos podem ser vistos no modo técnico e no painel de diagnóstico.</div>
                 </div>
 
                 <div class="availability-item">
-                  <strong>Recursos futuros</strong>
-                  <div class="tiny">Outras listas e ações seguem previstas, mas ainda não liberadas aqui.</div>
+                  <strong>Em liberação futura</strong>
+                  <div class="tiny">Comunicação automatizada e operações com dados aparecem aqui sem sugerir disponibilidade que ainda não existe.</div>
                 </div>
               </div>
             </div>
@@ -914,9 +876,56 @@
                 <div class="tiny" id="sum-health">Ainda não há leitura concluída.</div>
               </div>
               <div class="mini-card">
-                <strong>Última atividade</strong>
+                <strong>Último evento relevante</strong>
                 <div class="tiny" id="sum-last-action">Última ação: —</div>
                 <div class="tiny" id="sum-last-error">Último problema: —</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="module-map">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Arquitetura</span>
+              <h2 class="h2">Módulos reais e disponibilidade</h2>
+              <div class="muted">Esta leitura separa existência arquitetural de disponibilidade nesta interface.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--ok">Arquitetura refletida</span>
+                <span class="state-badge state-badge--warn">Nem tudo está publicado aqui</span>
+              </div>
+            </div>
+
+            <div class="fourcol">
+              <div class="mini-card">
+                <strong>CRM Core</strong>
+                <div class="tiny">Leituras públicas e instalação principal disponíveis.</div>
+                <div class="section-state">
+                  <span class="state-badge state-badge--ok">Parcialmente disponível</span>
+                </div>
+              </div>
+
+              <div class="mini-card">
+                <strong>Timeline</strong>
+                <div class="tiny">Entidade central do ecossistema, ainda sem leitura administrativa exposta aqui.</div>
+                <div class="section-state">
+                  <span class="state-badge state-badge--warn">Estrutura pronta</span>
+                </div>
+              </div>
+
+              <div class="mini-card">
+                <strong>PUBMAIL</strong>
+                <div class="tiny">Módulo real de comunicação já modelado, com operação futura nesta interface.</div>
+                <div class="section-state">
+                  <span class="state-badge state-badge--unavailable">Não exposto aqui</span>
+                </div>
+              </div>
+
+              <div class="mini-card">
+                <strong>PUBIO</strong>
+                <div class="tiny">Módulo real de importação, exportação e restauração, ainda sem fachada publicada nesta interface.</div>
+                <div class="section-state">
+                  <span class="state-badge state-badge--unavailable">Não exposto aqui</span>
+                </div>
               </div>
             </div>
           </section>
@@ -925,35 +934,38 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Conexão</span>
               <h2 class="h2">Configurar acesso</h2>
-              <div class="muted">Salve a URL do Web App, teste a conexão e execute a instalação do CRM quando necessário.</div>
+              <div class="muted">Salve a URL do Web App, teste o acesso, consulte as leituras públicas e, quando necessário, execute a única ação administrativa já liberada nesta interface: a instalação principal do CRM.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--ok">Conexão disponível</span>
-                <span class="state-badge state-badge--warn">Revisão recomendada</span>
-                <span class="state-badge state-badge--unavailable">Recursos parciais</span>
+                <span class="state-badge state-badge--ok">Teste de conexão disponível</span>
+                <span class="state-badge state-badge--info">Instalação principal disponível</span>
+                <span class="state-badge state-badge--unavailable">Demais ações seguem em liberação futura</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
-                <strong>CRM</strong>
-                <div class="tiny">Instale ou atualize o CRM quando necessário.</div>
-                <button class="btn btn--primary" id="btn-install-crm">Instalar ou atualizar</button>
-                <button class="btn btn--soft tech-only" data-admin-action="crm_summary">Ver detalhes</button>
+                <strong>Conexão principal</strong>
+                <div class="tiny">Use esta área para salvar a URL do Web App e validar se o painel consegue se comunicar com o sistema.</div>
+                <button class="btn btn--primary" id="test-api-base">Testar conexão</button>
+                <button class="btn btn--soft" id="btn-health-inline-start">Verificação rápida</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Envios</strong>
-                <div class="tiny">Este recurso ainda não pode ser gerenciado por este painel.</div>
-                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Ver detalhes</button>
-                <button class="btn btn--soft" data-admin-action="mail_checklist">Ver preparação</button>
+                <strong>Instalação do CRM</strong>
+                <div class="tiny">Quando necessário, esta ação instala ou atualiza a base principal disponível neste painel.</div>
+                <button class="btn btn--primary" id="btn-install-crm">Instalar ou atualizar CRM</button>
+                <button class="btn btn--soft tech-only" id="btn-contract-inline-start">Ver detalhes técnicos</button>
               </div>
 
-              <div class="mini-card compact-actions">
-                <strong>Próximos recursos</strong>
-                <div class="tiny">Há recursos previstos para esta interface, mas ainda não liberados aqui.</div>
-                <button class="btn btn--soft" data-admin-action="mail_scan">Ver detalhes</button>
-                <button class="btn btn--soft" data-admin-action="mail_process">Ver fluxo previsto</button>
+              <div class="mini-card">
+                <strong>Sequência recomendada</strong>
+                <ol class="checklist tiny">
+                  <li>Salvar a URL do Web App</li>
+                  <li>Testar a conexão</li>
+                  <li>Executar a verificação rápida</li>
+                  <li>Instalar ou atualizar o CRM se necessário</li>
+                </ol>
               </div>
             </div>
 
@@ -961,39 +973,28 @@
 
             <div class="twocol">
               <div class="mini-card">
-                <strong>Sequência recomendada</strong>
-                <ol class="checklist tiny">
-                  <li>Salve a URL do Web App</li>
-                  <li>Teste a conexão</li>
-                  <li>Atualize o resumo do sistema</li>
-                  <li>Instale o CRM, se necessário</li>
-                </ol>
+                <strong>URL do Web App</strong>
+                <div class="tiny">Esta configuração fica salva apenas neste navegador.</div>
+                <label class="tiny" for="api-base">URL de conexão</label>
+                <input class="input" id="api-base" placeholder="https://script.google.com/macros/s/.../exec" />
+                <div class="toolbar-right">
+                  <button class="btn btn--soft" id="save-api-base">Salvar URL</button>
+                  <button class="btn btn--soft" id="clear-api-base">Limpar</button>
+                  <button class="btn btn--primary" id="btn-status-inline-start">Testar conexão</button>
+                </div>
               </div>
 
               <div class="mini-card">
-                <strong>URL do Web App</strong>
-                <div class="tiny">A configuração fica salva apenas neste navegador.</div>
-                <label class="tiny" for="api-base">Cole a URL do Apps Script</label>
-                <input class="input" id="api-base" placeholder="https://script.google.com/macros/s/.../exec" />
-                <div class="toolbar-right">
-                  <button class="btn btn--soft" id="save-api-base">Salvar</button>
-                  <button class="btn btn--soft" id="clear-api-base">Limpar</button>
-                  <button class="btn btn--primary" id="test-api-base">Testar conexão</button>
-                </div>
-                <div class="tech-only">
-                  <div class="codebox">Leituras públicas
+                <strong>Leitura disponível nesta área</strong>
+                <div class="tiny">O painel pode testar a conexão, executar verificações e atualizar o resumo principal.</div>
+                <div class="codebox tech-only">Leituras públicas disponíveis
 mode=status
 mode=health
 mode=health_deep
 mode=contract
 
-Ações públicas
-action=capture_lead
-action=create_ticket
-
-Ação disponível neste painel
+Exceção administrativa já publicada
 action=admin_install_crm</div>
-                </div>
               </div>
             </div>
           </section>
@@ -1001,13 +1002,13 @@ action=admin_install_crm</div>
           <section class="panel" id="system-health">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Saúde do sistema</span>
-              <h2 class="h2">Verificações do serviço</h2>
-              <div class="muted">Veja se o sistema respondeu bem, se existe algo a corrigir e quando vale aprofundar o diagnóstico.</div>
+              <h2 class="h2">Estado atual</h2>
+              <div class="muted">Consulte a leitura principal do sistema, veja o veredito geral e abra os detalhes técnicos quando necessário.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--ok">Leitura rápida</span>
-                <span class="state-badge state-badge--warn">Aprofundar quando necessário</span>
-                <span class="state-badge state-badge--unavailable tech-only">Detalhes técnicos</span>
+                <span class="state-badge state-badge--ok">Verificação rápida disponível</span>
+                <span class="state-badge state-badge--info">Verificação completa disponível</span>
+                <span class="state-badge state-badge--info">Detalhes técnicos disponíveis</span>
               </div>
             </div>
 
@@ -1015,34 +1016,34 @@ action=admin_install_crm</div>
               <div class="metric">
                 <div class="eyebrow">Aplicação</div>
                 <div class="value" id="metric-app">—</div>
-                <div class="note">Identificação do serviço</div>
+                <div class="note">Nome identificado na leitura principal</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Versão</div>
                 <div class="value" id="metric-version">—</div>
-                <div class="note">Versão mais recente lida</div>
+                <div class="note">Versão pública detectada</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Estrutura</div>
                 <div class="value" id="metric-schema">—</div>
-                <div class="note">Situação geral</div>
+                <div class="note">Veredito da estrutura básica</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Ocorrências</div>
                 <div class="value" id="metric-safe">—</div>
-                <div class="note">Pontos que merecem revisão</div>
+                <div class="note">Ocorrências registradas na leitura</div>
               </div>
-              <div class="metric tech-only">
-                <div class="eyebrow">Detalhe</div>
+              <div class="metric">
+                <div class="eyebrow">Detalhes</div>
                 <div class="value" id="metric-contract">—</div>
-                <div class="note">Leitura técnica complementar</div>
+                <div class="note">Contagem resumida do contrato técnico</div>
               </div>
             </div>
 
             <div class="twocol" style="margin-top:18px">
               <div class="table-card">
                 <div class="table-head">
-                  <div class="table-title">Resultado da verificação</div>
+                  <div class="table-title">Resumo técnico da leitura</div>
                   <div class="toolbar-right">
                     <button class="btn btn--soft" id="copy-health-json">Copiar dados</button>
                   </div>
@@ -1053,14 +1054,14 @@ action=admin_install_crm</div>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Ações</strong>
-                <div class="tiny">Escolha o nível de verificação que deseja executar.</div>
+                <strong>Consultas disponíveis</strong>
+                <div class="tiny">Estas ações atualizam o resumo do painel sem expor detalhes além do necessário na camada principal.</div>
                 <button class="btn btn--soft" id="run-status-inline">Testar conexão</button>
                 <button class="btn btn--soft" id="run-health-inline">Verificação rápida</button>
                 <button class="btn btn--violet" id="run-health-deep-inline">Verificação completa</button>
-                <button class="btn btn--soft tech-only" id="run-contract-inline">Ver detalhes</button>
-                <div class="sep tech-only"></div>
-                <strong class="tech-only">Detalhes técnicos</strong>
+                <button class="btn btn--soft" id="run-contract-inline">Ver detalhes</button>
+                <div class="sep"></div>
+                <strong class="tech-only">Contrato técnico</strong>
                 <div class="codebox tech-only" id="contract-box">Detalhes técnicos ainda não carregados.</div>
               </div>
             </div>
@@ -1068,36 +1069,36 @@ action=admin_install_crm</div>
 
           <section class="panel" id="crm">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Atendimento e contatos</span>
-              <h2 class="h2">Leads, contatos e tickets</h2>
-              <div class="muted">Consulte os dados quando as listas estiverem liberadas neste painel. Enquanto isso, a interface mantém o espaço pronto e informa a indisponibilidade com clareza.</div>
+              <span class="tag" style="color:#1d4ed8">Pessoas e atendimento</span>
+              <h2 class="h2">Contatos, leads e tickets</h2>
+              <div class="muted">Acompanhe a base principal de relacionamento e atendimento. Quando uma lista ainda não estiver liberada, o painel mostrará isso de forma direta.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--ok">Exportação local</span>
-                <span class="state-badge state-badge--unavailable">Listas ainda não liberadas aqui</span>
+                <span class="state-badge state-badge--info">Estrutura pronta para leitura</span>
+                <span class="state-badge state-badge--warn">Algumas listas podem seguir indisponíveis</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
                 <strong>Leads</strong>
-                <div class="tiny">Esta lista ainda não está disponível aqui.</div>
+                <div class="tiny">Veja os registros de interesse e acompanhe filtros por item, origem e status.</div>
                 <button class="btn btn--soft" id="btn-load-leads">Ver lista</button>
-                <button class="btn btn--soft tech-only" data-admin-action="crm_list_leads">Ver detalhes</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_list_leads">Ver detalhes técnicos</button>
               </div>
 
               <div class="mini-card compact-actions">
                 <strong>Contatos</strong>
-                <div class="tiny">Esta lista ainda não está disponível aqui.</div>
+                <div class="tiny">Consulte a base de contatos quando esta leitura estiver liberada aqui.</div>
                 <button class="btn btn--soft" id="btn-load-contacts">Ver lista</button>
-                <button class="btn btn--soft tech-only" data-admin-action="crm_list_contacts">Ver detalhes</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_list_contacts">Ver detalhes técnicos</button>
               </div>
 
               <div class="mini-card compact-actions">
                 <strong>Tickets</strong>
-                <div class="tiny">Esta lista ainda não está disponível aqui.</div>
+                <div class="tiny">Acompanhe pedidos de ajuda, dúvidas e ocorrências técnicas quando a leitura estiver disponível.</div>
                 <button class="btn btn--soft" id="btn-load-tickets">Ver lista</button>
-                <button class="btn btn--soft tech-only" data-admin-action="crm_list_tickets">Ver detalhes</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_list_tickets">Ver detalhes técnicos</button>
               </div>
             </div>
 
@@ -1109,7 +1110,7 @@ action=admin_install_crm</div>
                   <div class="table-title">Leads</div>
                   <div class="toolbar-right">
                     <button class="btn btn--soft" data-local-export="leads">Exportar CSV</button>
-                    <button class="btn btn--soft tech-only" data-admin-action="io_export_leads">Exportar via PUBIO</button>
+                    <button class="btn btn--soft tech-only" data-admin-action="io_export_leads">Exportar pela área de dados</button>
                   </div>
                 </div>
                 <div class="toolbar" style="padding:0 18px 18px">
@@ -1117,12 +1118,8 @@ action=admin_install_crm</div>
                     <input class="input" id="filter-lead-search" placeholder="Buscar por nome, e-mail, item ou ID" />
                     <select class="select" id="filter-lead-item"><option value="">Todos os itens</option></select>
                     <select class="select" id="filter-lead-placement"><option value="">Todas as origens do clique</option></select>
-                    <select class="select" id="filter-lead-status">
-                      <option value="">Todos os status</option>
-                    </select>
-                    <select class="select" id="filter-lead-source">
-                      <option value="">Todas as origens</option>
-                    </select>
+                    <select class="select" id="filter-lead-status"><option value="">Todos os status</option></select>
+                    <select class="select" id="filter-lead-source"><option value="">Todas as origens</option></select>
                   </div>
                 </div>
                 <div class="table-wrap" id="leads-table-wrap"></div>
@@ -1133,15 +1130,13 @@ action=admin_install_crm</div>
                   <div class="table-title">Contatos</div>
                   <div class="toolbar-right">
                     <button class="btn btn--soft" data-local-export="contacts">Exportar CSV</button>
-                    <button class="btn btn--soft tech-only" data-admin-action="io_export_contacts">Exportar via PUBIO</button>
+                    <button class="btn btn--soft tech-only" data-admin-action="io_export_contacts">Exportar pela área de dados</button>
                   </div>
                 </div>
                 <div class="toolbar" style="padding:0 18px 18px">
                   <div class="filters" style="width:100%">
                     <input class="input" id="filter-contact-search" placeholder="Buscar por contato, e-mail, empresa ou cidade" />
-                    <select class="select" id="filter-contact-status">
-                      <option value="">Todos os status</option>
-                    </select>
+                    <select class="select" id="filter-contact-status"><option value="">Todos os status</option></select>
                     <input class="input" id="filter-contact-company" placeholder="Filtrar empresa" />
                     <input class="input" id="filter-contact-city" placeholder="Filtrar cidade" />
                     <input class="input" id="filter-contact-source" placeholder="Filtrar origem" />
@@ -1155,7 +1150,7 @@ action=admin_install_crm</div>
                   <div class="table-title">Tickets</div>
                   <div class="toolbar-right">
                     <button class="btn btn--soft" data-local-export="tickets">Exportar CSV</button>
-                    <button class="btn btn--soft tech-only" data-admin-action="io_export_tickets">Exportar via PUBIO</button>
+                    <button class="btn btn--soft tech-only" data-admin-action="io_export_tickets">Exportar pela área de dados</button>
                   </div>
                 </div>
                 <div class="toolbar" style="padding:0 18px 18px">
@@ -1174,43 +1169,39 @@ action=admin_install_crm</div>
 
           <section class="panel" id="activity">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Atividade recente</span>
-              <h2 class="h2">Eventos do sistema</h2>
-              <div class="muted">Acompanhe os eventos mais recentes quando esta visualização estiver liberada neste painel.</div>
+              <span class="tag" style="color:#1d4ed8">Atividade</span>
+              <h2 class="h2">Eventos do ecossistema</h2>
+              <div class="muted">Use esta área para acompanhar a linha de atividade do sistema e entender o encadeamento entre captação, atendimento e comunicação.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--warn">Pronto para uso</span>
-                <span class="state-badge state-badge--unavailable">Visualização ainda indisponível</span>
+                <span class="state-badge state-badge--info">Visão cronológica</span>
+                <span class="state-badge state-badge--warn">Pode seguir indisponível conforme a liberação do painel</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
-                <strong>Atividade</strong>
-                <div class="tiny">Esta visualização ainda não está disponível aqui.</div>
-                <button class="btn btn--soft" id="btn-load-timeline">Ver lista</button>
-                <button class="btn btn--soft tech-only" data-admin-action="crm_list_timeline">Ver detalhes</button>
+                <strong>Atividade recente</strong>
+                <div class="tiny">Consulte os eventos quando esta visualização estiver liberada aqui.</div>
+                <button class="btn btn--soft" id="btn-load-timeline">Ver atividade</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_list_timeline">Ver detalhes técnicos</button>
               </div>
 
               <div class="mini-card">
                 <strong>Filtros</strong>
-                <div class="tiny">A estrutura de busca já está pronta para quando os dados forem liberados.</div>
+                <div class="tiny">Refine a leitura por tipo de registro, evento ou identificador.</div>
                 <div class="toolbar" style="margin-bottom:0">
                   <div class="filters" style="width:100%">
-                    <input class="input" id="filter-timeline-search" placeholder="Buscar por ID, tipo de registro, evento ou conteúdo" />
-                    <select class="select" id="filter-timeline-entity">
-                      <option value="">Todos os tipos de registro</option>
-                    </select>
-                    <select class="select" id="filter-timeline-event">
-                      <option value="">Todos os eventos</option>
-                    </select>
+                    <input class="input" id="filter-timeline-search" placeholder="Buscar por ID, registro, evento ou conteúdo" />
+                    <select class="select" id="filter-timeline-entity"><option value="">Todos os tipos de registro</option></select>
+                    <select class="select" id="filter-timeline-event"><option value="">Todos os eventos</option></select>
                   </div>
                 </div>
               </div>
 
               <div class="mini-card compact-actions">
                 <strong>Saída</strong>
-                <div class="tiny">Quando a lista estiver disponível, você poderá exportar o resultado filtrado.</div>
+                <div class="tiny">Quando houver leitura disponível, você poderá exportar os resultados filtrados.</div>
                 <button class="btn btn--soft" data-local-export="timeline">Exportar CSV</button>
               </div>
             </div>
@@ -1222,38 +1213,57 @@ action=admin_install_crm</div>
               <div class="table-wrap" id="timeline-table-wrap"></div>
             </div>
           </section>
-                    <section class="panel" id="mail">
+
+          <section class="panel" id="communication">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Envios</span>
-              <h2 class="h2">Fila e comunicação</h2>
-              <div class="muted">Acompanhe a fila, os modelos e o histórico de envios quando esses recursos forem liberados neste painel.</div>
+              <span class="tag" style="color:#1d4ed8">Comunicação</span>
+              <h2 class="h2">Envios automáticos</h2>
+              <div class="muted">Esta área foi redesenhada para representar a operação real do PUBMAIL como produto de comunicação. Quando ainda não estiver liberada, o painel mostra o veredito, o resumo e a próxima ação sem fingir disponibilidade.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--unavailable">Recursos ainda não liberados aqui</span>
-                <span class="state-badge state-badge--warn">Estrutura pronta para expansão</span>
+                <span class="state-badge state-badge--unavailable">Área em liberação futura</span>
+                <span class="state-badge state-badge--warn">Fila, regras, modelos e histórico serão exibidos aqui</span>
               </div>
             </div>
 
             <div class="threecol">
-              <div class="mini-card compact-actions">
-                <strong>Preparação</strong>
-                <div class="tiny">Este recurso ainda não pode ser executado aqui.</div>
-                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Ver preparação</button>
-                <button class="btn btn--soft" data-admin-action="mail_process">Ver fluxo previsto</button>
+              <div class="mini-card">
+                <strong>Estado da área</strong>
+                <div class="tiny">Esta área ainda não pode ser operada neste painel.</div>
+                <div class="empty" style="margin-top:4px">
+                  <strong>Indisponível</strong>
+                  <div class="empty-meta">
+                    <div class="empty-meta-row">
+                      <strong>Resumo</strong>
+                      <span>O módulo de comunicação existe no sistema, mas sua operação ainda não foi liberada nesta interface.</span>
+                    </div>
+                    <div class="empty-meta-row">
+                      <strong>Próxima ação</strong>
+                      <span>Acompanhe a liberação futura ou abra os detalhes técnicos.</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Ver detalhes</button>
+              </div>
+
+              <div class="mini-card">
+                <strong>O que estará disponível aqui</strong>
+                <div class="tiny">Quando a área for liberada, o painel poderá mostrar:</div>
+                <ul class="checklist tiny">
+                  <li>Fila operacional de envios</li>
+                  <li>Campanhas, templates e regras</li>
+                  <li>Políticas, suppressions e cadência</li>
+                  <li>Estado relacional por contato</li>
+                  <li>Histórico de envios</li>
+                  <li>Log técnico interno do orquestrador</li>
+                </ul>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Regras e modelos</strong>
-                <div class="tiny">Esta área ainda não pode ser gerenciada por este painel.</div>
-                <button class="btn btn--soft" data-admin-action="mail_governance_model">Ver regras</button>
-                <button class="btn btn--soft" data-admin-action="mail_list_templates">Ver modelos</button>
-              </div>
-
-              <div class="mini-card compact-actions">
-                <strong>Fila e histórico</strong>
-                <div class="tiny">A visualização ainda não está disponível aqui.</div>
-                <button class="btn btn--soft" id="btn-load-mail-queue">Ver fila</button>
-                <button class="btn btn--soft tech-only" data-admin-action="mail_list_log">Ver histórico</button>
+                <strong>Leituras previstas</strong>
+                <div class="tiny">A área já representa a arquitetura real do PUBMAIL, mas a operação continua bloqueada nesta interface até a publicação das fachadas administrativas.</div>
+                <button class="btn btn--soft" data-admin-action="mail_list_queue">Ver fila prevista</button>
+                <button class="btn btn--soft tech-only" data-admin-action="mail_governance_model">Ver estrutura técnica</button>
               </div>
             </div>
 
@@ -1279,101 +1289,117 @@ action=admin_install_crm</div>
 
           <section class="panel" id="data-ops">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Importar e exportar</span>
-              <h2 class="h2">Operações com dados</h2>
-              <div class="muted">Gerencie importações, exportações e restauração quando este recurso estiver disponível neste painel.</div>
+              <span class="tag" style="color:#1d4ed8">Operações com dados</span>
+              <h2 class="h2">Importação, exportação e restauração</h2>
+              <div class="muted">Esta área representa o PUBIO em linguagem de produto. O foco aqui é segurança operacional: validar contrato, prever conflitos, criar snapshot antes de mudanças destrutivas e só então aplicar importação ou restauração quando o recurso estiver liberado.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--unavailable">Operações ainda indisponíveis</span>
-                <span class="state-badge state-badge--warn">Área preparada para uso futuro</span>
+                <span class="state-badge state-badge--unavailable">Área em liberação futura</span>
+                <span class="state-badge state-badge--warn">Validação e restauração planejadas</span>
               </div>
             </div>
 
             <div class="threecol">
-              <div class="mini-card compact-actions">
-                <strong>Exportação</strong>
-                <div class="tiny">Este recurso ainda não pode ser executado aqui.</div>
-                <button class="btn btn--soft" data-admin-action="io_export_entity">Exportar dados</button>
-                <button class="btn btn--soft" data-admin-action="io_validate_file">Validar arquivo</button>
+              <div class="mini-card">
+                <strong>Estado da área</strong>
+                <div class="tiny">As operações de dados ainda não podem ser executadas neste painel.</div>
+                <div class="empty" style="margin-top:4px">
+                  <strong>Indisponível</strong>
+                  <div class="empty-meta">
+                    <div class="empty-meta-row">
+                      <strong>Resumo</strong>
+                      <span>O módulo de dados existe no sistema, mas importação, exportação e restauração ainda não foram liberadas nesta interface.</span>
+                    </div>
+                    <div class="empty-meta-row">
+                      <strong>Próxima ação</strong>
+                      <span>Use exportações locais já disponíveis ou consulte os detalhes técnicos da área.</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn--soft" data-admin-action="io_export_entity">Ver detalhes</button>
+              </div>
+
+              <div class="mini-card">
+                <strong>O que estará disponível aqui</strong>
+                <div class="tiny">Quando a área for liberada, o painel poderá exibir:</div>
+                <ul class="checklist tiny">
+                  <li>Exportação por entidade ou pacote</li>
+                  <li>Validação contratual de header</li>
+                  <li>Prévia antes da importação</li>
+                  <li>Dry-run com conflitos e relações</li>
+                  <li>Snapshots automáticos para rollback</li>
+                  <li>Restauração por entidade</li>
+                </ul>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Importação</strong>
-                <div class="tiny">Importação e restauração ainda não estão liberadas aqui.</div>
-                <button class="btn btn--soft" data-admin-action="io_import_bundle">Importar dados</button>
-                <button class="btn btn--soft" data-admin-action="io_restore_snapshot">Restaurar</button>
-              </div>
-
-              <div class="mini-card compact-actions">
-                <strong>Acompanhamento</strong>
-                <div class="tiny">Os registros desta área ainda não podem ser consultados por este painel.</div>
-                <button class="btn btn--soft" data-admin-action="io_list_jobs">Ver processamento</button>
-                <button class="btn btn--soft" data-admin-action="io_list_logs">Ver histórico</button>
+                <strong>Leituras previstas</strong>
+                <div class="tiny">Centralize a consulta técnica sem espalhar botões redundantes pela interface principal.</div>
+                <button class="btn btn--soft" data-admin-action="io_validate_file">Ver validação prevista</button>
+                <button class="btn btn--soft tech-only" data-admin-action="io_list_logs">Ver estrutura técnica</button>
               </div>
             </div>
 
             <div class="twocol" style="margin-top:18px">
               <div class="mini-card">
                 <strong>Área de inspeção local</strong>
-                <div class="tiny">Cole aqui um JSON apenas para revisão local. Nenhum dado será enviado sem uma ação explícita.</div>
+                <div class="tiny">Cole um JSON apenas para revisão visual local. Nenhum dado é enviado sem uma ação explícita.</div>
                 <textarea class="textarea" id="import-json" placeholder='Cole aqui um JSON apenas para revisão local do conteúdo.'></textarea>
                 <div class="toolbar-right">
-                  <button class="btn btn--soft" data-admin-action="io_validate_file">Validar arquivo</button>
                   <button class="btn btn--soft" data-admin-action="io_preview_import">Ver prévia</button>
-                  <button class="btn btn--soft" data-admin-action="io_import_bundle">Importar dados</button>
+                  <button class="btn btn--soft" data-admin-action="io_import_bundle">Ver fluxo de importação</button>
                 </div>
               </div>
 
               <div class="mini-card tech-only">
                 <strong>Detalhes técnicos do módulo</strong>
-                <div class="codebox">exportEntity
-exportBundle
-exportEntityCsv
-validateImportFile
-previewJsonImport
-previewCsvImport
-importEntity
-importBundle
-importEntityCsv
-createEntitySnapshot
-restoreEntityFromSnapshot
-listIoLogs
-inspectStorageRef</div>
+                <div class="codebox">EXPORT_ENTITY
+EXPORT_BUNDLE
+EXPORT_ENTITY_CSV
+VALIDATE_IMPORT_FILE
+PREVIEW_JSON_IMPORT
+PREVIEW_CSV_IMPORT
+IMPORT_ENTITY
+IMPORT_BUNDLE
+IMPORT_ENTITY_CSV
+CREATE_ENTITY_SNAPSHOT
+RESTORE_ENTITY_FROM_SNAPSHOT
+LIST_IO_LOGS
+INSPECT_STORAGE_REF</div>
               </div>
             </div>
           </section>
-
-          <section class="panel" id="diagnostics">
+                    <section class="panel" id="diagnostics">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Diagnóstico</span>
               <h2 class="h2">Verificações e detalhes</h2>
-              <div class="muted">Veja o estado do painel, consulte verificações recentes e abra os detalhes técnicos quando necessário.</div>
+              <div class="muted">Abra um resumo consolidado do painel, veja o que já está disponível e consulte os detalhes técnicos apenas quando precisar.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Resumo disponível</span>
-                <span class="state-badge state-badge--unavailable">Alguns registros ainda indisponíveis</span>
+                <span class="state-badge state-badge--warn">Algumas áreas seguem em liberação futura</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
-                <strong>CRM</strong>
-                <div class="tiny">Os registros detalhados desta área ainda não estão disponíveis aqui.</div>
-                <button class="btn btn--soft" data-admin-action="obs_api_log">Ver detalhes</button>
-                <button class="btn btn--soft tech-only" data-admin-action="obs_audit_log">Ver auditoria</button>
+                <strong>Conexão e saúde</strong>
+                <div class="tiny">Abra o panorama consolidado da conexão, da leitura principal e dos últimos eventos relevantes.</div>
+                <button class="btn btn--soft" id="btn-show-diagnostics">Abrir diagnóstico</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Envios</strong>
-                <div class="tiny">Os registros detalhados desta área ainda não estão disponíveis aqui.</div>
-                <button class="btn btn--soft" data-admin-action="mail_list_log">Ver histórico</button>
+                <strong>Comunicação</strong>
+                <div class="tiny">Consulte a explicação técnica da área de comunicação quando precisar entender sua liberação futura.</div>
+                <button class="btn btn--soft" data-admin-action="mail_list_log">Ver detalhes</button>
                 <button class="btn btn--soft tech-only" data-admin-action="mail_list_internal_log">Ver detalhes internos</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Resumo técnico</strong>
-                <div class="tiny">Abra um panorama consolidado do painel e do que está disponível.</div>
-                <button class="btn btn--soft" id="btn-show-diagnostics">Abrir diagnóstico</button>
+                <strong>Dados</strong>
+                <div class="tiny">Consulte a explicação técnica da área de dados sem poluir a camada principal do produto.</div>
+                <button class="btn btn--soft" data-admin-action="io_list_jobs">Ver detalhes</button>
+                <button class="btn btn--soft tech-only" data-admin-action="io_list_logs">Ver registros técnicos</button>
               </div>
             </div>
           </section>
@@ -1402,11 +1428,11 @@ inspectStorageRef</div>
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Preferências</span>
               <h2 class="h2">Configurações locais</h2>
-              <div class="muted">Ajuste o modo de visualização e acompanhe o que fica salvo apenas neste navegador.</div>
+              <div class="muted">Escolha entre modo simples e modo técnico e acompanhe o que fica salvo apenas neste navegador.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Configuração local</span>
-                <span class="state-badge state-badge--warn">Expansão futura</span>
+                <span class="state-badge state-badge--info">Modo simples e modo técnico</span>
               </div>
             </div>
 
@@ -1419,22 +1445,25 @@ inspectStorageRef</div>
                   <button class="btn btn--soft" id="btn-mode-technical">Modo técnico</button>
                 </div>
               </div>
+
               <div class="mini-card">
                 <strong>Armazenamento local</strong>
-                <div class="tiny">A URL do Web App e o histórico do painel ficam salvos apenas neste navegador.</div>
+                <div class="tiny">A URL do Web App, o histórico e o modo de visualização ficam salvos apenas neste navegador.</div>
                 <div class="codebox tech-only">localStorage:
 PUBPANEL_V2_API_BASE
-PUBPANEL_V2_UI_HISTORY</div>
+PUBPANEL_V2_UI_HISTORY
+PUBPANEL_V2_UI_MODE</div>
               </div>
+
               <div class="mini-card">
                 <strong>Próximos passos</strong>
-                <div class="tiny">Conectar o painel, validar a leitura do sistema e acompanhar a liberação dos próximos recursos.</div>
+                <div class="tiny">Salvar a URL, testar a conexão, verificar a saúde do sistema e acompanhar a liberação futura das áreas de comunicação e dados.</div>
               </div>
             </div>
           </section>
 
           <section class="panel">
-            <div class="tiny">PUBPANEL 2.0.1 · Painel operacional do ecossistema PUB Editorial · Interface estática publicada no GitHub Pages.</div>
+            <div class="tiny">PUBPANEL 2.1.0 · Painel operacional do ecossistema PUB Editorial · Interface estática publicada no GitHub Pages.</div>
           </section>
 
         </div>
@@ -1454,7 +1483,7 @@ PUBPANEL_V2_UI_HISTORY</div>
 
   <script>
 const PUBPANEL = {
-  VERSION: "2.0.1",
+  VERSION: "2.1.0",
   STORAGE: {
     API_BASE: "PUBPANEL_V2_API_BASE",
     HISTORY: "PUBPANEL_V2_UI_HISTORY",
@@ -1571,42 +1600,42 @@ const FEATURE_AVAILABILITY = {
   mail_bootstrap: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Preparação de envios ainda não liberada aqui",
+    uiLabel: "Preparação de comunicação ainda não liberada aqui",
     technicalLabel: "admin_mail_bootstrap",
     facadeFuture: "admin_mail_bootstrap"
   },
   mail_health: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Verificação interna de envios ainda não liberada aqui",
+    uiLabel: "Verificação interna de comunicação ainda não liberada aqui",
     technicalLabel: "admin_mail_health",
     facadeFuture: "admin_mail_health"
   },
   mail_checklist: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Checklist de envios ainda não liberado aqui",
+    uiLabel: "Checklist de comunicação ainda não liberado aqui",
     technicalLabel: "admin_mail_checklist",
     facadeFuture: "admin_mail_checklist"
   },
   mail_scan: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Leitura da atividade para envios ainda não liberada aqui",
+    uiLabel: "Leitura da atividade para comunicação ainda não liberada aqui",
     technicalLabel: "admin_mail_scan_timeline",
     facadeFuture: "admin_mail_scan_timeline"
   },
   mail_process: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Processamento de envios ainda não liberado aqui",
+    uiLabel: "Processamento da fila de comunicação ainda não liberado aqui",
     technicalLabel: "admin_mail_process_queue",
     facadeFuture: "admin_mail_process_queue"
   },
   mail_governance_model: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Regras de envios ainda não liberadas aqui",
+    uiLabel: "Estrutura de comunicação ainda não liberada aqui",
     technicalLabel: "admin_mail_governance_model",
     facadeFuture: "admin_mail_governance_model"
   },
@@ -1627,14 +1656,14 @@ const FEATURE_AVAILABILITY = {
   mail_list_internal_log: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Detalhes internos de envios ainda não liberados aqui",
+    uiLabel: "Detalhes internos de comunicação ainda não liberados aqui",
     technicalLabel: "admin_mail_list_internal_log",
     facadeFuture: "admin_mail_list_internal_log"
   },
   mail_list_templates: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Modelos de envios ainda não liberados aqui",
+    uiLabel: "Modelos de comunicação ainda não liberados aqui",
     technicalLabel: "admin_mail_list_templates",
     facadeFuture: "admin_mail_list_templates"
   },
@@ -2180,10 +2209,9 @@ async function withBusyButton(button, busyLabel, fn){
 function confirmAdminAction(action){
   const labels = {
     crm_install: "Instalar ou atualizar CRM",
-    mail_bootstrap: "Preparar envios",
-    mail_process: "Processar envios",
-    io_import_bundle: "Importar dados",
-    io_restore_snapshot: "Restaurar dados"
+    mail_bootstrap: "Abrir detalhes da comunicação",
+    io_import_bundle: "Abrir detalhes da importação",
+    io_restore_snapshot: "Abrir detalhes da restauração"
   };
 
   if(!labels[action]) return true;
@@ -2340,11 +2368,10 @@ function fillContractFilters(){
   const contract = readContractData();
   const leadItems = contract.leadItems;
   const placements = contract.leadPlacements;
-  const ticketItems = contract.ticketItems;
 
   $("#filter-lead-item").innerHTML = `<option value="">Todos os itens</option>` + leadItems.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
   $("#filter-lead-placement").innerHTML = `<option value="">Todas as origens do clique</option>` + placements.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
-  $("#filter-ticket-item").setAttribute("placeholder", ticketItems.length ? "Filtrar item" : "Filtrar item");
+  $("#filter-ticket-item").setAttribute("placeholder", "Filtrar item");
 }
 
 function fillDataDrivenFilters(){
@@ -2362,8 +2389,8 @@ function fillDataDrivenFilters(){
 function renderOverviewMeta(){
   $("#meta-front-version").textContent = "PUBPANEL " + PUBPANEL.VERSION;
   $("#meta-crm-version").textContent = state.status?.data?.version || state.health?.data?.version || "—";
-  $("#meta-mail-version").textContent = "ainda não disponível aqui";
-  $("#meta-io-version").textContent = "ainda não disponível aqui";
+  $("#meta-mail-version").textContent = "não exposto aqui";
+  $("#meta-io-version").textContent = "não exposto aqui";
   $("#meta-api-base").textContent = state.apiBase ? "definida" : "não definida";
 
   if(!state.apiBase){
@@ -2375,6 +2402,12 @@ function renderOverviewMeta(){
   } else {
     $("#meta-status").textContent = "em verificação";
   }
+}
+
+function displayCountOrDash(kind){
+  return state.datasetAvailability[kind] === "loaded"
+    ? String(state.filtered[kind].length || 0)
+    : "—";
 }
 
 function renderSummary(){
@@ -2408,11 +2441,11 @@ function renderSummary(){
     else sumSchema.textContent = "—";
   }
 
-  if(sumContacts) sumContacts.textContent = String(state.filtered.contacts.length || 0);
-  if(sumLeads) sumLeads.textContent = String(state.filtered.leads.length || 0);
-  if(sumTickets) sumTickets.textContent = String(state.filtered.tickets.length || 0);
-  if(sumTimeline) sumTimeline.textContent = String(state.filtered.timeline.length || 0);
-  if(sumMail) sumMail.textContent = String(state.filtered.mailQueue.length || 0);
+  if(sumContacts) sumContacts.textContent = displayCountOrDash("contacts");
+  if(sumLeads) sumLeads.textContent = displayCountOrDash("leads");
+  if(sumTickets) sumTickets.textContent = displayCountOrDash("tickets");
+  if(sumTimeline) sumTimeline.textContent = displayCountOrDash("timeline");
+  if(sumMail) sumMail.textContent = displayCountOrDash("mailQueue");
 
   if(sumContract){
     sumContract.textContent = state.apiBase
@@ -2947,15 +2980,16 @@ function updateSideCounts(){
   const labels = {
     "#overview": "01",
     "#summary": "02",
-    "#connection": "03",
-    "#system-health": "04",
-    "#crm": "05",
-    "#activity": "06",
-    "#mail": "07",
-    "#data-ops": "08",
-    "#diagnostics": "09",
-    "#history": "10",
-    "#preferences": "11"
+    "#module-map": "03",
+    "#connection": "04",
+    "#system-health": "05",
+    "#crm": "06",
+    "#activity": "07",
+    "#communication": "08",
+    "#data-ops": "09",
+    "#diagnostics": "10",
+    "#history": "11",
+    "#preferences": "12"
   };
 
   const nav = $$("#nav a");
@@ -3457,13 +3491,16 @@ function bindTopbarActions(){
   $("#run-health-deep-inline").addEventListener("click", e => runHealthDeep(e.currentTarget));
   $("#run-contract-inline").addEventListener("click", e => runContract(e.currentTarget));
 
+  $("#btn-status-inline-start").addEventListener("click", e => runStatus(e.currentTarget));
+  $("#btn-health-inline-start").addEventListener("click", e => runHealth(e.currentTarget));
+  $("#btn-contract-inline-start").addEventListener("click", e => runContract(e.currentTarget));
+
   $("#btn-install-crm").addEventListener("click", e => runAdminInstallCrm(e.currentTarget));
 
   $("#btn-load-leads").addEventListener("click", e => handleUnavailableAdminDataset("leads", e.currentTarget));
   $("#btn-load-contacts").addEventListener("click", e => handleUnavailableAdminDataset("contacts", e.currentTarget));
   $("#btn-load-tickets").addEventListener("click", e => handleUnavailableAdminDataset("tickets", e.currentTarget));
   $("#btn-load-timeline").addEventListener("click", e => handleUnavailableAdminDataset("timeline", e.currentTarget));
-  $("#btn-load-mail-queue").addEventListener("click", e => handleUnavailableAdminDataset("mailQueue", e.currentTarget));
 
   $("#toggle-ui-mode").addEventListener("click", () => {
     saveUiMode(state.ui.mode === "technical" ? "simple" : "technical");
