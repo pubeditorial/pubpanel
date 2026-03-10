@@ -33,7 +33,7 @@
       --radius-card:24px;
       --radius-hero:34px;
       --radius-control:16px;
-      --container:1520px;
+      --container:1540px;
       --gutter:clamp(16px,3vw,28px);
       --s1:8px;
       --s2:12px;
@@ -48,7 +48,7 @@
       --text-md:15px;
       --text-sm:13px;
       --text-xs:12px;
-      --sidebar:318px;
+      --sidebar:326px;
       --header:72px;
     }
 
@@ -378,6 +378,12 @@
       color:var(--red);
       box-shadow:none;
     }
+    .btn--ok{
+      background:rgba(5,150,105,.08);
+      border-color:rgba(5,150,105,.16);
+      color:var(--green);
+      box-shadow:none;
+    }
     .btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
 
     .input,.select,.textarea{
@@ -558,7 +564,7 @@
       position:fixed;
       right:18px;
       bottom:18px;
-      width:min(700px,calc(100vw - 36px));
+      width:min(760px,calc(100vw - 36px));
       z-index:50;
       display:grid;
       gap:12px;
@@ -731,6 +737,28 @@
     @media (max-width:1200px){.mail-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media (max-width:720px){.mail-summary-grid{grid-template-columns:1fr}}
 
+    .io-grid{
+      display:grid;
+      gap:14px;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+    @media (max-width:1200px){.io-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:720px){.io-grid{grid-template-columns:1fr}}
+
+    .form-grid{
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+    .form-grid-3{
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+    @media (max-width:860px){
+      .form-grid,.form-grid-3{grid-template-columns:1fr}
+    }
+
     @media (max-width:1020px){
       .app{grid-template-columns:1fr}
       .sidebar{
@@ -783,18 +811,18 @@
           <a href="#system-health"><span>Saúde do sistema</span><small>05</small></a>
           <a href="#crm"><span>Pessoas e atendimento</span><small>06</small></a>
           <a href="#activity"><span>Atividade</span><small>07</small></a>
-          <a href="#communication"><span>Comunicação</span><small>08</small></a>
-          <a href="#data-ops"><span>Operações com dados</span><small>09</small></a>
+          <a href="#communication"><span>PUBMAIL</span><small>08</small></a>
+          <a href="#data-ops"><span>PUBIO</span><small>09</small></a>
           <a href="#diagnostics"><span>Diagnóstico</span><small>10</small></a>
           <a href="#history"><span>Ações recentes</span><small>11</small></a>
           <a href="#preferences"><span>Preferências</span><small>12</small></a>
         </nav>
 
         <div class="side-meta">
-          <div class="meta-row"><span>Painel</span><strong id="meta-front-version">PUBPANEL 2.3.0</strong></div>
+          <div class="meta-row"><span>Painel</span><strong id="meta-front-version">PUBPANEL 3.0.0</strong></div>
           <div class="meta-row"><span>CRM</span><strong id="meta-crm-version">—</strong></div>
           <div class="meta-row"><span>PUBMAIL</span><strong id="meta-mail-version">—</strong></div>
-          <div class="meta-row"><span>PUBIO</span><strong id="meta-io-version">módulo real</strong></div>
+          <div class="meta-row"><span>PUBIO</span><strong id="meta-io-version">—</strong></div>
           <div class="meta-row"><span>Conexão</span><strong id="meta-status">não configurada</strong></div>
           <div class="meta-row"><span>URL</span><strong id="meta-api-base">não definida</strong></div>
         </div>
@@ -807,12 +835,12 @@
           <button class="btn mobile-show" id="open-sidebar">Menu</button>
           <div>
             <div class="top-title">PUBPANEL</div>
-            <div class="top-sub">Painel operacional para acompanhar conexão, atendimento, timeline, comunicação orquestrada e operações com dados.</div>
+            <div class="top-sub">Painel operacional consolidado do ecossistema PUB Editorial. CRM, timeline, PUBMAIL e PUBIO em uma única superfície administrativa.</div>
           </div>
         </div>
         <div class="top-actions">
           <button class="btn btn--soft" id="btn-status">Testar conexão</button>
-          <button class="btn btn--soft" id="btn-contract">Ver detalhes</button>
+          <button class="btn btn--soft" id="btn-contract">Contrato</button>
           <button class="btn btn--soft" id="btn-health">Verificação rápida</button>
           <button class="btn btn--violet" id="btn-health-deep">Verificação completa</button>
           <button class="btn btn--soft" id="toggle-ui-mode">Modo técnico</button>
@@ -828,19 +856,19 @@
                 <div class="grid">
                   <span class="tag">Painel central</span>
                   <h1 class="h1">PUBPANEL</h1>
-                  <p class="lead">Veja rapidamente se o sistema está acessível, acompanhe atendimento e atividade do ecossistema, e trate PUBMAIL como camada operacional plena: saúde, checklist, governança, templates, campaigns, rules, policies, segments, suppressions, estado relacional, fila, logs, scan da timeline e processamento.</p>
+                  <p class="lead">Superfície operacional unificada para conexão com o Web App, leituras públicas, health checks, CRM, timeline, orquestração completa do PUBMAIL e operações reais do PUBIO com exportação, importação, snapshots, validação, restore e logs.</p>
                 </div>
 
                 <aside class="hero-box">
                   <h3>O que você pode fazer aqui</h3>
                   <ul class="trust">
-                    <li>Configurar a URL de conexão e testar acesso</li>
-                    <li>Ver o estado geral do sistema em poucos segundos</li>
-                    <li>Consultar leituras públicas já expostas</li>
-                    <li>Executar a instalação principal do CRM</li>
-                    <li>Ler e operar o PUBMAIL como módulo completo, sem dependências “futuras” na interface</li>
+                    <li>Configurar a URL do Web App e testar acesso</li>
+                    <li>Ler status, contrato, health e health_deep</li>
+                    <li>Executar instalação geral do CRM</li>
+                    <li>Operar o PUBMAIL completo, sem simplificações</li>
+                    <li>Operar o PUBIO completo com ações administrativas reais</li>
                   </ul>
-                  <div class="tiny">O painel assume o presente: o módulo existe, as fachadas devem estar publicadas e a interface já as consome integralmente.</div>
+                  <div class="tiny">O painel assume o presente: se uma action existir no backend, ela deve ser consumida; se falhar, o problema é operacional e não conceitual.</div>
                 </aside>
               </div>
             </div>
@@ -852,12 +880,12 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Resumo</span>
               <h2 class="h2">Leitura rápida</h2>
-              <div class="muted">Entenda em poucos segundos se a conexão está pronta, se existe algo que exige atenção e como o PUBMAIL está sendo aproveitado em sua capacidade total.</div>
+              <div class="muted">Entenda em poucos segundos o estado da conexão, do CRM, do PUBMAIL e do PUBIO, com visão executiva e operacional.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--ok">Leituras disponíveis</span>
-                <span class="state-badge state-badge--info">Operação do PUBMAIL disponível</span>
-                <span class="state-badge state-badge--warn">Atenção apenas quando houver erro real</span>
+                <span class="state-badge state-badge--ok">Painel unificado</span>
+                <span class="state-badge state-badge--ok">PUBMAIL operacional</span>
+                <span class="state-badge state-badge--ok">PUBIO operacional</span>
               </div>
             </div>
 
@@ -914,20 +942,48 @@
               </div>
             </div>
 
+            <div class="metrics" style="margin-top:18px">
+              <div class="metric">
+                <div class="eyebrow">PUBIO</div>
+                <div class="value" id="sum-io-health">—</div>
+                <div class="note">Saúde estrutural do módulo de dados</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Contrato IO</div>
+                <div class="value" id="sum-io-contract">—</div>
+                <div class="note">Contrato de importação/exportação</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Exportações</div>
+                <div class="value" id="sum-io-exports">—</div>
+                <div class="note">Atividade recente do módulo</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Snapshots</div>
+                <div class="value" id="sum-io-snapshots">—</div>
+                <div class="note">Pontos de restauração operacionais</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Logs IO</div>
+                <div class="value" id="sum-io-logs">—</div>
+                <div class="note">Evidência operacional do módulo</div>
+              </div>
+            </div>
+
             <div class="availability-card" style="margin-top:18px">
               <strong>Disponibilidade neste painel</strong>
               <div class="availability-grid">
                 <div class="availability-item">
                   <strong>Disponível agora</strong>
-                  <div class="tiny">Conexão, leituras públicas principais, instalação do CRM, bases do CRM, timeline e PUBMAIL completo.</div>
+                  <div class="tiny">Conexão, leituras públicas, instalação principal, PUBMAIL completo e PUBIO completo via actions administrativas reais.</div>
                 </div>
                 <div class="availability-item">
                   <strong>PUBMAIL integral</strong>
                   <div class="tiny">Saúde, checklist, governança, uso, templates, campaigns, rules, policies, segments, suppressions, contact state, fila, logs e operação.</div>
                 </div>
                 <div class="availability-item">
-                  <strong>Leitura do presente</strong>
-                  <div class="tiny">O painel não marca o módulo como futuro. Se algo falhar, o problema é real de endpoint, autenticação ou backend.</div>
+                  <strong>PUBIO integral</strong>
+                  <div class="tiny">Health, contrato, export entity, export bundle, export CSV, validate, preview, import entity, import bundle, import CSV, snapshots, restore, inspect, read e logs.</div>
                 </div>
               </div>
             </div>
@@ -946,9 +1002,27 @@
                 <div class="tiny" id="sum-mail-overview">Ainda não há leitura do módulo de comunicação.</div>
               </div>
               <div class="mini-card">
-                <strong>Último evento relevante</strong>
+                <strong>PUBIO</strong>
+                <div class="tiny" id="sum-io-overview">Ainda não há leitura do módulo de dados.</div>
+              </div>
+            </div>
+
+            <div class="mini-grid" style="margin-top:14px">
+              <div class="mini-card">
+                <strong>Última ação</strong>
                 <div class="tiny" id="sum-last-action">Última ação: —</div>
+              </div>
+              <div class="mini-card">
+                <strong>Último problema</strong>
                 <div class="tiny" id="sum-last-error">Último problema: —</div>
+              </div>
+              <div class="mini-card">
+                <strong>Endpoint</strong>
+                <div class="tiny" id="sum-endpoint-text">Não definido.</div>
+              </div>
+              <div class="mini-card">
+                <strong>Última atualização</strong>
+                <div class="tiny" id="sum-last-refresh">Ainda não atualizada.</div>
               </div>
             </div>
           </section>
@@ -957,45 +1031,38 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Arquitetura</span>
               <h2 class="h2">Módulos reais e disponibilidade</h2>
-              <div class="muted">Esta leitura separa existência arquitetural de disponibilidade operacional. Aqui, PUBMAIL aparece como módulo real e plenamente consumido pela interface.</div>
+              <div class="muted">A leitura abaixo separa existência arquitetural de disponibilidade operacional. PUBMAIL e PUBIO aparecem como módulos reais e plenamente consumíveis.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Arquitetura refletida</span>
                 <span class="state-badge state-badge--ok">PUBMAIL integralmente assumido</span>
+                <span class="state-badge state-badge--ok">PUBIO integralmente assumido</span>
               </div>
             </div>
 
             <div class="module-grid">
               <div class="mini-card">
                 <strong>CRM Core</strong>
-                <div class="tiny">Leituras e instalação principal disponíveis no painel.</div>
-                <div class="section-state">
-                  <span class="state-badge state-badge--ok">Disponível</span>
-                </div>
+                <div class="tiny">Leituras públicas, instalação principal, ações públicas e camada administrativa do ecossistema.</div>
+                <div class="section-state"><span class="state-badge state-badge--ok">Disponível</span></div>
               </div>
 
               <div class="mini-card">
                 <strong>Timeline</strong>
-                <div class="tiny">Entidade central do ecossistema e gatilho real do PUBMAIL.</div>
-                <div class="section-state">
-                  <span class="state-badge state-badge--ok">Disponível</span>
-                </div>
+                <div class="tiny">Entidade central do ecossistema e gatilho de automações, atendimento e comunicação.</div>
+                <div class="section-state"><span class="state-badge state-badge--ok">Disponível</span></div>
               </div>
 
               <div class="mini-card">
                 <strong>PUBMAIL</strong>
-                <div class="tiny">Módulo completo de comunicação por eventos, governança editorial, elegibilidade, suppressions, logs e contact state.</div>
-                <div class="section-state">
-                  <span class="state-badge state-badge--ok">Disponível</span>
-                </div>
+                <div class="tiny">Módulo completo de comunicação por eventos, governança editorial, elegibilidade, suppressions, contact state, queue e logs.</div>
+                <div class="section-state"><span class="state-badge state-badge--ok">Disponível</span></div>
               </div>
 
               <div class="mini-card">
                 <strong>PUBIO</strong>
-                <div class="tiny">Módulo real de importação, exportação e restauração, tratado como parte viva do ecossistema.</div>
-                <div class="section-state">
-                  <span class="state-badge state-badge--info">Módulo real</span>
-                </div>
+                <div class="tiny">Módulo real de importação, exportação, inspeção, snapshots e restauração, com fachada administrativa completa.</div>
+                <div class="section-state"><span class="state-badge state-badge--ok">Disponível</span></div>
               </div>
             </div>
           </section>
@@ -1004,12 +1071,12 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Conexão</span>
               <h2 class="h2">Configurar acesso</h2>
-              <div class="muted">Salve a URL do Web App, teste o acesso, consulte as leituras públicas e execute as operações administrativas disponíveis no sistema.</div>
+              <div class="muted">Salve a URL do Web App, teste o acesso, consulte leituras públicas e execute operações administrativas do sistema.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Teste de conexão disponível</span>
                 <span class="state-badge state-badge--ok">Instalação principal disponível</span>
-                <span class="state-badge state-badge--ok">Módulos operacionais disponíveis</span>
+                <span class="state-badge state-badge--ok">PUBMAIL e PUBIO disponíveis</span>
               </div>
             </div>
 
@@ -1023,7 +1090,7 @@
 
               <div class="mini-card compact-actions">
                 <strong>Instalação do CRM</strong>
-                <div class="tiny">Quando necessário, esta ação instala ou atualiza a base principal disponível neste painel.</div>
+                <div class="tiny">Executa a instalação ou atualização geral disponível no backend.</div>
                 <button class="btn btn--primary" id="btn-install-crm">Instalar ou atualizar CRM</button>
                 <button class="btn btn--soft tech-only" id="btn-contract-inline-start">Ver detalhes técnicos</button>
               </div>
@@ -1055,25 +1122,28 @@
               </div>
 
               <div class="mini-card">
-                <strong>Leitura disponível nesta área</strong>
-                <div class="tiny">O painel pode testar a conexão, executar verificações e atualizar o resumo principal.</div>
-                <div class="codebox tech-only">Leituras públicas disponíveis
+                <strong>Leituras e actions disponíveis</strong>
+                <div class="tiny">O painel já está preparado para operar leituras públicas, PUBMAIL administrativo e PUBIO administrativo no mesmo endpoint.</div>
+                <div class="codebox tech-only" id="available-actions-box">Leituras públicas
 mode=status
 mode=health
 mode=health_deep
 mode=contract
 
-Ação administrativa principal
+Admin principal
 action=admin_install_crm
 
-PUBMAIL administrativo já consumido aqui
+PUBMAIL
+action=admin_mail_overview
 action=admin_mail_health
 action=admin_mail_checklist
 action=admin_mail_governance_model
 action=admin_mail_usage_notes
-action=admin_mail_list_queue
-action=admin_mail_list_log
-action=admin_mail_list_internal_log
+action=admin_mail_bootstrap
+action=admin_mail_create_template_docs
+action=admin_mail_scan_timeline
+action=admin_mail_process_queue
+action=admin_mail_add_suppression
 action=admin_mail_list_templates
 action=admin_mail_list_campaigns
 action=admin_mail_list_rules
@@ -1081,11 +1151,29 @@ action=admin_mail_list_policy
 action=admin_mail_list_segments
 action=admin_mail_list_suppressions
 action=admin_mail_list_contact_state
-action=admin_mail_bootstrap
-action=admin_mail_create_template_docs
-action=admin_mail_scan_timeline
-action=admin_mail_process_queue
-action=admin_mail_add_suppression</div>
+action=admin_mail_list_queue
+action=admin_mail_list_log
+action=admin_mail_list_internal_log
+
+PUBIO
+action=admin_io_install
+action=admin_io_contract
+action=admin_io_health
+action=admin_io_export_entity
+action=admin_io_export_bundle
+action=admin_io_export_entity_csv
+action=admin_io_create_snapshot
+action=admin_io_restore_snapshot
+action=admin_io_validate_file
+action=admin_io_preview_json
+action=admin_io_preview_csv
+action=admin_io_import_entity
+action=admin_io_import_bundle
+action=admin_io_import_entity_csv
+action=admin_io_dry_run_import_entity
+action=admin_io_inspect_storage_ref
+action=admin_io_read_storage_ref
+action=admin_io_list_logs</div>
               </div>
             </div>
           </section>
@@ -1094,7 +1182,7 @@ action=admin_mail_add_suppression</div>
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Saúde do sistema</span>
               <h2 class="h2">Estado atual</h2>
-              <div class="muted">Consulte a leitura principal do sistema, veja o veredito geral e abra os detalhes técnicos quando necessário.</div>
+              <div class="muted">Consulte a leitura principal do sistema, o veredito geral, compatibilidade e detalhes técnicos consolidados.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Verificação rápida disponível</span>
@@ -1125,7 +1213,7 @@ action=admin_mail_add_suppression</div>
                 <div class="note">Ocorrências registradas na leitura</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Detalhes</div>
+                <div class="eyebrow">Contrato</div>
                 <div class="value" id="metric-contract">—</div>
                 <div class="note">Contagem resumida do contrato técnico</div>
               </div>
@@ -1146,11 +1234,11 @@ action=admin_mail_add_suppression</div>
 
               <div class="mini-card compact-actions">
                 <strong>Consultas disponíveis</strong>
-                <div class="tiny">Estas ações atualizam o resumo do painel e do PUBMAIL com leituras reais do backend.</div>
+                <div class="tiny">Estas ações atualizam o resumo do painel, da compatibilidade e dos módulos operacionais.</div>
                 <button class="btn btn--soft" id="run-status-inline">Testar conexão</button>
                 <button class="btn btn--soft" id="run-health-inline">Verificação rápida</button>
                 <button class="btn btn--violet" id="run-health-deep-inline">Verificação completa</button>
-                <button class="btn btn--soft" id="run-contract-inline">Ver detalhes</button>
+                <button class="btn btn--soft" id="run-contract-inline">Ver contrato</button>
                 <div class="sep"></div>
                 <strong class="tech-only">Contrato técnico</strong>
                 <div class="codebox tech-only" id="contract-box">Detalhes técnicos ainda não carregados.</div>
@@ -1162,11 +1250,11 @@ action=admin_mail_add_suppression</div>
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Pessoas e atendimento</span>
               <h2 class="h2">Contatos, leads e tickets</h2>
-              <div class="muted">Acompanhe a base principal de relacionamento e atendimento. O painel já está preparado para cruzar CRM e PUBMAIL, exibindo relationship stage quando houver contact state carregado.</div>
+              <div class="muted">Acompanhe a base principal de relacionamento e atendimento. O painel pode cruzar CRM e PUBMAIL, incluindo relationship stage quando houver contact state carregado.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--info">Estrutura pronta para leitura</span>
-                <span class="state-badge state-badge--warn">Depende de endpoints do CRM estarem publicados</span>
+                <span class="state-badge state-badge--warn">Depende dos endpoints administrativos do CRM estarem publicados</span>
               </div>
             </div>
 
@@ -1179,7 +1267,7 @@ action=admin_mail_add_suppression</div>
 
               <div class="mini-card compact-actions">
                 <strong>Contatos</strong>
-                <div class="tiny">Consulte a base de contatos com o contexto relacional vindo do PUBMAIL.</div>
+                <div class="tiny">Consulte a base de contatos com contexto relacional vindo do PUBMAIL.</div>
                 <button class="btn btn--soft" id="btn-load-contacts">Ver lista</button>
               </div>
 
@@ -1256,11 +1344,11 @@ action=admin_mail_add_suppression</div>
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Atividade</span>
               <h2 class="h2">Eventos do ecossistema</h2>
-              <div class="muted">Use esta área para acompanhar a linha de atividade do sistema e entender o encadeamento entre captação, atendimento e comunicação. Aqui a timeline é tratada como gatilho vivo do PUBMAIL.</div>
+              <div class="muted">Use esta área para acompanhar a linha de atividade do sistema e entender o encadeamento entre captação, atendimento e comunicação.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--info">Visão cronológica</span>
-                <span class="state-badge state-badge--warn">Depende de endpoint publicado no backend</span>
+                <span class="state-badge state-badge--warn">Depende de endpoint administrativo do CRM</span>
               </div>
             </div>
 
@@ -1316,7 +1404,7 @@ action=admin_mail_add_suppression</div>
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Comunicação</span>
               <h2 class="h2">PUBMAIL como camada operacional plena</h2>
-              <div class="muted">O painel assume o PUBMAIL inteiro: saúde, checklist, governança, uso recomendado, templates, campaigns, rules, policies, segments, suppressions, contact state, fila, logs, bootstrap, scan da timeline e processamento da fila.</div>
+              <div class="muted">O painel assume o PUBMAIL inteiro: overview, saúde, checklist, governança, uso recomendado, templates, campaigns, rules, policies, segments, suppressions, contact state, fila, logs, bootstrap, scan da timeline e processamento da fila.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Módulo integralmente assumido</span>
@@ -1326,6 +1414,11 @@ action=admin_mail_add_suppression</div>
             </div>
 
             <div class="metrics">
+              <div class="metric">
+                <div class="eyebrow">Overview</div>
+                <div class="value" id="mail-metric-overview">—</div>
+                <div class="note">Resumo estrutural do mailer</div>
+              </div>
               <div class="metric">
                 <div class="eyebrow">Saúde PUBMAIL</div>
                 <div class="value" id="mail-metric-health">—</div>
@@ -1351,12 +1444,33 @@ action=admin_mail_add_suppression</div>
                 <div class="value" id="mail-metric-suppressions">—</div>
                 <div class="note">Bloqueios e pausas operacionais</div>
               </div>
+              <div class="metric">
+                <div class="eyebrow">Queue</div>
+                <div class="value" id="mail-metric-queue">—</div>
+                <div class="note">Itens atuais na fila</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Logs</div>
+                <div class="value" id="mail-metric-logs">—</div>
+                <div class="note">Histórico operacional</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Internal log</div>
+                <div class="value" id="mail-metric-internal">—</div>
+                <div class="note">Diagnóstico interno</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Contact state</div>
+                <div class="value" id="mail-metric-contact-state">—</div>
+                <div class="note">Estado relacional por contato</div>
+              </div>
             </div>
 
             <div class="threecol" style="margin-top:18px">
               <div class="mini-card compact-actions">
                 <strong>Leituras de base</strong>
-                <div class="tiny">Comece por saúde, checklist, governança e notas de uso.</div>
+                <div class="tiny">Comece por overview, saúde, checklist, governança e notas de uso.</div>
+                <button class="btn btn--soft" id="btn-mail-overview">Overview</button>
                 <button class="btn btn--soft" id="btn-mail-health">Saúde do PUBMAIL</button>
                 <button class="btn btn--soft" id="btn-mail-checklist">Checklist</button>
                 <button class="btn btn--soft" id="btn-mail-governance">Governança</button>
@@ -1374,7 +1488,7 @@ action=admin_mail_add_suppression</div>
 
               <div class="mini-card compact-actions">
                 <strong>Ações de execução</strong>
-                <div class="tiny">Operações do mailer disponíveis no presente.</div>
+                <div class="tiny">Operações reais do mailer disponíveis no presente.</div>
                 <button class="btn btn--primary" id="btn-mail-bootstrap">Bootstrap completo</button>
                 <button class="btn btn--soft" id="btn-mail-create-docs">Criar docs padrão</button>
                 <button class="btn btn--soft" id="btn-mail-scan">Scan da timeline</button>
@@ -1405,7 +1519,7 @@ action=admin_mail_add_suppression</div>
                   <li>Expor saúde, governança, operação e conteúdo editorial.</li>
                   <li>Ligar comunicação à timeline.</li>
                   <li>Dar protagonismo a suppressions e contact state.</li>
-                  <li>Tratar qualquer falha como erro real de integração, não como “futuro”.</li>
+                  <li>Tratar qualquer falha como erro real de integração.</li>
                 </ul>
               </div>
             </div>
@@ -1417,7 +1531,7 @@ action=admin_mail_add_suppression</div>
               </div>
               <div class="mini-card">
                 <strong>Suppressions</strong>
-                <div class="tiny">GLOBAL, PROMOTIONAL_ONLY, SUPPORT_PAUSE e MANUAL aparecem como objetos de primeira classe no painel.</div>
+                <div class="tiny">GLOBAL, PROMOTIONAL_ONLY, SUPPORT_PAUSE e MANUAL aparecem como objetos de primeira classe.</div>
               </div>
               <div class="mini-card">
                 <strong>Governança editorial</strong>
@@ -1501,6 +1615,7 @@ action=admin_mail_add_suppression</div>
                 </div>
                 <div class="explorer-grid" style="padding:18px">
                   <div class="explorer-list">
+                    <button class="btn explorer-btn btn--soft" data-mail-explorer="overview">Overview</button>
                     <button class="btn explorer-btn btn--soft" data-mail-explorer="templates">Templates</button>
                     <button class="btn explorer-btn btn--soft" data-mail-explorer="campaigns">Campaigns</button>
                     <button class="btn explorer-btn btn--soft" data-mail-explorer="rules">Rules</button>
@@ -1524,135 +1639,194 @@ action=admin_mail_add_suppression</div>
                   </div>
                 </div>
               </div>
-
-              <div class="twocol">
-                <div class="mini-card">
-                  <strong>Estado da área</strong>
-                  <div class="empty" style="margin-top:4px">
-                    <strong>PUBMAIL tratado como presente operacional</strong>
-                    <div class="empty-meta">
-                      <div class="empty-meta-row">
-                        <strong>Resumo</strong>
-                        <span>O módulo existe e o painel o consome como camada real de comunicação, diagnóstico e operação.</span>
-                      </div>
-                      <div class="empty-meta-row">
-                        <strong>Próxima ação</strong>
-                        <span>Conectar o backend, carregar health, checklist, queue, logs, templates, rules e contact state.</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mini-card tech-only">
-                  <strong>Actions consumidas pelo painel</strong>
-                  <div class="codebox">admin_mail_health
-admin_mail_checklist
-admin_mail_governance_model
-admin_mail_usage_notes
-admin_mail_list_queue
-admin_mail_list_log
-admin_mail_list_internal_log
-admin_mail_list_templates
-admin_mail_list_campaigns
-admin_mail_list_rules
-admin_mail_list_policy
-admin_mail_list_segments
-admin_mail_list_suppressions
-admin_mail_list_contact_state
-admin_mail_bootstrap
-admin_mail_create_template_docs
-admin_mail_scan_timeline
-admin_mail_process_queue
-admin_mail_add_suppression</div>
-                </div>
-              </div>
             </div>
           </section>
 
           <section class="panel" id="data-ops">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Operações com dados</span>
-              <h2 class="h2">Importação, exportação e restauração</h2>
-              <div class="muted">Esta área representa o PUBIO em linguagem de produto. O foco aqui é segurança operacional: validar contrato, prever conflitos, criar snapshot antes de mudanças destrutivas e só então aplicar importação ou restauração.</div>
+              <h2 class="h2">PUBIO completo</h2>
+              <div class="muted">Esta área trata o PUBIO como módulo real e operacional: instalação, health, contrato, exportação, validação, preview, importação, snapshots, restore, inspeção de storage_ref e logs.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--info">Módulo real</span>
-                <span class="state-badge state-badge--warn">Consumo depende de endpoints publicados</span>
+                <span class="state-badge state-badge--ok">Módulo real</span>
+                <span class="state-badge state-badge--ok">Actions administrativas integradas</span>
+                <span class="state-badge state-badge--ok">Sem placeholders de futuro</span>
               </div>
             </div>
 
-            <div class="threecol">
-              <div class="mini-card">
-                <strong>Estado da área</strong>
-                <div class="tiny">As operações de dados são tratadas como parte real do sistema.</div>
-                <div class="empty" style="margin-top:4px">
-                  <strong>Módulo presente</strong>
-                  <div class="empty-meta">
-                    <div class="empty-meta-row">
-                      <strong>Resumo</strong>
-                      <span>Importação, exportação e restauração pertencem ao sistema e devem ser consumidas pela interface quando os actions estiverem expostos no backend.</span>
-                    </div>
-                    <div class="empty-meta-row">
-                      <strong>Próxima ação</strong>
-                      <span>Conectar os actions do PUBIO à mesma estratégia usada para o PUBMAIL.</span>
-                    </div>
-                  </div>
-                </div>
+            <div class="metrics">
+              <div class="metric">
+                <div class="eyebrow">Instalação</div>
+                <div class="value" id="io-metric-install">—</div>
+                <div class="note">Estado da instalação e vinculação do módulo</div>
               </div>
+              <div class="metric">
+                <div class="eyebrow">Health</div>
+                <div class="value" id="io-metric-health">—</div>
+                <div class="note">Verificação estrutural do módulo</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Contrato</div>
+                <div class="value" id="io-metric-contract">—</div>
+                <div class="note">Contrato de importação/exportação</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Último validate</div>
+                <div class="value" id="io-metric-validate">—</div>
+                <div class="note">Último resultado de validação</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Último log</div>
+                <div class="value" id="io-metric-log">—</div>
+                <div class="note">Última leitura de logs IO</div>
+              </div>
+            </div>
 
-              <div class="mini-card">
-                <strong>O que esta área contempla</strong>
-                <div class="tiny">Quando exposta no backend, a área pode exibir:</div>
-                <ul class="checklist tiny">
-                  <li>Exportação por entidade ou pacote</li>
-                  <li>Validação contratual de header</li>
-                  <li>Prévia antes da importação</li>
-                  <li>Dry-run com conflitos e relações</li>
-                  <li>Snapshots automáticos para rollback</li>
-                  <li>Restauração por entidade</li>
-                </ul>
+            <div class="io-grid" style="margin-top:18px">
+              <div class="mini-card compact-actions">
+                <strong>Base do módulo</strong>
+                <div class="tiny">Instalação, health e contrato de importação/exportação.</div>
+                <button class="btn btn--primary" id="btn-io-install">Instalar PUBIO</button>
+                <button class="btn btn--soft" id="btn-io-health">Health do PUBIO</button>
+                <button class="btn btn--soft" id="btn-io-contract">Contrato do PUBIO</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Leituras previstas de backend</strong>
-                <div class="tiny">Quando publicadas, podem ser tratadas no mesmo padrão do explorador do painel.</div>
-                <button class="btn btn--soft" data-admin-action="io_validate_file">Validação</button>
-                <button class="btn btn--soft" data-admin-action="io_preview_import">Prévia</button>
-                <button class="btn btn--soft" data-admin-action="io_import_bundle">Importação</button>
+                <strong>Exportação</strong>
+                <div class="tiny">Export entity JSON, export bundle e export entity CSV.</div>
+                <select class="select" id="io-export-entity-type"></select>
+                <input class="input" id="io-export-bundle-entities" placeholder="contacts,leads,tickets" />
+                <button class="btn btn--soft" id="btn-io-export-entity">Export entity JSON</button>
+                <button class="btn btn--soft" id="btn-io-export-entity-csv">Export entity CSV</button>
+                <button class="btn btn--soft" id="btn-io-export-bundle">Export bundle</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Validação e preview</strong>
+                <div class="tiny">Validate file, inspect, read, preview JSON e preview CSV.</div>
+                <input class="input" id="io-storage-ref" placeholder="drive:..." />
+                <select class="select" id="io-validate-entity-type"></select>
+                <select class="select" id="io-csv-delimiter">
+                  <option value=",">,</option>
+                  <option value=";">;</option>
+                </select>
+                <button class="btn btn--soft" id="btn-io-validate-file">Validar arquivo</button>
+                <button class="btn btn--soft" id="btn-io-inspect-ref">Inspecionar storage_ref</button>
+                <button class="btn btn--soft" id="btn-io-read-ref">Ler arquivo</button>
+                <button class="btn btn--soft" id="btn-io-preview-json">Preview JSON</button>
+                <button class="btn btn--soft" id="btn-io-preview-csv">Preview CSV</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Import entity JSON</strong>
+                <div class="tiny">Dry-run e import por entidade.</div>
+                <input class="input" id="io-import-entity-ref" placeholder="drive:..." />
+                <select class="select" id="io-import-entity-mode">
+                  <option value="UPSERT">UPSERT</option>
+                  <option value="REPLACE">REPLACE</option>
+                </select>
+                <button class="btn btn--soft" id="btn-io-dry-run-entity">Dry-run</button>
+                <button class="btn btn--primary" id="btn-io-import-entity">Import entity</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Import bundle JSON</strong>
+                <div class="tiny">Import bundle por storage_ref, mode, entities e failFast.</div>
+                <input class="input" id="io-import-bundle-ref" placeholder="drive:..." />
+                <select class="select" id="io-import-bundle-mode">
+                  <option value="UPSERT">UPSERT</option>
+                  <option value="REPLACE">REPLACE</option>
+                </select>
+                <input class="input" id="io-import-bundle-entities" placeholder="contacts,leads,tickets" />
+                <select class="select" id="io-import-bundle-failfast">
+                  <option value="true">failFast=true</option>
+                  <option value="false">failFast=false</option>
+                </select>
+                <button class="btn btn--primary" id="btn-io-import-bundle">Import bundle</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Import entity CSV</strong>
+                <div class="tiny">Import de CSV com entity_type, mode e delimiter.</div>
+                <input class="input" id="io-import-csv-ref" placeholder="drive:..." />
+                <select class="select" id="io-import-csv-entity-type"></select>
+                <select class="select" id="io-import-csv-mode">
+                  <option value="UPSERT">UPSERT</option>
+                  <option value="REPLACE">REPLACE</option>
+                </select>
+                <select class="select" id="io-import-csv-delimiter">
+                  <option value=",">,</option>
+                  <option value=";">;</option>
+                </select>
+                <button class="btn btn--primary" id="btn-io-import-csv">Import CSV</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Snapshots</strong>
+                <div class="tiny">Criação de snapshot operacional por entidade.</div>
+                <select class="select" id="io-snapshot-entity-type"></select>
+                <input class="input" id="io-snapshot-created-by" value="panel" />
+                <input class="input" id="io-snapshot-message" placeholder="mensagem opcional" />
+                <button class="btn btn--soft" id="btn-io-create-snapshot">Criar snapshot</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Restore</strong>
+                <div class="tiny">Restauração por snapshot_id.</div>
+                <input class="input" id="io-restore-snapshot-id" placeholder="S-..." />
+                <input class="input" id="io-restore-created-by" value="panel" />
+                <button class="btn btn--danger" id="btn-io-restore-snapshot">Restaurar snapshot</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Logs</strong>
+                <div class="tiny">Consulta operacional da trilha do módulo.</div>
+                <input class="input" id="io-log-operation" placeholder="IMPORT_BUNDLE" />
+                <input class="input" id="io-log-status" placeholder="SUCCESS" />
+                <select class="select" id="io-log-entity-type"></select>
+                <input class="input" id="io-log-format" placeholder="JSON / CSV" />
+                <button class="btn btn--soft" id="btn-io-list-logs">Listar logs</button>
               </div>
             </div>
 
             <div class="twocol" style="margin-top:18px">
-              <div class="mini-card">
-                <strong>Área de inspeção local</strong>
-                <div class="tiny">Cole um JSON apenas para revisão visual local. Nenhum dado é enviado sem uma ação explícita.</div>
-                <textarea class="textarea" id="import-json" placeholder='Cole aqui um JSON apenas para revisão local do conteúdo.'></textarea>
-                <div class="toolbar-right">
-                  <button class="btn btn--soft" data-admin-action="io_preview_import">Ver prévia</button>
-                  <button class="btn btn--soft" data-admin-action="io_import_bundle">Ver fluxo de importação</button>
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Resposta operacional do PUBIO</div>
+                  <div class="toolbar-right">
+                    <button class="btn btn--soft" id="btn-copy-io-json">Copiar dados</button>
+                  </div>
+                </div>
+                <div class="table-wrap">
+                  <div class="codebox" id="io-json-box">Nenhuma operação executada ainda.</div>
                 </div>
               </div>
 
               <div class="mini-card tech-only">
-                <strong>Detalhes técnicos do módulo</strong>
-                <div class="codebox">EXPORT_ENTITY
-EXPORT_BUNDLE
-EXPORT_ENTITY_CSV
-VALIDATE_IMPORT_FILE
-PREVIEW_JSON_IMPORT
-PREVIEW_CSV_IMPORT
-IMPORT_ENTITY
-IMPORT_BUNDLE
-IMPORT_ENTITY_CSV
-CREATE_ENTITY_SNAPSHOT
-RESTORE_ENTITY_FROM_SNAPSHOT
-LIST_IO_LOGS
-INSPECT_STORAGE_REF</div>
+                <strong>Actions consumidas pelo painel</strong>
+                <div class="codebox">admin_io_install
+admin_io_contract
+admin_io_health
+admin_io_export_entity
+admin_io_export_bundle
+admin_io_export_entity_csv
+admin_io_create_snapshot
+admin_io_restore_snapshot
+admin_io_validate_file
+admin_io_preview_json
+admin_io_preview_csv
+admin_io_import_entity
+admin_io_import_bundle
+admin_io_import_entity_csv
+admin_io_dry_run_import_entity
+admin_io_inspect_storage_ref
+admin_io_read_storage_ref
+admin_io_list_logs</div>
               </div>
             </div>
           </section>
-
-          <section class="panel" id="diagnostics">
+                    <section class="panel" id="diagnostics">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Diagnóstico</span>
               <h2 class="h2">Verificações e detalhes</h2>
@@ -1661,6 +1835,7 @@ INSPECT_STORAGE_REF</div>
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Resumo disponível</span>
                 <span class="state-badge state-badge--ok">PUBMAIL presente</span>
+                <span class="state-badge state-badge--ok">PUBIO presente</span>
               </div>
             </div>
 
@@ -1673,14 +1848,14 @@ INSPECT_STORAGE_REF</div>
 
               <div class="mini-card compact-actions">
                 <strong>PUBMAIL</strong>
-                <div class="tiny">Consulte a explicação técnica do módulo de comunicação, já tratado como integralmente disponível.</div>
+                <div class="tiny">Consulte a explicação técnica do módulo de comunicação, tratado como integralmente disponível.</div>
                 <button class="btn btn--soft" id="btn-show-mail-diagnostics">Diagnóstico do PUBMAIL</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Dados</strong>
-                <div class="tiny">Consulte a explicação técnica da área de dados sem poluir a camada principal.</div>
-                <button class="btn btn--soft" data-admin-action="io_list_jobs">Ver detalhes</button>
+                <strong>PUBIO</strong>
+                <div class="tiny">Consulte a explicação técnica da área de dados, com saúde, contrato, importação, exportação, snapshots e logs.</div>
+                <button class="btn btn--soft" id="btn-show-io-diagnostics">Diagnóstico do PUBIO</button>
               </div>
             </div>
           </section>
@@ -1694,7 +1869,7 @@ INSPECT_STORAGE_REF</div>
 
             <div class="toolbar">
               <div class="toolbar-left">
-                <div class="tiny">Exibe as 30 ações mais recentes salvas localmente.</div>
+                <div class="tiny">Exibe as 40 ações mais recentes salvas localmente.</div>
               </div>
               <div class="toolbar-right">
                 <button class="btn btn--soft" id="btn-refresh-history">Atualizar</button>
@@ -1731,20 +1906,20 @@ INSPECT_STORAGE_REF</div>
                 <strong>Armazenamento local</strong>
                 <div class="tiny">A URL do Web App, o histórico e o modo de visualização ficam salvos apenas neste navegador.</div>
                 <div class="codebox tech-only">localStorage:
-PUBPANEL_V2_API_BASE
-PUBPANEL_V2_UI_HISTORY
-PUBPANEL_V2_UI_MODE</div>
+PUBPANEL_V3_API_BASE
+PUBPANEL_V3_UI_HISTORY
+PUBPANEL_V3_UI_MODE</div>
               </div>
 
               <div class="mini-card">
                 <strong>Próximos passos</strong>
-                <div class="tiny">Salvar a URL, testar a conexão, verificar a saúde do sistema e carregar as coleções operacionais do PUBMAIL.</div>
+                <div class="tiny">Salvar a URL, testar a conexão, verificar a saúde do sistema, carregar as coleções do PUBMAIL e validar o contrato do PUBIO.</div>
               </div>
             </div>
           </section>
 
           <section class="panel">
-            <div class="tiny">PUBPANEL 2.3.0 · Painel operacional do ecossistema PUB Editorial · Interface estática publicada no GitHub Pages.</div>
+            <div class="tiny">PUBPANEL 3.0.0 · Painel operacional do ecossistema PUB Editorial · Interface estática publicada separadamente no GitHub Pages.</div>
           </section>
 
         </div>
@@ -1764,13 +1939,18 @@ PUBPANEL_V2_UI_MODE</div>
 
   <script>
 const PUBPANEL = {
-  VERSION: "2.3.0",
+  VERSION: "3.0.0",
   STORAGE: {
-    API_BASE: "PUBPANEL_V2_API_BASE",
-    HISTORY: "PUBPANEL_V2_UI_HISTORY",
-    UI_MODE: "PUBPANEL_V2_UI_MODE"
+    API_BASE: "PUBPANEL_V3_API_BASE",
+    HISTORY: "PUBPANEL_V3_UI_HISTORY",
+    UI_MODE: "PUBPANEL_V3_UI_MODE"
   }
 };
+
+const ENTITY_OPTIONS = [
+  "contacts","leads","tickets","timeline","api_log","install_log","health_log",
+  "safe_fail_log","audit_log","jobs","job_items","schema_migrations"
+];
 
 const DATASETS = {
   contacts: {
@@ -1805,292 +1985,6 @@ const DATASETS = {
   }
 };
 
-const FEATURE_AVAILABILITY = {
-  status: {
-    scope: "public_get",
-    published: true,
-    uiLabel: "Teste de conexão disponível",
-    technicalLabel: "mode=status",
-    publicEndpoint: "mode=status"
-  },
-  health: {
-    scope: "public_get",
-    published: true,
-    uiLabel: "Verificação rápida disponível",
-    technicalLabel: "mode=health",
-    publicEndpoint: "mode=health"
-  },
-  health_deep: {
-    scope: "public_get",
-    published: true,
-    uiLabel: "Verificação completa disponível",
-    technicalLabel: "mode=health_deep",
-    publicEndpoint: "mode=health_deep"
-  },
-  contract: {
-    scope: "public_get",
-    published: true,
-    uiLabel: "Detalhes técnicos disponíveis",
-    technicalLabel: "mode=contract",
-    publicEndpoint: "mode=contract"
-  },
-
-  crm_install: {
-    scope: "crm_admin",
-    published: true,
-    uiLabel: "Instalação do CRM disponível",
-    technicalLabel: "action=admin_install_crm",
-    publicEndpoint: "action=admin_install_crm"
-  },
-  crm_list_contacts: {
-    scope: "crm_admin",
-    published: false,
-    uiLabel: "Lista de contatos depende do endpoint administrativo do CRM",
-    technicalLabel: "action=admin_list_contacts",
-    facadeFuture: "admin_list_contacts"
-  },
-  crm_list_leads: {
-    scope: "crm_admin",
-    published: false,
-    uiLabel: "Lista de leads depende do endpoint administrativo do CRM",
-    technicalLabel: "action=admin_list_leads",
-    facadeFuture: "admin_list_leads"
-  },
-  crm_list_tickets: {
-    scope: "crm_admin",
-    published: false,
-    uiLabel: "Lista de tickets depende do endpoint administrativo do CRM",
-    technicalLabel: "action=admin_list_tickets",
-    facadeFuture: "admin_list_tickets"
-  },
-  crm_list_timeline: {
-    scope: "crm_admin",
-    published: false,
-    uiLabel: "Lista da timeline depende do endpoint administrativo do CRM",
-    technicalLabel: "action=admin_list_timeline",
-    facadeFuture: "admin_list_timeline"
-  },
-
-  mail_bootstrap: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Bootstrap completo do PUBMAIL disponível",
-    technicalLabel: "action=admin_mail_bootstrap",
-    publicEndpoint: "action=admin_mail_bootstrap"
-  },
-  mail_health: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Saúde estrutural do PUBMAIL disponível",
-    technicalLabel: "action=admin_mail_health",
-    publicEndpoint: "action=admin_mail_health"
-  },
-  mail_checklist: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Checklist do PUBMAIL disponível",
-    technicalLabel: "action=admin_mail_checklist",
-    publicEndpoint: "action=admin_mail_checklist"
-  },
-  mail_governance_model: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Modelo de governança do PUBMAIL disponível",
-    technicalLabel: "action=admin_mail_governance_model",
-    publicEndpoint: "action=admin_mail_governance_model"
-  },
-  mail_usage_notes: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Notas de uso recomendado do PUBMAIL disponíveis",
-    technicalLabel: "action=admin_mail_usage_notes",
-    publicEndpoint: "action=admin_mail_usage_notes"
-  },
-  mail_scan: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Leitura da timeline para comunicação disponível",
-    technicalLabel: "action=admin_mail_scan_timeline",
-    publicEndpoint: "action=admin_mail_scan_timeline"
-  },
-  mail_process: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Processamento da fila de comunicação disponível",
-    technicalLabel: "action=admin_mail_process_queue",
-    publicEndpoint: "action=admin_mail_process_queue"
-  },
-  mail_list_queue: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Fila de envios disponível",
-    technicalLabel: "action=admin_mail_list_queue",
-    publicEndpoint: "action=admin_mail_list_queue"
-  },
-  mail_list_log: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Histórico de envios disponível",
-    technicalLabel: "action=admin_mail_list_log",
-    publicEndpoint: "action=admin_mail_list_log"
-  },
-  mail_list_internal_log: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Log interno do PUBMAIL disponível",
-    technicalLabel: "action=admin_mail_list_internal_log",
-    publicEndpoint: "action=admin_mail_list_internal_log"
-  },
-  mail_list_templates: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Templates disponíveis",
-    technicalLabel: "action=admin_mail_list_templates",
-    publicEndpoint: "action=admin_mail_list_templates"
-  },
-  mail_list_campaigns: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Campaigns disponíveis",
-    technicalLabel: "action=admin_mail_list_campaigns",
-    publicEndpoint: "action=admin_mail_list_campaigns"
-  },
-  mail_list_rules: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Rules disponíveis",
-    technicalLabel: "action=admin_mail_list_rules",
-    publicEndpoint: "action=admin_mail_list_rules"
-  },
-  mail_list_policy: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Policies disponíveis",
-    technicalLabel: "action=admin_mail_list_policy",
-    publicEndpoint: "action=admin_mail_list_policy"
-  },
-  mail_list_segments: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Segments disponíveis",
-    technicalLabel: "action=admin_mail_list_segments",
-    publicEndpoint: "action=admin_mail_list_segments"
-  },
-  mail_list_suppressions: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Suppressions disponíveis",
-    technicalLabel: "action=admin_mail_list_suppressions",
-    publicEndpoint: "action=admin_mail_list_suppressions"
-  },
-  mail_list_contact_state: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Estado relacional por contato disponível",
-    technicalLabel: "action=admin_mail_list_contact_state",
-    publicEndpoint: "action=admin_mail_list_contact_state"
-  },
-  mail_create_template_docs: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Bootstrap de docs dos templates disponível",
-    technicalLabel: "action=admin_mail_create_template_docs",
-    publicEndpoint: "action=admin_mail_create_template_docs"
-  },
-  mail_add_suppression: {
-    scope: "pubmail_admin",
-    published: true,
-    uiLabel: "Cadastro de suppression disponível",
-    technicalLabel: "action=admin_mail_add_suppression",
-    publicEndpoint: "action=admin_mail_add_suppression"
-  },
-
-  io_export_entity: {
-    scope: "pubio_admin",
-    published: false,
-    uiLabel: "Exportação depende do endpoint do PUBIO",
-    technicalLabel: "action=admin_io_export_entity",
-    facadeFuture: "admin_io_export_entity"
-  },
-  io_validate_file: {
-    scope: "pubio_admin",
-    published: false,
-    uiLabel: "Validação depende do endpoint do PUBIO",
-    technicalLabel: "action=admin_io_validate_file",
-    facadeFuture: "admin_io_validate_file"
-  },
-  io_preview_import: {
-    scope: "pubio_admin",
-    published: false,
-    uiLabel: "Prévia depende do endpoint do PUBIO",
-    technicalLabel: "action=admin_io_preview_import",
-    facadeFuture: "admin_io_preview_import"
-  },
-  io_import_bundle: {
-    scope: "pubio_admin",
-    published: false,
-    uiLabel: "Importação depende do endpoint do PUBIO",
-    technicalLabel: "action=admin_io_import_bundle",
-    facadeFuture: "admin_io_import_bundle"
-  },
-  io_list_jobs: {
-    scope: "pubio_admin",
-    published: false,
-    uiLabel: "Acompanhamento de jobs depende do endpoint do PUBIO",
-    technicalLabel: "action=admin_io_list_jobs",
-    facadeFuture: "admin_io_list_jobs"
-  }
-};
-
-function getFeatureAvailability(key){
-  const item = FEATURE_AVAILABILITY[key];
-  if(!item){
-    return {
-      key,
-      state: "unknown",
-      published: false,
-      uiLabel: "Recurso não mapeado",
-      technicalLabel: "",
-      publicEndpoint: null,
-      facadeFuture: null
-    };
-  }
-
-  if(item.published && item.publicEndpoint){
-    return {
-      key,
-      state: "published",
-      published: true,
-      uiLabel: item.uiLabel || "",
-      technicalLabel: item.technicalLabel || "",
-      publicEndpoint: item.publicEndpoint || null,
-      facadeFuture: item.facadeFuture || null
-    };
-  }
-
-  if(!item.published && item.facadeFuture){
-    return {
-      key,
-      state: "backend_required",
-      published: false,
-      uiLabel: item.uiLabel || "",
-      technicalLabel: item.technicalLabel || "",
-      publicEndpoint: null,
-      facadeFuture: item.facadeFuture || null
-    };
-  }
-
-  return {
-    key,
-    state: "undefined",
-    published: !!item.published,
-    uiLabel: item.uiLabel || "",
-    technicalLabel: item.technicalLabel || "",
-    publicEndpoint: item.publicEndpoint || null,
-    facadeFuture: item.facadeFuture || null
-  };
-}
-
 const state = {
   apiBase: "",
   status: null,
@@ -2098,6 +1992,7 @@ const state = {
   health: null,
   healthDeep: null,
 
+  mailOverview: null,
   mailHealth: null,
   mailChecklist: null,
   mailGovernance: null,
@@ -2111,6 +2006,15 @@ const state = {
   mailContactState: [],
   mailLog: [],
   mailInternalLog: [],
+
+  ioInstall: null,
+  ioHealth: null,
+  ioContract: null,
+  ioLastResponse: null,
+  ioLastValidate: null,
+  ioLastLogs: [],
+  ioLastSnapshots: [],
+  ioLastExportsCount: 0,
 
   contacts: [],
   leads: [],
@@ -2155,7 +2059,8 @@ const state = {
     history: [],
     lastAction: "",
     lastError: "",
-    mailExplorer: "health"
+    lastRefresh: "",
+    mailExplorer: "overview"
   }
 };
 
@@ -2231,15 +2136,9 @@ async function readResponsePayload(res){
 }
 
 function describeBackendPayload(json){
-  if(json?.redirected && json?.redirect_url){
-    return "Foi detectado um redirecionamento em HTML.";
-  }
-  if(typeof json?.raw_text === "string" && json.raw_text){
-    return "O sistema respondeu com texto simples.";
-  }
-  if(json && typeof json === "object"){
-    return "O sistema respondeu com dados estruturados.";
-  }
+  if(json?.redirected && json?.redirect_url) return "Foi detectado um redirecionamento em HTML.";
+  if(typeof json?.raw_text === "string" && json.raw_text) return "O sistema respondeu com texto simples.";
+  if(json && typeof json === "object") return "O sistema respondeu com dados estruturados.";
   return "Resposta recebida.";
 }
 
@@ -2346,9 +2245,9 @@ function runDatasetFilterPipeline(kind){
 
 function pillClass(v){
   const s = String(v || "").toUpperCase();
-  if(["OK","SENT","ACTIVE","SIM","ONLINE","SUCCESS","ABERTO","OPEN","NOVO","READY","RESTORED","DELIVERED","ENGAGED","ALLOW"].includes(s)) return "pill pill--ok";
-  if(["ALTA","WARN","WARNING","MEDIA","PENDING","PROCESSING","QUIET_PERIOD","ACTIVATING","SUPPORT_OPEN","PARTIAL"].includes(s)) return "pill pill--warn";
-  if(["ERROR","FALHA","FAILED","SUPPRESSED","CANCELLED","NÃO","NAO","INACTIVE","SKIPPED","DENY","SUPPRESS"].includes(s)) return "pill pill--error";
+  if(["OK","SENT","ACTIVE","SIM","ONLINE","SUCCESS","ABERTO","OPEN","NOVO","READY","RESTORED","DELIVERED","ENGAGED","ALLOW","TRUE","INSTALLED","VALID"].includes(s)) return "pill pill--ok";
+  if(["ALTA","WARN","WARNING","MEDIA","PENDING","PROCESSING","QUIET_PERIOD","ACTIVATING","SUPPORT_OPEN","PARTIAL","UPSERT","REPLACE"].includes(s)) return "pill pill--warn";
+  if(["ERROR","FALHA","FAILED","SUPPRESSED","CANCELLED","NÃO","NAO","INACTIVE","SKIPPED","DENY","SUPPRESS","FALSE","INVALID"].includes(s)) return "pill pill--error";
   return "pill pill--info";
 }
 
@@ -2370,11 +2269,7 @@ function drawer(title, text){
 
 function drawerJson(title, intro, payload){
   $("#drawer-title").textContent = title || "Detalhes";
-  $("#drawer-text").textContent = [
-    intro || "",
-    "",
-    safeJson(payload)
-  ].join("\n");
+  $("#drawer-text").textContent = [intro || "", "", safeJson(payload)].join("\n");
   $("#drawer-card").classList.add("show");
 }
 
@@ -2390,11 +2285,15 @@ function setLastError(message){
   state.ui.lastError = message || "";
 }
 
+function setLastRefresh(){
+  state.ui.lastRefresh = nowLabel();
+}
+
 function loadPersistedHistory(){
   try{
     const raw = localStorage.getItem(PUBPANEL.STORAGE.HISTORY) || "[]";
     const parsed = JSON.parse(raw);
-    state.ui.history = Array.isArray(parsed) ? parsed.slice(0, 30) : [];
+    state.ui.history = Array.isArray(parsed) ? parsed.slice(0, 40) : [];
   }catch(_){
     state.ui.history = [];
   }
@@ -2402,7 +2301,7 @@ function loadPersistedHistory(){
 
 function persistHistory(){
   try{
-    localStorage.setItem(PUBPANEL.STORAGE.HISTORY, JSON.stringify(state.ui.history.slice(0, 30)));
+    localStorage.setItem(PUBPANEL.STORAGE.HISTORY, JSON.stringify(state.ui.history.slice(0, 40)));
   }catch(_){}
 }
 
@@ -2423,7 +2322,7 @@ function pushHistory(type, action, status, detail, extra={}){
     rows_count: Number(extra.rows_count || 0),
     api_base: state.apiBase || ""
   });
-  state.ui.history = state.ui.history.slice(0, 30);
+  state.ui.history = state.ui.history.slice(0, 40);
   persistHistory();
   renderHistory();
   renderSummary();
@@ -2534,12 +2433,18 @@ const api = {
   async postAction(action, payload={}){
     this.requireBase();
 
+    const body = {
+      action,
+      request_id: payload.request_id || (action.toUpperCase() + "-" + Date.now()),
+      ...payload
+    };
+
     const res = await fetch(state.apiBase, {
       method: "POST",
       cache: "no-store",
       redirect: "follow",
       headers: { "Content-Type":"text/plain;charset=utf-8" },
-      body: JSON.stringify({ action, ...payload })
+      body: JSON.stringify(body)
     });
 
     return readResponsePayload(res);
@@ -2583,6 +2488,20 @@ function normalizeRowsFromResponse(json){
   }
 
   return [];
+}
+
+function extractEnvelope(json){
+  if(json && typeof json === "object" && json.data && typeof json.data === "object") return json.data;
+  return json;
+}
+
+function countFromOverview(obj, key){
+  const data = extractEnvelope(obj) || {};
+  return Number(
+    data?.[key]
+    ?? data?.data?.[key]
+    ?? 0
+  );
 }
 
 function markDatasetAsLoaded(kind, rows){
@@ -2664,7 +2583,32 @@ function fillDataDrivenFilters(){
   $("#filter-mail-type").innerHTML = `<option value="">Todos os tipos</option>` + uniqueValues(state.mailQueue, "message_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
 }
 
+function fillEntitySelects(){
+  const ids = [
+    "#io-export-entity-type",
+    "#io-validate-entity-type",
+    "#io-import-csv-entity-type",
+    "#io-snapshot-entity-type",
+    "#io-log-entity-type"
+  ];
+  ids.forEach(selector => {
+    const el = $(selector);
+    if(!el) return;
+    const current = el.value;
+    const blank = selector === "#io-log-entity-type";
+    el.innerHTML = blank ? `<option value=""></option>` : "";
+    ENTITY_OPTIONS.forEach(entity => {
+      const opt = document.createElement("option");
+      opt.value = entity;
+      opt.textContent = entity;
+      el.appendChild(opt);
+    });
+    if(current) el.value = current;
+  });
+}
+
 function summarizeMailModule(){
+  const overview = extractEnvelope(state.mailOverview) || {};
   const health = state.mailHealth;
   const checklist = normalizeRowsFromResponse(state.mailChecklist);
   const usageNotes = normalizeRowsFromResponse(state.mailUsageNotes);
@@ -2681,18 +2625,38 @@ function summarizeMailModule(){
 
   return {
     healthOk: health?.ok === true,
+    overviewLoaded: !!state.mailOverview,
     checklistCount: checklist.length,
     usageNotesCount: usageNotes.length,
-    templatesCount: templates.length,
-    campaignsCount: campaigns.length,
-    rulesCount: rules.length,
-    policyCount: policy.length,
-    segmentsCount: segments.length,
-    suppressionsCount: suppressions.length,
-    queueCount: queue.length,
-    contactStateCount: contactState.length,
-    logCount: log.length,
-    internalLogCount: internalLog.length
+    templatesCount: templates.length || Number(overview.templates_count || 0),
+    campaignsCount: campaigns.length || Number(overview.campaigns_count || 0),
+    rulesCount: rules.length || Number(overview.rules_count || 0),
+    policyCount: policy.length || Number(overview.policy_count || 0),
+    segmentsCount: segments.length || Number(overview.segments_count || 0),
+    suppressionsCount: suppressions.length || Number(overview.suppressions_count || 0),
+    queueCount: queue.length || Number(overview.queue_count || 0),
+    contactStateCount: contactState.length || Number(overview.contact_state_count || 0),
+    logCount: log.length || Number(overview.log_count || 0),
+    internalLogCount: internalLog.length || Number(overview.internal_log_count || 0)
+  };
+}
+
+function summarizeIoModule(){
+  const ioHealth = state.ioHealth;
+  const ioContract = state.ioContract;
+  const ioLast = state.ioLastResponse;
+  const ioLogs = normalizeArray(state.ioLastLogs);
+  const ioSnapshots = normalizeArray(state.ioLastSnapshots);
+
+  return {
+    healthOk: ioHealth?.ok === true,
+    healthLoaded: !!ioHealth,
+    contractLoaded: !!ioContract,
+    lastValidateLoaded: !!state.ioLastValidate,
+    logsCount: ioLogs.length,
+    snapshotsCount: ioSnapshots.length,
+    exportsCount: Number(state.ioLastExportsCount || 0),
+    lastOperation: ioLast?.action || ioLast?.requested_action || ""
   };
 }
 
@@ -2704,13 +2668,22 @@ function renderOverviewMeta(){
     $("#meta-mail-version").textContent = "PUBMAIL " + state.mailHealth.version;
   } else if(state.mailHealth?.data?.version){
     $("#meta-mail-version").textContent = "PUBMAIL " + state.mailHealth.data.version;
-  } else if(state.mailChecklist || state.mailGovernance || state.mailUsageNotes){
+  } else if(state.mailOverview){
     $("#meta-mail-version").textContent = "PUBMAIL carregado";
   } else {
     $("#meta-mail-version").textContent = "não carregado";
   }
 
-  $("#meta-io-version").textContent = "módulo real";
+  if(state.ioHealth?.version){
+    $("#meta-io-version").textContent = "PUBIO " + state.ioHealth.version;
+  } else if(state.ioHealth?.data?.version){
+    $("#meta-io-version").textContent = "PUBIO " + state.ioHealth.data.version;
+  } else if(state.ioContract || state.ioInstall){
+    $("#meta-io-version").textContent = "PUBIO carregado";
+  } else {
+    $("#meta-io-version").textContent = "não carregado";
+  }
+
   $("#meta-api-base").textContent = state.apiBase ? "definida" : "não definida";
 
   if(!state.apiBase){
@@ -2742,72 +2715,41 @@ function renderSummary(){
   const healthDeepData = readHealthDeepData();
   const safeTotal = countSafeFailures(healthData);
   const mailSummary = summarizeMailModule();
+  const ioSummary = summarizeIoModule();
 
-  const sumStatus = $("#sum-status");
-  const sumSchema = $("#sum-schema");
-  const sumContacts = $("#sum-contacts");
-  const sumLeads = $("#sum-leads");
-  const sumTickets = $("#sum-tickets");
-  const sumTimeline = $("#sum-timeline");
-  const sumMailHealth = $("#sum-mail-health");
-  const sumMailTemplates = $("#sum-mail-templates");
-  const sumMailRules = $("#sum-mail-rules");
-  const sumMailQueue = $("#sum-mail-queue");
-  const sumContract = $("#sum-contract");
-  const sumHealth = $("#sum-health");
-  const sumMailOverview = $("#sum-mail-overview");
-  const sumLastAction = $("#sum-last-action");
-  const sumLastError = $("#sum-last-error");
+  setMetric("#sum-status", !state.apiBase ? "PENDENTE" : state.status?.ok ? "OK" : state.ui.lastError ? "ERRO" : "ATENÇÃO");
+  setMetric("#sum-schema", healthData.schema_ready === true ? "OK" : healthData.schema_ready === false ? "ATENÇÃO" : "—");
+  setMetric("#sum-contacts", displayCountOrDash("contacts"));
+  setMetric("#sum-leads", displayCountOrDash("leads"));
+  setMetric("#sum-tickets", displayCountOrDash("tickets"));
+  setMetric("#sum-timeline", displayCountOrDash("timeline"));
+  setMetric("#sum-mail-health", state.mailHealth?.ok === true ? "OK" : state.mailHealth ? "ATENÇÃO" : "—");
+  setMetric("#sum-mail-templates", mailSummary.templatesCount ? String(mailSummary.templatesCount) : "—");
+  setMetric("#sum-mail-rules", mailSummary.rulesCount ? String(mailSummary.rulesCount) : "—");
+  setMetric("#sum-mail-queue", state.datasetAvailability.mailQueue === "loaded" ? String(state.filtered.mailQueue.length || 0) : (mailSummary.queueCount ? String(mailSummary.queueCount) : "—"));
 
-  if(sumStatus){
-    if(!state.apiBase) sumStatus.textContent = "PENDENTE";
-    else if(state.status?.ok) sumStatus.textContent = "OK";
-    else if(state.ui.lastError) sumStatus.textContent = "ERRO";
-    else sumStatus.textContent = "ATENÇÃO";
+  setMetric("#sum-io-health", ioSummary.healthOk ? "OK" : ioSummary.healthLoaded ? "ATENÇÃO" : "—");
+  setMetric("#sum-io-contract", ioSummary.contractLoaded ? "OK" : "—");
+  setMetric("#sum-io-exports", ioSummary.exportsCount ? String(ioSummary.exportsCount) : "—");
+  setMetric("#sum-io-snapshots", ioSummary.snapshotsCount ? String(ioSummary.snapshotsCount) : "—");
+  setMetric("#sum-io-logs", ioSummary.logsCount ? String(ioSummary.logsCount) : "—");
+
+  $("#sum-contract").textContent = state.apiBase ? "URL salva e pronta para teste." : "A URL ainda não foi configurada.";
+
+  if(state.health || state.healthDeep){
+    const checks = [];
+    if(healthData.schema_ready === true) checks.push("estrutura OK");
+    if(healthData.schema_ready === false) checks.push("estrutura requer atenção");
+    checks.push(`ocorrências: ${safeTotal}`);
+    if(state.healthDeep) checks.push(`verificação completa: ${healthDeepData.check_type || "carregada"}`);
+    $("#sum-health").textContent = checks.join(" · ");
+  } else {
+    $("#sum-health").textContent = "Ainda não há leitura concluída.";
   }
 
-  if(sumSchema){
-    if(healthData.schema_ready === true) sumSchema.textContent = "OK";
-    else if(healthData.schema_ready === false) sumSchema.textContent = "ATENÇÃO";
-    else sumSchema.textContent = "—";
-  }
-
-  if(sumContacts) sumContacts.textContent = displayCountOrDash("contacts");
-  if(sumLeads) sumLeads.textContent = displayCountOrDash("leads");
-  if(sumTickets) sumTickets.textContent = displayCountOrDash("tickets");
-  if(sumTimeline) sumTimeline.textContent = displayCountOrDash("timeline");
-
-  if(sumMailHealth){
-    if(state.mailHealth?.ok === true) sumMailHealth.textContent = "OK";
-    else if(state.mailHealth) sumMailHealth.textContent = "ATENÇÃO";
-    else sumMailHealth.textContent = "—";
-  }
-
-  if(sumMailTemplates) sumMailTemplates.textContent = mailSummary.templatesCount ? String(mailSummary.templatesCount) : "—";
-  if(sumMailRules) sumMailRules.textContent = mailSummary.rulesCount ? String(mailSummary.rulesCount) : "—";
-  if(sumMailQueue) sumMailQueue.textContent = state.datasetAvailability.mailQueue === "loaded" ? String(state.filtered.mailQueue.length || 0) : (mailSummary.queueCount ? String(mailSummary.queueCount) : "—");
-
-  if(sumContract){
-    sumContract.textContent = state.apiBase
-      ? "URL salva e pronta para teste."
-      : "A URL ainda não foi configurada.";
-  }
-
-  if(sumHealth){
-    if(state.health || state.healthDeep){
-      const checks = [];
-      if(healthData.schema_ready === true) checks.push("estrutura OK");
-      if(healthData.schema_ready === false) checks.push("estrutura requer atenção");
-      checks.push(`ocorrências: ${safeTotal}`);
-      if(state.healthDeep) checks.push(`verificação completa: ${healthDeepData.check_type || "carregada"}`);
-      sumHealth.textContent = checks.join(" · ");
-    } else {
-      sumHealth.textContent = "Ainda não há leitura concluída.";
-    }
-  }
-
-  if(sumMailOverview){
+  {
     const parts = [];
+    if(state.mailOverview) parts.push("overview carregado");
     if(state.mailHealth?.ok === true) parts.push("saúde OK");
     else if(state.mailHealth) parts.push("saúde com atenção");
     if(mailSummary.checklistCount) parts.push(`checklist: ${mailSummary.checklistCount}`);
@@ -2819,28 +2761,54 @@ function renderSummary(){
     if(mailSummary.suppressionsCount) parts.push(`suppressions: ${mailSummary.suppressionsCount}`);
     if(mailSummary.contactStateCount) parts.push(`contact_state: ${mailSummary.contactStateCount}`);
     if(mailSummary.logCount) parts.push(`logs: ${mailSummary.logCount}`);
-
-    sumMailOverview.textContent = parts.length
-      ? parts.join(" · ")
-      : "Ainda não há leitura do módulo de comunicação.";
+    $("#sum-mail-overview").textContent = parts.length ? parts.join(" · ") : "Ainda não há leitura do módulo de comunicação.";
   }
 
-  if(sumLastAction) sumLastAction.textContent = "Última ação: " + (state.ui.lastAction || "—");
-  if(sumLastError) sumLastError.textContent = "Último problema: " + (state.ui.lastError || "—");
+  {
+    const parts = [];
+    if(ioSummary.healthOk) parts.push("health OK");
+    else if(ioSummary.healthLoaded) parts.push("health com atenção");
+    if(ioSummary.contractLoaded) parts.push("contrato carregado");
+    if(ioSummary.exportsCount) parts.push(`exports: ${ioSummary.exportsCount}`);
+    if(ioSummary.snapshotsCount) parts.push(`snapshots: ${ioSummary.snapshotsCount}`);
+    if(ioSummary.logsCount) parts.push(`logs: ${ioSummary.logsCount}`);
+    $("#sum-io-overview").textContent = parts.length ? parts.join(" · ") : "Ainda não há leitura do módulo de dados.";
+  }
+
+  $("#sum-last-action").textContent = "Última ação: " + (state.ui.lastAction || "—");
+  $("#sum-last-error").textContent = "Último problema: " + (state.ui.lastError || "—");
+  $("#sum-endpoint-text").textContent = state.apiBase || "Não definido.";
+  $("#sum-last-refresh").textContent = state.ui.lastRefresh || "Ainda não atualizada.";
 
   renderCommunicationSummary();
+  renderIoSummary();
   renderOverviewMeta();
   updateSideCounts();
+
+  setLastRefresh();
 }
 
 function renderCommunicationSummary(){
   const mailSummary = summarizeMailModule();
-
+  setMetric("#mail-metric-overview", state.mailOverview ? "OK" : "—");
   setMetric("#mail-metric-health", state.mailHealth?.ok === true ? "OK" : state.mailHealth ? "ATENÇÃO" : "—");
   setMetric("#mail-metric-checklist", mailSummary.checklistCount ? String(mailSummary.checklistCount) : "—");
   setMetric("#mail-metric-templates", mailSummary.templatesCount ? String(mailSummary.templatesCount) : "—");
   setMetric("#mail-metric-rules", mailSummary.rulesCount ? String(mailSummary.rulesCount) : "—");
   setMetric("#mail-metric-suppressions", mailSummary.suppressionsCount ? String(mailSummary.suppressionsCount) : "—");
+  setMetric("#mail-metric-queue", state.datasetAvailability.mailQueue === "loaded" ? String(state.filtered.mailQueue.length || 0) : (mailSummary.queueCount ? String(mailSummary.queueCount) : "—"));
+  setMetric("#mail-metric-logs", mailSummary.logCount ? String(mailSummary.logCount) : "—");
+  setMetric("#mail-metric-internal", mailSummary.internalLogCount ? String(mailSummary.internalLogCount) : "—");
+  setMetric("#mail-metric-contact-state", mailSummary.contactStateCount ? String(mailSummary.contactStateCount) : "—");
+}
+
+function renderIoSummary(){
+  const ioSummary = summarizeIoModule();
+  setMetric("#io-metric-install", state.ioInstall?.ok === true ? "OK" : state.ioInstall ? "ATENÇÃO" : "—");
+  setMetric("#io-metric-health", ioSummary.healthOk ? "OK" : ioSummary.healthLoaded ? "ATENÇÃO" : "—");
+  setMetric("#io-metric-contract", ioSummary.contractLoaded ? "OK" : "—");
+  setMetric("#io-metric-validate", state.ioLastValidate ? "OK" : "—");
+  setMetric("#io-metric-log", ioSummary.logsCount ? String(ioSummary.logsCount) : "—");
 }
 
 function assignPublicModeResult(mode, json){
@@ -2885,32 +2853,16 @@ async function runPublicMode(mode, button){
       const durationMs = Math.round(performance.now() - startedAt);
 
       assignPublicModeResult(mode, json);
+      setLastRefresh();
 
-      notify(
-        "success",
-        publicModeSuccessTitle(mode),
-        publicModeSuccessMessage(mode) + " " + describeBackendPayload(json)
-      );
-
-      pushHistory(
-        "GET",
-        "mode=" + mode,
-        "ok",
-        describeBackendPayload(json),
-        { duration_ms: durationMs, rows_count: 0 }
-      );
+      notify("success", publicModeSuccessTitle(mode), publicModeSuccessMessage(mode) + " " + describeBackendPayload(json));
+      pushHistory("GET", "mode=" + mode, "ok", describeBackendPayload(json), { duration_ms: durationMs, rows_count: 0 });
     });
   }catch(err){
     const durationMs = Math.round(performance.now() - startedAt);
     setLastError(err.message || "Erro desconhecido");
     notify("error", "Não foi possível concluir a leitura", err.message || "Erro desconhecido");
-    pushHistory(
-      "GET",
-      "mode=" + mode,
-      "erro",
-      err.message || "erro",
-      { duration_ms: durationMs, rows_count: 0 }
-    );
+    pushHistory("GET", "mode=" + mode, "erro", err.message || "erro", { duration_ms: durationMs, rows_count: 0 });
   } finally {
     renderSummary();
   }
@@ -2950,6 +2902,7 @@ function renderHealth(){
       }
     } : null,
     pubmail: {
+      overview: state.mailOverview,
       health: state.mailHealth,
       checklist_count: normalizeRowsFromResponse(state.mailChecklist).length,
       governance_loaded: !!state.mailGovernance,
@@ -2964,6 +2917,14 @@ function renderHealth(){
       queue_count: normalizeArray(state.mailQueue).length,
       log_count: normalizeArray(state.mailLog).length,
       internal_log_count: normalizeArray(state.mailInternalLog).length
+    },
+    pubio: {
+      install: state.ioInstall,
+      health: state.ioHealth,
+      contract: state.ioContract,
+      last_validate: state.ioLastValidate,
+      last_logs_count: normalizeArray(state.ioLastLogs).length,
+      last_snapshots_count: normalizeArray(state.ioLastSnapshots).length
     }
   });
 
@@ -2973,7 +2934,8 @@ function renderHealth(){
 
   renderSummary();
 }
-    function applyLeadFilters(){
+
+function applyLeadFilters(){
   const q = stringValue($("#filter-lead-search")?.value).toLowerCase();
   const item = stringValue($("#filter-lead-item")?.value);
   const placement = stringValue($("#filter-lead-placement")?.value);
@@ -3079,22 +3041,18 @@ function applyMailFilters(){
   renderMailQueue(rows);
 }
 
-function renderBackendRequiredDatasetMessage(title, moduleName, technicalLabel){
+function renderBackendRequiredDatasetMessage(title, technicalLabel){
   return `
     <div class="empty">
       <strong>${title}</strong>
       <div class="empty-meta">
         <div class="empty-meta-row">
           <strong>Estado</strong>
-          <span>O painel está pronto, mas o backend ainda precisa expor este endpoint.</span>
+          <span>O painel está pronto, mas o backend ainda precisa expor este endpoint administrativo.</span>
         </div>
         <div class="empty-meta-row">
           <strong>Resumo</strong>
-          <span>O módulo é tratado como presente. A ausência aqui indica falta de fachada HTTP publicada, não “futuro de produto”.</span>
-        </div>
-        <div class="empty-meta-row">
-          <strong>Módulo</strong>
-          <span>${escapeHtml(moduleName || "—")}</span>
+          <span>A ausência aqui indica falta de fachada HTTP publicada, não “futuro de produto”.</span>
         </div>
         <div class="empty-meta-row tech-only">
           <strong>Action esperado</strong>
@@ -3112,14 +3070,9 @@ function getContactStateForEmail(email){
 
 function renderLeads(rows){
   const wrap = $("#leads-table-wrap");
-  const availability = getFeatureAvailability("crm_list_leads");
 
   if(state.datasetAvailability.leads !== "loaded"){
-    wrap.innerHTML = renderBackendRequiredDatasetMessage(
-      "Lista de leads ainda não carregada.",
-      "Leads no CRM",
-      availability.technicalLabel
-    );
+    wrap.innerHTML = renderBackendRequiredDatasetMessage("Lista de leads ainda não carregada.", "action=admin_list_leads");
     updateSideCounts();
     return;
   }
@@ -3162,9 +3115,7 @@ function renderLeads(rows){
         `).join("")}
       </tbody>
     </table>
-    <div class="table-foot">
-      <div class="tiny">Resultados encontrados: ${rows.length}</div>
-    </div>
+    <div class="table-foot"><div class="tiny">Resultados encontrados: ${rows.length}</div></div>
     ${renderPager("leads", info)}
   `;
   updateSideCounts();
@@ -3172,14 +3123,9 @@ function renderLeads(rows){
 
 function renderContacts(rows){
   const wrap = $("#contacts-table-wrap");
-  const availability = getFeatureAvailability("crm_list_contacts");
 
   if(state.datasetAvailability.contacts !== "loaded"){
-    wrap.innerHTML = renderBackendRequiredDatasetMessage(
-      "Lista de contatos ainda não carregada.",
-      "Contatos no CRM",
-      availability.technicalLabel
-    );
+    wrap.innerHTML = renderBackendRequiredDatasetMessage("Lista de contatos ainda não carregada.", "action=admin_list_contacts");
     updateSideCounts();
     return;
   }
@@ -3224,9 +3170,7 @@ function renderContacts(rows){
         }).join("")}
       </tbody>
     </table>
-    <div class="table-foot">
-      <div class="tiny">Resultados encontrados: ${rows.length}</div>
-    </div>
+    <div class="table-foot"><div class="tiny">Resultados encontrados: ${rows.length}</div></div>
     ${renderPager("contacts", info)}
   `;
   updateSideCounts();
@@ -3234,14 +3178,9 @@ function renderContacts(rows){
 
 function renderTickets(rows){
   const wrap = $("#tickets-table-wrap");
-  const availability = getFeatureAvailability("crm_list_tickets");
 
   if(state.datasetAvailability.tickets !== "loaded"){
-    wrap.innerHTML = renderBackendRequiredDatasetMessage(
-      "Lista de tickets ainda não carregada.",
-      "Tickets no CRM",
-      availability.technicalLabel
-    );
+    wrap.innerHTML = renderBackendRequiredDatasetMessage("Lista de tickets ainda não carregada.", "action=admin_list_tickets");
     updateSideCounts();
     return;
   }
@@ -3282,9 +3221,7 @@ function renderTickets(rows){
         `).join("")}
       </tbody>
     </table>
-    <div class="table-foot">
-      <div class="tiny">Resultados encontrados: ${rows.length}</div>
-    </div>
+    <div class="table-foot"><div class="tiny">Resultados encontrados: ${rows.length}</div></div>
     ${renderPager("tickets", info)}
   `;
   updateSideCounts();
@@ -3292,14 +3229,9 @@ function renderTickets(rows){
 
 function renderTimeline(rows){
   const wrap = $("#timeline-table-wrap");
-  const availability = getFeatureAvailability("crm_list_timeline");
 
   if(state.datasetAvailability.timeline !== "loaded"){
-    wrap.innerHTML = renderBackendRequiredDatasetMessage(
-      "Timeline ainda não carregada.",
-      "Timeline do ecossistema",
-      availability.technicalLabel
-    );
+    wrap.innerHTML = renderBackendRequiredDatasetMessage("Timeline ainda não carregada.", "action=admin_list_timeline");
     updateSideCounts();
     return;
   }
@@ -3338,9 +3270,7 @@ function renderTimeline(rows){
         `).join("")}
       </tbody>
     </table>
-    <div class="table-foot">
-      <div class="tiny">Resultados encontrados: ${rows.length}</div>
-    </div>
+    <div class="table-foot"><div class="tiny">Resultados encontrados: ${rows.length}</div></div>
     ${renderPager("timeline", info)}
   `;
   updateSideCounts();
@@ -3360,14 +3290,8 @@ function renderMailQueue(rows){
       <div class="empty">
         <strong>Fila sem itens</strong>
         <div class="empty-meta">
-          <div class="empty-meta-row">
-            <strong>Estado</strong>
-            <span>Carregada</span>
-          </div>
-          <div class="empty-meta-row">
-            <strong>Resumo</strong>
-            <span>Não há itens na fila para os filtros atuais.</span>
-          </div>
+          <div class="empty-meta-row"><strong>Estado</strong><span>Carregada</span></div>
+          <div class="empty-meta-row"><strong>Resumo</strong><span>Não há itens na fila para os filtros atuais.</span></div>
         </div>
       </div>
     `;
@@ -3405,9 +3329,7 @@ function renderMailQueue(rows){
         `).join("")}
       </tbody>
     </table>
-    <div class="table-foot">
-      <div class="tiny">Resultados encontrados: ${rows.length}</div>
-    </div>
+    <div class="table-foot"><div class="tiny">Resultados encontrados: ${rows.length}</div></div>
     ${renderPager("mailQueue", info)}
   `;
   updateSideCounts();
@@ -3466,6 +3388,14 @@ function renderMailExplorer(){
   const wrap = $("#mail-explorer-wrap");
   const caption = $("#mail-explorer-caption");
   const key = state.ui.mailExplorer;
+
+  if(key === "overview"){
+    caption.textContent = "Resumo estrutural do PUBMAIL.";
+    wrap.innerHTML = state.mailOverview
+      ? renderExplorerCode("PUBMAIL Overview", state.mailOverview)
+      : `<div class="empty">O overview ainda não foi carregado.</div>`;
+    return;
+  }
 
   if(key === "health"){
     caption.textContent = "Saúde estrutural do PUBMAIL.";
@@ -3765,82 +3695,227 @@ function exportCurrentDataset(kind){
   pushHistory("UI", "export_csv_" + kind, "ok", "Exportação local com " + cfg.rows.length + " linhas.");
 }
 
-function buildAdminPayload(action){
-  const importField = $("#import-json");
-  const importJson = importField ? String(importField.value || "").trim() : "";
-
-  const payload = {};
-
-  if(String(action).includes("io_") && importJson){
-    payload.import_json = importJson;
+function buildIoPayload(action){
+  if(action === "admin_io_export_entity" || action === "admin_io_export_entity_csv"){
+    return { entity_type: $("#io-export-entity-type").value };
   }
 
-  if(action === "io_export_leads") payload.entity_type = "leads";
-  if(action === "io_export_contacts") payload.entity_type = "contacts";
-  if(action === "io_export_tickets") payload.entity_type = "tickets";
-
-  if(action === "mail_add_suppression"){
-    payload.contact_id = "";
-    payload.email = "";
-    payload.suppression_type = "MANUAL";
-    payload.reason = "";
-    payload.until_at = "";
-    payload.source = "panel";
-    payload.notes = "";
+  if(action === "admin_io_export_bundle"){
+    return { entities: stringValue($("#io-export-bundle-entities").value) };
   }
 
-  return payload;
+  if(action === "admin_io_validate_file"){
+    return {
+      storage_ref: stringValue($("#io-storage-ref").value),
+      entity_type: $("#io-validate-entity-type").value,
+      delimiter: $("#io-csv-delimiter").value
+    };
+  }
+
+  if(action === "admin_io_inspect_storage_ref"){
+    return { storage_ref: stringValue($("#io-storage-ref").value) };
+  }
+
+  if(action === "admin_io_read_storage_ref"){
+    return {
+      storage_ref: stringValue($("#io-storage-ref").value),
+      entity_type: $("#io-validate-entity-type").value,
+      delimiter: $("#io-csv-delimiter").value
+    };
+  }
+
+  if(action === "admin_io_preview_json"){
+    return {
+      storage_ref: stringValue($("#io-storage-ref").value),
+      entities: stringValue($("#io-export-bundle-entities").value || $("#io-import-bundle-entities").value)
+    };
+  }
+
+  if(action === "admin_io_preview_csv"){
+    return {
+      storage_ref: stringValue($("#io-storage-ref").value),
+      entity_type: $("#io-validate-entity-type").value,
+      delimiter: $("#io-csv-delimiter").value
+    };
+  }
+
+  if(action === "admin_io_dry_run_import_entity" || action === "admin_io_import_entity"){
+    return {
+      storage_ref: stringValue($("#io-import-entity-ref").value),
+      mode: $("#io-import-entity-mode").value
+    };
+  }
+
+  if(action === "admin_io_import_bundle"){
+    return {
+      storage_ref: stringValue($("#io-import-bundle-ref").value),
+      mode: $("#io-import-bundle-mode").value,
+      entities: stringValue($("#io-import-bundle-entities").value),
+      failFast: $("#io-import-bundle-failfast").value
+    };
+  }
+
+  if(action === "admin_io_import_entity_csv"){
+    return {
+      storage_ref: stringValue($("#io-import-csv-ref").value),
+      entity_type: $("#io-import-csv-entity-type").value,
+      mode: $("#io-import-csv-mode").value,
+      delimiter: $("#io-import-csv-delimiter").value
+    };
+  }
+
+  if(action === "admin_io_create_snapshot"){
+    return {
+      entity_type: $("#io-snapshot-entity-type").value,
+      created_by: stringValue($("#io-snapshot-created-by").value),
+      message: stringValue($("#io-snapshot-message").value)
+    };
+  }
+
+  if(action === "admin_io_restore_snapshot"){
+    return {
+      snapshot_id: stringValue($("#io-restore-snapshot-id").value),
+      created_by: stringValue($("#io-restore-created-by").value)
+    };
+  }
+
+  if(action === "admin_io_list_logs"){
+    return {
+      operation: stringValue($("#io-log-operation").value),
+      status: stringValue($("#io-log-status").value),
+      entity_type: stringValue($("#io-log-entity-type").value),
+      format: stringValue($("#io-log-format").value)
+    };
+  }
+
+  return {};
 }
 
-async function handleBackendRequiredAction(action, button){
-  const availability = getFeatureAvailability(action);
-  const startedAt = performance.now();
+function storeMailReadResult(action, json){
+  if(action === "mail_overview") state.mailOverview = json;
+  if(action === "mail_health") state.mailHealth = json;
+  if(action === "mail_checklist") state.mailChecklist = json;
+  if(action === "mail_governance_model") state.mailGovernance = json;
+  if(action === "mail_usage_notes") state.mailUsageNotes = json;
+  if(action === "mail_list_templates") state.mailTemplates = normalizeRowsFromResponse(json);
+  if(action === "mail_list_campaigns") state.mailCampaigns = normalizeRowsFromResponse(json);
+  if(action === "mail_list_rules") state.mailRules = normalizeRowsFromResponse(json);
+  if(action === "mail_list_policy") state.mailPolicy = normalizeRowsFromResponse(json);
+  if(action === "mail_list_segments") state.mailSegments = normalizeRowsFromResponse(json);
+  if(action === "mail_list_suppressions") state.mailSuppressions = normalizeRowsFromResponse(json);
+  if(action === "mail_list_contact_state") state.mailContactState = normalizeRowsFromResponse(json);
+  if(action === "mail_list_log") state.mailLog = normalizeRowsFromResponse(json);
+  if(action === "mail_list_internal_log") state.mailInternalLog = normalizeRowsFromResponse(json);
 
-  try{
-    setLastAction(action);
-    setLastError("");
-
-    await withBusyButton(button, "Abrindo...", async () => {
-      drawer(
-        "Endpoint ainda não publicado",
-        [
-          "Estado",
-          "Backend requerido",
-          "",
-          "Resumo",
-          availability.uiLabel,
-          "",
-          "Próxima ação",
-          "Publicar este action no backend e conectar a mesma estratégia já usada pelo PUBMAIL.",
-          "",
-          "Detalhes técnicos",
-          "Rótulo técnico: " + (availability.technicalLabel || "—"),
-          "Action esperado: " + (availability.facadeFuture || "—"),
-          "Hora: " + nowLabel(),
-          "URL salva: " + (state.apiBase || "não definida")
-        ].join("\n")
-      );
-
-      notify("warn", "Endpoint ainda não publicado", "A interface está pronta, mas o backend ainda precisa expor este action.");
-
-      pushHistory(
-        "UI",
-        action,
-        "backend_required",
-        "A interface está pronta; falta publicar o action no backend.",
-        { duration_ms: Math.round(performance.now() - startedAt), rows_count: 0 }
-      );
-    });
-  }catch(err){
-    setLastError(err.message || "Erro desconhecido");
-    notify("error", "Falha ao abrir detalhe", err.message || "Erro desconhecido");
-    pushHistory("UI", action, "erro", err.message || "erro", {
-      duration_ms: Math.round(performance.now() - startedAt),
-      rows_count: 0
-    });
-  } finally {
-    renderSummary();
+  if(action === "mail_list_queue"){
+    const rows = normalizeRowsFromResponse(json);
+    state.mailQueue = rows.slice();
+    state.filtered.mailQueue = rows.slice();
+    state.datasetAvailability.mailQueue = "loaded";
+    fillDataDrivenFilters();
+    applyMailFilters();
   }
+}
+
+function storeIoResult(action, json){
+  state.ioLastResponse = { action, payload: json };
+
+  if(action === "admin_io_install") state.ioInstall = json;
+  if(action === "admin_io_health") state.ioHealth = json;
+  if(action === "admin_io_contract") state.ioContract = json;
+
+  if(action === "admin_io_validate_file") state.ioLastValidate = json;
+  if(action === "admin_io_create_snapshot"){
+    const snaps = normalizeRowsFromResponse(json);
+    if(snaps.length) state.ioLastSnapshots = snaps;
+  }
+  if(action === "admin_io_restore_snapshot"){
+    const snaps = normalizeRowsFromResponse(json);
+    if(snaps.length) state.ioLastSnapshots = snaps;
+  }
+  if(action === "admin_io_list_logs"){
+    state.ioLastLogs = normalizeRowsFromResponse(json);
+  }
+
+  if(["admin_io_export_entity","admin_io_export_entity_csv","admin_io_export_bundle"].includes(action)){
+    state.ioLastExportsCount += 1;
+  }
+
+  $("#io-json-box").textContent = safeJson(json);
+}
+
+function buildMailReadSummary(action, json){
+  const rows = normalizeRowsFromResponse(json);
+  if(action === "mail_overview") return "Overview do PUBMAIL carregado.";
+  if(action === "mail_health") return json?.ok === true ? "A saúde estrutural do PUBMAIL foi lida com sucesso." : "A leitura retornou atenção para a saúde do PUBMAIL.";
+  if(action === "mail_checklist") return `Checklist carregado com ${rows.length} etapa(s).`;
+  if(action === "mail_governance_model") return "Modelo de governança do PUBMAIL carregado.";
+  if(action === "mail_usage_notes") return `Notas de uso carregadas com ${rows.length} item(ns).`;
+  if(action === "mail_list_queue") return `Fila carregada com ${rows.length} item(ns).`;
+  if(action === "mail_list_templates") return `Templates carregados: ${rows.length}.`;
+  if(action === "mail_list_campaigns") return `Campaigns carregadas: ${rows.length}.`;
+  if(action === "mail_list_rules") return `Rules carregadas: ${rows.length}.`;
+  if(action === "mail_list_policy") return `Policies carregadas: ${rows.length}.`;
+  if(action === "mail_list_segments") return `Segments carregados: ${rows.length}.`;
+  if(action === "mail_list_suppressions") return `Suppressions carregadas: ${rows.length}.`;
+  if(action === "mail_list_contact_state") return `Contact state carregado: ${rows.length}.`;
+  if(action === "mail_list_log") return `Logs de envio carregados: ${rows.length}.`;
+  if(action === "mail_list_internal_log") return `Logs internos carregados: ${rows.length}.`;
+  if(action === "mail_bootstrap") return "Bootstrap completo do PUBMAIL executado.";
+  if(action === "mail_create_template_docs") return "Criação ou vínculo de docs padrão concluída.";
+  if(action === "mail_scan") return "Scan da timeline concluído.";
+  if(action === "mail_process") return "Processamento da fila concluído.";
+  if(action === "mail_add_suppression") return "Suppression adicionada.";
+  return describeBackendPayload(json);
+}
+
+function buildIoSummary(action, json){
+  const rows = normalizeRowsFromResponse(json);
+  if(action === "admin_io_install") return "Instalação do PUBIO concluída.";
+  if(action === "admin_io_health") return json?.ok === true ? "Health do PUBIO carregado." : "Health do PUBIO carregado com atenção.";
+  if(action === "admin_io_contract") return "Contrato do PUBIO carregado.";
+  if(action === "admin_io_export_entity") return "Exportação JSON por entidade concluída.";
+  if(action === "admin_io_export_entity_csv") return "Exportação CSV por entidade concluída.";
+  if(action === "admin_io_export_bundle") return "Exportação de bundle concluída.";
+  if(action === "admin_io_validate_file") return "Validação de arquivo concluída.";
+  if(action === "admin_io_inspect_storage_ref") return "Inspeção de storage_ref concluída.";
+  if(action === "admin_io_read_storage_ref") return "Leitura de storage_ref concluída.";
+  if(action === "admin_io_preview_json") return "Preview JSON concluído.";
+  if(action === "admin_io_preview_csv") return "Preview CSV concluído.";
+  if(action === "admin_io_dry_run_import_entity") return "Dry-run de import entity concluído.";
+  if(action === "admin_io_import_entity") return "Import entity concluído.";
+  if(action === "admin_io_import_bundle") return "Import bundle concluído.";
+  if(action === "admin_io_import_entity_csv") return "Import CSV concluído.";
+  if(action === "admin_io_create_snapshot") return rows.length ? `Snapshot carregado: ${rows.length}.` : "Snapshot criado.";
+  if(action === "admin_io_restore_snapshot") return "Restore de snapshot concluído.";
+  if(action === "admin_io_list_logs") return `Logs IO carregados: ${rows.length}.`;
+  return describeBackendPayload(json);
+}
+
+function mapMailActionToEndpoint(action){
+  const map = {
+    mail_overview: "admin_mail_overview",
+    mail_health: "admin_mail_health",
+    mail_checklist: "admin_mail_checklist",
+    mail_governance_model: "admin_mail_governance_model",
+    mail_usage_notes: "admin_mail_usage_notes",
+    mail_list_queue: "admin_mail_list_queue",
+    mail_list_log: "admin_mail_list_log",
+    mail_list_internal_log: "admin_mail_list_internal_log",
+    mail_list_templates: "admin_mail_list_templates",
+    mail_list_campaigns: "admin_mail_list_campaigns",
+    mail_list_rules: "admin_mail_list_rules",
+    mail_list_policy: "admin_mail_list_policy",
+    mail_list_segments: "admin_mail_list_segments",
+    mail_list_suppressions: "admin_mail_list_suppressions",
+    mail_list_contact_state: "admin_mail_list_contact_state",
+    mail_bootstrap: "admin_mail_bootstrap",
+    mail_create_template_docs: "admin_mail_create_template_docs",
+    mail_scan: "admin_mail_scan_timeline",
+    mail_process: "admin_mail_process_queue",
+    mail_add_suppression: "admin_mail_add_suppression"
+  };
+  return map[action] || action;
 }
 
 async function runAdminDataset(kind, button){
@@ -3850,13 +3925,41 @@ async function runAdminDataset(kind, button){
     return;
   }
 
-  const availability = getFeatureAvailability(dataset.adminListAction);
-  if(availability.state !== "backend_required"){
-    notify("warn", "Configuração inesperada", "O dataset não está mapeado como leitura administrativa de CRM.");
-    return;
-  }
+  const startedAt = performance.now();
+  const actionMap = {
+    contacts: "admin_list_contacts",
+    leads: "admin_list_leads",
+    tickets: "admin_list_tickets",
+    timeline: "admin_list_timeline"
+  };
+  const action = actionMap[kind];
 
-  return handleBackendRequiredAction(dataset.adminListAction, button);
+  try{
+    setLastAction(action);
+    setLastError("");
+
+    await withBusyButton(button, "Carregando...", async () => {
+      const json = await api.admin(action, {});
+      const rows = normalizeRowsFromResponse(json);
+      markDatasetAsLoaded(kind, rows);
+      setLastRefresh();
+
+      notify("success", "Leitura concluída", `${dataset.label} carregado(a) com ${rows.length} linha(s).`);
+      pushHistory("POST", action, "ok", `${dataset.label} carregado(a).`, {
+        duration_ms: Math.round(performance.now() - startedAt),
+        rows_count: rows.length
+      });
+    });
+  }catch(err){
+    setLastError(err.message || "Erro desconhecido");
+    notify("error", "Falha ao carregar dataset", err.message || "Erro desconhecido");
+    pushHistory("POST", action, "erro", err.message || "erro", {
+      duration_ms: Math.round(performance.now() - startedAt),
+      rows_count: 0
+    });
+  } finally {
+    renderSummary();
+  }
 }
 
 async function runStatus(button){ return runPublicMode("status", button); }
@@ -3872,11 +3975,7 @@ async function runAdminInstallCrm(button){
     setLastError("");
 
     await withBusyButton(button, "Instalando...", async () => {
-      const payload = {
-        request_id: "ADMIN-" + Date.now()
-      };
-
-      const json = await api.postAction("admin_install_crm", payload);
+      const json = await api.postAction("admin_install_crm", {});
       const durationMs = Math.round(performance.now() - startedAt);
 
       drawerJson(
@@ -3898,13 +3997,10 @@ async function runAdminInstallCrm(button){
 
       notify("success", "CRM instalado ou atualizado", "A operação foi concluída com sucesso.");
 
-      pushHistory(
-        "POST",
-        "action=admin_install_crm",
-        "ok",
-        "Instalação ou atualização do CRM executada com sucesso.",
-        { duration_ms: durationMs, rows_count: 0 }
-      );
+      pushHistory("POST", "action=admin_install_crm", "ok", "Instalação ou atualização do CRM executada com sucesso.", {
+        duration_ms: durationMs,
+        rows_count: 0
+      });
 
       try { await runStatus(); } catch(_) {}
       try { await runHealth(); } catch(_) {}
@@ -3936,95 +4032,10 @@ async function runAdminInstallCrm(button){
     );
 
     notify("error", "Falha na instalação do CRM", err.message || "Erro desconhecido");
-
-    pushHistory(
-      "POST",
-      "action=admin_install_crm",
-      "erro",
-      err.message || "erro",
-      { duration_ms: durationMs, rows_count: 0 }
-    );
+    pushHistory("POST", "action=admin_install_crm", "erro", err.message || "erro", { duration_ms: durationMs, rows_count: 0 });
   } finally {
     renderSummary();
   }
-}
-
-function storeMailReadResult(action, json){
-  if(action === "mail_health") state.mailHealth = json;
-  if(action === "mail_checklist") state.mailChecklist = json;
-  if(action === "mail_governance_model") state.mailGovernance = json;
-  if(action === "mail_usage_notes") state.mailUsageNotes = json;
-  if(action === "mail_list_templates") state.mailTemplates = normalizeRowsFromResponse(json);
-  if(action === "mail_list_campaigns") state.mailCampaigns = normalizeRowsFromResponse(json);
-  if(action === "mail_list_rules") state.mailRules = normalizeRowsFromResponse(json);
-  if(action === "mail_list_policy") state.mailPolicy = normalizeRowsFromResponse(json);
-  if(action === "mail_list_segments") state.mailSegments = normalizeRowsFromResponse(json);
-  if(action === "mail_list_suppressions") state.mailSuppressions = normalizeRowsFromResponse(json);
-  if(action === "mail_list_contact_state") state.mailContactState = normalizeRowsFromResponse(json);
-  if(action === "mail_list_log") state.mailLog = normalizeRowsFromResponse(json);
-  if(action === "mail_list_internal_log") state.mailInternalLog = normalizeRowsFromResponse(json);
-
-  if(action === "mail_list_queue"){
-    const rows = normalizeRowsFromResponse(json);
-    state.mailQueue = rows.slice();
-    state.filtered.mailQueue = rows.slice();
-    state.datasetAvailability.mailQueue = "loaded";
-    fillDataDrivenFilters();
-    applyMailFilters();
-  }
-}
-
-function buildMailReadSummary(action, json){
-  const rows = normalizeRowsFromResponse(json);
-  if(action === "mail_health"){
-    return json?.ok === true
-      ? "A saúde estrutural do PUBMAIL foi lida com sucesso."
-      : "A leitura retornou atenção para a saúde do PUBMAIL.";
-  }
-  if(action === "mail_checklist") return `Checklist carregado com ${rows.length} etapa(s).`;
-  if(action === "mail_governance_model") return "Modelo de governança do PUBMAIL carregado.";
-  if(action === "mail_usage_notes") return `Notas de uso carregadas com ${rows.length} item(ns).`;
-  if(action === "mail_list_queue") return `Fila carregada com ${rows.length} item(ns).`;
-  if(action === "mail_list_templates") return `Templates carregados: ${rows.length}.`;
-  if(action === "mail_list_campaigns") return `Campaigns carregadas: ${rows.length}.`;
-  if(action === "mail_list_rules") return `Rules carregadas: ${rows.length}.`;
-  if(action === "mail_list_policy") return `Policies carregadas: ${rows.length}.`;
-  if(action === "mail_list_segments") return `Segments carregados: ${rows.length}.`;
-  if(action === "mail_list_suppressions") return `Suppressions carregadas: ${rows.length}.`;
-  if(action === "mail_list_contact_state") return `Contact state carregado: ${rows.length}.`;
-  if(action === "mail_list_log") return `Logs de envio carregados: ${rows.length}.`;
-  if(action === "mail_list_internal_log") return `Logs internos carregados: ${rows.length}.`;
-  if(action === "mail_bootstrap") return "Bootstrap completo do PUBMAIL executado.";
-  if(action === "mail_create_template_docs") return "Criação ou vínculo de docs padrão concluída.";
-  if(action === "mail_scan") return "Scan da timeline concluído.";
-  if(action === "mail_process") return "Processamento da fila concluído.";
-  if(action === "mail_add_suppression") return "Suppression adicionada.";
-  return describeBackendPayload(json);
-}
-
-function mapMailActionToEndpoint(action){
-  const map = {
-    mail_health: "admin_mail_health",
-    mail_checklist: "admin_mail_checklist",
-    mail_governance_model: "admin_mail_governance_model",
-    mail_usage_notes: "admin_mail_usage_notes",
-    mail_list_queue: "admin_mail_list_queue",
-    mail_list_log: "admin_mail_list_log",
-    mail_list_internal_log: "admin_mail_list_internal_log",
-    mail_list_templates: "admin_mail_list_templates",
-    mail_list_campaigns: "admin_mail_list_campaigns",
-    mail_list_rules: "admin_mail_list_rules",
-    mail_list_policy: "admin_mail_list_policy",
-    mail_list_segments: "admin_mail_list_segments",
-    mail_list_suppressions: "admin_mail_list_suppressions",
-    mail_list_contact_state: "admin_mail_list_contact_state",
-    mail_bootstrap: "admin_mail_bootstrap",
-    mail_create_template_docs: "admin_mail_create_template_docs",
-    mail_scan: "admin_mail_scan_timeline",
-    mail_process: "admin_mail_process_queue",
-    mail_add_suppression: "admin_mail_add_suppression"
-  };
-  return map[action] || action;
 }
 
 async function runMailRead(action, button){
@@ -4036,26 +4047,19 @@ async function runMailRead(action, button){
 
     await withBusyButton(button, "Lendo...", async () => {
       const endpoint = mapMailActionToEndpoint(action);
-      const payload = buildAdminPayload(action);
-      const json = await api.admin(endpoint, payload);
-
+      const json = await api.admin(endpoint, {});
       storeMailReadResult(action, json);
 
       const rows = normalizeRowsFromResponse(json);
       const detail = buildMailReadSummary(action, json);
+      setLastRefresh();
 
       notify("success", "Leitura concluída", detail);
 
-      pushHistory(
-        "POST",
-        endpoint,
-        "ok",
-        detail,
-        {
-          duration_ms: Math.round(performance.now() - startedAt),
-          rows_count: rows.length
-        }
-      );
+      pushHistory("POST", endpoint, "ok", detail, {
+        duration_ms: Math.round(performance.now() - startedAt),
+        rows_count: rows.length
+      });
 
       drawerJson(
         "Leitura do PUBMAIL",
@@ -4086,19 +4090,8 @@ async function runMailRead(action, button){
   }catch(err){
     const durationMs = Math.round(performance.now() - startedAt);
     setLastError(err.message || "Erro desconhecido");
-
     notify("error", "Falha na leitura do PUBMAIL", err.message || "Erro desconhecido");
-
-    pushHistory(
-      "POST",
-      action,
-      "erro",
-      err.message || "erro",
-      {
-        duration_ms: durationMs,
-        rows_count: 0
-      }
-    );
+    pushHistory("POST", action, "erro", err.message || "erro", { duration_ms: durationMs, rows_count: 0 });
   } finally {
     renderSummary();
   }
@@ -4119,22 +4112,16 @@ async function runMailOperation(action, button){
 
     await withBusyButton(button, busyLabel, async () => {
       const endpoint = mapMailActionToEndpoint(action);
-      const payload = buildAdminPayload(action);
-      const json = await api.admin(endpoint, payload);
+      const json = await api.admin(endpoint, {});
       const detail = buildMailReadSummary(action, json);
+      setLastRefresh();
 
       notify("success", "Operação concluída", detail);
 
-      pushHistory(
-        "POST",
-        endpoint,
-        "ok",
-        detail,
-        {
-          duration_ms: Math.round(performance.now() - startedAt),
-          rows_count: normalizeRowsFromResponse(json).length
-        }
-      );
+      pushHistory("POST", endpoint, "ok", detail, {
+        duration_ms: Math.round(performance.now() - startedAt),
+        rows_count: normalizeRowsFromResponse(json).length
+      });
 
       drawerJson(
         "Operação do PUBMAIL",
@@ -4153,6 +4140,7 @@ async function runMailOperation(action, button){
         json
       );
 
+      try{ await runMailRead("mail_overview"); }catch(_){}
       try{ await runMailRead("mail_health"); }catch(_){}
       try{ await runMailRead("mail_checklist"); }catch(_){}
       try{ await runMailRead("mail_list_queue"); }catch(_){}
@@ -4167,6 +4155,60 @@ async function runMailOperation(action, button){
     });
     setLastError(err.message || "Erro desconhecido");
     notify("error", "Falha na operação do PUBMAIL", err.message || "Erro desconhecido");
+  } finally {
+    renderSummary();
+  }
+}
+
+async function runIoAction(action, button){
+  const startedAt = performance.now();
+
+  try{
+    setLastAction(action);
+    setLastError("");
+
+    await withBusyButton(button, "Executando...", async () => {
+      const payload = buildIoPayload(action);
+      const json = await api.admin(action, payload);
+      storeIoResult(action, json);
+
+      const detail = buildIoSummary(action, json);
+      const rows = normalizeRowsFromResponse(json);
+      setLastRefresh();
+
+      notify("success", "Operação do PUBIO concluída", detail);
+      pushHistory("POST", action, "ok", detail, {
+        duration_ms: Math.round(performance.now() - startedAt),
+        rows_count: rows.length
+      });
+
+      drawerJson(
+        "Operação do PUBIO",
+        [
+          "Estado",
+          "OK",
+          "",
+          "Resumo",
+          detail,
+          "",
+          "Próxima ação",
+          "O painel registrou a resposta operacional do módulo de dados.",
+          "",
+          "Detalhes técnicos"
+        ].join("\n"),
+        json
+      );
+
+      renderIoSummary();
+      renderSummary();
+    });
+  }catch(err){
+    setLastError(err.message || "Erro desconhecido");
+    notify("error", "Falha na operação do PUBIO", err.message || "Erro desconhecido");
+    pushHistory("POST", action, "erro", err.message || "erro", {
+      duration_ms: Math.round(performance.now() - startedAt),
+      rows_count: 0
+    });
   } finally {
     renderSummary();
   }
@@ -4243,6 +4285,7 @@ function bindTopbarActions(){
   $("#btn-load-tickets").addEventListener("click", e => runAdminDataset("tickets", e.currentTarget));
   $("#btn-load-timeline").addEventListener("click", e => runAdminDataset("timeline", e.currentTarget));
 
+  $("#btn-mail-overview").addEventListener("click", e => runMailRead("mail_overview", e.currentTarget));
   $("#btn-mail-health").addEventListener("click", e => runMailRead("mail_health", e.currentTarget));
   $("#btn-mail-checklist").addEventListener("click", e => runMailRead("mail_checklist", e.currentTarget));
   $("#btn-mail-governance").addEventListener("click", e => runMailRead("mail_governance_model", e.currentTarget));
@@ -4302,9 +4345,26 @@ function bindTopbarActions(){
   $("#btn-mail-scan").addEventListener("click", e => runMailOperation("mail_scan", e.currentTarget));
   $("#btn-mail-process").addEventListener("click", e => runMailOperation("mail_process", e.currentTarget));
 
-  $("#toggle-ui-mode").addEventListener("click", () => {
-    saveUiMode(state.ui.mode === "technical" ? "simple" : "technical");
-  });
+  $("#btn-io-install").addEventListener("click", e => runIoAction("admin_io_install", e.currentTarget));
+  $("#btn-io-health").addEventListener("click", e => runIoAction("admin_io_health", e.currentTarget));
+  $("#btn-io-contract").addEventListener("click", e => runIoAction("admin_io_contract", e.currentTarget));
+  $("#btn-io-export-entity").addEventListener("click", e => runIoAction("admin_io_export_entity", e.currentTarget));
+  $("#btn-io-export-entity-csv").addEventListener("click", e => runIoAction("admin_io_export_entity_csv", e.currentTarget));
+  $("#btn-io-export-bundle").addEventListener("click", e => runIoAction("admin_io_export_bundle", e.currentTarget));
+  $("#btn-io-validate-file").addEventListener("click", e => runIoAction("admin_io_validate_file", e.currentTarget));
+  $("#btn-io-inspect-ref").addEventListener("click", e => runIoAction("admin_io_inspect_storage_ref", e.currentTarget));
+  $("#btn-io-read-ref").addEventListener("click", e => runIoAction("admin_io_read_storage_ref", e.currentTarget));
+  $("#btn-io-preview-json").addEventListener("click", e => runIoAction("admin_io_preview_json", e.currentTarget));
+  $("#btn-io-preview-csv").addEventListener("click", e => runIoAction("admin_io_preview_csv", e.currentTarget));
+  $("#btn-io-dry-run-entity").addEventListener("click", e => runIoAction("admin_io_dry_run_import_entity", e.currentTarget));
+  $("#btn-io-import-entity").addEventListener("click", e => runIoAction("admin_io_import_entity", e.currentTarget));
+  $("#btn-io-import-bundle").addEventListener("click", e => runIoAction("admin_io_import_bundle", e.currentTarget));
+  $("#btn-io-import-csv").addEventListener("click", e => runIoAction("admin_io_import_entity_csv", e.currentTarget));
+  $("#btn-io-create-snapshot").addEventListener("click", e => runIoAction("admin_io_create_snapshot", e.currentTarget));
+  $("#btn-io-restore-snapshot").addEventListener("click", e => runIoAction("admin_io_restore_snapshot", e.currentTarget));
+  $("#btn-io-list-logs").addEventListener("click", e => runIoAction("admin_io_list_logs", e.currentTarget));
+
+  $("#toggle-ui-mode").addEventListener("click", () => saveUiMode(state.ui.mode === "technical" ? "simple" : "technical"));
   $("#btn-mode-simple").addEventListener("click", () => saveUiMode("simple"));
   $("#btn-mode-technical").addEventListener("click", () => saveUiMode("technical"));
 }
@@ -4365,24 +4425,21 @@ function bindUtilityActions(){
     }
   });
 
+  $("#btn-copy-io-json").addEventListener("click", async () => {
+    try{
+      await navigator.clipboard.writeText($("#io-json-box").textContent || "");
+      notify("success", "Dados copiados", "O conteúdo do PUBIO foi copiado para a área de transferência.");
+      pushHistory("UI", "copy_io_json", "ok", "Dados copiados.");
+    }catch(err){
+      notify("warn", "Não foi possível copiar", "Copie manualmente o conteúdo exibido.");
+      pushHistory("UI", "copy_io_json", "erro", err.message || "erro");
+    }
+  });
+
   $("#btn-show-diagnostics").addEventListener("click", () => {
-    const historyLines = state.ui.history.slice(0, 8).map(h =>
+    const historyLines = state.ui.history.slice(0, 10).map(h =>
       `[${h.at}] ${h.type} ${h.action} -> ${h.status} :: ${h.detail} :: ${h.duration_ms || 0} ms`
     );
-
-    const publishedActions = Object.keys(FEATURE_AVAILABILITY)
-      .filter(key => getFeatureAvailability(key).state === "published")
-      .map(key => {
-        const availability = getFeatureAvailability(key);
-        return key + " => " + availability.technicalLabel;
-      });
-
-    const backendRequired = Object.keys(FEATURE_AVAILABILITY)
-      .filter(key => getFeatureAvailability(key).state === "backend_required")
-      .map(key => {
-        const availability = getFeatureAvailability(key);
-        return key + " => " + (availability.facadeFuture || "não definido");
-      });
 
     drawer("Diagnóstico do painel", [
       "Estado",
@@ -4395,7 +4452,7 @@ function bindUtilityActions(){
       "",
       "Próxima ação",
       state.apiBase
-        ? "Teste a conexão, execute uma verificação rápida e carregue as coleções do PUBMAIL."
+        ? "Teste a conexão, execute uma verificação rápida e carregue as coleções do PUBMAIL e do PUBIO."
         : "Vá até Conexão, salve a URL do Web App e teste o acesso.",
       "",
       "Detalhes técnicos",
@@ -4403,12 +4460,6 @@ function bindUtilityActions(){
       "Última ação: " + (state.ui.lastAction || "—"),
       "Último problema: " + (state.ui.lastError || "—"),
       "Datasets: contacts=" + state.datasetAvailability.contacts + " · leads=" + state.datasetAvailability.leads + " · tickets=" + state.datasetAvailability.tickets + " · timeline=" + state.datasetAvailability.timeline + " · mailQueue=" + state.datasetAvailability.mailQueue,
-      "",
-      "Ações publicadas",
-      publishedActions.length ? publishedActions.join("\n") : "Nenhuma.",
-      "",
-      "Ações que ainda dependem do backend",
-      backendRequired.length ? backendRequired.join("\n") : "Nenhuma.",
       "",
       "Histórico recente",
       historyLines.length ? historyLines.join("\n") : "Sem histórico ainda."
@@ -4425,9 +4476,10 @@ function bindUtilityActions(){
       "O painel trata o PUBMAIL como módulo presente, completo e operacional.",
       "",
       "Próxima ação",
-      "Carregue ou recarregue as coleções críticas: health, checklist, queue, templates, rules, suppressions, contact state e logs.",
+      "Carregue ou recarregue as coleções críticas: overview, health, checklist, queue, templates, rules, suppressions, contact state e logs.",
       "",
       "Detalhes técnicos",
+      "overview: " + (state.mailOverview ? "sim" : "não"),
       "health: " + (state.mailHealth ? "sim" : "não"),
       "checklist: " + mailSummary.checklistCount,
       "templates: " + mailSummary.templatesCount,
@@ -4443,13 +4495,37 @@ function bindUtilityActions(){
     ].join("\n"));
   });
 
-  $("#btn-mail-explorer-refresh").addEventListener("click", () => renderMailExplorer());
+  $("#btn-show-io-diagnostics").addEventListener("click", () => {
+    const ioSummary = summarizeIoModule();
+    drawer("Diagnóstico do PUBIO", [
+      "Estado",
+      ioSummary.healthOk ? "OK" : (ioSummary.healthLoaded ? "Atenção" : "Não carregado"),
+      "",
+      "Resumo",
+      "O painel trata o PUBIO como módulo presente, completo e operacional.",
+      "",
+      "Próxima ação",
+      "Carregue ou recarregue install, health, contract, validate, previews, snapshots e logs.",
+      "",
+      "Detalhes técnicos",
+      "install: " + (state.ioInstall ? "sim" : "não"),
+      "health: " + (state.ioHealth ? "sim" : "não"),
+      "contract: " + (state.ioContract ? "sim" : "não"),
+      "last_validate: " + (state.ioLastValidate ? "sim" : "não"),
+      "logs: " + ioSummary.logsCount,
+      "snapshots: " + ioSummary.snapshotsCount,
+      "exports: " + ioSummary.exportsCount,
+      "última operação: " + (ioSummary.lastOperation || "—")
+    ].join("\n"));
+  });
 
+  $("#btn-mail-explorer-refresh").addEventListener("click", () => renderMailExplorer());
   $$("[data-mail-explorer]").forEach(btn => {
     btn.addEventListener("click", async () => {
       const key = btn.getAttribute("data-mail-explorer");
       state.ui.mailExplorer = key;
 
+      if(key === "overview" && !state.mailOverview) await runMailRead("mail_overview");
       if(key === "templates" && !state.mailTemplates.length) await runMailRead("mail_list_templates");
       if(key === "campaigns" && !state.mailCampaigns.length) await runMailRead("mail_list_campaigns");
       if(key === "rules" && !state.mailRules.length) await runMailRead("mail_list_rules");
@@ -4466,6 +4542,10 @@ function bindUtilityActions(){
 
       renderMailExplorer();
     });
+  });
+
+  $$("[data-local-export]").forEach(btn => {
+    btn.addEventListener("click", () => exportCurrentDataset(btn.getAttribute("data-local-export")));
   });
 }
 
@@ -4484,16 +4564,6 @@ function bindHistoryActions(){
     renderHistory();
     renderSummary();
     notify("warn", "Histórico limpo", "O histórico local foi apagado.");
-  });
-}
-
-function bindAdminButtons(){
-  $$("[data-admin-action]").forEach(btn => {
-    btn.addEventListener("click", () => handleBackendRequiredAction(btn.getAttribute("data-admin-action"), btn));
-  });
-
-  $$("[data-local-export]").forEach(btn => {
-    btn.addEventListener("click", () => exportCurrentDataset(btn.getAttribute("data-local-export")));
   });
 }
 
@@ -4534,7 +4604,6 @@ function bind(){
   bindFilterActions();
   bindUtilityActions();
   bindHistoryActions();
-  bindAdminButtons();
   bindShellActions();
   bindPagerEvents();
   bindSortEvents();
@@ -4553,6 +4622,8 @@ function bootPlaceholders(){
   state.datasetAvailability.timeline = "idle";
   state.datasetAvailability.mailQueue = "idle";
 
+  fillEntitySelects();
+
   renderContacts([]);
   renderLeads([]);
   renderTickets([]);
@@ -4561,11 +4632,13 @@ function bootPlaceholders(){
 
   $("#contract-box").textContent = "Detalhes técnicos ainda não carregados.";
   $("#health-json-box").textContent = "Nenhuma verificação executada ainda.";
+  $("#io-json-box").textContent = "Nenhuma operação executada ainda.";
 
   renderOverviewMeta();
   renderSummary();
   renderHistory();
   renderMailExplorer();
+  renderIoSummary();
 }
 
 async function autoWarm(){
@@ -4578,6 +4651,7 @@ async function autoWarm(){
   try{ await runStatus(); }catch(_){}
   try{ await runContract(); }catch(_){}
   try{ await runHealth(); }catch(_){}
+  try{ await runMailRead("mail_overview"); }catch(_){}
   try{ await runMailRead("mail_health"); }catch(_){}
   try{ await runMailRead("mail_checklist"); }catch(_){}
   try{ await runMailRead("mail_governance_model"); }catch(_){}
@@ -4592,11 +4666,13 @@ async function autoWarm(){
   try{ await runMailRead("mail_list_queue"); }catch(_){}
   try{ await runMailRead("mail_list_log"); }catch(_){}
   try{ await runMailRead("mail_list_internal_log"); }catch(_){}
+  try{ await runIoAction("admin_io_health"); }catch(_){}
+  try{ await runIoAction("admin_io_contract"); }catch(_){}
 
-  state.ui.mailExplorer = "health";
+  state.ui.mailExplorer = "overview";
   renderMailExplorer();
 
-  notify("success", "Resumo atualizado", "O painel executou as leituras principais e do PUBMAIL para atualizar a visão geral.");
+  notify("success", "Resumo atualizado", "O painel executou as leituras principais, do PUBMAIL e do PUBIO para atualizar a visão geral.");
   renderSummary();
 }
 
