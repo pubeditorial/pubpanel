@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="color-scheme" content="light" />
-  <title>PUBPANEL | Painel Operacional | PUB Editorial</title>
+  <title>PUBPANEL | Painel operacional | PUB Editorial</title>
   <style>
     :root{
       --bg:#f8fafc;
@@ -441,6 +441,7 @@
     .pill--warn{color:var(--amber);background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.16)}
     .pill--error{color:var(--red);background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.16)}
     .pill--info{color:#1d4ed8;background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.16)}
+    .pill--unavailable{color:#6b21a8;background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.18)}
 
     .section-state{
       display:flex;
@@ -475,25 +476,25 @@
       opacity:.92;
     }
 
-    .state-badge--public{
+    .state-badge--ok{
       color:#047857;
       background:rgba(5,150,105,.08);
       border-color:rgba(5,150,105,.18);
     }
 
-    .state-badge--internal{
-      color:#7c3aed;
-      background:rgba(124,58,237,.08);
-      border-color:rgba(124,58,237,.18);
-    }
-
-    .state-badge--pending{
+    .state-badge--warn{
       color:#b45309;
       background:rgba(217,119,6,.08);
       border-color:rgba(217,119,6,.18);
     }
 
-    .state-badge--blocked{
+    .state-badge--unavailable{
+      color:#7c3aed;
+      background:rgba(124,58,237,.08);
+      border-color:rgba(124,58,237,.18);
+    }
+
+    .state-badge--error{
       color:#b91c1c;
       background:rgba(220,38,38,.08);
       border-color:rgba(220,38,38,.18);
@@ -584,6 +585,7 @@
     .status-banner.error{border-color:rgba(220,38,38,.18);background:rgba(220,38,38,.05)}
     .status-banner.success{border-color:rgba(5,150,105,.18);background:rgba(5,150,105,.05)}
     .status-banner.warn{border-color:rgba(217,119,6,.18);background:rgba(217,119,6,.05)}
+    .status-banner.unavailable{border-color:rgba(124,58,237,.18);background:rgba(124,58,237,.05)}
 
     .drawer{
       position:fixed;
@@ -724,6 +726,10 @@
       min-height:42px;
     }
 
+    .tech-only{}
+    body[data-ui-mode="simple"] .tech-only{display:none !important;}
+    body[data-ui-mode="technical"] .tech-only{display:block;}
+
     @media (max-width:640px){
       .topbar{
         align-items:flex-start;
@@ -741,7 +747,7 @@
     }
   </style>
 </head>
-<body>
+<body data-ui-mode="simple">
   <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
   <div class="app">
@@ -749,32 +755,32 @@
       <div class="sidebar-inner">
         <div class="brand">
           <div class="logo">PUB<span class="grad">PANEL</span></div>
-          <div class="sub">Operação e diagnóstico</div>
+          <div class="sub">Painel operacional</div>
         </div>
 
-        <div class="side-chip">crm + pubmail + pubio</div>
+        <div class="side-chip">CRM + envios + dados</div>
 
         <nav class="nav" id="nav">
-          <a href="#overview" class="active"><span>Visão geral</span><small>01</small></a>
-          <a href="#summary"><span>Resumo</span><small>02</small></a>
-          <a href="#installation"><span>Setup</span><small>03</small></a>
-          <a href="#health"><span>Health</span><small>04</small></a>
-          <a href="#crm-core"><span>CRM</span><small>05</small></a>
-          <a href="#timeline"><span>Timeline</span><small>06</small></a>
-          <a href="#mail-core"><span>PUBMAIL</span><small>07</small></a>
-          <a href="#pubio-core"><span>PUBIO</span><small>08</small></a>
-          <a href="#observability"><span>Logs</span><small>09</small></a>
-          <a href="#history"><span>Histórico</span><small>10</small></a>
-          <a href="#settings"><span>Ajustes</span><small>11</small></a>
+          <a href="#overview" class="active"><span>Painel</span><small>01</small></a>
+          <a href="#summary"><span>Situação atual</span><small>02</small></a>
+          <a href="#connection"><span>Conexão</span><small>03</small></a>
+          <a href="#system-health"><span>Saúde do sistema</span><small>04</small></a>
+          <a href="#crm"><span>Atendimento e contatos</span><small>05</small></a>
+          <a href="#activity"><span>Atividade recente</span><small>06</small></a>
+          <a href="#mail"><span>Envios</span><small>07</small></a>
+          <a href="#data-ops"><span>Importar e exportar</span><small>08</small></a>
+          <a href="#diagnostics"><span>Diagnóstico</span><small>09</small></a>
+          <a href="#history"><span>Ações recentes</span><small>10</small></a>
+          <a href="#preferences"><span>Preferências</span><small>11</small></a>
         </nav>
 
         <div class="side-meta">
-          <div class="meta-row"><span>Front</span><strong id="meta-front-version">PUBPANEL 2.0.1</strong></div>
+          <div class="meta-row"><span>Painel</span><strong id="meta-front-version">PUBPANEL 2.0.1</strong></div>
           <div class="meta-row"><span>CRM</span><strong id="meta-crm-version">—</strong></div>
-          <div class="meta-row"><span>PUBMAIL</span><strong id="meta-mail-version">não publicado</strong></div>
-          <div class="meta-row"><span>PUBIO</span><strong id="meta-io-version">não publicado</strong></div>
-          <div class="meta-row"><span>Status</span><strong id="meta-status">desconectado</strong></div>
-          <div class="meta-row"><span>API base</span><strong id="meta-api-base">não definida</strong></div>
+          <div class="meta-row"><span>Envios</span><strong id="meta-mail-version">ainda não disponível aqui</strong></div>
+          <div class="meta-row"><span>Dados</span><strong id="meta-io-version">ainda não disponível aqui</strong></div>
+          <div class="meta-row"><span>Conexão</span><strong id="meta-status">não configurada</strong></div>
+          <div class="meta-row"><span>URL salva</span><strong id="meta-api-base">não definida</strong></div>
         </div>
       </div>
     </aside>
@@ -785,14 +791,15 @@
           <button class="btn mobile-show" id="open-sidebar">Menu</button>
           <div>
             <div class="top-title">PUBPANEL</div>
-            <div class="top-sub">Leitura pública do deploy e estado dos módulos.</div>
+            <div class="top-sub">Acompanhe a conexão, a saúde do sistema e os recursos disponíveis.</div>
           </div>
         </div>
         <div class="top-actions">
-          <button class="btn btn--soft" id="btn-status">Status</button>
-          <button class="btn btn--soft" id="btn-contract">Contrato</button>
-          <button class="btn btn--soft" id="btn-health">Health</button>
-          <button class="btn btn--violet" id="btn-health-deep">Health profundo</button>
+          <button class="btn btn--soft" id="toggle-ui-mode">Modo técnico</button>
+          <button class="btn btn--soft" id="btn-status">Testar conexão</button>
+          <button class="btn btn--soft" id="btn-health">Verificação rápida</button>
+          <button class="btn btn--violet" id="btn-health-deep">Verificação completa</button>
+          <button class="btn btn--soft tech-only" id="btn-contract">Ver detalhes</button>
         </div>
       </header>
 
@@ -804,19 +811,19 @@
               <div class="hero-grid">
                 <div class="grid">
                   <span class="tag">Painel central</span>
-                  <h1 class="h1">PUBPANEL</h1>
-                  <p class="lead">Leitura pública do deploy, instalação do CRM e diagnóstico dos módulos do ecossistema.</p>
+                  <h1 class="h1">Acompanhe o sistema em um só lugar</h1>
+                  <p class="lead">Veja se a conexão está funcionando, quais recursos estão disponíveis e onde é preciso agir.</p>
                 </div>
 
                 <aside class="hero-box">
-                  <h3>Deploy atual</h3>
+                  <h3>Disponível neste painel</h3>
                   <ul class="trust">
-                    <li>GETs públicos: status, health, health_deep, contract</li>
-                    <li>POSTs públicos: capture_lead, create_ticket</li>
-                    <li>POST admin publicado: admin_install_crm</li>
-                    <li>Demais rotas admin: pendentes</li>
+                    <li>Testar a conexão com o sistema</li>
+                    <li>Atualizar o resumo operacional</li>
+                    <li>Instalar ou atualizar o CRM</li>
+                    <li>Consultar verificações públicas</li>
                   </ul>
-                  <div class="tiny">A interface mostra o estado real do endpoint.</div>
+                  <div class="tiny">Os detalhes técnicos ficam disponíveis em camadas secundárias.</div>
                 </aside>
               </div>
             </div>
@@ -826,127 +833,127 @@
 
           <section class="panel" id="summary">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Resumo</span>
-              <h2 class="h2">Leitura rápida</h2>
-              <div class="muted">Conectividade, contrato, saúde e datasets.</div>
+              <span class="tag" style="color:#1d4ed8">Situação atual</span>
+              <h2 class="h2">Resumo rápido</h2>
+              <div class="muted">Entenda em poucos segundos se está tudo certo, se existe algo a corrigir e o que já pode ser usado aqui.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--public">Público</span>
-                <span class="state-badge state-badge--public">CRM install</span>
-                <span class="state-badge state-badge--internal">Módulos internos</span>
-                <span class="state-badge state-badge--pending">Admin pendente</span>
+                <span class="state-badge state-badge--ok">OK</span>
+                <span class="state-badge state-badge--warn">Atenção</span>
+                <span class="state-badge state-badge--unavailable">Indisponível</span>
+                <span class="state-badge state-badge--error">Erro</span>
               </div>
             </div>
 
             <div class="metrics">
               <div class="metric">
-                <div class="eyebrow">Status</div>
+                <div class="eyebrow">Conexão</div>
                 <div class="value" id="sum-status">—</div>
-                <div class="note">mode=status</div>
+                <div class="note">Situação atual do acesso</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Schema</div>
+                <div class="eyebrow">Sistema</div>
                 <div class="value" id="sum-schema">—</div>
-                <div class="note">health</div>
+                <div class="note">Leitura mais recente</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Contatos</div>
                 <div class="value" id="sum-contacts">0</div>
-                <div class="note">filtrados</div>
+                <div class="note">Itens visíveis</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Leads</div>
                 <div class="value" id="sum-leads">0</div>
-                <div class="note">filtrados</div>
+                <div class="note">Itens visíveis</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Tickets</div>
                 <div class="value" id="sum-tickets">0</div>
-                <div class="note">filtrados</div>
+                <div class="note">Itens visíveis</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Timeline</div>
+                <div class="eyebrow">Atividade</div>
                 <div class="value" id="sum-timeline">0</div>
-                <div class="note">visíveis</div>
+                <div class="note">Eventos visíveis</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Fila mail</div>
+                <div class="eyebrow">Envios</div>
                 <div class="value" id="sum-mail">0</div>
-                <div class="note">visíveis</div>
+                <div class="note">Itens visíveis</div>
               </div>
             </div>
 
             <div class="availability-card" style="margin-top:18px">
-              <strong>Disponibilidade</strong>
+              <strong>O que já está disponível</strong>
 
               <div class="availability-grid">
                 <div class="availability-item">
-                  <strong>GET público</strong>
-                  <div class="tiny mono">status · health · health_deep · contract</div>
+                  <strong>Conexão e leitura do sistema</strong>
+                  <div class="tiny">Teste de conexão e verificações públicas do serviço.</div>
                 </div>
 
                 <div class="availability-item">
-                  <strong>POST público</strong>
-                  <div class="tiny mono">capture_lead · create_ticket</div>
+                  <strong>Instalação do CRM</strong>
+                  <div class="tiny">A instalação ou atualização do CRM pode ser executada neste painel.</div>
                 </div>
 
                 <div class="availability-item">
-                  <strong>POST admin</strong>
-                  <div class="tiny mono">admin_install_crm</div>
+                  <strong>Recursos futuros</strong>
+                  <div class="tiny">Outras listas e ações seguem previstas, mas ainda não liberadas aqui.</div>
                 </div>
               </div>
             </div>
 
             <div class="mini-grid" style="margin-top:18px">
               <div class="mini-card">
-                <strong>Contrato</strong>
-                <div class="tiny" id="sum-contract">Contrato ainda não carregado.</div>
+                <strong>Conexão</strong>
+                <div class="tiny" id="sum-contract">A URL ainda não foi configurada.</div>
               </div>
               <div class="mini-card">
-                <strong>Health</strong>
-                <div class="tiny" id="sum-health">Health ainda não carregado.</div>
+                <strong>Saúde do sistema</strong>
+                <div class="tiny" id="sum-health">Ainda não há leitura concluída.</div>
               </div>
               <div class="mini-card">
                 <strong>Última atividade</strong>
                 <div class="tiny" id="sum-last-action">Última ação: —</div>
-                <div class="tiny" id="sum-last-error">Último erro: —</div>
+                <div class="tiny" id="sum-last-error">Último problema: —</div>
               </div>
             </div>
           </section>
 
-          <section class="panel" id="installation">
+          <section class="panel" id="connection">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Setup</span>
-              <h2 class="h2">Conexão e bootstrap</h2>
-              <div class="muted">Salvar a URL do Web App, validar a camada pública e instalar o CRM quando necessário.</div>
+              <span class="tag" style="color:#1d4ed8">Conexão</span>
+              <h2 class="h2">Configurar acesso</h2>
+              <div class="muted">Salve a URL do Web App, teste a conexão e execute a instalação do CRM quando necessário.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--public">Leitura pública</span>
-                <span class="state-badge state-badge--public">CRM install</span>
-                <span class="state-badge state-badge--pending">Demais admins</span>
+                <span class="state-badge state-badge--ok">Conexão disponível</span>
+                <span class="state-badge state-badge--warn">Revisão recomendada</span>
+                <span class="state-badge state-badge--unavailable">Recursos parciais</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
                 <strong>CRM</strong>
-                <div class="tiny">Instalação disponível neste endpoint.</div>
-                <button class="btn btn--primary" id="btn-install-crm">Instalar ou atualizar CRM</button>
-                <button class="btn btn--soft" data-admin-action="crm_summary">Diagnóstico do CRM</button>
+                <div class="tiny">Instale ou atualize o CRM quando necessário.</div>
+                <button class="btn btn--primary" id="btn-install-crm">Instalar ou atualizar</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_summary">Ver detalhes</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>PUBMAIL</strong>
-                <div class="tiny">Módulo interno. Rotas admin ainda não publicadas.</div>
-                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Bootstrap</button>
-                <button class="btn btn--soft" data-admin-action="mail_checklist">Checklist</button>
+                <strong>Envios</strong>
+                <div class="tiny">Este recurso ainda não pode ser gerenciado por este painel.</div>
+                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Ver detalhes</button>
+                <button class="btn btn--soft" data-admin-action="mail_checklist">Ver preparação</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Próximos admins</strong>
-                <div class="tiny">UI pronta para novas façades sem redesenho.</div>
-                <button class="btn btn--soft" data-admin-action="mail_scan">Scan timeline</button>
-                <button class="btn btn--soft" data-admin-action="mail_process">Processar fila</button>
+                <strong>Próximos recursos</strong>
+                <div class="tiny">Há recursos previstos para esta interface, mas ainda não liberados aqui.</div>
+                <button class="btn btn--soft" data-admin-action="mail_scan">Ver detalhes</button>
+                <button class="btn btn--soft" data-admin-action="mail_process">Ver fluxo previsto</button>
               </div>
             </div>
 
@@ -956,142 +963,141 @@
               <div class="mini-card">
                 <strong>Sequência recomendada</strong>
                 <ol class="checklist tiny">
-                  <li>Salvar a URL do Web App</li>
-                  <li>Validar status, contract e health</li>
-                  <li>Executar admin_install_crm quando necessário</li>
-                  <li>Publicar novos admins por módulo</li>
+                  <li>Salve a URL do Web App</li>
+                  <li>Teste a conexão</li>
+                  <li>Atualize o resumo do sistema</li>
+                  <li>Instale o CRM, se necessário</li>
                 </ol>
               </div>
 
               <div class="mini-card">
-                <strong>URL base do Web App</strong>
-                <div class="tiny">Persistida em localStorage.</div>
-                <label class="tiny" for="api-base">URL base do Apps Script</label>
+                <strong>URL do Web App</strong>
+                <div class="tiny">A configuração fica salva apenas neste navegador.</div>
+                <label class="tiny" for="api-base">Cole a URL do Apps Script</label>
                 <input class="input" id="api-base" placeholder="https://script.google.com/macros/s/.../exec" />
                 <div class="toolbar-right">
-                  <button class="btn btn--soft" id="save-api-base">Salvar URL</button>
+                  <button class="btn btn--soft" id="save-api-base">Salvar</button>
                   <button class="btn btn--soft" id="clear-api-base">Limpar</button>
                   <button class="btn btn--primary" id="test-api-base">Testar conexão</button>
                 </div>
-                <div class="codebox">GET
+                <div class="tech-only">
+                  <div class="codebox">Leituras públicas
 mode=status
 mode=health
 mode=health_deep
 mode=contract
 
-POST público
+Ações públicas
 action=capture_lead
 action=create_ticket
 
-POST admin
-action=admin_install_crm
-
-Demais admins: pendentes neste endpoint.</div>
+Ação disponível neste painel
+action=admin_install_crm</div>
+                </div>
               </div>
             </div>
           </section>
 
-          <section class="panel" id="health">
+          <section class="panel" id="system-health">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Health</span>
-              <h2 class="h2">Camada pública</h2>
-              <div class="muted">Consultas públicas do endpoint.</div>
+              <span class="tag" style="color:#1d4ed8">Saúde do sistema</span>
+              <h2 class="h2">Verificações do serviço</h2>
+              <div class="muted">Veja se o sistema respondeu bem, se existe algo a corrigir e quando vale aprofundar o diagnóstico.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--public">status</span>
-                <span class="state-badge state-badge--public">health</span>
-                <span class="state-badge state-badge--public">health_deep</span>
-                <span class="state-badge state-badge--public">contract</span>
+                <span class="state-badge state-badge--ok">Leitura rápida</span>
+                <span class="state-badge state-badge--warn">Aprofundar quando necessário</span>
+                <span class="state-badge state-badge--unavailable tech-only">Detalhes técnicos</span>
               </div>
             </div>
 
             <div class="metrics">
               <div class="metric">
-                <div class="eyebrow">App</div>
+                <div class="eyebrow">Aplicação</div>
                 <div class="value" id="metric-app">—</div>
-                <div class="note">status/health</div>
+                <div class="note">Identificação do serviço</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Versão CRM</div>
+                <div class="eyebrow">Versão</div>
                 <div class="value" id="metric-version">—</div>
-                <div class="note">backend público</div>
+                <div class="note">Versão mais recente lida</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Schema</div>
+                <div class="eyebrow">Estrutura</div>
                 <div class="value" id="metric-schema">—</div>
-                <div class="note">health</div>
+                <div class="note">Situação geral</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Safe failures</div>
+                <div class="eyebrow">Ocorrências</div>
                 <div class="value" id="metric-safe">—</div>
-                <div class="note">agregado</div>
+                <div class="note">Pontos que merecem revisão</div>
               </div>
-              <div class="metric">
-                <div class="eyebrow">Contrato</div>
+              <div class="metric tech-only">
+                <div class="eyebrow">Detalhe</div>
                 <div class="value" id="metric-contract">—</div>
-                <div class="note">front</div>
+                <div class="note">Leitura técnica complementar</div>
               </div>
             </div>
 
             <div class="twocol" style="margin-top:18px">
               <div class="table-card">
                 <div class="table-head">
-                  <div class="table-title">Saída da camada pública</div>
+                  <div class="table-title">Resultado da verificação</div>
                   <div class="toolbar-right">
-                    <button class="btn btn--soft" id="copy-health-json">Copiar JSON</button>
+                    <button class="btn btn--soft" id="copy-health-json">Copiar dados</button>
                   </div>
                 </div>
                 <div class="table-wrap">
-                  <div class="codebox" id="health-json-box">Nenhuma consulta executada ainda.</div>
+                  <div class="codebox" id="health-json-box">Nenhuma verificação executada ainda.</div>
                 </div>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Consultas</strong>
-                <div class="tiny">Somente leitura pública.</div>
-                <button class="btn btn--soft" id="run-status-inline">Status</button>
-                <button class="btn btn--soft" id="run-health-inline">Health</button>
-                <button class="btn btn--violet" id="run-health-deep-inline">Health profundo</button>
-                <button class="btn btn--soft" id="run-contract-inline">Contrato</button>
-                <div class="sep"></div>
-                <strong>Contrato</strong>
-                <div class="codebox" id="contract-box">Contrato ainda não carregado.</div>
+                <strong>Ações</strong>
+                <div class="tiny">Escolha o nível de verificação que deseja executar.</div>
+                <button class="btn btn--soft" id="run-status-inline">Testar conexão</button>
+                <button class="btn btn--soft" id="run-health-inline">Verificação rápida</button>
+                <button class="btn btn--violet" id="run-health-deep-inline">Verificação completa</button>
+                <button class="btn btn--soft tech-only" id="run-contract-inline">Ver detalhes</button>
+                <div class="sep tech-only"></div>
+                <strong class="tech-only">Detalhes técnicos</strong>
+                <div class="codebox tech-only" id="contract-box">Detalhes técnicos ainda não carregados.</div>
               </div>
             </div>
           </section>
 
-          <section class="panel" id="crm-core">
+          <section class="panel" id="crm">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">CRM</span>
+              <span class="tag" style="color:#1d4ed8">Atendimento e contatos</span>
               <h2 class="h2">Leads, contatos e tickets</h2>
-              <div class="muted">Módulo real. Listagens admin ainda não publicadas.</div>
+              <div class="muted">Consulte os dados quando as listas estiverem liberadas neste painel. Enquanto isso, a interface mantém o espaço pronto e informa a indisponibilidade com clareza.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--internal">Módulo real</span>
-                <span class="state-badge state-badge--blocked">Listagens pendentes</span>
+                <span class="state-badge state-badge--ok">Exportação local</span>
+                <span class="state-badge state-badge--unavailable">Listas ainda não liberadas aqui</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
                 <strong>Leads</strong>
-                <div class="tiny">Listagem admin pendente.</div>
-                <button class="btn btn--soft" id="btn-load-leads">Listagem</button>
-                <button class="btn btn--soft" data-admin-action="crm_list_leads">Diagnóstico</button>
+                <div class="tiny">Esta lista ainda não está disponível aqui.</div>
+                <button class="btn btn--soft" id="btn-load-leads">Ver lista</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_list_leads">Ver detalhes</button>
               </div>
 
               <div class="mini-card compact-actions">
                 <strong>Contatos</strong>
-                <div class="tiny">Listagem admin pendente.</div>
-                <button class="btn btn--soft" id="btn-load-contacts">Listagem</button>
-                <button class="btn btn--soft" data-admin-action="crm_list_contacts">Diagnóstico</button>
+                <div class="tiny">Esta lista ainda não está disponível aqui.</div>
+                <button class="btn btn--soft" id="btn-load-contacts">Ver lista</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_list_contacts">Ver detalhes</button>
               </div>
 
               <div class="mini-card compact-actions">
                 <strong>Tickets</strong>
-                <div class="tiny">Listagem admin pendente.</div>
-                <button class="btn btn--soft" id="btn-load-tickets">Listagem</button>
-                <button class="btn btn--soft" data-admin-action="crm_list_tickets">Diagnóstico</button>
+                <div class="tiny">Esta lista ainda não está disponível aqui.</div>
+                <button class="btn btn--soft" id="btn-load-tickets">Ver lista</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_list_tickets">Ver detalhes</button>
               </div>
             </div>
 
@@ -1102,15 +1108,15 @@ Demais admins: pendentes neste endpoint.</div>
                 <div class="table-head">
                   <div class="table-title">Leads</div>
                   <div class="toolbar-right">
-                    <button class="btn btn--soft" data-local-export="leads">Exportar CSV local</button>
-                    <button class="btn btn--soft" data-admin-action="io_export_leads">Exportar via PUBIO</button>
+                    <button class="btn btn--soft" data-local-export="leads">Exportar CSV</button>
+                    <button class="btn btn--soft tech-only" data-admin-action="io_export_leads">Exportar via PUBIO</button>
                   </div>
                 </div>
                 <div class="toolbar" style="padding:0 18px 18px">
                   <div class="filters" style="width:100%">
-                    <input class="input" id="filter-lead-search" placeholder="Buscar por nome, email, item ou ID" />
+                    <input class="input" id="filter-lead-search" placeholder="Buscar por nome, e-mail, item ou ID" />
                     <select class="select" id="filter-lead-item"><option value="">Todos os itens</option></select>
-                    <select class="select" id="filter-lead-placement"><option value="">Todos os placements</option></select>
+                    <select class="select" id="filter-lead-placement"><option value="">Todas as origens do clique</option></select>
                     <select class="select" id="filter-lead-status">
                       <option value="">Todos os status</option>
                     </select>
@@ -1126,19 +1132,19 @@ Demais admins: pendentes neste endpoint.</div>
                 <div class="table-head">
                   <div class="table-title">Contatos</div>
                   <div class="toolbar-right">
-                    <button class="btn btn--soft" data-local-export="contacts">Exportar CSV local</button>
-                    <button class="btn btn--soft" data-admin-action="io_export_contacts">Exportar via PUBIO</button>
+                    <button class="btn btn--soft" data-local-export="contacts">Exportar CSV</button>
+                    <button class="btn btn--soft tech-only" data-admin-action="io_export_contacts">Exportar via PUBIO</button>
                   </div>
                 </div>
                 <div class="toolbar" style="padding:0 18px 18px">
                   <div class="filters" style="width:100%">
-                    <input class="input" id="filter-contact-search" placeholder="Buscar por contato, email, empresa ou cidade" />
+                    <input class="input" id="filter-contact-search" placeholder="Buscar por contato, e-mail, empresa ou cidade" />
                     <select class="select" id="filter-contact-status">
                       <option value="">Todos os status</option>
                     </select>
                     <input class="input" id="filter-contact-company" placeholder="Filtrar empresa" />
                     <input class="input" id="filter-contact-city" placeholder="Filtrar cidade" />
-                    <input class="input" id="filter-contact-source" placeholder="Filtrar source" />
+                    <input class="input" id="filter-contact-source" placeholder="Filtrar origem" />
                   </div>
                 </div>
                 <div class="table-wrap" id="contacts-table-wrap"></div>
@@ -1148,13 +1154,13 @@ Demais admins: pendentes neste endpoint.</div>
                 <div class="table-head">
                   <div class="table-title">Tickets</div>
                   <div class="toolbar-right">
-                    <button class="btn btn--soft" data-local-export="tickets">Exportar CSV local</button>
-                    <button class="btn btn--soft" data-admin-action="io_export_tickets">Exportar via PUBIO</button>
+                    <button class="btn btn--soft" data-local-export="tickets">Exportar CSV</button>
+                    <button class="btn btn--soft tech-only" data-admin-action="io_export_tickets">Exportar via PUBIO</button>
                   </div>
                 </div>
                 <div class="toolbar" style="padding:0 18px 18px">
                   <div class="filters" style="width:100%">
-                    <input class="input" id="filter-ticket-search" placeholder="Buscar por ticket, assunto, email ou item" />
+                    <input class="input" id="filter-ticket-search" placeholder="Buscar por ticket, assunto, e-mail ou item" />
                     <select class="select" id="filter-ticket-priority"><option value="">Todas as prioridades</option></select>
                     <select class="select" id="filter-ticket-status"><option value="">Todos os status</option></select>
                     <input class="input" id="filter-ticket-item" placeholder="Filtrar item" />
@@ -1166,34 +1172,34 @@ Demais admins: pendentes neste endpoint.</div>
             </div>
           </section>
 
-          <section class="panel" id="timeline">
+          <section class="panel" id="activity">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Timeline</span>
-              <h2 class="h2">Eixo de eventos</h2>
-              <div class="muted">Conecta CRM e PUBMAIL. Listagem admin pendente.</div>
+              <span class="tag" style="color:#1d4ed8">Atividade recente</span>
+              <h2 class="h2">Eventos do sistema</h2>
+              <div class="muted">Acompanhe os eventos mais recentes quando esta visualização estiver liberada neste painel.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--internal">Entidade central</span>
-                <span class="state-badge state-badge--blocked">Listagem pendente</span>
+                <span class="state-badge state-badge--warn">Pronto para uso</span>
+                <span class="state-badge state-badge--unavailable">Visualização ainda indisponível</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
-                <strong>Timeline</strong>
-                <div class="tiny">Listagem admin pendente.</div>
-                <button class="btn btn--soft" id="btn-load-timeline">Listagem</button>
-                <button class="btn btn--soft" data-admin-action="crm_list_timeline">Diagnóstico</button>
+                <strong>Atividade</strong>
+                <div class="tiny">Esta visualização ainda não está disponível aqui.</div>
+                <button class="btn btn--soft" id="btn-load-timeline">Ver lista</button>
+                <button class="btn btn--soft tech-only" data-admin-action="crm_list_timeline">Ver detalhes</button>
               </div>
 
               <div class="mini-card">
                 <strong>Filtros</strong>
-                <div class="tiny">Estrutura pronta para leitura conectada.</div>
+                <div class="tiny">A estrutura de busca já está pronta para quando os dados forem liberados.</div>
                 <div class="toolbar" style="margin-bottom:0">
                   <div class="filters" style="width:100%">
-                    <input class="input" id="filter-timeline-search" placeholder="Buscar por timeline_id, entity_id, event_type ou payload" />
+                    <input class="input" id="filter-timeline-search" placeholder="Buscar por ID, tipo de registro, evento ou conteúdo" />
                     <select class="select" id="filter-timeline-entity">
-                      <option value="">Todos os tipos de entidade</option>
+                      <option value="">Todos os tipos de registro</option>
                     </select>
                     <select class="select" id="filter-timeline-event">
                       <option value="">Todos os eventos</option>
@@ -1204,8 +1210,8 @@ Demais admins: pendentes neste endpoint.</div>
 
               <div class="mini-card compact-actions">
                 <strong>Saída</strong>
-                <div class="tiny">Tabela pronta para dados reais.</div>
-                <button class="btn btn--soft" data-local-export="timeline">Exportar CSV local</button>
+                <div class="tiny">Quando a lista estiver disponível, você poderá exportar o resultado filtrado.</div>
+                <button class="btn btn--soft" data-local-export="timeline">Exportar CSV</button>
               </div>
             </div>
 
@@ -1216,110 +1222,110 @@ Demais admins: pendentes neste endpoint.</div>
               <div class="table-wrap" id="timeline-table-wrap"></div>
             </div>
           </section>
-                    <section class="panel" id="mail-core">
+                    <section class="panel" id="mail">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">PUBMAIL</span>
-              <h2 class="h2">Fila, regras e templates</h2>
-              <div class="muted">Módulo real. Operações admin ainda não publicadas.</div>
+              <span class="tag" style="color:#1d4ed8">Envios</span>
+              <h2 class="h2">Fila e comunicação</h2>
+              <div class="muted">Acompanhe a fila, os modelos e o histórico de envios quando esses recursos forem liberados neste painel.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--internal">Módulo real</span>
-                <span class="state-badge state-badge--blocked">Admin pendente</span>
+                <span class="state-badge state-badge--unavailable">Recursos ainda não liberados aqui</span>
+                <span class="state-badge state-badge--warn">Estrutura pronta para expansão</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
-                <strong>Bootstrap</strong>
-                <div class="tiny">Operação admin pendente.</div>
-                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Bootstrap</button>
-                <button class="btn btn--soft" data-admin-action="mail_process">Processar fila</button>
+                <strong>Preparação</strong>
+                <div class="tiny">Este recurso ainda não pode ser executado aqui.</div>
+                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Ver preparação</button>
+                <button class="btn btn--soft" data-admin-action="mail_process">Ver fluxo previsto</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Governança</strong>
-                <div class="tiny">Templates, campaigns, rules e policy.</div>
-                <button class="btn btn--soft" data-admin-action="mail_governance_model">Governança</button>
-                <button class="btn btn--soft" data-admin-action="mail_list_templates">Templates</button>
+                <strong>Regras e modelos</strong>
+                <div class="tiny">Esta área ainda não pode ser gerenciada por este painel.</div>
+                <button class="btn btn--soft" data-admin-action="mail_governance_model">Ver regras</button>
+                <button class="btn btn--soft" data-admin-action="mail_list_templates">Ver modelos</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Fila e logs</strong>
-                <div class="tiny">Listagens admin pendentes.</div>
-                <button class="btn btn--soft" id="btn-load-mail-queue">Fila</button>
-                <button class="btn btn--soft" data-admin-action="mail_list_log">Logs</button>
+                <strong>Fila e histórico</strong>
+                <div class="tiny">A visualização ainda não está disponível aqui.</div>
+                <button class="btn btn--soft" id="btn-load-mail-queue">Ver fila</button>
+                <button class="btn btn--soft tech-only" data-admin-action="mail_list_log">Ver histórico</button>
               </div>
             </div>
 
             <div class="table-card" style="margin-top:18px">
               <div class="table-head">
-                <div class="table-title">Fila operacional</div>
+                <div class="table-title">Fila de envios</div>
                 <div class="toolbar-right">
-                  <button class="btn btn--soft" data-local-export="mailQueue">Exportar CSV local</button>
+                  <button class="btn btn--soft" data-local-export="mailQueue">Exportar CSV</button>
                 </div>
               </div>
               <div class="toolbar" style="padding:0 18px 18px">
                 <div class="filters" style="width:100%">
-                  <input class="input" id="filter-mail-search" placeholder="Buscar por queue_id, recipient, campaign, template ou mail_key" />
+                  <input class="input" id="filter-mail-search" placeholder="Buscar por ID, destinatário, campanha ou modelo" />
                   <select class="select" id="filter-mail-status"><option value="">Todos os status</option></select>
                   <select class="select" id="filter-mail-type"><option value="">Todos os tipos</option></select>
-                  <input class="input" id="filter-mail-campaign" placeholder="Filtrar campaign_key" />
-                  <input class="input" id="filter-mail-template" placeholder="Filtrar template_key" />
+                  <input class="input" id="filter-mail-campaign" placeholder="Filtrar campanha" />
+                  <input class="input" id="filter-mail-template" placeholder="Filtrar modelo" />
                 </div>
               </div>
               <div class="table-wrap" id="mail-table-wrap"></div>
             </div>
           </section>
 
-          <section class="panel" id="pubio-core">
+          <section class="panel" id="data-ops">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">PUBIO</span>
-              <h2 class="h2">Importação, exportação e restore</h2>
-              <div class="muted">Módulo real com rotas admin pendentes neste endpoint.</div>
+              <span class="tag" style="color:#1d4ed8">Importar e exportar</span>
+              <h2 class="h2">Operações com dados</h2>
+              <div class="muted">Gerencie importações, exportações e restauração quando este recurso estiver disponível neste painel.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--internal">Módulo real</span>
-                <span class="state-badge state-badge--blocked">Operações pendentes</span>
+                <span class="state-badge state-badge--unavailable">Operações ainda indisponíveis</span>
+                <span class="state-badge state-badge--warn">Área preparada para uso futuro</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
                 <strong>Exportação</strong>
-                <div class="tiny">Operações admin pendentes.</div>
-                <button class="btn btn--soft" data-admin-action="io_export_entity">Exportar</button>
-                <button class="btn btn--soft" data-admin-action="io_validate_file">Validar</button>
+                <div class="tiny">Este recurso ainda não pode ser executado aqui.</div>
+                <button class="btn btn--soft" data-admin-action="io_export_entity">Exportar dados</button>
+                <button class="btn btn--soft" data-admin-action="io_validate_file">Validar arquivo</button>
               </div>
 
               <div class="mini-card compact-actions">
                 <strong>Importação</strong>
-                <div class="tiny">Import e restore pendentes.</div>
-                <button class="btn btn--soft" data-admin-action="io_import_bundle">Importar</button>
-                <button class="btn btn--soft" data-admin-action="io_restore_snapshot">Restore</button>
+                <div class="tiny">Importação e restauração ainda não estão liberadas aqui.</div>
+                <button class="btn btn--soft" data-admin-action="io_import_bundle">Importar dados</button>
+                <button class="btn btn--soft" data-admin-action="io_restore_snapshot">Restaurar</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Governança</strong>
-                <div class="tiny">Jobs, logs e snapshots.</div>
-                <button class="btn btn--soft" data-admin-action="io_list_jobs">Jobs</button>
-                <button class="btn btn--soft" data-admin-action="io_list_logs">Logs</button>
+                <strong>Acompanhamento</strong>
+                <div class="tiny">Os registros desta área ainda não podem ser consultados por este painel.</div>
+                <button class="btn btn--soft" data-admin-action="io_list_jobs">Ver processamento</button>
+                <button class="btn btn--soft" data-admin-action="io_list_logs">Ver histórico</button>
               </div>
             </div>
 
             <div class="twocol" style="margin-top:18px">
               <div class="mini-card">
-                <strong>Staging manual</strong>
-                <div class="tiny">Área local para inspeção visual.</div>
-                <textarea class="textarea" id="import-json" placeholder='Cole aqui um payload JSON apenas para inspeção visual local do painel.'></textarea>
+                <strong>Área de inspeção local</strong>
+                <div class="tiny">Cole aqui um JSON apenas para revisão local. Nenhum dado será enviado sem uma ação explícita.</div>
+                <textarea class="textarea" id="import-json" placeholder='Cole aqui um JSON apenas para revisão local do conteúdo.'></textarea>
                 <div class="toolbar-right">
-                  <button class="btn btn--soft" data-admin-action="io_validate_file">Validar</button>
-                  <button class="btn btn--soft" data-admin-action="io_preview_import">Preview</button>
-                  <button class="btn btn--soft" data-admin-action="io_import_bundle">Importar</button>
+                  <button class="btn btn--soft" data-admin-action="io_validate_file">Validar arquivo</button>
+                  <button class="btn btn--soft" data-admin-action="io_preview_import">Ver prévia</button>
+                  <button class="btn btn--soft" data-admin-action="io_import_bundle">Importar dados</button>
                 </div>
               </div>
 
-              <div class="mini-card">
-                <strong>Operações do módulo</strong>
+              <div class="mini-card tech-only">
+                <strong>Detalhes técnicos do módulo</strong>
                 <div class="codebox">exportEntity
 exportBundle
 exportEntityCsv
@@ -1337,54 +1343,54 @@ inspectStorageRef</div>
             </div>
           </section>
 
-          <section class="panel" id="observability">
+          <section class="panel" id="diagnostics">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Logs</span>
-              <h2 class="h2">Observabilidade</h2>
-              <div class="muted">Health público e trilhas internas do ecossistema.</div>
+              <span class="tag" style="color:#1d4ed8">Diagnóstico</span>
+              <h2 class="h2">Verificações e detalhes</h2>
+              <div class="muted">Veja o estado do painel, consulte verificações recentes e abra os detalhes técnicos quando necessário.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--public">Health público</span>
-                <span class="state-badge state-badge--blocked">Logs admin pendentes</span>
+                <span class="state-badge state-badge--ok">Resumo disponível</span>
+                <span class="state-badge state-badge--unavailable">Alguns registros ainda indisponíveis</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card compact-actions">
                 <strong>CRM</strong>
-                <div class="tiny">Logs admin pendentes.</div>
-                <button class="btn btn--soft" data-admin-action="obs_api_log">API log</button>
-                <button class="btn btn--soft" data-admin-action="obs_audit_log">Auditoria</button>
+                <div class="tiny">Os registros detalhados desta área ainda não estão disponíveis aqui.</div>
+                <button class="btn btn--soft" data-admin-action="obs_api_log">Ver detalhes</button>
+                <button class="btn btn--soft tech-only" data-admin-action="obs_audit_log">Ver auditoria</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>PUBMAIL</strong>
-                <div class="tiny">Logs admin pendentes.</div>
-                <button class="btn btn--soft" data-admin-action="mail_list_log">mail_log</button>
-                <button class="btn btn--soft" data-admin-action="mail_list_internal_log">internal_log</button>
+                <strong>Envios</strong>
+                <div class="tiny">Os registros detalhados desta área ainda não estão disponíveis aqui.</div>
+                <button class="btn btn--soft" data-admin-action="mail_list_log">Ver histórico</button>
+                <button class="btn btn--soft tech-only" data-admin-action="mail_list_internal_log">Ver detalhes internos</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Diagnóstico</strong>
-                <div class="tiny">Resumo do estado do painel.</div>
-                <button class="btn btn--soft" id="btn-show-diagnostics">Mostrar diagnóstico</button>
+                <strong>Resumo técnico</strong>
+                <div class="tiny">Abra um panorama consolidado do painel e do que está disponível.</div>
+                <button class="btn btn--soft" id="btn-show-diagnostics">Abrir diagnóstico</button>
               </div>
             </div>
           </section>
 
           <section class="panel" id="history">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Histórico</span>
-              <h2 class="h2">Ações do painel</h2>
-              <div class="muted">Registro local de consultas, exportações e falhas.</div>
+              <span class="tag" style="color:#1d4ed8">Ações recentes</span>
+              <h2 class="h2">Histórico local do painel</h2>
+              <div class="muted">Veja as últimas ações, consultas, exportações e falhas registradas neste navegador.</div>
             </div>
 
             <div class="toolbar">
               <div class="toolbar-left">
-                <div class="tiny">Exibe as últimas 30 ações no navegador.</div>
+                <div class="tiny">Exibe as 30 ações mais recentes salvas localmente.</div>
               </div>
               <div class="toolbar-right">
-                <button class="btn btn--soft" id="btn-refresh-history">Atualizar histórico</button>
+                <button class="btn btn--soft" id="btn-refresh-history">Atualizar</button>
                 <button class="btn btn--danger" id="btn-clear-history">Limpar histórico</button>
               </div>
             </div>
@@ -1392,35 +1398,37 @@ inspectStorageRef</div>
             <div id="history-wrap"></div>
           </section>
 
-          <section class="panel" id="settings">
+          <section class="panel" id="preferences">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Ajustes</span>
-              <h2 class="h2">Parâmetros do painel</h2>
-              <div class="muted">Persistência local e estado da interface.</div>
+              <span class="tag" style="color:#1d4ed8">Preferências</span>
+              <h2 class="h2">Configurações locais</h2>
+              <div class="muted">Ajuste o modo de visualização e acompanhe o que fica salvo apenas neste navegador.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--public">Configuração local</span>
-                <span class="state-badge state-badge--internal">Módulos preservados</span>
-                <span class="state-badge state-badge--pending">Expansão futura</span>
+                <span class="state-badge state-badge--ok">Configuração local</span>
+                <span class="state-badge state-badge--warn">Expansão futura</span>
               </div>
             </div>
 
             <div class="threecol">
               <div class="mini-card">
-                <strong>Persistência local</strong>
-                <div class="codebox">localStorage:
+                <strong>Modo de visualização</strong>
+                <div class="tiny">Use o modo simples para operação diária e o modo técnico para inspeção detalhada.</div>
+                <div class="toolbar-right">
+                  <button class="btn btn--soft" id="btn-mode-simple">Modo simples</button>
+                  <button class="btn btn--soft" id="btn-mode-technical">Modo técnico</button>
+                </div>
+              </div>
+              <div class="mini-card">
+                <strong>Armazenamento local</strong>
+                <div class="tiny">A URL do Web App e o histórico do painel ficam salvos apenas neste navegador.</div>
+                <div class="codebox tech-only">localStorage:
 PUBPANEL_V2_API_BASE
 PUBPANEL_V2_UI_HISTORY</div>
               </div>
               <div class="mini-card">
-                <strong>Camadas ativas</strong>
-                <div class="tiny">Leitura por status, health, health_deep e contract.</div>
-                <div class="tiny">Execução admin confirmada para admin_install_crm.</div>
-                <div class="tiny">Demais admins seguem pendentes.</div>
-              </div>
-              <div class="mini-card">
-                <strong>Próximo passo</strong>
-                <div class="tiny">Expor endpoints admin por módulo real.</div>
+                <strong>Próximos passos</strong>
+                <div class="tiny">Conectar o painel, validar a leitura do sistema e acompanhar a liberação dos próximos recursos.</div>
               </div>
             </div>
           </section>
@@ -1436,7 +1444,7 @@ PUBPANEL_V2_UI_HISTORY</div>
 
   <div class="drawer" id="drawer">
     <div class="drawer-card" id="drawer-card">
-      <div class="drawer-title" id="drawer-title">Diagnóstico</div>
+      <div class="drawer-title" id="drawer-title">Detalhes</div>
       <div class="tiny" id="drawer-text"></div>
       <div class="drawer-actions">
         <button class="btn btn--soft" id="drawer-close">Fechar</button>
@@ -1449,7 +1457,8 @@ const PUBPANEL = {
   VERSION: "2.0.1",
   STORAGE: {
     API_BASE: "PUBPANEL_V2_API_BASE",
-    HISTORY: "PUBPANEL_V2_UI_HISTORY"
+    HISTORY: "PUBPANEL_V2_UI_HISTORY",
+    UI_MODE: "PUBPANEL_V2_UI_MODE"
   }
 };
 
@@ -1474,348 +1483,260 @@ const DATASETS = {
   },
   timeline: {
     key: "timeline",
-    label: "Timeline",
+    label: "Atividade",
     adminListAction: "crm_list_timeline",
     defaultSort: { key: "event_at", dir: "desc" }
   },
   mailQueue: {
     key: "mailQueue",
-    label: "Fila mail",
+    label: "Fila de envios",
     adminListAction: "mail_list_queue",
     defaultSort: { key: "scheduled_at", dir: "desc" }
   }
 };
 
-const ACTION_PUBLICATION = {
+const FEATURE_AVAILABILITY = {
   status: {
     scope: "public_get",
     published: true,
-    label: "Status — leitura pública publicada",
+    uiLabel: "Teste de conexão disponível",
+    technicalLabel: "mode=status",
     publicEndpoint: "mode=status"
   },
   health: {
     scope: "public_get",
     published: true,
-    label: "Health — leitura pública publicada",
+    uiLabel: "Verificação rápida disponível",
+    technicalLabel: "mode=health",
     publicEndpoint: "mode=health"
   },
   health_deep: {
     scope: "public_get",
     published: true,
-    label: "Health profundo — leitura pública publicada",
+    uiLabel: "Verificação completa disponível",
+    technicalLabel: "mode=health_deep",
     publicEndpoint: "mode=health_deep"
   },
   contract: {
     scope: "public_get",
     published: true,
-    label: "Contrato — leitura pública publicada",
+    uiLabel: "Detalhes técnicos disponíveis",
+    technicalLabel: "mode=contract",
     publicEndpoint: "mode=contract"
   },
 
   crm_install: {
     scope: "crm_admin",
     published: true,
-    label: "Instalar CRM — ação administrativa publicada",
+    uiLabel: "Instalação do CRM disponível",
+    technicalLabel: "action=admin_install_crm",
     publicEndpoint: "action=admin_install_crm"
   },
   crm_summary: {
     scope: "crm_admin",
     published: false,
-    label: "Resumo administrativo do CRM — não publicado neste endpoint",
+    uiLabel: "Resumo do CRM ainda não liberado aqui",
+    technicalLabel: "admin_dashboard_summary",
     facadeFuture: "admin_dashboard_summary"
   },
   crm_list_contacts: {
     scope: "crm_admin",
     published: false,
-    label: "Listagem de contatos — não publicada neste endpoint",
+    uiLabel: "Lista de contatos ainda não liberada aqui",
+    technicalLabel: "admin_list_contacts",
     facadeFuture: "admin_list_contacts"
   },
   crm_list_leads: {
     scope: "crm_admin",
     published: false,
-    label: "Listagem de leads — não publicada neste endpoint",
+    uiLabel: "Lista de leads ainda não liberada aqui",
+    technicalLabel: "admin_list_leads",
     facadeFuture: "admin_list_leads"
   },
   crm_list_tickets: {
     scope: "crm_admin",
     published: false,
-    label: "Listagem de tickets — não publicada neste endpoint",
+    uiLabel: "Lista de tickets ainda não liberada aqui",
+    technicalLabel: "admin_list_tickets",
     facadeFuture: "admin_list_tickets"
   },
   crm_list_timeline: {
     scope: "crm_admin",
     published: false,
-    label: "Listagem administrativa da timeline — não publicada neste endpoint",
+    uiLabel: "Lista de atividade ainda não liberada aqui",
+    technicalLabel: "admin_list_timeline",
     facadeFuture: "admin_list_timeline"
   },
 
   mail_bootstrap: {
     scope: "pubmail_admin",
     published: false,
-    label: "Bootstrap do PUBMAIL — função interna do módulo, façade admin pendente",
+    uiLabel: "Preparação de envios ainda não liberada aqui",
+    technicalLabel: "admin_mail_bootstrap",
     facadeFuture: "admin_mail_bootstrap"
   },
   mail_health: {
     scope: "pubmail_admin",
     published: false,
-    label: "Health interno do PUBMAIL — função interna do módulo, não publicado neste endpoint",
+    uiLabel: "Verificação interna de envios ainda não liberada aqui",
+    technicalLabel: "admin_mail_health",
     facadeFuture: "admin_mail_health"
   },
   mail_checklist: {
     scope: "pubmail_admin",
     published: false,
-    label: "Checklist de implementação do PUBMAIL — função interna do módulo, façade admin pendente",
+    uiLabel: "Checklist de envios ainda não liberado aqui",
+    technicalLabel: "admin_mail_checklist",
     facadeFuture: "admin_mail_checklist"
   },
   mail_scan: {
     scope: "pubmail_admin",
     published: false,
-    label: "Scan da timeline pelo PUBMAIL — operação interna do módulo",
+    uiLabel: "Leitura da atividade para envios ainda não liberada aqui",
+    technicalLabel: "admin_mail_scan_timeline",
     facadeFuture: "admin_mail_scan_timeline"
   },
   mail_process: {
     scope: "pubmail_admin",
     published: false,
-    label: "Processamento da fila do PUBMAIL — operação interna do módulo",
+    uiLabel: "Processamento de envios ainda não liberado aqui",
+    technicalLabel: "admin_mail_process_queue",
     facadeFuture: "admin_mail_process_queue"
-  },
-  mail_create_docs: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Criação de Docs padrão do PUBMAIL — função interna do módulo",
-    facadeFuture: "admin_mail_create_docs"
-  },
-  mail_create_triggers: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Criação de triggers do PUBMAIL — função interna do módulo",
-    facadeFuture: "admin_mail_create_triggers"
   },
   mail_governance_model: {
     scope: "pubmail_admin",
     published: false,
-    label: "Modelo de governança do PUBMAIL — função interna do módulo",
+    uiLabel: "Regras de envios ainda não liberadas aqui",
+    technicalLabel: "admin_mail_governance_model",
     facadeFuture: "admin_mail_governance_model"
-  },
-  mail_usage_notes: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Notas de uso do PUBMAIL — função interna do módulo",
-    facadeFuture: "admin_mail_usage_notes"
   },
   mail_list_queue: {
     scope: "pubmail_admin",
     published: false,
-    label: "Listagem da fila do PUBMAIL — não publicada neste endpoint",
+    uiLabel: "Fila de envios ainda não liberada aqui",
+    technicalLabel: "admin_mail_list_queue",
     facadeFuture: "admin_mail_list_queue"
   },
   mail_list_log: {
     scope: "pubmail_admin",
     published: false,
-    label: "Listagem de mail_log — não publicada neste endpoint",
+    uiLabel: "Histórico de envios ainda não liberado aqui",
+    technicalLabel: "admin_mail_list_log",
     facadeFuture: "admin_mail_list_log"
   },
   mail_list_internal_log: {
     scope: "pubmail_admin",
     published: false,
-    label: "Listagem de mail_internal_log — não publicada neste endpoint",
+    uiLabel: "Detalhes internos de envios ainda não liberados aqui",
+    technicalLabel: "admin_mail_list_internal_log",
     facadeFuture: "admin_mail_list_internal_log"
   },
   mail_list_templates: {
     scope: "pubmail_admin",
     published: false,
-    label: "Listagem de templates do PUBMAIL — não publicada neste endpoint",
+    uiLabel: "Modelos de envios ainda não liberados aqui",
+    technicalLabel: "admin_mail_list_templates",
     facadeFuture: "admin_mail_list_templates"
-  },
-  mail_list_campaigns: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Listagem de campaigns do PUBMAIL — não publicada neste endpoint",
-    facadeFuture: "admin_mail_list_campaigns"
-  },
-  mail_list_rules: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Listagem de rules do PUBMAIL — não publicada neste endpoint",
-    facadeFuture: "admin_mail_list_rules"
-  },
-  mail_list_policy: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Listagem de policy do PUBMAIL — não publicada neste endpoint",
-    facadeFuture: "admin_mail_list_policy"
-  },
-  mail_list_segments: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Listagem de segments do PUBMAIL — não publicada neste endpoint",
-    facadeFuture: "admin_mail_list_segments"
-  },
-  mail_list_suppressions: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Listagem de suppressions do PUBMAIL — não publicada neste endpoint",
-    facadeFuture: "admin_mail_list_suppressions"
-  },
-  mail_list_contact_state: {
-    scope: "pubmail_admin",
-    published: false,
-    label: "Listagem de contact_state do PUBMAIL — não publicada neste endpoint",
-    facadeFuture: "admin_mail_list_contact_state"
   },
 
   io_export_leads: {
     scope: "pubio_admin",
     published: false,
-    label: "Exportação de leads via PUBIO — função existente no módulo, façade admin pendente",
+    uiLabel: "Exportação de leads ainda não liberada aqui",
+    technicalLabel: "admin_io_export_entity",
     facadeFuture: "admin_io_export_entity"
   },
   io_export_contacts: {
     scope: "pubio_admin",
     published: false,
-    label: "Exportação de contatos via PUBIO — função existente no módulo, façade admin pendente",
+    uiLabel: "Exportação de contatos ainda não liberada aqui",
+    technicalLabel: "admin_io_export_entity",
     facadeFuture: "admin_io_export_entity"
   },
   io_export_tickets: {
     scope: "pubio_admin",
     published: false,
-    label: "Exportação de tickets via PUBIO — função existente no módulo, façade admin pendente",
+    uiLabel: "Exportação de tickets ainda não liberada aqui",
+    technicalLabel: "admin_io_export_entity",
     facadeFuture: "admin_io_export_entity"
   },
   io_export_entity: {
     scope: "pubio_admin",
     published: false,
-    label: "exportEntity — função interna do PUBIO, não publicada neste endpoint",
+    uiLabel: "Exportação de dados ainda não liberada aqui",
+    technicalLabel: "admin_io_export_entity",
     facadeFuture: "admin_io_export_entity"
-  },
-  io_export_bundle: {
-    scope: "pubio_admin",
-    published: false,
-    label: "exportBundle — função interna do PUBIO, não publicada neste endpoint",
-    facadeFuture: "admin_io_export_bundle"
-  },
-  io_export_csv: {
-    scope: "pubio_admin",
-    published: false,
-    label: "exportEntityCsv — função interna do PUBIO, não publicada neste endpoint",
-    facadeFuture: "admin_io_export_csv"
   },
   io_validate_file: {
     scope: "pubio_admin",
     published: false,
-    label: "validateImportFile — função interna do PUBIO, não publicada neste endpoint",
+    uiLabel: "Validação de arquivo ainda não liberada aqui",
+    technicalLabel: "admin_io_validate_file",
     facadeFuture: "admin_io_validate_file"
   },
   io_preview_import: {
     scope: "pubio_admin",
     published: false,
-    label: "previewJsonImport ou previewCsvImport — função interna do PUBIO, não publicada neste endpoint",
+    uiLabel: "Prévia de importação ainda não liberada aqui",
+    technicalLabel: "admin_io_preview_import",
     facadeFuture: "admin_io_preview_import"
-  },
-  io_inspect_ref: {
-    scope: "pubio_admin",
-    published: false,
-    label: "inspectStorageRef — função interna do PUBIO, não publicada neste endpoint",
-    facadeFuture: "admin_io_inspect_storage_ref"
-  },
-  io_import_entity: {
-    scope: "pubio_admin",
-    published: false,
-    label: "importEntity — operação interna do PUBIO, não publicada neste endpoint",
-    facadeFuture: "admin_io_import_entity"
   },
   io_import_bundle: {
     scope: "pubio_admin",
     published: false,
-    label: "importBundle — operação interna do PUBIO, não publicada neste endpoint",
+    uiLabel: "Importação de dados ainda não liberada aqui",
+    technicalLabel: "admin_io_import_bundle",
     facadeFuture: "admin_io_import_bundle"
-  },
-  io_import_csv: {
-    scope: "pubio_admin",
-    published: false,
-    label: "importEntityCsv — operação interna do PUBIO, não publicada neste endpoint",
-    facadeFuture: "admin_io_import_csv"
-  },
-  io_create_snapshot: {
-    scope: "pubio_admin",
-    published: false,
-    label: "createEntitySnapshot — operação interna do PUBIO, não publicada neste endpoint",
-    facadeFuture: "admin_io_create_snapshot"
   },
   io_restore_snapshot: {
     scope: "pubio_admin",
     published: false,
-    label: "restoreEntityFromSnapshot — operação interna do PUBIO, não publicada neste endpoint",
+    uiLabel: "Restauração ainda não liberada aqui",
+    technicalLabel: "admin_io_restore_snapshot",
     facadeFuture: "admin_io_restore_snapshot"
   },
   io_list_jobs: {
     scope: "pubio_admin",
     published: false,
-    label: "Listagem de io_jobs — não publicada neste endpoint",
+    uiLabel: "Acompanhamento de processamento ainda não liberado aqui",
+    technicalLabel: "admin_io_list_jobs",
     facadeFuture: "admin_io_list_jobs"
-  },
-  io_list_job_items: {
-    scope: "pubio_admin",
-    published: false,
-    label: "Listagem de io_job_items — não publicada neste endpoint",
-    facadeFuture: "admin_io_list_job_items"
-  },
-  io_list_snapshots: {
-    scope: "pubio_admin",
-    published: false,
-    label: "Listagem de io_snapshots — não publicada neste endpoint",
-    facadeFuture: "admin_io_list_snapshots"
-  },
-  io_list_restore_points: {
-    scope: "pubio_admin",
-    published: false,
-    label: "Listagem de io_restore_points — não publicada neste endpoint",
-    facadeFuture: "admin_io_list_restore_points"
   },
   io_list_logs: {
     scope: "pubio_admin",
     published: false,
-    label: "Listagem de io_log — não publicada neste endpoint",
+    uiLabel: "Histórico de operações ainda não liberado aqui",
+    technicalLabel: "admin_io_list_logs",
     facadeFuture: "admin_io_list_logs"
-  },
-  io_contract: {
-    scope: "pubio_admin",
-    published: false,
-    label: "getPubioImportContract — função interna do PUBIO, não publicada neste endpoint",
-    facadeFuture: "admin_io_contract"
   },
 
   obs_api_log: {
     scope: "observability_admin",
     published: false,
-    label: "Listagem de api_log — não publicada neste endpoint",
+    uiLabel: "Detalhes de CRM ainda não liberados aqui",
+    technicalLabel: "admin_obs_api_log",
     facadeFuture: "admin_obs_api_log"
-  },
-  obs_safe_fail_log: {
-    scope: "observability_admin",
-    published: false,
-    label: "Listagem de safe_fail_log — não publicada neste endpoint",
-    facadeFuture: "admin_obs_safe_fail_log"
   },
   obs_audit_log: {
     scope: "observability_admin",
     published: false,
-    label: "Listagem de audit_log — não publicada neste endpoint",
+    uiLabel: "Auditoria ainda não liberada aqui",
+    technicalLabel: "admin_obs_audit_log",
     facadeFuture: "admin_obs_audit_log"
   }
 };
 
-function getActionAvailability(key){
-  const item = ACTION_PUBLICATION[key];
-
+function getFeatureAvailability(key){
+  const item = FEATURE_AVAILABILITY[key];
   if(!item){
     return {
       key,
       state: "unknown",
       published: false,
+      uiLabel: "Recurso não mapeado",
+      technicalLabel: "",
       publicEndpoint: null,
-      facadeFuture: null,
-      label: "ação não mapeada"
+      facadeFuture: null
     };
   }
 
@@ -1824,9 +1745,10 @@ function getActionAvailability(key){
       key,
       state: "published",
       published: true,
-      publicEndpoint: item.publicEndpoint,
-      facadeFuture: item.facadeFuture || null,
-      label: item.label || ""
+      uiLabel: item.uiLabel || "",
+      technicalLabel: item.technicalLabel || "",
+      publicEndpoint: item.publicEndpoint || null,
+      facadeFuture: item.facadeFuture || null
     };
   }
 
@@ -1835,9 +1757,10 @@ function getActionAvailability(key){
       key,
       state: "planned",
       published: false,
+      uiLabel: item.uiLabel || "",
+      technicalLabel: item.technicalLabel || "",
       publicEndpoint: null,
-      facadeFuture: item.facadeFuture,
-      label: item.label || ""
+      facadeFuture: item.facadeFuture || null
     };
   }
 
@@ -1845,9 +1768,10 @@ function getActionAvailability(key){
     key,
     state: "undefined",
     published: !!item.published,
+    uiLabel: item.uiLabel || "",
+    technicalLabel: item.technicalLabel || "",
     publicEndpoint: item.publicEndpoint || null,
-    facadeFuture: item.facadeFuture || null,
-    label: item.label || ""
+    facadeFuture: item.facadeFuture || null
   };
 }
 
@@ -1897,6 +1821,7 @@ const state = {
   },
 
   ui: {
+    mode: "simple",
     history: [],
     lastAction: "",
     lastError: ""
@@ -1932,16 +1857,12 @@ function tryParseJsonText(text){
 
 function extractRedirectUrlFromHtml(html){
   const text = String(html || "");
-
   const metaMatch = text.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["'][^"']*url=([^"']+)["']/i);
   if(metaMatch && metaMatch[1]) return metaMatch[1].trim();
-
   const jsMatch = text.match(/window\.location(?:\.href)?\s*=\s*["']([^"']+)["']/i);
   if(jsMatch && jsMatch[1]) return jsMatch[1].trim();
-
   const linkMatch = text.match(/<a[^>]+href=["']([^"']+)["']/i);
   if(linkMatch && linkMatch[1]) return linkMatch[1].trim();
-
   return "";
 }
 
@@ -1950,13 +1871,13 @@ async function readResponsePayload(res){
   const text = await res.text();
 
   if(!res.ok){
-    throw new Error("Falha HTTP " + res.status + " ao consultar o backend.");
+    throw new Error("Falha HTTP " + res.status + " ao consultar o sistema.");
   }
 
   if(contentType.includes("application/json")){
     const parsed = tryParseJsonText(text);
     if(parsed !== null) return parsed;
-    throw new Error("O backend declarou JSON, mas retornou conteúdo inválido.");
+    throw new Error("O sistema informou JSON, mas retornou conteúdo inválido.");
   }
 
   const parsedLoose = tryParseJsonText(text);
@@ -1980,17 +1901,14 @@ async function readResponsePayload(res){
 
 function describeBackendPayload(json){
   if(json?.redirected && json?.redirect_url){
-    return "Resposta HTML com redirect detectado.";
+    return "Foi detectado um redirecionamento em HTML.";
   }
-
   if(typeof json?.raw_text === "string" && json.raw_text){
-    return "Resposta textual sem JSON estruturado.";
+    return "O sistema respondeu com texto simples.";
   }
-
   if(json && typeof json === "object"){
-    return "Resposta JSON estruturada.";
+    return "O sistema respondeu com dados estruturados.";
   }
-
   return "Resposta recebida.";
 }
 
@@ -2016,15 +1934,12 @@ function formatDateTime(v){
 function compareValues(a, b){
   const av = stringValue(a);
   const bv = stringValue(b);
-
   const ad = Date.parse(av);
   const bd = Date.parse(bv);
   if(!Number.isNaN(ad) && !Number.isNaN(bd)) return ad - bd;
-
   const an = Number(av);
   const bn = Number(bv);
   if(!Number.isNaN(an) && !Number.isNaN(bn)) return an - bn;
-
   return av.localeCompare(bv, "pt-BR", { sensitivity: "base" });
 }
 
@@ -2091,7 +2006,6 @@ function setSort(kind, key){
     current.key = key;
     current.dir = "asc";
   }
-
   runDatasetFilterPipeline(kind);
 }
 
@@ -2105,7 +2019,8 @@ function pillClass(v){
 
 function notify(type, title, text){
   const box = $("#global-status");
-  box.className = "status-banner show " + (type || "");
+  const uiType = type === "unavailable" ? "unavailable" : type;
+  box.className = "status-banner show " + (uiType || "");
   box.innerHTML =
     "<strong>" + escapeHtml(title) + "</strong>" +
     "<div class='tiny' style='margin-top:6px'>" + escapeHtml(text) + "</div>" +
@@ -2113,13 +2028,13 @@ function notify(type, title, text){
 }
 
 function drawer(title, text){
-  $("#drawer-title").textContent = title || "Diagnóstico";
+  $("#drawer-title").textContent = title || "Detalhes";
   $("#drawer-text").textContent = text || "";
   $("#drawer-card").classList.add("show");
 }
 
 function drawerJson(title, intro, payload){
-  $("#drawer-title").textContent = title || "Inspeção";
+  $("#drawer-title").textContent = title || "Detalhes";
   $("#drawer-text").textContent = [
     intro || "",
     "",
@@ -2185,7 +2100,7 @@ function renderHistory(){
   if(!wrap) return;
 
   if(!state.ui.history.length){
-    wrap.innerHTML = `<div class="empty">Ainda não há ações registradas no histórico local do painel.</div>`;
+    wrap.innerHTML = `<div class="empty">Ainda não há ações registradas neste navegador.</div>`;
     return;
   }
 
@@ -2200,7 +2115,7 @@ function renderHistory(){
             <span><strong>Status:</strong> ${escapeHtml(item.status || "—")}</span>
             <span><strong>Duração:</strong> ${escapeHtml(String(item.duration_ms || 0))} ms</span>
             <span><strong>Linhas:</strong> ${escapeHtml(String(item.rows_count || 0))}</span>
-            <span><strong>API:</strong> ${escapeHtml(item.api_base ? "definida" : "não definida")}</span>
+            <span><strong>Conexão:</strong> ${escapeHtml(item.api_base ? "configurada" : "não configurada")}</span>
           </div>
           <div class="history-detail">${escapeHtml(item.detail || "")}</div>
         </div>
@@ -2211,14 +2126,16 @@ function renderHistory(){
 
 function loadSettings(){
   state.apiBase = localStorage.getItem(PUBPANEL.STORAGE.API_BASE) || "";
+  state.ui.mode = localStorage.getItem(PUBPANEL.STORAGE.UI_MODE) || "simple";
   $("#api-base").value = state.apiBase;
+  applyUiMode();
 }
 
 function saveSettings(){
   const v = ($("#api-base").value || "").trim();
   localStorage.setItem(PUBPANEL.STORAGE.API_BASE, v);
   state.apiBase = v;
-  notify("success", "URL salva", "A URL base do Apps Script foi armazenada no navegador.");
+  notify("success", "URL salva", "A URL do Web App foi armazenada neste navegador.");
   pushHistory("UI", "save_api_base", "ok", v || "sem valor");
   renderSummary();
 }
@@ -2230,6 +2147,20 @@ function clearSettings(){
   notify("warn", "URL removida", "A configuração local foi limpa.");
   pushHistory("UI", "clear_api_base", "ok", "configuração removida");
   renderSummary();
+}
+
+function saveUiMode(mode){
+  state.ui.mode = mode === "technical" ? "technical" : "simple";
+  localStorage.setItem(PUBPANEL.STORAGE.UI_MODE, state.ui.mode);
+  applyUiMode();
+}
+
+function applyUiMode(){
+  document.body.setAttribute("data-ui-mode", state.ui.mode);
+  const toggle = $("#toggle-ui-mode");
+  if(toggle){
+    toggle.textContent = state.ui.mode === "technical" ? "Modo simples" : "Modo técnico";
+  }
 }
 
 async function withBusyButton(button, busyLabel, fn){
@@ -2248,28 +2179,26 @@ async function withBusyButton(button, busyLabel, fn){
 
 function confirmAdminAction(action){
   const labels = {
-    crm_install: "Instalar/atualizar CRM",
-    mail_bootstrap: "Bootstrap do PUBMAIL",
-    mail_process: "Processar fila do PUBMAIL",
-    io_import_entity: "Import entity",
-    io_import_bundle: "Import bundle",
-    io_import_csv: "Import CSV",
-    io_restore_snapshot: "Restore de snapshot"
+    crm_install: "Instalar ou atualizar CRM",
+    mail_bootstrap: "Preparar envios",
+    mail_process: "Processar envios",
+    io_import_bundle: "Importar dados",
+    io_restore_snapshot: "Restaurar dados"
   };
 
   if(!labels[action]) return true;
 
   if(action === "crm_install"){
-    return window.confirm(`Confirmar ação: ${labels[action]}\n\nEsta operação já está publicada no deploy atual e será executada pelo painel.`);
+    return window.confirm(`Confirmar ação: ${labels[action]}\n\nEsta operação pode ser executada por este painel.`);
   }
 
-  return window.confirm(`Confirmar ação: ${labels[action]}\n\nAtenção: o painel não assume que esta operação esteja publicada neste deploy.`);
+  return window.confirm(`Confirmar ação: ${labels[action]}\n\nEste recurso ainda pode não estar disponível neste painel.`);
 }
 
 const api = {
   requireBase(){
     if(!state.apiBase){
-      throw new Error("Defina a URL base do Web App do Apps Script na seção Setup para usar o painel em modo conectado.");
+      throw new Error("Defina a URL do Web App na seção Conexão para usar o painel conectado.");
     }
   },
 
@@ -2301,25 +2230,11 @@ const api = {
     return readResponsePayload(res);
   },
 
-  status(){
-    return this.getMode("status");
-  },
-
-  health(){
-    return this.getMode("health");
-  },
-
-  healthDeep(){
-    return this.getMode("health_deep");
-  },
-
-  contract(){
-    return this.getMode("contract");
-  },
-
-  admin(action, payload={}){
-    return this.postAction(action, payload);
-  }
+  status(){ return this.getMode("status"); },
+  health(){ return this.getMode("health"); },
+  healthDeep(){ return this.getMode("health_deep"); },
+  contract(){ return this.getMode("contract"); },
+  admin(action, payload={}){ return this.postAction(action, payload); }
 };
 
 function normalizeRowsFromResponse(json){
@@ -2353,14 +2268,11 @@ function normalizeRowsFromResponse(json){
 
 function markDatasetAsLoaded(kind, rows){
   if(!state.datasetAvailability[kind]) return;
-
   const safeRows = Array.isArray(rows) ? rows.slice() : [];
-
   state.datasetAvailability[kind] = "loaded";
   state[kind] = safeRows;
   state.filtered[kind] = safeRows.slice();
   state.paging[kind].page = 1;
-
   fillDataDrivenFilters();
   applyDatasetFilters(kind);
 }
@@ -2373,62 +2285,8 @@ function renderDatasetByKind(kind){
   if(kind === "mailQueue") return renderMailQueue(state.filtered.mailQueue);
 }
 
-async function loadPublishedDataset(kind, action, payload={}, button){
-  const startedAt = performance.now();
-
-  try{
-    setLastAction(action);
-    setLastError("");
-
-    await withBusyButton(button, "Carregando...", async () => {
-      const json = await api.admin(action, payload);
-      const rows = normalizeRowsFromResponse(json);
-      const durationMs = Math.round(performance.now() - startedAt);
-
-      markDatasetAsLoaded(kind, rows);
-      renderDatasetByKind(kind);
-
-      notify(
-        "success",
-        "Dataset carregado",
-        DATASETS[kind].label + " carregado com " + rows.length + " linha(s)."
-      );
-
-      pushHistory(
-        "POST",
-        action,
-        "ok",
-        "Dataset carregado com sucesso.",
-        {
-          duration_ms: durationMs,
-          rows_count: rows.length
-        }
-      );
-    });
-  }catch(err){
-    const durationMs = Math.round(performance.now() - startedAt);
-
-    setLastError(err.message || "Erro desconhecido");
-    notify("error", "Falha ao carregar dataset", err.message || "Erro desconhecido");
-
-    pushHistory(
-      "POST",
-      action,
-      "erro",
-      err.message || "erro",
-      {
-        duration_ms: durationMs,
-        rows_count: 0
-      }
-    );
-  } finally {
-    renderSummary();
-  }
-}
-
 function readContractData(){
   const data = state.contract?.data || {};
-
   return {
     leadItems: normalizeArray(data.leadItems),
     ticketItems: normalizeArray(data.ticketItems),
@@ -2439,7 +2297,6 @@ function readContractData(){
 function readHealthData(){
   const data = state.health?.data || {};
   const safe = data.safe_failures || {};
-
   return {
     app: data.app || "",
     version: data.version || "",
@@ -2457,7 +2314,6 @@ function readHealthData(){
 function readHealthDeepData(){
   const data = state.healthDeep?.data || {};
   const safe = data.safe_failures || {};
-
   return {
     app: data.app || "",
     version: data.version || "",
@@ -2487,22 +2343,18 @@ function fillContractFilters(){
   const ticketItems = contract.ticketItems;
 
   $("#filter-lead-item").innerHTML = `<option value="">Todos os itens</option>` + leadItems.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
-  $("#filter-lead-placement").innerHTML = `<option value="">Todos os placements</option>` + placements.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
-  $("#filter-ticket-item").setAttribute("placeholder", ticketItems.length ? "Filtrar item (ex.: PROBLEMA TECNICO)" : "Filtrar item");
+  $("#filter-lead-placement").innerHTML = `<option value="">Todas as origens do clique</option>` + placements.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  $("#filter-ticket-item").setAttribute("placeholder", ticketItems.length ? "Filtrar item" : "Filtrar item");
 }
 
 function fillDataDrivenFilters(){
   $("#filter-lead-status").innerHTML = `<option value="">Todos os status</option>` + uniqueValues(state.leads, "status").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
   $("#filter-lead-source").innerHTML = `<option value="">Todas as origens</option>` + uniqueValues(state.leads, "source").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
-
   $("#filter-contact-status").innerHTML = `<option value="">Todos os status</option>` + uniqueValues(state.contacts, "status").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
-
   $("#filter-ticket-priority").innerHTML = `<option value="">Todas as prioridades</option>` + uniqueValues(state.tickets, "priority").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
   $("#filter-ticket-status").innerHTML = `<option value="">Todos os status</option>` + uniqueValues(state.tickets, "status").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
-
-  $("#filter-timeline-entity").innerHTML = `<option value="">Todos os tipos de entidade</option>` + uniqueValues(state.timeline, "entity_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  $("#filter-timeline-entity").innerHTML = `<option value="">Todos os tipos de registro</option>` + uniqueValues(state.timeline, "entity_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
   $("#filter-timeline-event").innerHTML = `<option value="">Todos os eventos</option>` + uniqueValues(state.timeline, "event_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
-
   $("#filter-mail-status").innerHTML = `<option value="">Todos os status</option>` + uniqueValues(state.mailQueue, "status").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
   $("#filter-mail-type").innerHTML = `<option value="">Todos os tipos</option>` + uniqueValues(state.mailQueue, "message_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
 }
@@ -2510,18 +2362,18 @@ function fillDataDrivenFilters(){
 function renderOverviewMeta(){
   $("#meta-front-version").textContent = "PUBPANEL " + PUBPANEL.VERSION;
   $("#meta-crm-version").textContent = state.status?.data?.version || state.health?.data?.version || "—";
-  $("#meta-mail-version").textContent = "não publicado";
-  $("#meta-io-version").textContent = "não publicado";
+  $("#meta-mail-version").textContent = "ainda não disponível aqui";
+  $("#meta-io-version").textContent = "ainda não disponível aqui";
   $("#meta-api-base").textContent = state.apiBase ? "definida" : "não definida";
 
   if(!state.apiBase){
-    $("#meta-status").textContent = "sem url";
+    $("#meta-status").textContent = "não configurada";
   } else if(state.status?.ok){
-    $("#meta-status").textContent = "online";
+    $("#meta-status").textContent = "conectada";
   } else if(state.ui.lastError){
-    $("#meta-status").textContent = "erro";
+    $("#meta-status").textContent = "com problema";
   } else {
-    $("#meta-status").textContent = "conectando";
+    $("#meta-status").textContent = "em verificação";
   }
 }
 
@@ -2543,8 +2395,19 @@ function renderSummary(){
   const sumLastAction = $("#sum-last-action");
   const sumLastError = $("#sum-last-error");
 
-  if(sumStatus) sumStatus.textContent = state.status?.ok ? "ONLINE" : "—";
-  if(sumSchema) sumSchema.textContent = healthData.schema_ready === true ? "SIM" : healthData.schema_ready === false ? "NÃO" : "—";
+  if(sumStatus){
+    if(!state.apiBase) sumStatus.textContent = "PENDENTE";
+    else if(state.status?.ok) sumStatus.textContent = "OK";
+    else if(state.ui.lastError) sumStatus.textContent = "ERRO";
+    else sumStatus.textContent = "ATENÇÃO";
+  }
+
+  if(sumSchema){
+    if(healthData.schema_ready === true) sumSchema.textContent = "OK";
+    else if(healthData.schema_ready === false) sumSchema.textContent = "ATENÇÃO";
+    else sumSchema.textContent = "—";
+  }
+
   if(sumContacts) sumContacts.textContent = String(state.filtered.contacts.length || 0);
   if(sumLeads) sumLeads.textContent = String(state.filtered.leads.length || 0);
   if(sumTickets) sumTickets.textContent = String(state.filtered.tickets.length || 0);
@@ -2552,24 +2415,26 @@ function renderSummary(){
   if(sumMail) sumMail.textContent = String(state.filtered.mailQueue.length || 0);
 
   if(sumContract){
-    sumContract.textContent = state.contract
-      ? `leadItems: ${contract.leadItems.length} · ticketItems: ${contract.ticketItems.length} · placements: ${contract.leadPlacements.length}`
-      : "Contrato ainda não carregado.";
+    sumContract.textContent = state.apiBase
+      ? "URL salva e pronta para teste."
+      : "A URL ainda não foi configurada.";
   }
 
   if(sumHealth){
     if(state.health || state.healthDeep){
-      const deepInfo = state.healthDeep
-        ? ` · health_deep: ${healthDeepData.check_type || "carregado"}`
-        : "";
-      sumHealth.textContent = `schema_ready: ${healthData.schema_ready === true ? "SIM" : healthData.schema_ready === false ? "NÃO" : "—"} · safe_failures: ${safeTotal}${deepInfo}`;
+      const checks = [];
+      if(healthData.schema_ready === true) checks.push("estrutura OK");
+      if(healthData.schema_ready === false) checks.push("estrutura requer atenção");
+      checks.push(`ocorrências: ${safeTotal}`);
+      if(state.healthDeep) checks.push(`verificação completa: ${healthDeepData.check_type || "carregada"}`);
+      sumHealth.textContent = checks.join(" · ");
     } else {
-      sumHealth.textContent = "Health ainda não carregado.";
+      sumHealth.textContent = "Ainda não há leitura concluída.";
     }
   }
 
   if(sumLastAction) sumLastAction.textContent = "Última ação: " + (state.ui.lastAction || "—");
-  if(sumLastError) sumLastError.textContent = "Último erro: " + (state.ui.lastError || "—");
+  if(sumLastError) sumLastError.textContent = "Último problema: " + (state.ui.lastError || "—");
 
   renderOverviewMeta();
   updateSideCounts();
@@ -2588,34 +2453,32 @@ function assignPublicModeResult(mode, json){
   if(mode === "health_deep") state.healthDeep = json;
 
   if(mode === "contract") fillContractFilters();
-
   renderHealth();
 }
 
 function publicModeSuccessMessage(mode){
-  if(mode === "status") return "O endpoint status respondeu com sucesso.";
-  if(mode === "contract") return "O contrato do front foi carregado.";
-  if(mode === "health") return "A leitura resumida de saúde estrutural foi carregada.";
-  if(mode === "health_deep") return "O diagnóstico funcional detalhado foi carregado separadamente.";
+  if(mode === "status") return "A conexão respondeu com sucesso.";
+  if(mode === "contract") return "Os detalhes técnicos foram carregados.";
+  if(mode === "health") return "A verificação rápida foi concluída.";
+  if(mode === "health_deep") return "A verificação completa foi concluída.";
   return "Consulta concluída.";
 }
 
 function publicModeSuccessTitle(mode){
-  if(mode === "status") return "Status lido";
-  if(mode === "contract") return "Contrato lido";
-  if(mode === "health") return "Health lido";
-  if(mode === "health_deep") return "Health profundo concluído";
+  if(mode === "status") return "Conexão testada";
+  if(mode === "contract") return "Detalhes carregados";
+  if(mode === "health") return "Verificação rápida concluída";
+  if(mode === "health_deep") return "Verificação completa concluída";
   return "Consulta concluída";
 }
 
 function publicModeBusyLabel(mode){
-  if(mode === "health_deep") return "Rodando...";
-  return "Lendo...";
+  if(mode === "health_deep") return "Verificando...";
+  return "Carregando...";
 }
 
 async function runPublicMode(mode, button){
   const startedAt = performance.now();
-
   try{
     setLastAction("mode=" + mode);
     setLastError("");
@@ -2637,26 +2500,19 @@ async function runPublicMode(mode, button){
         "mode=" + mode,
         "ok",
         describeBackendPayload(json),
-        {
-          duration_ms: durationMs,
-          rows_count: 0
-        }
+        { duration_ms: durationMs, rows_count: 0 }
       );
     });
   }catch(err){
     const durationMs = Math.round(performance.now() - startedAt);
-
     setLastError(err.message || "Erro desconhecido");
-    notify("error", "Falha em mode=" + mode, err.message || "Erro desconhecido");
+    notify("error", "Não foi possível concluir a leitura", err.message || "Erro desconhecido");
     pushHistory(
       "GET",
       "mode=" + mode,
       "erro",
       err.message || "erro",
-      {
-        duration_ms: durationMs,
-        rows_count: 0
-      }
+      { duration_ms: durationMs, rows_count: 0 }
     );
   } finally {
     renderSummary();
@@ -2671,16 +2527,14 @@ function renderHealth(){
 
   setMetric("#metric-app", healthData.app || status?.data?.app || "—");
   setMetric("#metric-version", healthData.version || status?.data?.version || "—");
-  setMetric("#metric-schema", healthData.schema_ready === true ? "SIM" : healthData.schema_ready === false ? "NÃO" : "—");
+  setMetric("#metric-schema", healthData.schema_ready === true ? "OK" : healthData.schema_ready === false ? "ATENÇÃO" : "—");
   setMetric("#metric-safe", String(safeTotal));
 
   const contractScore = [
     contract.leadItems.length,
     contract.ticketItems.length,
     contract.leadPlacements.length
-  ]
-  .filter(v => v > 0)
-  .join(" / ");
+  ].filter(v => v > 0).join(" / ");
 
   setMetric("#metric-contract", contractScore || "—");
 
@@ -2715,10 +2569,7 @@ function applyLeadFilters(){
   const source = stringValue($("#filter-lead-source")?.value);
 
   let rows = state.leads.slice().filter(r => {
-    const hay = [
-      r.lead_id, r.request_id, r.contact_id, r.name, r.email, r.item, r.placement, r.status, r.source
-    ].join(" ").toLowerCase();
-
+    const hay = [r.lead_id, r.request_id, r.contact_id, r.name, r.email, r.item, r.placement, r.status, r.source].join(" ").toLowerCase();
     if(q && !hay.includes(q)) return false;
     if(item && stringValue(r.item) !== item) return false;
     if(placement && stringValue(r.placement) !== placement) return false;
@@ -2740,10 +2591,7 @@ function applyContactFilters(){
   const source = stringValue($("#filter-contact-source")?.value).toLowerCase();
 
   let rows = state.contacts.slice().filter(r => {
-    const hay = [
-      r.contact_id, r.name, r.email, r.whatsapp, r.company, r.city, r.state, r.status, r.source
-    ].join(" ").toLowerCase();
-
+    const hay = [r.contact_id, r.name, r.email, r.whatsapp, r.company, r.city, r.state, r.status, r.source].join(" ").toLowerCase();
     if(q && !hay.includes(q)) return false;
     if(status && stringValue(r.status) !== status) return false;
     if(company && !stringValue(r.company).toLowerCase().includes(company)) return false;
@@ -2765,10 +2613,7 @@ function applyTicketFilters(){
   const script = stringValue($("#filter-ticket-script")?.value).toLowerCase();
 
   let rows = state.tickets.slice().filter(r => {
-    const hay = [
-      r.ticket_id, r.request_id, r.contact_id, r.name, r.email, r.item, r.subject, r.message, r.priority, r.status, r.script_name, r.script_version
-    ].join(" ").toLowerCase();
-
+    const hay = [r.ticket_id, r.request_id, r.contact_id, r.name, r.email, r.item, r.subject, r.message, r.priority, r.status, r.script_name, r.script_version].join(" ").toLowerCase();
     if(q && !hay.includes(q)) return false;
     if(priority && stringValue(r.priority) !== priority) return false;
     if(status && stringValue(r.status) !== status) return false;
@@ -2788,10 +2633,7 @@ function applyTimelineFilters(){
   const eventType = stringValue($("#filter-timeline-event")?.value);
 
   let rows = state.timeline.slice().filter(r => {
-    const hay = [
-      r.timeline_id, r.entity_type, r.entity_id, r.event_type, r.payload_json
-    ].join(" ").toLowerCase();
-
+    const hay = [r.timeline_id, r.entity_type, r.entity_id, r.event_type, r.payload_json].join(" ").toLowerCase();
     if(q && !hay.includes(q)) return false;
     if(entity && stringValue(r.entity_type) !== entity) return false;
     if(eventType && stringValue(r.event_type) !== eventType) return false;
@@ -2811,10 +2653,7 @@ function applyMailFilters(){
   const template = stringValue($("#filter-mail-template")?.value).toLowerCase();
 
   let rows = state.mailQueue.slice().filter(r => {
-    const hay = [
-      r.queue_id, r.mail_key, r.recipient, r.campaign_key, r.template_key, r.message_type, r.status, r.entity_type, r.entity_id
-    ].join(" ").toLowerCase();
-
+    const hay = [r.queue_id, r.mail_key, r.recipient, r.campaign_key, r.template_key, r.message_type, r.status, r.entity_type, r.entity_id].join(" ").toLowerCase();
     if(q && !hay.includes(q)) return false;
     if(status && stringValue(r.status) !== status) return false;
     if(type && stringValue(r.message_type) !== type) return false;
@@ -2828,29 +2667,40 @@ function applyMailFilters(){
   renderMailQueue(rows);
 }
 
-function renderLeads(rows){
-  if(state.datasetAvailability.leads === "unpublished"){
-    $("#leads-table-wrap").innerHTML = `
-      <div class="empty">
-        Listagem administrativa não publicada neste endpoint.
-        <div class="empty-meta">
-          <div class="empty-meta-row">
-            <strong>Status</strong>
-            <span>Pendente</span>
-          </div>
-          <div class="empty-meta-row">
-            <strong>Módulo</strong>
-            <span>Leads no CRM</span>
-          </div>
+function renderUnavailableDatasetMessage(title, moduleName){
+  return `
+    <div class="empty">
+      <strong>${title}</strong>
+      <div class="empty-meta">
+        <div class="empty-meta-row">
+          <strong>Estado</strong>
+          <span>Indisponível</span>
+        </div>
+        <div class="empty-meta-row">
+          <strong>Resumo</strong>
+          <span>Os dados existem no sistema, mas esta visualização ainda não foi liberada neste painel.</span>
+        </div>
+        <div class="empty-meta-row">
+          <strong>Próxima ação</strong>
+          <span>Use os recursos já disponíveis aqui ou abra os detalhes técnicos.</span>
+        </div>
+        <div class="empty-meta-row tech-only">
+          <strong>Módulo</strong>
+          <span>${moduleName}</span>
         </div>
       </div>
-    `;
+    </div>
+  `;
+}
+
+function renderLeads(rows){
+  if(state.datasetAvailability.leads === "unpublished"){
+    $("#leads-table-wrap").innerHTML = renderUnavailableDatasetMessage("Esta lista ainda não está disponível aqui.", "Leads no CRM");
     updateSideCounts();
     return;
   }
-
   if(!rows.length){
-    $("#leads-table-wrap").innerHTML = `<div class="empty">Nenhuma linha com os filtros atuais.</div>`;
+    $("#leads-table-wrap").innerHTML = `<div class="empty">Nenhum resultado encontrado. Revise os filtros ou limpe a busca para tentar novamente.</div>`;
     updateSideCounts();
     return;
   }
@@ -2865,7 +2715,7 @@ function renderLeads(rows){
           <th><button class="th-sort" data-sort-kind="leads" data-sort-key="lead_id" data-dir="${sortAttr("leads","lead_id")}">Lead</button></th>
           <th><button class="th-sort" data-sort-kind="leads" data-sort-key="name" data-dir="${sortAttr("leads","name")}">Contato</button></th>
           <th><button class="th-sort" data-sort-kind="leads" data-sort-key="item" data-dir="${sortAttr("leads","item")}">Item</button></th>
-          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="placement" data-dir="${sortAttr("leads","placement")}">Placement</button></th>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="placement" data-dir="${sortAttr("leads","placement")}">Origem do clique</button></th>
           <th><button class="th-sort" data-sort-kind="leads" data-sort-key="source" data-dir="${sortAttr("leads","source")}">Origem</button></th>
           <th><button class="th-sort" data-sort-kind="leads" data-sort-key="status" data-dir="${sortAttr("leads","status")}">Status</button></th>
           <th><button class="th-sort" data-sort-kind="leads" data-sort-key="score" data-dir="${sortAttr("leads","score")}">Score</button></th>
@@ -2888,7 +2738,7 @@ function renderLeads(rows){
       </tbody>
     </table>
     <div class="table-foot">
-      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+      <div class="tiny">Resultados encontrados: ${rows.length}</div>
     </div>
     ${renderPager("leads", info)}
   `;
@@ -2897,27 +2747,12 @@ function renderLeads(rows){
 
 function renderContacts(rows){
   if(state.datasetAvailability.contacts === "unpublished"){
-    $("#contacts-table-wrap").innerHTML = `
-      <div class="empty">
-        Listagem administrativa não publicada neste endpoint.
-        <div class="empty-meta">
-          <div class="empty-meta-row">
-            <strong>Status</strong>
-            <span>Pendente</span>
-          </div>
-          <div class="empty-meta-row">
-            <strong>Módulo</strong>
-            <span>Contatos no CRM</span>
-          </div>
-        </div>
-      </div>
-    `;
+    $("#contacts-table-wrap").innerHTML = renderUnavailableDatasetMessage("Esta lista ainda não está disponível aqui.", "Contatos no CRM");
     updateSideCounts();
     return;
   }
-
   if(!rows.length){
-    $("#contacts-table-wrap").innerHTML = `<div class="empty">Nenhuma linha com os filtros atuais.</div>`;
+    $("#contacts-table-wrap").innerHTML = `<div class="empty">Nenhum resultado encontrado. Revise os filtros ou limpe a busca para tentar novamente.</div>`;
     updateSideCounts();
     return;
   }
@@ -2930,7 +2765,7 @@ function renderContacts(rows){
       <thead>
         <tr>
           <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="contact_id" data-dir="${sortAttr("contacts","contact_id")}">Contato</button></th>
-          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="email" data-dir="${sortAttr("contacts","email")}">Email</button></th>
+          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="email" data-dir="${sortAttr("contacts","email")}">E-mail</button></th>
           <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="whatsapp" data-dir="${sortAttr("contacts","whatsapp")}">WhatsApp</button></th>
           <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="company" data-dir="${sortAttr("contacts","company")}">Empresa</button></th>
           <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="city" data-dir="${sortAttr("contacts","city")}">Cidade</button></th>
@@ -2953,7 +2788,7 @@ function renderContacts(rows){
       </tbody>
     </table>
     <div class="table-foot">
-      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+      <div class="tiny">Resultados encontrados: ${rows.length}</div>
     </div>
     ${renderPager("contacts", info)}
   `;
@@ -2962,27 +2797,12 @@ function renderContacts(rows){
 
 function renderTickets(rows){
   if(state.datasetAvailability.tickets === "unpublished"){
-    $("#tickets-table-wrap").innerHTML = `
-      <div class="empty">
-        Listagem administrativa não publicada neste endpoint.
-        <div class="empty-meta">
-          <div class="empty-meta-row">
-            <strong>Status</strong>
-            <span>Pendente</span>
-          </div>
-          <div class="empty-meta-row">
-            <strong>Módulo</strong>
-            <span>Tickets no CRM</span>
-          </div>
-        </div>
-      </div>
-    `;
+    $("#tickets-table-wrap").innerHTML = renderUnavailableDatasetMessage("Esta lista ainda não está disponível aqui.", "Tickets no CRM");
     updateSideCounts();
     return;
   }
-
   if(!rows.length){
-    $("#tickets-table-wrap").innerHTML = `<div class="empty">Nenhuma linha com os filtros atuais.</div>`;
+    $("#tickets-table-wrap").innerHTML = `<div class="empty">Nenhum resultado encontrado. Revise os filtros ou limpe a busca para tentar novamente.</div>`;
     updateSideCounts();
     return;
   }
@@ -3000,7 +2820,7 @@ function renderTickets(rows){
           <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="subject" data-dir="${sortAttr("tickets","subject")}">Assunto</button></th>
           <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="priority" data-dir="${sortAttr("tickets","priority")}">Prioridade</button></th>
           <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="status" data-dir="${sortAttr("tickets","status")}">Status</button></th>
-          <th>Contexto técnico</th>
+          <th>Detalhes</th>
         </tr>
       </thead>
       <tbody>
@@ -3018,7 +2838,7 @@ function renderTickets(rows){
       </tbody>
     </table>
     <div class="table-foot">
-      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+      <div class="tiny">Resultados encontrados: ${rows.length}</div>
     </div>
     ${renderPager("tickets", info)}
   `;
@@ -3027,27 +2847,12 @@ function renderTickets(rows){
 
 function renderMailQueue(rows){
   if(state.datasetAvailability.mailQueue === "unpublished"){
-    $("#mail-table-wrap").innerHTML = `
-      <div class="empty">
-        Listagem administrativa não publicada neste endpoint.
-        <div class="empty-meta">
-          <div class="empty-meta-row">
-            <strong>Status</strong>
-            <span>Pendente</span>
-          </div>
-          <div class="empty-meta-row">
-            <strong>Módulo</strong>
-            <span>Fila do PUBMAIL</span>
-          </div>
-        </div>
-      </div>
-    `;
+    $("#mail-table-wrap").innerHTML = renderUnavailableDatasetMessage("Esta lista ainda não está disponível aqui.", "Fila de envios");
     updateSideCounts();
     return;
   }
-
   if(!rows.length){
-    $("#mail-table-wrap").innerHTML = `<div class="empty">Nenhuma linha com os filtros atuais.</div>`;
+    $("#mail-table-wrap").innerHTML = `<div class="empty">Nenhum resultado encontrado. Revise os filtros ou limpe a busca para tentar novamente.</div>`;
     updateSideCounts();
     return;
   }
@@ -3059,10 +2864,10 @@ function renderMailQueue(rows){
     <table>
       <thead>
         <tr>
-          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="queue_id" data-dir="${sortAttr("mailQueue","queue_id")}">Queue</button></th>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="queue_id" data-dir="${sortAttr("mailQueue","queue_id")}">Fila</button></th>
           <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="recipient" data-dir="${sortAttr("mailQueue","recipient")}">Destinatário</button></th>
           <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="campaign_key" data-dir="${sortAttr("mailQueue","campaign_key")}">Campanha</button></th>
-          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="template_key" data-dir="${sortAttr("mailQueue","template_key")}">Template</button></th>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="template_key" data-dir="${sortAttr("mailQueue","template_key")}">Modelo</button></th>
           <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="message_type" data-dir="${sortAttr("mailQueue","message_type")}">Tipo</button></th>
           <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="status" data-dir="${sortAttr("mailQueue","status")}">Status</button></th>
           <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="scheduled_at" data-dir="${sortAttr("mailQueue","scheduled_at")}">Agendado</button></th>
@@ -3083,7 +2888,7 @@ function renderMailQueue(rows){
       </tbody>
     </table>
     <div class="table-foot">
-      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+      <div class="tiny">Resultados encontrados: ${rows.length}</div>
     </div>
     ${renderPager("mailQueue", info)}
   `;
@@ -3092,27 +2897,12 @@ function renderMailQueue(rows){
 
 function renderTimeline(rows){
   if(state.datasetAvailability.timeline === "unpublished"){
-    $("#timeline-table-wrap").innerHTML = `
-      <div class="empty">
-        Listagem administrativa não publicada neste endpoint.
-        <div class="empty-meta">
-          <div class="empty-meta-row">
-            <strong>Status</strong>
-            <span>Pendente</span>
-          </div>
-          <div class="empty-meta-row">
-            <strong>Módulo</strong>
-            <span>Timeline do ecossistema</span>
-          </div>
-        </div>
-      </div>
-    `;
+    $("#timeline-table-wrap").innerHTML = renderUnavailableDatasetMessage("Esta visualização ainda não está disponível aqui.", "Atividade do ecossistema");
     updateSideCounts();
     return;
   }
-
   if(!rows.length){
-    $("#timeline-table-wrap").innerHTML = `<div class="empty">Nenhuma linha com os filtros atuais.</div>`;
+    $("#timeline-table-wrap").innerHTML = `<div class="empty">Nenhum resultado encontrado. Revise os filtros ou limpe a busca para tentar novamente.</div>`;
     updateSideCounts();
     return;
   }
@@ -3124,12 +2914,12 @@ function renderTimeline(rows){
     <table>
       <thead>
         <tr>
-          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="timeline_id" data-dir="${sortAttr("timeline","timeline_id")}">Timeline</button></th>
-          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="entity_type" data-dir="${sortAttr("timeline","entity_type")}">Entity type</button></th>
-          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="entity_id" data-dir="${sortAttr("timeline","entity_id")}">Entity ID</button></th>
-          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="event_type" data-dir="${sortAttr("timeline","event_type")}">Event type</button></th>
-          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="event_at" data-dir="${sortAttr("timeline","event_at")}">Event at</button></th>
-          <th>Payload</th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="timeline_id" data-dir="${sortAttr("timeline","timeline_id")}">ID</button></th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="entity_type" data-dir="${sortAttr("timeline","entity_type")}">Tipo de registro</button></th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="entity_id" data-dir="${sortAttr("timeline","entity_id")}">Registro</button></th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="event_type" data-dir="${sortAttr("timeline","event_type")}">Evento</button></th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="event_at" data-dir="${sortAttr("timeline","event_at")}">Data</button></th>
+          <th>Conteúdo</th>
         </tr>
       </thead>
       <tbody>
@@ -3146,7 +2936,7 @@ function renderTimeline(rows){
       </tbody>
     </table>
     <div class="table-foot">
-      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+      <div class="tiny">Resultados encontrados: ${rows.length}</div>
     </div>
     ${renderPager("timeline", info)}
   `;
@@ -3157,15 +2947,15 @@ function updateSideCounts(){
   const labels = {
     "#overview": "01",
     "#summary": "02",
-    "#installation": "03",
-    "#health": "04",
-    "#crm-core": "05",
-    "#timeline": "06",
-    "#mail-core": "07",
-    "#pubio-core": "08",
-    "#observability": "09",
+    "#connection": "03",
+    "#system-health": "04",
+    "#crm": "05",
+    "#activity": "06",
+    "#mail": "07",
+    "#data-ops": "08",
+    "#diagnostics": "09",
     "#history": "10",
-    "#settings": "11"
+    "#preferences": "11"
   };
 
   const nav = $$("#nav a");
@@ -3284,37 +3074,35 @@ function exportCurrentDataset(kind){
   if(!cfg) return;
 
   if(!cfg.rows.length){
-    notify("warn", "Nada para exportar", "Não há linhas filtradas em " + kind + ".");
+    notify("warn", "Nada para exportar", "Ajuste os filtros ou carregue dados antes de exportar.");
     pushHistory("UI", "export_csv_" + kind, "vazio", "Nenhuma linha disponível.");
     return;
   }
 
   const csv = rowsToCsv(cfg.rows, cfg.columns, ";");
   downloadTextFile(cfg.file, csv, "text/csv;charset=utf-8");
-  notify("success", "CSV exportado", "Arquivo local gerado com os dados filtrados de " + kind + ".");
+  notify("success", "Arquivo exportado", "O CSV foi gerado com os dados filtrados.");
   pushHistory("UI", "export_csv_" + kind, "ok", "Exportação local com " + cfg.rows.length + " linhas.");
 }
 
-function mapAdminAction(action){
-  const availability = getActionAvailability(action);
+function mapTechnicalAction(action){
+  const availability = getFeatureAvailability(action);
 
   if(availability.state === "unknown"){
-    throw new Error("Ação administrativa sem mapeamento explícito no painel: " + action);
+    throw new Error("Ação sem mapeamento explícito no painel: " + action);
   }
-
   if(availability.state !== "planned"){
-    throw new Error("A ação não está em estado planejado para façade administrativa: " + action);
+    throw new Error("A ação não está em estado planejado: " + action);
   }
-
   if(!availability.facadeFuture){
-    throw new Error("Ação administrativa sem facadeFuture definida no painel: " + action);
+    throw new Error("Ação sem identificador técnico futuro: " + action);
   }
 
-  return "façade_admin_pendente::" + availability.facadeFuture;
+  return availability.facadeFuture;
 }
 
 function buildAdminPayload(action){
-  const mapped = mapAdminAction(action);
+  const mapped = mapTechnicalAction(action);
   const payload = {};
   const importField = $("#import-json");
   const importJson = importField ? String(importField.value || "").trim() : "";
@@ -3333,18 +3121,14 @@ function buildAdminPayload(action){
 async function handleAdminAction(action, button){
   if(!confirmAdminAction(action)) return;
 
-  const availability = getActionAvailability(action);
+  const availability = getFeatureAvailability(action);
   if(availability.state === "unknown"){
-    notify("error", "Ação administrativa sem cadastro", "A ação não está registrada em ACTION_PUBLICATION.");
+    notify("error", "Recurso não mapeado", "Este recurso não está registrado corretamente no painel.");
     return;
   }
 
   if(availability.state === "published"){
-    notify(
-      "warn",
-      "Use a ação publicada correspondente",
-      "Esta ação já está marcada como publicada no painel e deve ser tratada por uma rotina real de execução."
-    );
+    notify("warn", "Use a ação principal", "Este recurso já está marcado como disponível e deve ser tratado pela rotina correspondente.");
     return;
   }
 
@@ -3356,106 +3140,80 @@ async function handleAdminAction(action, button){
     setLastAction(action);
     setLastError("");
 
-    mapped = mapAdminAction(action);
+    mapped = mapTechnicalAction(action);
     payload = buildAdminPayload(action);
 
-    await withBusyButton(button, "Abrindo diagnóstico...", async () => {
+    await withBusyButton(button, "Abrindo...", async () => {
       const durationMs = Math.round(performance.now() - startedAt);
 
       drawer(
-        "Operação administrativa não publicada",
+        "Recurso ainda não disponível aqui",
         [
-          "AÇÃO",
-          action,
+          "Estado",
+          "Indisponível",
           "",
-          "ESTADO",
-          availability.state,
+          "Resumo",
+          availability.uiLabel,
           "",
-          "RÓTULO",
-          availability.label,
+          "Próxima ação",
+          "Use os recursos já disponíveis neste painel ou acompanhe a liberação futura desta área.",
           "",
-          "FAÇADE FUTURA",
-          mapped,
-          "",
-          "LEITURA CORRETA",
-          "A função pode existir no módulo.",
-          "O que não existe neste deploy é a façade HTTP publicada para esta operação.",
-          "",
-          "DADOS",
+          "Detalhes técnicos",
+          "Identificador previsto: " + mapped,
+          "Rótulo técnico: " + (availability.technicalLabel || "—"),
           "Hora: " + nowLabel(),
-          "URL base: " + (state.apiBase || "não definida"),
+          "URL salva: " + (state.apiBase || "não definida"),
           "Duração: " + durationMs + " ms",
           "",
-          "PAYLOAD",
+          "Payload",
           safeJson(payload)
         ].join("\n")
       );
 
-      notify(
-        "warn",
-        "Operação não publicada",
-        "Função interna preservada no painel, mas sem façade administrativa publicada."
-      );
+      notify("unavailable", "Recurso indisponível", "Este recurso está previsto no sistema, mas ainda não foi liberado nesta interface.");
 
       pushHistory(
         "UI",
         mapped,
-        "não_publicado",
-        "Ação administrativa bloqueada por ausência de façade HTTP publicada.",
-        {
-          duration_ms: durationMs,
-          rows_count: 0
-        }
+        "indisponível",
+        "Recurso previsto, ainda não liberado nesta interface.",
+        { duration_ms: durationMs, rows_count: 0 }
       );
     });
   }catch(err){
     const durationMs = Math.round(performance.now() - startedAt);
-
     setLastError(err.message || "Erro desconhecido");
 
     drawer(
-      "Falha ao abrir diagnóstico",
+      "Não foi possível abrir os detalhes",
       [
-        "AÇÃO",
-        action,
+        "Estado",
+        "Erro",
         "",
-        "ESTADO",
-        availability.state,
+        "Resumo",
+        "Falha ao abrir o detalhe deste recurso.",
         "",
-        "RÓTULO",
-        availability.label,
+        "Próxima ação",
+        "Tente novamente ou revise o mapeamento técnico no painel.",
         "",
-        "FAÇADE FUTURA",
-        mapped || "indisponível",
-        "",
-        "PAYLOAD",
-        safeJson(payload),
-        "",
-        "DADOS",
+        "Detalhes técnicos",
+        "Recurso: " + action,
+        "Identificador previsto: " + (mapped || "indisponível"),
+        "Payload: " + safeJson(payload),
+        "Motivo: " + (err.message || "Erro desconhecido"),
         "Hora: " + nowLabel(),
-        "URL base: " + (state.apiBase || "não definida"),
-        "Duração: " + durationMs + " ms",
-        "",
-        "MOTIVO",
-        err.message || "Erro desconhecido"
+        "Duração: " + durationMs + " ms"
       ].join("\n")
     );
 
-    notify(
-      "warn",
-      "Diagnóstico admin indisponível",
-      "Não foi possível abrir o diagnóstico da ação administrativa."
-    );
+    notify("warn", "Detalhes indisponíveis", "Não foi possível abrir o detalhamento deste recurso.");
 
     pushHistory(
       "UI",
       mapped || action,
       "erro",
       err.message || "erro",
-      {
-        duration_ms: durationMs,
-        rows_count: 0
-      }
+      { duration_ms: durationMs, rows_count: 0 }
     );
   } finally {
     renderSummary();
@@ -3465,13 +3223,13 @@ async function handleAdminAction(action, button){
 async function handleUnavailableAdminDataset(kind, button){
   const dataset = DATASETS[kind];
   if(!dataset){
-    notify("error", "Dataset desconhecido", "O painel não reconhece o dataset solicitado: " + kind);
+    notify("error", "Área desconhecida", "O painel não reconhece a área solicitada.");
     return;
   }
 
-  const availability = getActionAvailability(dataset.adminListAction);
+  const availability = getFeatureAvailability(dataset.adminListAction);
   if(availability.state === "unknown"){
-    notify("error", "Dataset sem publicação mapeada", "A ação administrativa do dataset não está registrada em ACTION_PUBLICATION.");
+    notify("error", "Disponibilidade não mapeada", "A disponibilidade desta lista não está registrada corretamente.");
     return;
   }
 
@@ -3481,10 +3239,9 @@ async function handleUnavailableAdminDataset(kind, button){
   try{
     setLastAction(dataset.adminListAction);
     setLastError("");
+    mapped = mapTechnicalAction(dataset.adminListAction);
 
-    mapped = mapAdminAction(dataset.adminListAction);
-
-    await withBusyButton(button, "Abrindo diagnóstico...", async () => {
+    await withBusyButton(button, "Abrindo...", async () => {
       state[kind] = [];
       state.filtered[kind] = [];
       state.datasetAvailability[kind] = "unpublished";
@@ -3495,46 +3252,35 @@ async function handleUnavailableAdminDataset(kind, button){
       const durationMs = Math.round(performance.now() - startedAt);
 
       drawer(
-        "Listagem administrativa não publicada",
+        "Esta lista ainda não está disponível aqui",
         [
-          "DATASET",
-          dataset.label,
+          "Estado",
+          "Indisponível",
           "",
-          "ESTADO",
-          availability.state,
+          "Resumo",
+          availability.uiLabel,
           "",
-          "RÓTULO",
-          availability.label,
+          "Próxima ação",
+          "Use os recursos já disponíveis neste painel ou consulte os detalhes técnicos desta área.",
           "",
-          "FAÇADE FUTURA",
-          mapped,
-          "",
-          "LEITURA",
-          "A entidade existe no ecossistema real.",
-          "A listagem HTTP publicada ainda não existe neste endpoint.",
-          "",
-          "DADOS",
+          "Detalhes técnicos",
+          "Lista: " + dataset.label,
+          "Identificador previsto: " + mapped,
+          "Rótulo técnico: " + (availability.technicalLabel || "—"),
           "Hora: " + nowLabel(),
-          "URL base: " + (state.apiBase || "não definida"),
+          "URL salva: " + (state.apiBase || "não definida"),
           "Duração: " + durationMs + " ms"
         ].join("\n")
       );
 
-      notify(
-        "warn",
-        "Listagem não publicada",
-        "A entidade permanece modelada no painel, mas sua listagem administrativa ainda não foi publicada."
-      );
+      notify("unavailable", "Lista indisponível", "Os dados existem no sistema, mas esta visualização ainda não foi liberada aqui.");
 
       pushHistory(
         "UI",
         mapped,
-        "não_publicado",
-        "Listagem administrativa bloqueada por ausência de façade HTTP publicada.",
-        {
-          duration_ms: durationMs,
-          rows_count: 0
-        }
+        "indisponível",
+        "Lista ainda não disponível nesta interface.",
+        { duration_ms: durationMs, rows_count: 0 }
       );
     });
   }catch(err){
@@ -3547,42 +3293,24 @@ async function handleUnavailableAdminDataset(kind, button){
 
     renderDatasetByKind(kind);
 
-    notify(
-      "warn",
-      "Falha na listagem informativa",
-      "Não foi possível abrir o diagnóstico de indisponibilidade da listagem."
-    );
+    notify("warn", "Detalhes indisponíveis", "Não foi possível abrir os detalhes desta lista.");
 
     pushHistory(
       "UI",
       mapped || dataset.adminListAction,
       "erro",
       err.message || "erro",
-      {
-        duration_ms: durationMs,
-        rows_count: 0
-      }
+      { duration_ms: durationMs, rows_count: 0 }
     );
   } finally {
     renderSummary();
   }
 }
 
-async function runStatus(button){
-  return runPublicMode("status", button);
-}
-
-async function runContract(button){
-  return runPublicMode("contract", button);
-}
-
-async function runHealth(button){
-  return runPublicMode("health", button);
-}
-
-async function runHealthDeep(button){
-  return runPublicMode("health_deep", button);
-}
+async function runStatus(button){ return runPublicMode("status", button); }
+async function runContract(button){ return runPublicMode("contract", button); }
+async function runHealth(button){ return runPublicMode("health", button); }
+async function runHealthDeep(button){ return runPublicMode("health_deep", button); }
 
 async function runAdminInstallCrm(button){
   const startedAt = performance.now();
@@ -3604,33 +3332,30 @@ async function runAdminInstallCrm(button){
       const durationMs = Math.round(performance.now() - startedAt);
 
       drawerJson(
-        "Instalação do CRM concluída",
+        "CRM instalado ou atualizado",
         [
-          "A action administrativa publicada foi executada com sucesso.",
+          "Estado",
+          "OK",
           "",
-          "O painel executará em seguida leituras públicas de atualização:",
-          "- mode=status",
-          "- mode=health",
-          "- mode=contract"
+          "Resumo",
+          "A instalação ou atualização do CRM foi concluída com sucesso.",
+          "",
+          "Próxima ação",
+          "O painel vai atualizar as leituras principais para refletir o novo estado.",
+          "",
+          "Detalhes técnicos"
         ].join("\n"),
         json
       );
 
-      notify(
-        "success",
-        "CRM instalado ou atualizado",
-        "A action=admin_install_crm foi executada com sucesso."
-      );
+      notify("success", "CRM instalado ou atualizado", "A operação foi concluída com sucesso.");
 
       pushHistory(
         "POST",
         "action=admin_install_crm",
         "ok",
         "Instalação ou atualização do CRM executada com sucesso.",
-        {
-          duration_ms: durationMs,
-          rows_count: 0
-        }
+        { duration_ms: durationMs, rows_count: 0 }
       );
 
       try { await runStatus(); } catch(_) {}
@@ -3639,40 +3364,37 @@ async function runAdminInstallCrm(button){
     });
   }catch(err){
     const durationMs = Math.round(performance.now() - startedAt);
-
     setLastError(err.message || "Erro desconhecido");
 
     drawer(
-      "Falha na instalação do CRM",
+      "Não foi possível instalar ou atualizar o CRM",
       [
-        "AÇÃO",
-        "action=admin_install_crm",
+        "Estado",
+        "Erro",
         "",
-        "MOTIVO",
-        err.message || "Erro desconhecido",
+        "Resumo",
+        "A operação não pôde ser concluída.",
         "",
-        "DADOS",
+        "Próxima ação",
+        "Revise a URL salva, teste a conexão e tente novamente.",
+        "",
+        "Detalhes técnicos",
+        "Ação: action=admin_install_crm",
+        "Motivo: " + (err.message || "Erro desconhecido"),
         "Hora: " + nowLabel(),
-        "URL base: " + (state.apiBase || "não definida"),
+        "URL salva: " + (state.apiBase || "não definida"),
         "Duração: " + durationMs + " ms"
       ].join("\n")
     );
 
-    notify(
-      "error",
-      "Falha na instalação do CRM",
-      err.message || "Erro desconhecido"
-    );
+    notify("error", "Falha na instalação do CRM", err.message || "Erro desconhecido");
 
     pushHistory(
       "POST",
       "action=admin_install_crm",
       "erro",
       err.message || "erro",
-      {
-        duration_ms: durationMs,
-        rows_count: 0
-      }
+      { duration_ms: durationMs, rows_count: 0 }
     );
   } finally {
     renderSummary();
@@ -3742,6 +3464,12 @@ function bindTopbarActions(){
   $("#btn-load-tickets").addEventListener("click", e => handleUnavailableAdminDataset("tickets", e.currentTarget));
   $("#btn-load-timeline").addEventListener("click", e => handleUnavailableAdminDataset("timeline", e.currentTarget));
   $("#btn-load-mail-queue").addEventListener("click", e => handleUnavailableAdminDataset("mailQueue", e.currentTarget));
+
+  $("#toggle-ui-mode").addEventListener("click", () => {
+    saveUiMode(state.ui.mode === "technical" ? "simple" : "technical");
+  });
+  $("#btn-mode-simple").addEventListener("click", () => saveUiMode("simple"));
+  $("#btn-mode-technical").addEventListener("click", () => saveUiMode("technical"));
 }
 
 function bindFilterActions(){
@@ -3792,52 +3520,60 @@ function bindUtilityActions(){
   $("#copy-health-json").addEventListener("click", async () => {
     try{
       await navigator.clipboard.writeText($("#health-json-box").textContent || "");
-      notify("success", "Copiado", "O JSON foi copiado para a área de transferência.");
-      pushHistory("UI", "copy_health_json", "ok", "JSON copiado.");
+      notify("success", "Dados copiados", "O conteúdo foi copiado para a área de transferência.");
+      pushHistory("UI", "copy_health_json", "ok", "Dados copiados.");
     }catch(err){
-      notify("warn", "Não foi possível copiar", "Copie manualmente o conteúdo do bloco.");
+      notify("warn", "Não foi possível copiar", "Copie manualmente o conteúdo exibido.");
       pushHistory("UI", "copy_health_json", "erro", err.message || "erro");
     }
   });
 
   $("#btn-show-diagnostics").addEventListener("click", () => {
     const historyLines = state.ui.history.slice(0, 8).map(h =>
-      `[${h.at}] ${h.type} ${h.action} -> ${h.status} :: ${h.detail} :: ${h.duration_ms || 0} ms :: ${h.rows_count || 0} linhas`
+      `[${h.at}] ${h.type} ${h.action} -> ${h.status} :: ${h.detail} :: ${h.duration_ms || 0} ms`
     );
 
-    const publishedActions = Object.keys(ACTION_PUBLICATION)
-      .filter(key => getActionAvailability(key).state === "published")
+    const publishedActions = Object.keys(FEATURE_AVAILABILITY)
+      .filter(key => getFeatureAvailability(key).state === "published")
       .map(key => {
-        const availability = getActionAvailability(key);
-        return key + " => " + availability.label + " :: endpoint publicado = " + (availability.publicEndpoint || "não definido");
+        const availability = getFeatureAvailability(key);
+        return key + " => " + availability.technicalLabel;
       });
 
-    const plannedActions = Object.keys(ACTION_PUBLICATION)
-      .filter(key => getActionAvailability(key).state === "planned")
+    const plannedActions = Object.keys(FEATURE_AVAILABILITY)
+      .filter(key => getFeatureAvailability(key).state === "planned")
       .map(key => {
-        const availability = getActionAvailability(key);
-        return key + " => " + availability.label + " :: façade futura mapeada = " + (availability.facadeFuture || "não definida");
+        const availability = getFeatureAvailability(key);
+        return key + " => " + (availability.facadeFuture || "não definido");
       });
 
     drawer("Diagnóstico do painel", [
-      "MATRIZ DO DEPLOY",
-      "GETs públicos: mode=status, mode=health, mode=health_deep, mode=contract",
-      "POSTs públicos: action=capture_lead, action=create_ticket",
-      "POST admin: action=admin_install_crm",
+      "Estado",
+      state.apiBase ? (state.status?.ok ? "OK" : (state.ui.lastError ? "Erro" : "Atenção")) : "Indisponível",
       "",
-      "ESTADO DO PAINEL",
-      "URL base: " + (state.apiBase || "não definida"),
+      "Resumo",
+      state.apiBase
+        ? "O painel possui uma URL salva e pode consultar os recursos disponíveis."
+        : "O painel ainda não possui uma URL de conexão salva.",
+      "",
+      "Próxima ação",
+      state.apiBase
+        ? "Teste a conexão ou execute uma verificação rápida."
+        : "Vá até Conexão, salve a URL do Web App e teste o acesso.",
+      "",
+      "Detalhes técnicos",
+      "URL salva: " + (state.apiBase || "não definida"),
       "Última ação: " + (state.ui.lastAction || "—"),
-      "Último erro: " + (state.ui.lastError || "—"),
+      "Último problema: " + (state.ui.lastError || "—"),
       "Datasets: contacts=" + state.datasetAvailability.contacts + " · leads=" + state.datasetAvailability.leads + " · tickets=" + state.datasetAvailability.tickets + " · timeline=" + state.datasetAvailability.timeline + " · mailQueue=" + state.datasetAvailability.mailQueue,
       "",
-      "AÇÕES PUBLICADAS",
-      publishedActions.length ? publishedActions.join("\n") : "Nenhuma ação publicada mapeada.",
+      "Ações publicadas",
+      publishedActions.length ? publishedActions.join("\n") : "Nenhuma.",
       "",
-      "AÇÕES FUTURAS",
-      plannedActions.length ? plannedActions.join("\n") : "Nenhuma ação futura mapeada.",
+      "Ações previstas",
+      plannedActions.length ? plannedActions.join("\n") : "Nenhuma.",
       "",
-      "HISTÓRICO RECENTE",
+      "Histórico recente",
       historyLines.length ? historyLines.join("\n") : "Sem histórico ainda."
     ].join("\n"));
   });
@@ -3846,7 +3582,7 @@ function bindUtilityActions(){
 function bindHistoryActions(){
   $("#btn-refresh-history").addEventListener("click", () => {
     renderHistory();
-    notify("success", "Histórico atualizado", "O histórico local foi redesenhado.");
+    notify("success", "Histórico atualizado", "O histórico local foi recarregado.");
   });
 
   $("#btn-clear-history").addEventListener("click", () => {
@@ -3933,8 +3669,8 @@ function bootPlaceholders(){
   renderTimeline([]);
   renderMailQueue([]);
 
-  $("#contract-box").textContent = "Contrato ainda não carregado.";
-  $("#health-json-box").textContent = "Nenhuma consulta executada ainda.";
+  $("#contract-box").textContent = "Detalhes técnicos ainda não carregados.";
+  $("#health-json-box").textContent = "Nenhuma verificação executada ainda.";
 
   renderOverviewMeta();
   renderSummary();
@@ -3943,11 +3679,7 @@ function bootPlaceholders(){
 
 async function autoWarm(){
   if(!state.apiBase){
-    notify(
-      "warn",
-      "URL do backend não definida",
-      "Informe a URL base do Web App do Apps Script para ativar as leituras públicas do painel."
-    );
+    notify("warn", "Conexão não configurada", "Informe a URL do Web App para ativar as leituras deste painel.");
     renderSummary();
     return;
   }
@@ -3956,12 +3688,7 @@ async function autoWarm(){
   try{ await runContract(); }catch(_){}
   try{ await runHealth(); }catch(_){}
 
-  notify(
-    "success",
-    "Camada pública carregada",
-    "O painel executou somente warm-up de leituras públicas leves: mode=status, mode=contract e mode=health."
-  );
-
+  notify("success", "Resumo atualizado", "O painel executou as leituras principais para atualizar a visão geral.");
   renderSummary();
 }
 
