@@ -33,7 +33,7 @@
       --radius-card:24px;
       --radius-hero:34px;
       --radius-control:16px;
-      --container:1440px;
+      --container:1480px;
       --gutter:clamp(16px,3vw,28px);
       --s1:8px;
       --s2:12px;
@@ -48,7 +48,7 @@
       --text-md:15px;
       --text-sm:13px;
       --text-xs:12px;
-      --sidebar:310px;
+      --sidebar:318px;
       --header:72px;
     }
 
@@ -230,7 +230,7 @@
     .hero-inner{position:relative;z-index:1;padding:clamp(22px,2.8vw,34px)}
     .hero-grid{display:grid;gap:22px;align-items:stretch}
     @media (min-width:1100px){
-      .hero-grid{grid-template-columns:minmax(0,1.14fr) minmax(350px,.86fr)}
+      .hero-grid{grid-template-columns:minmax(0,1.16fr) minmax(360px,.84fr)}
     }
 
     .tag{
@@ -270,7 +270,7 @@
       color:rgba(226,232,240,.90);
       font-size:14px;
       line-height:1.65;
-      max-width:58ch;
+      max-width:60ch;
     }
 
     .hero-box{
@@ -312,7 +312,7 @@
       color:#1d4ed8;
     }
     .metric .value{
-      font-size:clamp(24px,2.2vw,34px);
+      font-size:clamp(22px,2.1vw,34px);
       font-weight:1000;
       letter-spacing:-.04em;
     }
@@ -321,8 +321,9 @@
     .twocol{display:grid;gap:var(--s4);grid-template-columns:1.15fr .85fr}
     .threecol{display:grid;gap:var(--s4);grid-template-columns:repeat(3,minmax(0,1fr))}
     .fourcol{display:grid;gap:var(--s4);grid-template-columns:repeat(4,minmax(0,1fr))}
+    .fivecol{display:grid;gap:var(--s4);grid-template-columns:repeat(5,minmax(0,1fr))}
     @media (max-width:1100px){
-      .twocol,.threecol,.fourcol{grid-template-columns:1fr}
+      .twocol,.threecol,.fourcol,.fivecol{grid-template-columns:1fr}
     }
 
     .toolbar{
@@ -538,6 +539,7 @@
 
     .sep{height:1px;background:var(--line)}
     .mini-grid{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}
+    .stack-grid{display:grid;gap:14px}
     @media (max-width:1050px){.mini-grid{grid-template-columns:1fr}}
     .mini-card{padding:16px;display:grid;gap:8px}
     .mini-card strong{font-size:15px;line-height:1.3}
@@ -559,7 +561,7 @@
       position:fixed;
       right:18px;
       bottom:18px;
-      width:min(540px,calc(100vw - 36px));
+      width:min(580px,calc(100vw - 36px));
       z-index:50;
       display:grid;
       gap:12px;
@@ -593,7 +595,7 @@
       background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
     }
     .empty-meta-row strong{
-      min-width:98px;
+      min-width:110px;
       font-size:12px;
       line-height:1.45;
       color:#0f172a;
@@ -672,8 +674,41 @@
     }
 
     .mobile-show{display:none}
-
     body[data-ui-mode="simple"] .tech-only{display:none!important}
+
+    .module-grid{
+      display:grid;
+      gap:14px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+    @media (max-width:1200px){.module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:720px){.module-grid{grid-template-columns:1fr}}
+
+    .mail-stage-grid{
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+    @media (max-width:1200px){.mail-stage-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:720px){.mail-stage-grid{grid-template-columns:1fr}}
+
+    .flow-list{
+      display:grid;
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .flow-item{
+      padding:12px 14px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
+      display:grid;
+      gap:4px;
+    }
+    .flow-item strong{font-size:13px}
+    .flow-item span{font-size:12px;color:var(--muted2)}
 
     @media (max-width:1020px){
       .app{grid-template-columns:1fr}
@@ -689,9 +724,7 @@
       .mobile-show{display:inline-flex!important}
     }
 
-    .top-actions .btn{
-      min-height:42px;
-    }
+    .top-actions .btn{min-height:42px}
 
     @media (max-width:640px){
       .topbar{
@@ -719,7 +752,7 @@
           <div class="sub">Operação e acompanhamento</div>
         </div>
 
-        <div class="side-chip">crm + comunicação + dados</div>
+        <div class="side-chip">crm + timeline + pubmail + pubio</div>
 
         <nav class="nav" id="nav">
           <a href="#overview" class="active"><span>Visão geral</span><small>01</small></a>
@@ -737,10 +770,10 @@
         </nav>
 
         <div class="side-meta">
-          <div class="meta-row"><span>Painel</span><strong id="meta-front-version">PUBPANEL 2.1.0</strong></div>
+          <div class="meta-row"><span>Painel</span><strong id="meta-front-version">PUBPANEL 2.2.0</strong></div>
           <div class="meta-row"><span>CRM</span><strong id="meta-crm-version">—</strong></div>
-          <div class="meta-row"><span>Comunicação</span><strong id="meta-mail-version">não exposto aqui</strong></div>
-          <div class="meta-row"><span>Dados</span><strong id="meta-io-version">não exposto aqui</strong></div>
+          <div class="meta-row"><span>PUBMAIL</span><strong id="meta-mail-version">não carregado</strong></div>
+          <div class="meta-row"><span>PUBIO</span><strong id="meta-io-version">não exposto aqui</strong></div>
           <div class="meta-row"><span>Conexão</span><strong id="meta-status">não configurada</strong></div>
           <div class="meta-row"><span>URL</span><strong id="meta-api-base">não definida</strong></div>
         </div>
@@ -753,7 +786,7 @@
           <button class="btn mobile-show" id="open-sidebar">Menu</button>
           <div>
             <div class="top-title">PUBPANEL</div>
-            <div class="top-sub">Painel operacional para acompanhar conexão, atendimento, atividade, comunicação e dados.</div>
+            <div class="top-sub">Painel operacional para acompanhar conexão, atendimento, timeline, comunicação orquestrada e operações com dados.</div>
           </div>
         </div>
         <div class="top-actions">
@@ -774,7 +807,7 @@
                 <div class="grid">
                   <span class="tag">Painel central</span>
                   <h1 class="h1">PUBPANEL</h1>
-                  <p class="lead">Veja rapidamente se o sistema está acessível, acompanhe o atendimento, monitore a atividade do ecossistema e consulte a liberação das áreas de comunicação e operações com dados.</p>
+                  <p class="lead">Veja rapidamente se o sistema está acessível, acompanhe atendimento e atividade do ecossistema, e trate PUBMAIL como camada real de orquestração: saúde, checklist, governança, fila, suppressions, estado relacional e diagnóstico.</p>
                 </div>
 
                 <aside class="hero-box">
@@ -784,9 +817,9 @@
                     <li>Ver o estado geral do sistema em poucos segundos</li>
                     <li>Consultar leituras públicas já expostas</li>
                     <li>Executar a única ação administrativa já publicada nesta interface: a instalação principal do CRM</li>
-                    <li>Consultar a liberação de comunicação e dados sem expor linguagem técnica na camada principal</li>
+                    <li>Preparar a área de comunicação para operar sobre saúde, governança editorial, timeline e estado relacional</li>
                   </ul>
-                  <div class="tiny">Os detalhes internos ficam restritos ao modo técnico e ao painel de detalhes.</div>
+                  <div class="tiny">Os detalhes internos seguem restritos ao modo técnico e ao painel de diagnóstico.</div>
                 </aside>
               </div>
             </div>
@@ -798,12 +831,12 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Resumo</span>
               <h2 class="h2">Leitura rápida</h2>
-              <div class="muted">Entenda em poucos segundos se a conexão está pronta, se existe algo que exige atenção e quais áreas já podem ser usadas.</div>
+              <div class="muted">Entenda em poucos segundos se a conexão está pronta, se existe algo que exige atenção e como PUBMAIL está sendo representado nesta interface.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Leitura principal disponível</span>
                 <span class="state-badge state-badge--warn">Ação necessária quando houver alerta</span>
-                <span class="state-badge state-badge--unavailable">Áreas futuras preservadas</span>
+                <span class="state-badge state-badge--unavailable">Fachadas futuras preservadas</span>
               </div>
             </div>
 
@@ -834,34 +867,46 @@
                 <div class="note">Resultados visíveis quando a lista estiver liberada</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Atividade</div>
+                <div class="eyebrow">Timeline</div>
                 <div class="value" id="sum-timeline">—</div>
                 <div class="note">Eventos visíveis quando a leitura estiver liberada</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Comunicação</div>
-                <div class="value" id="sum-mail">—</div>
-                <div class="note">Fila visível quando a área for publicada</div>
+                <div class="eyebrow">PUBMAIL</div>
+                <div class="value" id="sum-mail-health">—</div>
+                <div class="note">Saúde e prontidão do módulo de comunicação</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Templates</div>
+                <div class="value" id="sum-mail-templates">—</div>
+                <div class="note">Biblioteca editorial quando a leitura existir</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Rules</div>
+                <div class="value" id="sum-mail-rules">—</div>
+                <div class="note">Regras operacionais e disparos</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Fila pendente</div>
+                <div class="value" id="sum-mail-queue">—</div>
+                <div class="note">Pendências reais ou previstas de processamento</div>
               </div>
             </div>
 
             <div class="availability-card" style="margin-top:18px">
               <strong>Disponibilidade neste painel</strong>
-
               <div class="availability-grid">
                 <div class="availability-item">
                   <strong>Disponível agora</strong>
-                  <div class="tiny">Conexão, leituras públicas principais e instalação do CRM.</div>
+                  <div class="tiny">Conexão, leituras públicas principais, instalação do CRM e visão semântica ampliada do PUBMAIL.</div>
                 </div>
-
                 <div class="availability-item">
-                  <strong>Leitura técnica</strong>
-                  <div class="tiny">Detalhes completos podem ser vistos no modo técnico e no painel de diagnóstico.</div>
+                  <strong>Pronto para integrar</strong>
+                  <div class="tiny">Saúde, checklist, governança, uso recomendado e leituras administrativas leves do PUBMAIL.</div>
                 </div>
-
                 <div class="availability-item">
                   <strong>Em liberação futura</strong>
-                  <div class="tiny">Comunicação automatizada e operações com dados aparecem aqui sem sugerir disponibilidade que ainda não existe.</div>
+                  <div class="tiny">Fila real, logs, contact state, suppressions e processamento de comunicação.</div>
                 </div>
               </div>
             </div>
@@ -876,6 +921,10 @@
                 <div class="tiny" id="sum-health">Ainda não há leitura concluída.</div>
               </div>
               <div class="mini-card">
+                <strong>PUBMAIL</strong>
+                <div class="tiny" id="sum-mail-overview">Ainda não há leitura do módulo de comunicação.</div>
+              </div>
+              <div class="mini-card">
                 <strong>Último evento relevante</strong>
                 <div class="tiny" id="sum-last-action">Última ação: —</div>
                 <div class="tiny" id="sum-last-error">Último problema: —</div>
@@ -887,7 +936,7 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Arquitetura</span>
               <h2 class="h2">Módulos reais e disponibilidade</h2>
-              <div class="muted">Esta leitura separa existência arquitetural de disponibilidade nesta interface.</div>
+              <div class="muted">Esta leitura separa existência arquitetural de disponibilidade nesta interface. PUBMAIL deixa de ser tratado apenas como “fila futura” e passa a refletir saúde, governança, elegibilidade, suppressions e estado relacional.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--ok">Arquitetura refletida</span>
@@ -895,7 +944,7 @@
               </div>
             </div>
 
-            <div class="fourcol">
+            <div class="module-grid">
               <div class="mini-card">
                 <strong>CRM Core</strong>
                 <div class="tiny">Leituras públicas e instalação principal disponíveis.</div>
@@ -906,7 +955,7 @@
 
               <div class="mini-card">
                 <strong>Timeline</strong>
-                <div class="tiny">Entidade central do ecossistema, ainda sem leitura administrativa exposta aqui.</div>
+                <div class="tiny">Entidade central do ecossistema. Também é gatilho real de orquestração do PUBMAIL.</div>
                 <div class="section-state">
                   <span class="state-badge state-badge--warn">Estrutura pronta</span>
                 </div>
@@ -914,9 +963,9 @@
 
               <div class="mini-card">
                 <strong>PUBMAIL</strong>
-                <div class="tiny">Módulo real de comunicação já modelado, com operação futura nesta interface.</div>
+                <div class="tiny">Módulo real de comunicação por eventos, governança editorial, cadência, suppressions, logs e contact state.</div>
                 <div class="section-state">
-                  <span class="state-badge state-badge--unavailable">Não exposto aqui</span>
+                  <span class="state-badge state-badge--info">Integração ampliada</span>
                 </div>
               </div>
 
@@ -1071,7 +1120,7 @@ action=admin_install_crm</div>
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Pessoas e atendimento</span>
               <h2 class="h2">Contatos, leads e tickets</h2>
-              <div class="muted">Acompanhe a base principal de relacionamento e atendimento. Quando uma lista ainda não estiver liberada, o painel mostrará isso de forma direta.</div>
+              <div class="muted">Acompanhe a base principal de relacionamento e atendimento. Quando uma lista ainda não estiver liberada, o painel mostrará isso de forma direta. A integração com PUBMAIL reserva espaço para exibir estágio relacional e contexto de comunicação.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--info">Estrutura pronta para leitura</span>
@@ -1171,7 +1220,7 @@ action=admin_install_crm</div>
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Atividade</span>
               <h2 class="h2">Eventos do ecossistema</h2>
-              <div class="muted">Use esta área para acompanhar a linha de atividade do sistema e entender o encadeamento entre captação, atendimento e comunicação.</div>
+              <div class="muted">Use esta área para acompanhar a linha de atividade do sistema e entender o encadeamento entre captação, atendimento e comunicação. Esta seção passa a reservar também o recorte de eventos que impactam PUBMAIL.</div>
 
               <div class="section-state">
                 <span class="state-badge state-badge--info">Visão cronológica</span>
@@ -1206,84 +1255,235 @@ action=admin_install_crm</div>
               </div>
             </div>
 
-            <div class="table-card" style="margin-top:18px">
-              <div class="table-head">
-                <div class="table-title">Eventos recentes</div>
+            <div class="twocol" style="margin-top:18px">
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Eventos recentes</div>
+                </div>
+                <div class="table-wrap" id="timeline-table-wrap"></div>
               </div>
-              <div class="table-wrap" id="timeline-table-wrap"></div>
+
+              <div class="mini-card">
+                <strong>Impacto previsto no PUBMAIL</strong>
+                <div class="tiny">A timeline é o gatilho real do orquestrador. Este bloco resume o fluxo decisório que o painel deve acompanhar quando a integração administrativa estiver publicada.</div>
+                <ol class="flow-list">
+                  <li class="flow-item"><strong>1. Evento recebido</strong><span>Lead ou ticket criado na timeline.</span></li>
+                  <li class="flow-item"><strong>2. Rule compatível</strong><span>Match por entity_type, event_type e filtros.</span></li>
+                  <li class="flow-item"><strong>3. Segment e recipient</strong><span>Segmentação validada e destinatário resolvido.</span></li>
+                  <li class="flow-item"><strong>4. Elegibilidade</strong><span>Dedupe, suppression, cadência, suporte recente e opt-in.</span></li>
+                  <li class="flow-item"><strong>5. Fila e resultado</strong><span>Queue, send, log, contact state e writeback na timeline.</span></li>
+                </ol>
+              </div>
             </div>
           </section>
 
           <section class="panel" id="communication">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Comunicação</span>
-              <h2 class="h2">Envios automáticos</h2>
-              <div class="muted">Esta área foi redesenhada para representar a operação real do PUBMAIL como produto de comunicação. Quando ainda não estiver liberada, o painel mostra o veredito, o resumo e a próxima ação sem fingir disponibilidade.</div>
+              <h2 class="h2">PUBMAIL como camada operacional</h2>
+              <div class="muted">Esta área deixa de tratar comunicação apenas como “fila futura”. O foco passa a ser o módulo real: saúde, checklist, governança editorial, templates, campaigns, rules, policies, suppressions, contact state, fila, logs e processamento orientado pela timeline.</div>
 
               <div class="section-state">
-                <span class="state-badge state-badge--unavailable">Área em liberação futura</span>
-                <span class="state-badge state-badge--warn">Fila, regras, modelos e histórico serão exibidos aqui</span>
+                <span class="state-badge state-badge--info">Representação ampliada do módulo</span>
+                <span class="state-badge state-badge--warn">Leituras leves devem ser priorizadas</span>
+                <span class="state-badge state-badge--unavailable">Operação completa ainda depende de fachadas administrativas</span>
               </div>
             </div>
 
-            <div class="threecol">
-              <div class="mini-card">
-                <strong>Estado da área</strong>
-                <div class="tiny">Esta área ainda não pode ser operada neste painel.</div>
-                <div class="empty" style="margin-top:4px">
-                  <strong>Indisponível</strong>
-                  <div class="empty-meta">
-                    <div class="empty-meta-row">
-                      <strong>Resumo</strong>
-                      <span>O módulo de comunicação existe no sistema, mas sua operação ainda não foi liberada nesta interface.</span>
-                    </div>
-                    <div class="empty-meta-row">
-                      <strong>Próxima ação</strong>
-                      <span>Acompanhe a liberação futura ou abra os detalhes técnicos.</span>
-                    </div>
-                  </div>
-                </div>
-                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Ver detalhes</button>
+            <div class="metrics">
+              <div class="metric">
+                <div class="eyebrow">Saúde PUBMAIL</div>
+                <div class="value" id="mail-metric-health">—</div>
+                <div class="note">Verificação estrutural do módulo</div>
               </div>
+              <div class="metric">
+                <div class="eyebrow">Checklist</div>
+                <div class="value" id="mail-metric-checklist">—</div>
+                <div class="note">Etapas de implantação e preparo operacional</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Templates</div>
+                <div class="value" id="mail-metric-templates">—</div>
+                <div class="note">Biblioteca editorial e fallback</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Rules</div>
+                <div class="value" id="mail-metric-rules">—</div>
+                <div class="note">Regras por evento, timing e destinatário</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Suppressions</div>
+                <div class="value" id="mail-metric-suppressions">—</div>
+                <div class="note">Bloqueios e pausas operacionais</div>
+              </div>
+            </div>
 
-              <div class="mini-card">
-                <strong>O que estará disponível aqui</strong>
-                <div class="tiny">Quando a área for liberada, o painel poderá mostrar:</div>
-                <ul class="checklist tiny">
-                  <li>Fila operacional de envios</li>
-                  <li>Campanhas, templates e regras</li>
-                  <li>Políticas, suppressions e cadência</li>
-                  <li>Estado relacional por contato</li>
-                  <li>Histórico de envios</li>
-                  <li>Log técnico interno do orquestrador</li>
-                </ul>
+            <div class="threecol" style="margin-top:18px">
+              <div class="mini-card compact-actions">
+                <strong>Leituras leves recomendadas</strong>
+                <div class="tiny">Comece por saúde, checklist, governança e notas de uso antes de abrir fila e processamento.</div>
+                <button class="btn btn--soft" id="btn-mail-health">Saúde do PUBMAIL</button>
+                <button class="btn btn--soft" id="btn-mail-checklist">Checklist</button>
+                <button class="btn btn--soft" id="btn-mail-governance">Governança</button>
+                <button class="btn btn--soft" id="btn-mail-usage">Uso recomendado</button>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Leituras previstas</strong>
-                <div class="tiny">A área já representa a arquitetura real do PUBMAIL, mas a operação continua bloqueada nesta interface até a publicação das fachadas administrativas.</div>
-                <button class="btn btn--soft" data-admin-action="mail_list_queue">Ver fila prevista</button>
-                <button class="btn btn--soft tech-only" data-admin-action="mail_governance_model">Ver estrutura técnica</button>
+                <strong>Leituras operacionais futuras</strong>
+                <div class="tiny">Aderência plena depende de leituras administrativas reais, publicadas em ordem de baixo risco.</div>
+                <button class="btn btn--soft" id="btn-mail-queue">Fila</button>
+                <button class="btn btn--soft" id="btn-mail-log">Histórico de envios</button>
+                <button class="btn btn--soft" id="btn-mail-internal-log">Log interno</button>
+                <button class="btn btn--soft" id="btn-mail-contact-state">Estado por contato</button>
+              </div>
+
+              <div class="mini-card">
+                <strong>Modelo de priorização</strong>
+                <ol class="checklist tiny">
+                  <li>Saúde estrutural</li>
+                  <li>Checklist e governança</li>
+                  <li>Fila, logs, contact state e suppressions</li>
+                  <li>Bootstrap, scan da timeline e processamento</li>
+                </ol>
               </div>
             </div>
 
-            <div class="table-card" style="margin-top:18px">
-              <div class="table-head">
-                <div class="table-title">Fila de envios</div>
-                <div class="toolbar-right">
-                  <button class="btn btn--soft" data-local-export="mailQueue">Exportar CSV</button>
+            <div class="sep" style="margin:20px 0"></div>
+
+            <div class="twocol">
+              <div class="mini-card">
+                <strong>Como o PUBMAIL decide</strong>
+                <div class="tiny">Fluxo operacional que o painel passa a representar explicitamente.</div>
+                <ol class="flow-list">
+                  <li class="flow-item"><strong>Evento da timeline</strong><span>Lead ou ticket criado.</span></li>
+                  <li class="flow-item"><strong>Rule + campaign + template</strong><span>Acoplamento operacional do envio.</span></li>
+                  <li class="flow-item"><strong>Segment e destinatário</strong><span>Escopo e recipient_mode.</span></li>
+                  <li class="flow-item"><strong>Elegibilidade</strong><span>Dedupe, suppression, min gap, cooldown, opt-in.</span></li>
+                  <li class="flow-item"><strong>Fila e envio</strong><span>Queue, send, log, timeline writeback.</span></li>
+                  <li class="flow-item"><strong>Contact state</strong><span>Relationship stage e contadores por janela.</span></li>
+                </ol>
+              </div>
+
+              <div class="mini-card">
+                <strong>Princípios de aderência no painel</strong>
+                <ul class="checklist tiny">
+                  <li>Não reduzir PUBMAIL à fila.</li>
+                  <li>Expor saúde, governança e uso editorial antes de operação pesada.</li>
+                  <li>Ligar comunicação à timeline.</li>
+                  <li>Dar protagonismo a suppressions e contact state.</li>
+                  <li>Separar claramente leitura publicada de fachada futura.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mail-stage-grid" style="margin-top:18px">
+              <div class="mini-card">
+                <strong>Relationship stage</strong>
+                <div class="tiny">Quando disponível, esta área mostra NEW_LEAD, DELIVERED, ACTIVATING, ENGAGED, SUPPORT_OPEN, SUPPORT_RECENT, PROMO_ELIGIBLE e QUIET_PERIOD.</div>
+              </div>
+              <div class="mini-card">
+                <strong>Suppressions</strong>
+                <div class="tiny">GLOBAL, PROMOTIONAL_ONLY, SUPPORT_PAUSE e MANUAL passam a ser objetos de primeira classe no painel.</div>
+              </div>
+              <div class="mini-card">
+                <strong>Governança editorial</strong>
+                <div class="tiny">Templates, campaigns, rules, policies e segments deixam de ser vistos como detalhe técnico.</div>
+              </div>
+              <div class="mini-card">
+                <strong>Diagnóstico orientado à decisão</strong>
+                <div class="tiny">O painel deve responder “por que não enviou?” com clareza operacional.</div>
+              </div>
+            </div>
+
+            <div class="grid" style="margin-top:18px">
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Fila de envios</div>
+                  <div class="toolbar-right">
+                    <button class="btn btn--soft" data-local-export="mailQueue">Exportar CSV</button>
+                  </div>
+                </div>
+                <div class="toolbar" style="padding:0 18px 18px">
+                  <div class="filters" style="width:100%">
+                    <input class="input" id="filter-mail-search" placeholder="Buscar por ID, destinatário, campanha ou modelo" />
+                    <select class="select" id="filter-mail-status"><option value="">Todos os status</option></select>
+                    <select class="select" id="filter-mail-type"><option value="">Todos os tipos</option></select>
+                    <input class="input" id="filter-mail-campaign" placeholder="Filtrar campanha" />
+                    <input class="input" id="filter-mail-template" placeholder="Filtrar modelo" />
+                  </div>
+                </div>
+                <div class="table-wrap" id="mail-table-wrap"></div>
+              </div>
+
+              <div class="fivecol">
+                <div class="mini-card compact-actions">
+                  <strong>Templates</strong>
+                  <div class="tiny">Biblioteca editorial: assunto, corpo, Docs e fallback.</div>
+                  <button class="btn btn--soft" id="btn-mail-templates">Ver templates</button>
+                </div>
+                <div class="mini-card compact-actions">
+                  <strong>Campaigns</strong>
+                  <div class="tiny">Objetivos de negócio e agrupamento operacional.</div>
+                  <button class="btn btn--soft" id="btn-mail-campaigns">Ver campaigns</button>
+                </div>
+                <div class="mini-card compact-actions">
+                  <strong>Rules</strong>
+                  <div class="tiny">Evento, delay, recipient_mode, dedupe e cooldown.</div>
+                  <button class="btn btn--soft" id="btn-mail-rules">Ver rules</button>
+                </div>
+                <div class="mini-card compact-actions">
+                  <strong>Policies</strong>
+                  <div class="tiny">Cadência, max por janela, min gap e suporte recente.</div>
+                  <button class="btn btn--soft" id="btn-mail-policy">Ver policies</button>
+                </div>
+                <div class="mini-card compact-actions">
+                  <strong>Suppressions</strong>
+                  <div class="tiny">Bloqueios e pausas operacionais por contato ou email.</div>
+                  <button class="btn btn--soft" id="btn-mail-suppressions">Ver suppressions</button>
                 </div>
               </div>
-              <div class="toolbar" style="padding:0 18px 18px">
-                <div class="filters" style="width:100%">
-                  <input class="input" id="filter-mail-search" placeholder="Buscar por ID, destinatário, campanha ou modelo" />
-                  <select class="select" id="filter-mail-status"><option value="">Todos os status</option></select>
-                  <select class="select" id="filter-mail-type"><option value="">Todos os tipos</option></select>
-                  <input class="input" id="filter-mail-campaign" placeholder="Filtrar campanha" />
-                  <input class="input" id="filter-mail-template" placeholder="Filtrar modelo" />
+
+              <div class="twocol">
+                <div class="mini-card">
+                  <strong>Estado da área</strong>
+                  <div class="empty" style="margin-top:4px">
+                    <strong>Parcialmente pronta</strong>
+                    <div class="empty-meta">
+                      <div class="empty-meta-row">
+                        <strong>Resumo</strong>
+                        <span>O módulo existe e o painel já o representa melhor, mas a operação plena ainda depende de fachadas administrativas explícitas.</span>
+                      </div>
+                      <div class="empty-meta-row">
+                        <strong>Próxima ação</strong>
+                        <span>Priorizar health, checklist, governance e usage notes; depois abrir queue, logs, contact state e suppressions.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mini-card tech-only">
+                  <strong>Fachadas PUBMAIL recomendadas</strong>
+                  <div class="codebox">admin_mail_health
+admin_mail_checklist
+admin_mail_governance_model
+admin_mail_usage_notes
+admin_mail_list_queue
+admin_mail_list_log
+admin_mail_list_internal_log
+admin_mail_list_templates
+admin_mail_list_campaigns
+admin_mail_list_rules
+admin_mail_list_policy
+admin_mail_list_segments
+admin_mail_list_suppressions
+admin_mail_list_contact_state
+admin_mail_bootstrap
+admin_mail_create_template_docs
+admin_mail_scan_timeline
+admin_mail_process_queue
+admin_mail_add_suppression</div>
                 </div>
               </div>
-              <div class="table-wrap" id="mail-table-wrap"></div>
             </div>
           </section>
 
@@ -1369,7 +1569,8 @@ INSPECT_STORAGE_REF</div>
               </div>
             </div>
           </section>
-                    <section class="panel" id="diagnostics">
+
+          <section class="panel" id="diagnostics">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Diagnóstico</span>
               <h2 class="h2">Verificações e detalhes</h2>
@@ -1389,9 +1590,9 @@ INSPECT_STORAGE_REF</div>
               </div>
 
               <div class="mini-card compact-actions">
-                <strong>Comunicação</strong>
-                <div class="tiny">Consulte a explicação técnica da área de comunicação quando precisar entender sua liberação futura.</div>
-                <button class="btn btn--soft" data-admin-action="mail_list_log">Ver detalhes</button>
+                <strong>PUBMAIL</strong>
+                <div class="tiny">Consulte a explicação técnica do módulo de comunicação, com ordem recomendada de publicação e integração.</div>
+                <button class="btn btn--soft" data-admin-action="mail_governance_model">Ver detalhes</button>
                 <button class="btn btn--soft tech-only" data-admin-action="mail_list_internal_log">Ver detalhes internos</button>
               </div>
 
@@ -1457,13 +1658,13 @@ PUBPANEL_V2_UI_MODE</div>
 
               <div class="mini-card">
                 <strong>Próximos passos</strong>
-                <div class="tiny">Salvar a URL, testar a conexão, verificar a saúde do sistema e acompanhar a liberação futura das áreas de comunicação e dados.</div>
+                <div class="tiny">Salvar a URL, testar a conexão, verificar a saúde do sistema e priorizar a integração leve do PUBMAIL antes da operação completa.</div>
               </div>
             </div>
           </section>
 
           <section class="panel">
-            <div class="tiny">PUBPANEL 2.1.0 · Painel operacional do ecossistema PUB Editorial · Interface estática publicada no GitHub Pages.</div>
+            <div class="tiny">PUBPANEL 2.2.0 · Painel operacional do ecossistema PUB Editorial · Interface estática publicada no GitHub Pages.</div>
           </section>
 
         </div>
@@ -1483,7 +1684,7 @@ PUBPANEL_V2_UI_MODE</div>
 
   <script>
 const PUBPANEL = {
-  VERSION: "2.1.0",
+  VERSION: "2.2.0",
   STORAGE: {
     API_BASE: "PUBPANEL_V2_API_BASE",
     HISTORY: "PUBPANEL_V2_UI_HISTORY",
@@ -1607,21 +1808,35 @@ const FEATURE_AVAILABILITY = {
   mail_health: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Verificação interna de comunicação ainda não liberada aqui",
+    uiLabel: "Saúde estrutural do PUBMAIL ainda não liberada aqui",
     technicalLabel: "admin_mail_health",
     facadeFuture: "admin_mail_health"
   },
   mail_checklist: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Checklist de comunicação ainda não liberado aqui",
+    uiLabel: "Checklist do PUBMAIL ainda não liberado aqui",
     technicalLabel: "admin_mail_checklist",
     facadeFuture: "admin_mail_checklist"
+  },
+  mail_governance_model: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Modelo de governança do PUBMAIL ainda não liberado aqui",
+    technicalLabel: "admin_mail_governance_model",
+    facadeFuture: "admin_mail_governance_model"
+  },
+  mail_usage_notes: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Notas de uso recomendado do PUBMAIL ainda não liberadas aqui",
+    technicalLabel: "admin_mail_usage_notes",
+    facadeFuture: "admin_mail_usage_notes"
   },
   mail_scan: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Leitura da atividade para comunicação ainda não liberada aqui",
+    uiLabel: "Leitura da timeline para comunicação ainda não liberada aqui",
     technicalLabel: "admin_mail_scan_timeline",
     facadeFuture: "admin_mail_scan_timeline"
   },
@@ -1631,13 +1846,6 @@ const FEATURE_AVAILABILITY = {
     uiLabel: "Processamento da fila de comunicação ainda não liberado aqui",
     technicalLabel: "admin_mail_process_queue",
     facadeFuture: "admin_mail_process_queue"
-  },
-  mail_governance_model: {
-    scope: "pubmail_admin",
-    published: false,
-    uiLabel: "Estrutura de comunicação ainda não liberada aqui",
-    technicalLabel: "admin_mail_governance_model",
-    facadeFuture: "admin_mail_governance_model"
   },
   mail_list_queue: {
     scope: "pubmail_admin",
@@ -1656,16 +1864,72 @@ const FEATURE_AVAILABILITY = {
   mail_list_internal_log: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Detalhes internos de comunicação ainda não liberados aqui",
+    uiLabel: "Log interno do PUBMAIL ainda não liberado aqui",
     technicalLabel: "admin_mail_list_internal_log",
     facadeFuture: "admin_mail_list_internal_log"
   },
   mail_list_templates: {
     scope: "pubmail_admin",
     published: false,
-    uiLabel: "Modelos de comunicação ainda não liberados aqui",
+    uiLabel: "Templates ainda não liberados aqui",
     technicalLabel: "admin_mail_list_templates",
     facadeFuture: "admin_mail_list_templates"
+  },
+  mail_list_campaigns: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Campaigns ainda não liberadas aqui",
+    technicalLabel: "admin_mail_list_campaigns",
+    facadeFuture: "admin_mail_list_campaigns"
+  },
+  mail_list_rules: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Rules ainda não liberadas aqui",
+    technicalLabel: "admin_mail_list_rules",
+    facadeFuture: "admin_mail_list_rules"
+  },
+  mail_list_policy: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Policies ainda não liberadas aqui",
+    technicalLabel: "admin_mail_list_policy",
+    facadeFuture: "admin_mail_list_policy"
+  },
+  mail_list_segments: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Segments ainda não liberados aqui",
+    technicalLabel: "admin_mail_list_segments",
+    facadeFuture: "admin_mail_list_segments"
+  },
+  mail_list_suppressions: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Suppressions ainda não liberadas aqui",
+    technicalLabel: "admin_mail_list_suppressions",
+    facadeFuture: "admin_mail_list_suppressions"
+  },
+  mail_list_contact_state: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Estado relacional por contato ainda não liberado aqui",
+    technicalLabel: "admin_mail_list_contact_state",
+    facadeFuture: "admin_mail_list_contact_state"
+  },
+  mail_create_template_docs: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Bootstrap de docs dos templates ainda não liberado aqui",
+    technicalLabel: "admin_mail_create_template_docs",
+    facadeFuture: "admin_mail_create_template_docs"
+  },
+  mail_add_suppression: {
+    scope: "pubmail_admin",
+    published: false,
+    uiLabel: "Cadastro de suppression ainda não liberado aqui",
+    technicalLabel: "admin_mail_add_suppression",
+    facadeFuture: "admin_mail_add_suppression"
   },
 
   io_export_leads: {
@@ -1810,6 +2074,20 @@ const state = {
   contract: null,
   health: null,
   healthDeep: null,
+
+  mailHealth: null,
+  mailChecklist: null,
+  mailGovernance: null,
+  mailUsageNotes: null,
+  mailTemplates: [],
+  mailCampaigns: [],
+  mailRules: [],
+  mailPolicy: [],
+  mailSegments: [],
+  mailSuppressions: [],
+  mailContactState: [],
+  mailLog: [],
+  mailInternalLog: [],
 
   contacts: [],
   leads: [],
@@ -2192,35 +2470,16 @@ function applyUiMode(){
   }
 }
 
-async function withBusyButton(button, busyLabel, fn){
+function withBusyButton(button, busyLabel, fn){
   if(!button) return fn();
   const original = button.dataset.originalLabel || button.textContent;
   button.dataset.originalLabel = original;
   button.disabled = true;
   button.textContent = busyLabel || "Carregando...";
-  try{
-    return await fn();
-  } finally {
+  return Promise.resolve(fn()).finally(() => {
     button.disabled = false;
     button.textContent = original;
-  }
-}
-
-function confirmAdminAction(action){
-  const labels = {
-    crm_install: "Instalar ou atualizar CRM",
-    mail_bootstrap: "Abrir detalhes da comunicação",
-    io_import_bundle: "Abrir detalhes da importação",
-    io_restore_snapshot: "Abrir detalhes da restauração"
-  };
-
-  if(!labels[action]) return true;
-
-  if(action === "crm_install"){
-    return window.confirm(`Confirmar ação: ${labels[action]}\n\nEsta operação pode ser executada por este painel.`);
-  }
-
-  return window.confirm(`Confirmar ação: ${labels[action]}\n\nEste recurso ainda pode não estar disponível neste painel.`);
+  });
 }
 
 const api = {
@@ -2284,7 +2543,9 @@ function normalizeRowsFromResponse(json){
     json?.data?.jobs,
     json?.data?.job_items,
     json?.data?.snapshots,
-    json?.data?.restore_points
+    json?.data?.restore_points,
+    json?.data?.steps,
+    json?.data?.notes
   ];
 
   for(const value of candidates){
@@ -2293,8 +2554,7 @@ function normalizeRowsFromResponse(json){
 
   return [];
 }
-
-function markDatasetAsLoaded(kind, rows){
+    function markDatasetAsLoaded(kind, rows){
   if(!state.datasetAvailability[kind]) return;
   const safeRows = Array.isArray(rows) ? rows.slice() : [];
   state.datasetAvailability[kind] = "loaded";
@@ -2386,10 +2646,38 @@ function fillDataDrivenFilters(){
   $("#filter-mail-type").innerHTML = `<option value="">Todos os tipos</option>` + uniqueValues(state.mailQueue, "message_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
 }
 
+function summarizeMailModule(){
+  const health = state.mailHealth;
+  const checklist = normalizeRowsFromResponse(state.mailChecklist);
+  const templates = normalizeArray(state.mailTemplates);
+  const rules = normalizeArray(state.mailRules);
+  const suppressions = normalizeArray(state.mailSuppressions);
+  const queue = normalizeArray(state.mailQueue);
+
+  return {
+    healthOk: health?.ok === true,
+    checklistCount: checklist.length,
+    templatesCount: templates.length,
+    rulesCount: rules.length,
+    suppressionsCount: suppressions.length,
+    queueCount: queue.length
+  };
+}
+
 function renderOverviewMeta(){
   $("#meta-front-version").textContent = "PUBPANEL " + PUBPANEL.VERSION;
   $("#meta-crm-version").textContent = state.status?.data?.version || state.health?.data?.version || "—";
-  $("#meta-mail-version").textContent = "não exposto aqui";
+
+  if(state.mailHealth?.data?.version){
+    $("#meta-mail-version").textContent = "PUBMAIL " + state.mailHealth.data.version;
+  } else if(state.mailHealth?.version){
+    $("#meta-mail-version").textContent = "PUBMAIL " + state.mailHealth.version;
+  } else if(state.mailChecklist || state.mailGovernance || state.mailUsageNotes){
+    $("#meta-mail-version").textContent = "parcialmente lido";
+  } else {
+    $("#meta-mail-version").textContent = "não carregado";
+  }
+
   $("#meta-io-version").textContent = "não exposto aqui";
   $("#meta-api-base").textContent = state.apiBase ? "definida" : "não definida";
 
@@ -2415,6 +2703,7 @@ function renderSummary(){
   const healthData = readHealthData();
   const healthDeepData = readHealthDeepData();
   const safeTotal = countSafeFailures(healthData);
+  const mailSummary = summarizeMailModule();
 
   const sumStatus = $("#sum-status");
   const sumSchema = $("#sum-schema");
@@ -2422,9 +2711,13 @@ function renderSummary(){
   const sumLeads = $("#sum-leads");
   const sumTickets = $("#sum-tickets");
   const sumTimeline = $("#sum-timeline");
-  const sumMail = $("#sum-mail");
+  const sumMailHealth = $("#sum-mail-health");
+  const sumMailTemplates = $("#sum-mail-templates");
+  const sumMailRules = $("#sum-mail-rules");
+  const sumMailQueue = $("#sum-mail-queue");
   const sumContract = $("#sum-contract");
   const sumHealth = $("#sum-health");
+  const sumMailOverview = $("#sum-mail-overview");
   const sumLastAction = $("#sum-last-action");
   const sumLastError = $("#sum-last-error");
 
@@ -2445,7 +2738,17 @@ function renderSummary(){
   if(sumLeads) sumLeads.textContent = displayCountOrDash("leads");
   if(sumTickets) sumTickets.textContent = displayCountOrDash("tickets");
   if(sumTimeline) sumTimeline.textContent = displayCountOrDash("timeline");
-  if(sumMail) sumMail.textContent = displayCountOrDash("mailQueue");
+
+  if(sumMailHealth){
+    if(state.mailHealth?.ok === true) sumMailHealth.textContent = "OK";
+    else if(state.mailHealth) sumMailHealth.textContent = "ATENÇÃO";
+    else if(state.mailChecklist || state.mailGovernance || state.mailUsageNotes) sumMailHealth.textContent = "PARCIAL";
+    else sumMailHealth.textContent = "—";
+  }
+
+  if(sumMailTemplates) sumMailTemplates.textContent = mailSummary.templatesCount ? String(mailSummary.templatesCount) : "—";
+  if(sumMailRules) sumMailRules.textContent = mailSummary.rulesCount ? String(mailSummary.rulesCount) : "—";
+  if(sumMailQueue) sumMailQueue.textContent = state.datasetAvailability.mailQueue === "loaded" ? String(state.filtered.mailQueue.length || 0) : (mailSummary.queueCount ? String(mailSummary.queueCount) : "—");
 
   if(sumContract){
     sumContract.textContent = state.apiBase
@@ -2466,9 +2769,24 @@ function renderSummary(){
     }
   }
 
+  if(sumMailOverview){
+    const parts = [];
+    if(state.mailHealth?.ok === true) parts.push("saúde OK");
+    else if(state.mailHealth) parts.push("saúde com atenção");
+    if(mailSummary.checklistCount) parts.push(`checklist: ${mailSummary.checklistCount}`);
+    if(mailSummary.templatesCount) parts.push(`templates: ${mailSummary.templatesCount}`);
+    if(mailSummary.rulesCount) parts.push(`rules: ${mailSummary.rulesCount}`);
+    if(mailSummary.suppressionsCount) parts.push(`suppressions: ${mailSummary.suppressionsCount}`);
+
+    sumMailOverview.textContent = parts.length
+      ? parts.join(" · ")
+      : "Ainda não há leitura do módulo de comunicação.";
+  }
+
   if(sumLastAction) sumLastAction.textContent = "Última ação: " + (state.ui.lastAction || "—");
   if(sumLastError) sumLastError.textContent = "Último problema: " + (state.ui.lastError || "—");
 
+  renderCommunicationSummary();
   renderOverviewMeta();
   updateSideCounts();
 }
@@ -2477,6 +2795,16 @@ function setMetric(id, value){
   const el = $(id);
   if(!el) return;
   el.textContent = value ?? "—";
+}
+
+function renderCommunicationSummary(){
+  const mailSummary = summarizeMailModule();
+
+  setMetric("#mail-metric-health", state.mailHealth?.ok === true ? "OK" : state.mailHealth ? "ATENÇÃO" : "—");
+  setMetric("#mail-metric-checklist", mailSummary.checklistCount ? String(mailSummary.checklistCount) : "—");
+  setMetric("#mail-metric-templates", mailSummary.templatesCount ? String(mailSummary.templatesCount) : "—");
+  setMetric("#mail-metric-rules", mailSummary.rulesCount ? String(mailSummary.rulesCount) : "—");
+  setMetric("#mail-metric-suppressions", mailSummary.suppressionsCount ? String(mailSummary.suppressionsCount) : "—");
 }
 
 function assignPublicModeResult(mode, json){
@@ -2584,7 +2912,13 @@ function renderHealth(){
         finished_at: state.healthDeep?.data?.finished_at,
         tests_count: Array.isArray(state.healthDeep?.data?.tests) ? state.healthDeep.data.tests.length : 0
       }
-    } : null
+    } : null,
+    pubmail: {
+      health: state.mailHealth,
+      checklist_count: normalizeRowsFromResponse(state.mailChecklist).length,
+      governance_loaded: !!state.mailGovernance,
+      usage_notes_count: normalizeRowsFromResponse(state.mailUsageNotes).length
+    }
   });
 
   if(state.contract){
@@ -3119,6 +3453,26 @@ function exportCurrentDataset(kind){
   pushHistory("UI", "export_csv_" + kind, "ok", "Exportação local com " + cfg.rows.length + " linhas.");
 }
 
+function confirmAdminAction(action){
+  const labels = {
+    crm_install: "Instalar ou atualizar CRM",
+    mail_bootstrap: "Abrir detalhes do bootstrap de comunicação",
+    io_import_bundle: "Abrir detalhes da importação",
+    io_restore_snapshot: "Abrir detalhes da restauração",
+    mail_scan: "Abrir detalhes do scan da timeline",
+    mail_process: "Abrir detalhes do processamento da fila",
+    mail_add_suppression: "Abrir detalhes da criação de suppression"
+  };
+
+  if(!labels[action]) return true;
+
+  if(action === "crm_install"){
+    return window.confirm(`Confirmar ação: ${labels[action]}\n\nEsta operação pode ser executada por este painel.`);
+  }
+
+  return window.confirm(`Confirmar ação: ${labels[action]}\n\nEste recurso ainda pode não estar disponível neste painel.`);
+}
+
 function mapTechnicalAction(action){
   const availability = getFeatureAvailability(action);
 
@@ -3435,6 +3789,102 @@ async function runAdminInstallCrm(button){
   }
 }
 
+function storeMailReadResult(action, json){
+  if(action === "mail_health") state.mailHealth = json;
+  if(action === "mail_checklist") state.mailChecklist = json;
+  if(action === "mail_governance_model") state.mailGovernance = json;
+  if(action === "mail_usage_notes") state.mailUsageNotes = json;
+  if(action === "mail_list_templates") state.mailTemplates = normalizeRowsFromResponse(json);
+  if(action === "mail_list_campaigns") state.mailCampaigns = normalizeRowsFromResponse(json);
+  if(action === "mail_list_rules") state.mailRules = normalizeRowsFromResponse(json);
+  if(action === "mail_list_policy") state.mailPolicy = normalizeRowsFromResponse(json);
+  if(action === "mail_list_segments") state.mailSegments = normalizeRowsFromResponse(json);
+  if(action === "mail_list_suppressions") state.mailSuppressions = normalizeRowsFromResponse(json);
+  if(action === "mail_list_contact_state") state.mailContactState = normalizeRowsFromResponse(json);
+  if(action === "mail_list_log") state.mailLog = normalizeRowsFromResponse(json);
+  if(action === "mail_list_internal_log") state.mailInternalLog = normalizeRowsFromResponse(json);
+  if(action === "mail_list_queue"){
+    const rows = normalizeRowsFromResponse(json);
+    state.mailQueue = rows.slice();
+    state.filtered.mailQueue = rows.slice();
+    state.datasetAvailability.mailQueue = rows.length ? "loaded" : "unpublished";
+    fillDataDrivenFilters();
+    applyMailFilters();
+  }
+}
+
+function buildMailReadSummary(action, json){
+  const rows = normalizeRowsFromResponse(json);
+  if(action === "mail_health"){
+    return json?.ok === true
+      ? "A saúde estrutural do PUBMAIL foi lida com sucesso."
+      : "A leitura retornou atenção para a saúde do PUBMAIL.";
+  }
+  if(action === "mail_checklist") return `Checklist carregado com ${rows.length} etapa(s).`;
+  if(action === "mail_governance_model") return "Modelo de governança do PUBMAIL carregado.";
+  if(action === "mail_usage_notes") return `Notas de uso carregadas com ${rows.length} item(ns).`;
+  if(action === "mail_list_queue") return `Fila carregada com ${rows.length} item(ns).`;
+  if(action === "mail_list_templates") return `Templates carregados: ${rows.length}.`;
+  if(action === "mail_list_campaigns") return `Campaigns carregadas: ${rows.length}.`;
+  if(action === "mail_list_rules") return `Rules carregadas: ${rows.length}.`;
+  if(action === "mail_list_policy") return `Policies carregadas: ${rows.length}.`;
+  if(action === "mail_list_segments") return `Segments carregados: ${rows.length}.`;
+  if(action === "mail_list_suppressions") return `Suppressions carregadas: ${rows.length}.`;
+  if(action === "mail_list_contact_state") return `Contact state carregado: ${rows.length}.`;
+  if(action === "mail_list_log") return `Logs de envio carregados: ${rows.length}.`;
+  if(action === "mail_list_internal_log") return `Logs internos carregados: ${rows.length}.`;
+  return describeBackendPayload(json);
+}
+
+async function runPlannedMailRead(action, button){
+  const availability = getFeatureAvailability(action);
+  const startedAt = performance.now();
+
+  try{
+    setLastAction(action);
+    setLastError("");
+
+    await withBusyButton(button, "Lendo...", async () => {
+      const mapped = mapTechnicalAction(action);
+
+      drawer(
+        "Leitura planejada para o PUBMAIL",
+        [
+          "Estado",
+          "Planejada",
+          "",
+          "Resumo",
+          availability.uiLabel,
+          "",
+          "Próxima ação",
+          "Publicar a fachada administrativa correspondente no backend e trocar este acionador pela rotina real.",
+          "",
+          "Detalhes técnicos",
+          "Identificador previsto: " + mapped,
+          "Rótulo técnico: " + (availability.technicalLabel || "—"),
+          "Hora: " + nowLabel(),
+          "URL salva: " + (state.apiBase || "não definida")
+        ].join("\n")
+      );
+
+      notify("unavailable", "Leitura ainda não publicada", "Esta leitura do PUBMAIL está mapeada, mas ainda depende de fachada administrativa.");
+      pushHistory("UI", mapped, "indisponível", "Leitura do PUBMAIL ainda não publicada.", {
+        duration_ms: Math.round(performance.now() - startedAt),
+        rows_count: 0
+      });
+    });
+  }catch(err){
+    setLastError(err.message || "Erro desconhecido");
+    notify("warn", "Leitura indisponível", err.message || "Erro desconhecido");
+    pushHistory("UI", action, "erro", err.message || "erro", {
+      duration_ms: Math.round(performance.now() - startedAt),
+      rows_count: 0
+    });
+  } finally {
+    renderSummary();
+  }
+}
+
 function applyDatasetFilters(kind){
   return runDatasetFilterPipeline(kind);
 }
@@ -3501,6 +3951,20 @@ function bindTopbarActions(){
   $("#btn-load-contacts").addEventListener("click", e => handleUnavailableAdminDataset("contacts", e.currentTarget));
   $("#btn-load-tickets").addEventListener("click", e => handleUnavailableAdminDataset("tickets", e.currentTarget));
   $("#btn-load-timeline").addEventListener("click", e => handleUnavailableAdminDataset("timeline", e.currentTarget));
+
+  $("#btn-mail-health").addEventListener("click", e => runPlannedMailRead("mail_health", e.currentTarget));
+  $("#btn-mail-checklist").addEventListener("click", e => runPlannedMailRead("mail_checklist", e.currentTarget));
+  $("#btn-mail-governance").addEventListener("click", e => runPlannedMailRead("mail_governance_model", e.currentTarget));
+  $("#btn-mail-usage").addEventListener("click", e => runPlannedMailRead("mail_usage_notes", e.currentTarget));
+  $("#btn-mail-queue").addEventListener("click", e => runPlannedMailRead("mail_list_queue", e.currentTarget));
+  $("#btn-mail-log").addEventListener("click", e => runPlannedMailRead("mail_list_log", e.currentTarget));
+  $("#btn-mail-internal-log").addEventListener("click", e => runPlannedMailRead("mail_list_internal_log", e.currentTarget));
+  $("#btn-mail-contact-state").addEventListener("click", e => runPlannedMailRead("mail_list_contact_state", e.currentTarget));
+  $("#btn-mail-templates").addEventListener("click", e => runPlannedMailRead("mail_list_templates", e.currentTarget));
+  $("#btn-mail-campaigns").addEventListener("click", e => runPlannedMailRead("mail_list_campaigns", e.currentTarget));
+  $("#btn-mail-rules").addEventListener("click", e => runPlannedMailRead("mail_list_rules", e.currentTarget));
+  $("#btn-mail-policy").addEventListener("click", e => runPlannedMailRead("mail_list_policy", e.currentTarget));
+  $("#btn-mail-suppressions").addEventListener("click", e => runPlannedMailRead("mail_list_suppressions", e.currentTarget));
 
   $("#toggle-ui-mode").addEventListener("click", () => {
     saveUiMode(state.ui.mode === "technical" ? "simple" : "technical");
@@ -3595,7 +4059,7 @@ function bindUtilityActions(){
       "",
       "Próxima ação",
       state.apiBase
-        ? "Teste a conexão ou execute uma verificação rápida."
+        ? "Teste a conexão, execute uma verificação rápida e priorize leituras leves do PUBMAIL."
         : "Vá até Conexão, salve a URL do Web App e teste o acesso.",
       "",
       "Detalhes técnicos",
@@ -3603,6 +4067,7 @@ function bindUtilityActions(){
       "Última ação: " + (state.ui.lastAction || "—"),
       "Último problema: " + (state.ui.lastError || "—"),
       "Datasets: contacts=" + state.datasetAvailability.contacts + " · leads=" + state.datasetAvailability.leads + " · tickets=" + state.datasetAvailability.tickets + " · timeline=" + state.datasetAvailability.timeline + " · mailQueue=" + state.datasetAvailability.mailQueue,
+      "PUBMAIL: health=" + (state.mailHealth ? "carregado" : "não") + " · checklist=" + normalizeRowsFromResponse(state.mailChecklist).length + " · governance=" + (!!state.mailGovernance) + " · usage=" + normalizeRowsFromResponse(state.mailUsageNotes).length,
       "",
       "Ações publicadas",
       publishedActions.length ? publishedActions.join("\n") : "Nenhuma.",
