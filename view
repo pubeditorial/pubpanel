@@ -1,0 +1,4030 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0a1222" />
+  <title>PUBPANEL | PUB Editorial</title>
+  <style>
+    :root{
+      --bg:#f8fafc;
+      --bg-soft:#eef4ff;
+      --fg:#0f172a;
+      --muted:#475569;
+      --muted2:#64748b;
+      --blue:#2563eb;
+      --blue-2:#60a5fa;
+      --violet:#7c3aed;
+      --green:#059669;
+      --amber:#d97706;
+      --red:#dc2626;
+      --surface-1:rgba(255,255,255,.92);
+      --surface-2:rgba(255,255,255,.76);
+      --border:rgba(15,23,42,.08);
+      --line:#e2e8f0;
+      --focus:rgba(96,165,250,.46);
+      --shadow-card:0 10px 30px rgba(15,23,42,.05);
+      --shadow-pop:0 18px 60px rgba(15,23,42,.12);
+      --shadow-hero:0 28px 80px rgba(2,6,23,.20);
+      --radius-card:24px;
+      --radius-hero:34px;
+      --radius-control:16px;
+      --container:1440px;
+      --gutter:clamp(16px,3vw,28px);
+      --s1:8px;
+      --s2:12px;
+      --s3:16px;
+      --s4:20px;
+      --s5:28px;
+      --s6:36px;
+      --s7:52px;
+      --s8:72px;
+      --text-xl:clamp(24px,2.2vw,34px);
+      --text-lg:18px;
+      --text-md:15px;
+      --text-sm:13px;
+      --text-xs:12px;
+      --sidebar:310px;
+      --header:72px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;min-height:100%}
+    body{
+      background:
+        radial-gradient(1100px 320px at 10% 0%, rgba(37,99,235,.06), transparent 60%),
+        radial-gradient(1100px 320px at 90% 0%, rgba(124,58,237,.06), transparent 60%),
+        var(--bg);
+      color:var(--fg);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font:inherit}
+    :focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:12px}
+
+    .app{
+      display:grid;
+      grid-template-columns:var(--sidebar) 1fr;
+      min-height:100vh;
+    }
+
+    .sidebar{
+      position:sticky;
+      top:0;
+      height:100vh;
+      overflow:auto;
+      padding:22px 18px 18px;
+      background:linear-gradient(180deg,#0a1222 0%,#07111f 52%,#050b16 100%);
+      color:#fff;
+      border-right:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow-hero);
+      z-index:20;
+    }
+    .sidebar::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(500px 240px at 14% 10%, rgba(96,165,250,.16), transparent 60%),
+        radial-gradient(520px 260px at 86% 18%, rgba(167,139,250,.14), transparent 64%);
+      opacity:.95;
+    }
+    .sidebar-inner{position:relative;z-index:1;display:grid;gap:18px}
+    .brand{display:grid;gap:6px}
+    .logo{font-weight:980;font-size:28px;letter-spacing:-.03em}
+    .grad{
+      background:linear-gradient(90deg,#60a5fa,#a78bfa);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .sub{
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(226,232,240,.72);
+    }
+
+    .side-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.06);
+      color:rgba(241,245,249,.92);
+      font-size:12px;
+      font-weight:800;
+      width:max-content;
+    }
+    .side-chip::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:4px;
+      background:linear-gradient(135deg, rgba(96,165,250,.95), rgba(167,139,250,.85));
+    }
+
+    .nav{display:grid;gap:8px}
+    .nav a{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:rgba(241,245,249,.92);
+      font-size:14px;
+      font-weight:850;
+      transition:background .18s ease,border-color .18s ease,transform .18s ease;
+    }
+    .nav a:hover{
+      background:rgba(255,255,255,.08);
+      border-color:rgba(255,255,255,.16);
+      transform:translateY(-1px);
+    }
+    .nav a.active{
+      background:rgba(96,165,250,.14);
+      border-color:rgba(96,165,250,.34);
+      color:#fff;
+    }
+    .nav small{font-size:11px;color:rgba(226,232,240,.62);font-weight:800}
+
+    .side-meta{
+      display:grid;
+      gap:10px;
+      padding-top:8px;
+      border-top:1px solid rgba(255,255,255,.10);
+    }
+    .meta-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:12px;
+      color:rgba(226,232,240,.78);
+    }
+
+    .main{
+      min-width:0;
+      display:grid;
+      grid-template-rows:auto 1fr;
+      height:100vh;
+      overflow:hidden;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:15;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px var(--gutter);
+      border-bottom:1px solid var(--border);
+      background:rgba(248,250,252,.76);
+      backdrop-filter:blur(14px);
+    }
+    .top-left{display:flex;align-items:center;gap:12px;min-width:0}
+    .top-title{font-size:16px;font-weight:950;letter-spacing:-.02em}
+    .top-sub{font-size:12px;color:var(--muted2)}
+    .top-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+
+    .layout{overflow:auto;padding:var(--gutter)}
+    .wrap{max-width:var(--container);margin:0 auto;display:grid;gap:var(--s5)}
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--radius-hero);
+      background:linear-gradient(180deg,#0a1222 0%,#07111f 52%,#050b16 100%);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:var(--shadow-hero);
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-110px;
+      pointer-events:none;
+      background:
+        radial-gradient(580px 280px at 12% 16%, rgba(96,165,250,.20), transparent 62%),
+        radial-gradient(540px 260px at 88% 18%, rgba(167,139,250,.18), transparent 64%),
+        radial-gradient(520px 360px at 78% 72%, rgba(37,99,235,.14), transparent 62%);
+      opacity:.96;
+    }
+    .hero-inner{position:relative;z-index:1;padding:clamp(22px,2.8vw,34px)}
+    .hero-grid{display:grid;gap:22px;align-items:stretch}
+    @media (min-width:1100px){
+      .hero-grid{grid-template-columns:minmax(0,1.14fr) minmax(350px,.86fr)}
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:#bfdbfe;
+    }
+    .tag::before{
+      content:"";
+      width:10px;
+      height:10px;
+      border-radius:4px;
+      background:linear-gradient(135deg, rgba(96,165,250,.95), rgba(167,139,250,.85));
+    }
+    .h1{
+      font-size:clamp(34px,3.6vw,54px);
+      line-height:1;
+      letter-spacing:-.045em;
+      margin:0;
+      max-width:16ch;
+      font-weight:1000;
+    }
+    .h2{
+      margin:0;
+      font-size:var(--text-xl);
+      line-height:1.1;
+      letter-spacing:-.03em;
+      font-weight:980;
+    }
+    .lead{
+      margin:0;
+      color:rgba(226,232,240,.90);
+      font-size:15px;
+      line-height:1.8;
+      max-width:64ch;
+    }
+
+    .hero-box{
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      padding:20px;
+      display:grid;
+      gap:14px;
+      align-content:start;
+      box-shadow:0 20px 50px rgba(0,0,0,.18);
+      backdrop-filter:blur(12px);
+    }
+    .hero-box h3{margin:0;font-size:15px;color:rgba(226,232,240,.95)}
+    .trust{margin:0;padding-left:18px;display:grid;gap:8px;color:rgba(226,232,240,.84);font-size:13px}
+
+    .panel,.card,.table-card,.metric,.mini-card,.drawer-card{
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.90));
+      box-shadow:var(--shadow-card);
+      border-radius:var(--radius-card);
+    }
+    .panel{padding:clamp(20px,2vw,28px)}
+
+    .head{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+    .muted{color:var(--muted);font-size:15px;line-height:1.72}
+    .grid{display:grid;gap:var(--s4)}
+    .metrics{display:grid;gap:var(--s4);grid-template-columns:repeat(5,minmax(0,1fr))}
+    @media (max-width:1280px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media (max-width:860px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:640px){.metrics{grid-template-columns:1fr}}
+
+    .metric{padding:18px;display:grid;gap:10px}
+    .metric .eyebrow{
+      font-size:11px;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#1d4ed8;
+    }
+    .metric .value{
+      font-size:clamp(24px,2.2vw,34px);
+      font-weight:1000;
+      letter-spacing:-.04em;
+    }
+    .metric .note{font-size:13px;color:var(--muted2);line-height:1.55}
+
+    .twocol{display:grid;gap:var(--s4);grid-template-columns:1.15fr .85fr}
+    .threecol{display:grid;gap:var(--s4);grid-template-columns:repeat(3,minmax(0,1fr))}
+    .fourcol{display:grid;gap:var(--s4);grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media (max-width:1100px){
+      .twocol,.threecol,.fourcol{grid-template-columns:1fr}
+    }
+
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .toolbar-left,.toolbar-right{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-height:46px;
+      padding:12px 14px;
+      border-radius:15px;
+      border:1px solid rgba(15,23,42,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(241,245,249,.92));
+      color:#0f172a;
+      font-weight:900;
+      letter-spacing:-.01em;
+      cursor:pointer;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 8px 20px rgba(15,23,42,.05);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,opacity .18s ease;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:rgba(37,99,235,.20)}
+    .btn:active{transform:translateY(0)}
+    .btn--primary{
+      background:linear-gradient(135deg,#2563eb 0%,#3b82f6 56%,#60a5fa 100%);
+      border-color:transparent;
+      color:#fff;
+      box-shadow:0 16px 34px rgba(37,99,235,.24),inset 0 1px 0 rgba(255,255,255,.18);
+    }
+    .btn--violet{
+      background:linear-gradient(135deg,#6d28d9 0%,#7c3aed 56%,#a78bfa 100%);
+      border-color:transparent;
+      color:#fff;
+    }
+    .btn--soft{
+      background:rgba(37,99,235,.06);
+      border-color:rgba(37,99,235,.12);
+      color:#1d4ed8;
+      box-shadow:none;
+    }
+    .btn--danger{
+      background:rgba(220,38,38,.06);
+      border-color:rgba(220,38,38,.12);
+      color:var(--red);
+      box-shadow:none;
+    }
+    .btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
+
+    .input,.select,.textarea{
+      width:100%;
+      min-height:46px;
+      padding:12px 14px;
+      border-radius:15px;
+      border:1px solid rgba(15,23,42,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.96));
+      color:#0f172a;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 1px 2px rgba(15,23,42,.03);
+    }
+    .textarea{min-height:110px;resize:vertical}
+    .input::placeholder,.textarea::placeholder{color:#94a3b8}
+
+    .filters{display:grid;gap:12px;grid-template-columns:repeat(5,minmax(0,1fr))}
+    @media (max-width:1200px){.filters{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media (max-width:860px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:640px){.filters{grid-template-columns:1fr}}
+
+    .table-card{overflow:hidden}
+    .table-head{
+      padding:18px 20px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .table-title{font-size:16px;font-weight:950;letter-spacing:-.02em}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:920px}
+    th,td{padding:14px 16px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#64748b;
+      font-weight:950;
+      background:#f8fafc;
+    }
+    td{font-size:14px;color:#0f172a}
+    tbody tr:hover{background:rgba(37,99,235,.03)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+    .tiny{font-size:12px;color:var(--muted2);line-height:1.55}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      white-space:nowrap;
+    }
+    .pill--ok{color:var(--green);background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.16)}
+    .pill--warn{color:var(--amber);background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.16)}
+    .pill--error{color:var(--red);background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.16)}
+    .pill--info{color:#1d4ed8;background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.16)}
+
+    .section-state{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+      margin-bottom:2px;
+    }
+
+    .state-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:36px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(15,23,42,.10);
+      background:#fff;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.02em;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .state-badge::before{
+      content:"";
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:currentColor;
+      opacity:.92;
+    }
+
+    .state-badge--public{
+      color:#047857;
+      background:rgba(5,150,105,.08);
+      border-color:rgba(5,150,105,.18);
+    }
+
+    .state-badge--internal{
+      color:#7c3aed;
+      background:rgba(124,58,237,.08);
+      border-color:rgba(124,58,237,.18);
+    }
+
+    .state-badge--pending{
+      color:#b45309;
+      background:rgba(217,119,6,.08);
+      border-color:rgba(217,119,6,.18);
+    }
+
+    .state-badge--blocked{
+      color:#b91c1c;
+      background:rgba(220,38,38,.08);
+      border-color:rgba(220,38,38,.18);
+    }
+
+    .availability-card{
+      padding:18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .availability-grid{
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    @media (max-width:1100px){
+      .availability-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .availability-item{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
+      padding:14px;
+      display:grid;
+      gap:8px;
+    }
+
+    .availability-item strong{
+      font-size:14px;
+      line-height:1.2;
+    }
+
+    .availability-item .tiny{
+      margin:0;
+    }
+
+    .section-note{
+      padding:16px 18px;
+      border-radius:18px;
+      border:1px solid rgba(15,23,42,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
+      font-size:14px;
+      line-height:1.68;
+      color:var(--muted);
+    }
+
+    .compact-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .compact-actions .tiny{
+      margin:0;
+    }
+    .compact-actions .toolbar{
+      margin-bottom:0;
+    }
+
+    .compact-actions .filters{
+      grid-template-columns:1fr;
+    }
+
+    @media (min-width:860px){
+      .compact-actions .filters{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+    }
+
+    .sep{height:1px;background:var(--line)}
+    .mini-grid{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media (max-width:1050px){.mini-grid{grid-template-columns:1fr}}
+    .mini-card{padding:18px;display:grid;gap:10px}
+    .mini-card strong{font-size:15px;line-height:1.3}
+
+    .status-banner{
+      display:none;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(37,99,235,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.95));
+    }
+    .status-banner.show{display:block}
+    .status-banner.error{border-color:rgba(220,38,38,.18);background:rgba(220,38,38,.05)}
+    .status-banner.success{border-color:rgba(5,150,105,.18);background:rgba(5,150,105,.05)}
+    .status-banner.warn{border-color:rgba(217,119,6,.18);background:rgba(217,119,6,.05)}
+
+    .drawer{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      width:min(460px,calc(100vw - 36px));
+      z-index:50;
+      display:grid;
+      gap:12px;
+    }
+    .drawer-card{padding:16px 18px;display:none}
+    .drawer-card.show{display:grid}
+    .drawer-title{font-size:14px;font-weight:950}
+    .drawer-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+    .empty{
+      padding:26px;
+      border:1px dashed rgba(15,23,42,.14);
+      border-radius:20px;
+      color:var(--muted2);
+      font-size:14px;
+      line-height:1.65;
+      background:rgba(248,250,252,.8);
+    }
+
+    .empty-meta{
+      margin-top:14px;
+      display:grid;
+      gap:8px;
+    }
+
+    .empty-meta-row{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid rgba(15,23,42,.08);
+      border-radius:14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
+    }
+
+    .empty-meta-row strong{
+      min-width:132px;
+      font-size:12px;
+      line-height:1.45;
+      color:#0f172a;
+    }
+
+    .empty-meta-row span{
+      font-size:13px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .codebox{
+      padding:14px 16px;
+      border-radius:16px;
+      background:#0f172a;
+      color:#e2e8f0;
+      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
+      overflow:auto;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .checklist{margin:0;padding-left:18px;display:grid;gap:8px}
+    .hidden{display:none!important}
+
+    .th-sort{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      user-select:none;
+      background:none;
+      border:0;
+      padding:0;
+      color:inherit;
+      font:inherit;
+    }
+    .th-sort:hover{color:#1d4ed8}
+    .th-sort::after{content:"↕";font-size:11px;opacity:.55}
+    .th-sort[data-dir="asc"]::after{content:"↑";opacity:1;color:#1d4ed8}
+    .th-sort[data-dir="desc"]::after{content:"↓";opacity:1;color:#1d4ed8}
+
+    .table-foot{
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      border-top:1px solid var(--line);
+      background:#fff;
+    }
+
+    .history-list{display:grid;gap:10px}
+    .history-item{
+      padding:14px 16px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.95));
+    }
+    .history-item strong{display:block;font-size:13px;margin-bottom:6px;letter-spacing:-.01em}
+    .history-meta{display:flex;flex-wrap:wrap;gap:8px 14px;margin-bottom:8px;font-size:12px;color:var(--muted2)}
+    .history-detail{font-size:13px;color:var(--fg);line-height:1.6;white-space:pre-wrap;word-break:break-word}
+
+    .sidebar-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(2,6,23,.42);
+      backdrop-filter:blur(2px);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .22s ease;
+      z-index:19;
+    }
+    .sidebar-backdrop.show{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .mobile-show{display:none}
+    @media (max-width:1020px){
+      .app{grid-template-columns:1fr}
+      .sidebar{
+        position:fixed;
+        inset:0 auto 0 0;
+        transform:translateX(-100%);
+        width:min(320px,88vw);
+        transition:transform .22s ease;
+      }
+      .sidebar.open{transform:translateX(0)}
+      .main{grid-template-rows:auto 1fr}
+      .mobile-show{display:inline-flex!important}
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div class="brand">
+          <div class="logo">PUB<span class="grad">PANEL</span></div>
+          <div class="sub">Painel operacional do ecossistema PUB</div>
+        </div>
+
+        <div class="side-chip">crm + pubmail + pubio</div>
+
+        <nav class="nav" id="nav">
+          <a href="#overview" class="active"><span>Visão geral</span><small>01</small></a>
+          <a href="#summary"><span>Resumo executivo</span><small>02</small></a>
+          <a href="#installation"><span>Instalação</span><small>03</small></a>
+          <a href="#health"><span>Saúde e contrato</span><small>04</small></a>
+          <a href="#crm-core"><span>CRM Core</span><small>05</small></a>
+          <a href="#timeline"><span>Timeline</span><small>06</small></a>
+          <a href="#mail-core"><span>PUBMAIL</span><small>07</small></a>
+          <a href="#pubio-core"><span>PUBIO</span><small>08</small></a>
+          <a href="#observability"><span>Observabilidade</span><small>09</small></a>
+          <a href="#history"><span>Histórico local</span><small>10</small></a>
+          <a href="#settings"><span>Configurações</span><small>11</small></a>
+        </nav>
+
+        <div class="side-meta">
+          <div class="meta-row"><span>Front</span><strong id="meta-front-version">PUBPANEL 2.0</strong></div>
+          <div class="meta-row"><span>CRM</span><strong id="meta-crm-version">—</strong></div>
+          <div class="meta-row"><span>PUBMAIL</span><strong id="meta-mail-version">não publicado neste endpoint</strong></div>
+          <div class="meta-row"><span>PUBIO</span><strong id="meta-io-version">não publicado neste endpoint</strong></div>
+          <div class="meta-row"><span>Status</span><strong id="meta-status">desconectado</strong></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="top-left">
+          <button class="btn mobile-show" id="open-sidebar">Menu</button>
+          <div>
+            <div class="top-title">PUBPANEL</div>
+            <div class="top-sub">Painel único aderente ao ecossistema completo, com leitura pública real do deploy, POSTs públicos reais do front e representação fiel de CRM Core, Timeline, PUBMAIL, PUBIO e observabilidade sem sugerir façade administrativa HTTP ainda não publicada</div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn--soft" id="btn-status">Status</button>
+          <button class="btn btn--soft" id="btn-contract">Contrato</button>
+          <button class="btn btn--soft" id="btn-health">Health</button>
+          <button class="btn btn--violet" id="btn-health-deep">Health profundo</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <div class="wrap">
+
+          <section class="hero" id="overview">
+            <div class="hero-inner">
+              <div class="hero-grid">
+                <div class="grid">
+                  <span class="tag">Painel central do ecossistema</span>
+                  <h1 class="h1">Controle visual completo do projeto PUB Editorial</h1>
+                  <p class="lead">Esta versão do PUBPANEL foi reestruturada para refletir o desenho real do sistema: CRM Core, Timeline, PUBMAIL, PUBIO, governança e observabilidade. O foco é separar com clareza a camada pública já disponível da camada administrativa ainda não publicada neste deploy.</p>
+                  <p class="lead">Neste endpoint, a leitura pública confirmada permanece em status, health, health_deep e contract. As operações administrativas continuam representadas como arquitetura do sistema e prontidão para futura façade administrativa.</p>
+                </div>
+
+                <aside class="hero-box">
+                  <h3>O que este painel representa no deploy atual</h3>
+                  <ul class="trust">
+                    <li>Camada pública ativa: status, health, health_deep e contract</li>
+                    <li>CRM Core, Timeline, PUBMAIL e PUBIO como módulos reais do sistema</li>
+                    <li>Funções administrativas preservadas como arquitetura visual, sem execução HTTP</li>
+                    <li>Observabilidade separada de operações sensíveis</li>
+                    <li>Estrutura pronta para futura publicação de façades administrativas</li>
+                  </ul>
+                  <div class="tiny">O painel não deve induzir que listagens administrativas, importações, restores, processamento de fila ou bootstrap já estejam publicados no endpoint atual.</div>
+                </aside>
+              </div>
+            </div>
+          </section>
+
+          <div id="global-status" class="status-banner"></div>
+
+          <section class="panel" id="summary">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Resumo executivo</span>
+              <h2 class="h2">Leitura rápida do ecossistema</h2>
+              <div class="muted">Resumo consolidado a partir do que o painel já carregou: conectividade, contrato, saúde estrutural pública, diagnóstico funcional detalhado, datasets e histórico local.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--public">Leitura pública ativa</span>
+                <span class="state-badge state-badge--blocked">Admin HTTP não publicado neste deploy</span>
+                <span class="state-badge state-badge--internal">Funções internas reais preservadas por módulo</span>
+                <span class="state-badge state-badge--pending">Façades administrativas futuras sem redesenho do painel</span>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="metric">
+                <div class="eyebrow">Status</div>
+                <div class="value" id="sum-status">—</div>
+                <div class="note">Conectividade básica via mode=status.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Schema</div>
+                <div class="value" id="sum-schema">—</div>
+                <div class="note">Resultado do health estrutural.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Contatos</div>
+                <div class="value" id="sum-contacts">0</div>
+                <div class="note">Linhas filtradas no painel.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Leads</div>
+                <div class="value" id="sum-leads">0</div>
+                <div class="note">Linhas filtradas no painel.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Tickets</div>
+                <div class="value" id="sum-tickets">0</div>
+                <div class="note">Linhas filtradas no painel.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Timeline</div>
+                <div class="value" id="sum-timeline">0</div>
+                <div class="note">Eventos visíveis no painel.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Fila mail</div>
+                <div class="value" id="sum-mail">0</div>
+                <div class="note">Itens visíveis no painel.</div>
+              </div>
+            </div>
+
+            <div class="availability-card" style="margin-top:18px">
+              <strong>Matriz de disponibilidade do deploy atual</strong>
+
+              <div class="availability-grid">
+                <div class="availability-item">
+                  <strong>GETs públicos reais do BACK</strong>
+                  <div class="tiny">
+                    Disponíveis neste endpoint por
+                    <span class="mono">mode=status</span>,
+                    <span class="mono">mode=health</span>,
+                    <span class="mono">mode=health_deep</span>
+                    e
+                    <span class="mono">mode=contract</span>.
+                  </div>
+                </div>
+
+                <div class="availability-item">
+                  <strong>POSTs públicos reais do FRONT</strong>
+                  <div class="tiny">
+                    Disponíveis no BACK atual:
+                    <span class="mono">action=capture_lead</span>
+                    e
+                    <span class="mono">action=create_ticket</span>.
+                  </div>
+                </div>
+
+                <div class="availability-item">
+                  <strong>Funções administrativas por módulo</strong>
+                  <div class="tiny">
+                    CRM Core, Timeline, PUBMAIL, PUBIO e observabilidade continuam representados como arquitetura real do sistema, mas sem façade administrativa HTTP publicada neste endpoint.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mini-grid" style="margin-top:18px">
+              <div class="mini-card">
+                <strong>Contrato do front</strong>
+                <div class="tiny" id="sum-contract">Contrato ainda não carregado.</div>
+              </div>
+              <div class="mini-card">
+                <strong>Saúde operacional</strong>
+                <div class="tiny" id="sum-health">Health ainda não carregado.</div>
+              </div>
+              <div class="mini-card">
+                <strong>Última atividade local</strong>
+                <div class="tiny" id="sum-last-action">Última ação: —</div>
+                <div class="tiny" id="sum-last-error">Último erro: —</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="installation">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Instalação e bootstrap</span>
+              <h2 class="h2">Workflow operacional aderente ao projeto real</h2>
+              <div class="muted">A arquitetura do painel continua modular e aderente ao ecossistema. Neste deploy, porém, o painel não executa bootstrap administrativo. Ele expõe a camada pública real, preserva a arquitetura dos módulos e documenta com clareza o que ainda depende de publicação explícita.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--public">Leitura pública disponível</span>
+                <span class="state-badge state-badge--internal">Fluxos internos reais preservados</span>
+                <span class="state-badge state-badge--blocked">Bootstrap administrativo não publicado</span>
+                <span class="state-badge state-badge--pending">Façades futuras por módulo</span>
+              </div>
+            </div>
+
+            <div class="threecol">
+              <div class="mini-card compact-actions">
+                <strong>CRM Core</strong>
+                <div class="tiny">A instalação e o resumo administrativo do CRM pertencem ao ecossistema real, mas não estão publicados neste endpoint do painel.</div>
+                <button class="btn btn--soft" data-admin-action="crm_install">Abrir diagnóstico da instalação do CRM</button>
+                <button class="btn btn--soft" data-admin-action="crm_summary">Abrir diagnóstico do resumo administrativo do CRM</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>PUBMAIL</strong>
+                <div class="tiny">Bootstrap do mailer, checklist de implantação, scan de timeline e processamento de fila continuam existindo no módulo real, porém sem façade administrativa publicada neste deploy.</div>
+                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Abrir diagnóstico do bootstrap do PUBMAIL</button>
+                <button class="btn btn--soft" data-admin-action="mail_checklist">Abrir diagnóstico do checklist do PUBMAIL</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Operação futura</strong>
+                <div class="tiny">A próxima evolução natural do painel é publicar endpoints administrativos por módulo real, sem alterar a arquitetura visual já adotada nesta interface.</div>
+                <button class="btn btn--soft" data-admin-action="mail_scan">Abrir diagnóstico do scan de timeline</button>
+                <button class="btn btn--soft" data-admin-action="mail_process">Abrir diagnóstico do processamento de fila</button>
+              </div>
+            </div>
+
+            <div class="section-note" style="margin-top:18px">
+              Esta seção deve transmitir que o deploy atual já suporta leitura pública operacional, enquanto o bootstrap administrativo permanece intencionalmente fora deste endpoint. A interface continua pronta para acoplar futuras façades sem necessidade de redesenho estrutural.
+            </div>
+
+            <div class="sep" style="margin:20px 0"></div>
+
+            <div class="twocol">
+              <div class="mini-card">
+                <strong>Sequência recomendada</strong>
+                <ol class="checklist tiny">
+                  <li>Validar a camada pública disponível por status, contract, health e health_deep</li>
+                  <li>Tratar health e health_deep como contratos distintos</li>
+                  <li>Exibir operações administrativas apenas como internas, planejadas ou não publicadas quando não houver façade confirmada</li>
+                  <li>Manter CRM Core, Timeline, PUBMAIL, PUBIO e Observabilidade como módulos independentes</li>
+                  <li>Publicar façades administrativas por módulo real quando isso for desejado no deploy</li>
+                  <li>Conectar o painel aos endpoints administrativos somente após publicação explícita</li>
+                </ol>
+              </div>
+
+              <div class="mini-card">
+                <strong>URL base do Web App</strong>
+                <div class="tiny">Persistida em localStorage para manter o painel desacoplado do deploy.</div>
+                <label class="tiny" for="api-base">URL base do Apps Script</label>
+                <input class="input" id="api-base" placeholder="https://script.google.com/macros/s/.../exec" />
+                <div class="toolbar-right">
+                  <button class="btn btn--soft" id="save-api-base">Salvar URL</button>
+                  <button class="btn btn--soft" id="clear-api-base">Limpar</button>
+                </div>
+                <div class="codebox">camada pública confirmada neste deploy:
+
+GET
+mode=status
+mode=health
+mode=health_deep
+mode=contract
+
+POST público do front confirmado no BACK
+action=capture_lead
+action=create_ticket
+
+façades administrativas ainda não publicadas neste endpoint:
+
+CRM Core
+admin_install_crm
+admin_dashboard_summary
+admin_list_contacts
+admin_list_leads
+admin_list_tickets
+admin_list_timeline
+
+PUBMAIL
+admin_mail_bootstrap
+admin_mail_health
+admin_mail_checklist
+admin_mail_scan_timeline
+admin_mail_process_queue
+admin_mail_create_docs
+admin_mail_create_triggers
+admin_mail_governance_model
+admin_mail_usage_notes
+admin_mail_list_queue
+admin_mail_list_log
+admin_mail_list_internal_log
+admin_mail_list_templates
+admin_mail_list_campaigns
+admin_mail_list_rules
+admin_mail_list_policy
+admin_mail_list_segments
+admin_mail_list_suppressions
+admin_mail_list_contact_state
+
+PUBIO
+admin_io_export_entity
+admin_io_export_bundle
+admin_io_export_csv
+admin_io_validate_file
+admin_io_preview_import
+admin_io_inspect_storage_ref
+admin_io_import_entity
+admin_io_import_bundle
+admin_io_import_csv
+admin_io_create_snapshot
+admin_io_restore_snapshot
+admin_io_list_jobs
+admin_io_list_job_items
+admin_io_list_snapshots
+admin_io_list_restore_points
+admin_io_list_logs
+admin_io_contract
+
+OBSERVABILIDADE
+admin_obs_api_log
+admin_obs_safe_fail_log
+admin_obs_audit_log</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="health">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Saúde e contrato</span>
+              <h2 class="h2">Camada pública já funcional</h2>
+              <div class="muted">Esta seção usa exclusivamente a camada pública já exposta pelo backend. Ela deve permanecer como leitura real do deploy, sem inferir operações administrativas, contratos internos não publicados ou disponibilidade de façades que o endpoint atual não comprova.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--public">Leitura pública confirmada</span>
+                <span class="state-badge state-badge--public">Health e health_deep tratados separadamente</span>
+                <span class="state-badge state-badge--public">Contrato do front lido sem inferência administrativa</span>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="metric">
+                <div class="eyebrow">App</div>
+                <div class="value" id="metric-app">—</div>
+                <div class="note">Nome exposto pelo status ou pelo health.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Versão CRM</div>
+                <div class="value" id="metric-version">—</div>
+                <div class="note">Versão reportada pelo backend público.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Schema ready</div>
+                <div class="value" id="metric-schema">—</div>
+                <div class="note">Validação estrutural da base no health resumido.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Safe failures</div>
+                <div class="value" id="metric-safe">—</div>
+                <div class="note">Contadores agregados do health estrutural.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Contrato</div>
+                <div class="value" id="metric-contract">—</div>
+                <div class="note">Itens e placements expostos ao front.</div>
+              </div>
+            </div>
+
+            <div class="section-note" style="margin-top:18px">
+              Esta seção deve comunicar com clareza que a camada pública já permite leitura operacional real do deploy por <span class="mono">status</span>, <span class="mono">health</span>, <span class="mono">health_deep</span> e <span class="mono">contract</span>. O objetivo aqui não é administrar o sistema, e sim tornar visível, com fidelidade, o que o endpoint público realmente publica hoje.
+            </div>
+
+            <div class="twocol" style="margin-top:18px">
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Saída estruturada da camada pública</div>
+                  <div class="toolbar-right">
+                    <button class="btn btn--soft" id="copy-health-json">Copiar JSON</button>
+                  </div>
+                </div>
+                <div class="table-wrap">
+                  <div class="codebox" id="health-json-box">Nenhuma consulta executada ainda.</div>
+                </div>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Leitura pública já disponível</strong>
+                <div class="tiny">Os botões abaixo executam somente leituras públicas confirmadas do deploy atual. Eles não acionam rotinas administrativas e não pressupõem nenhuma façade interna publicada além do que já está disponível no endpoint.</div>
+                <button class="btn btn--soft" id="run-status-inline">Status</button>
+                <button class="btn btn--soft" id="run-health-inline">Health</button>
+                <button class="btn btn--violet" id="run-health-deep-inline">Health profundo</button>
+                <button class="btn btn--soft" id="run-contract-inline">Contrato</button>
+                <div class="sep"></div>
+                <strong>Contrato do front</strong>
+                <div class="codebox" id="contract-box">Contrato ainda não carregado.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="crm-core">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">CRM Core</span>
+              <h2 class="h2">Contacts, leads e tickets como núcleo operacional</h2>
+              <div class="muted">O CRM foi reorganizado como módulo real. A timeline foi extraída para uma seção própria porque participa tanto da camada de CRM quanto da orquestração do PUBMAIL. O painel preserva a modelagem do núcleo operacional sem assumir publicação administrativa que o deploy atual não comprova.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--internal">CRM real preservado</span>
+                <span class="state-badge state-badge--blocked">Listagens administrativas não publicadas</span>
+                <span class="state-badge state-badge--pending">Façades futuras compatíveis com esta estrutura</span>
+              </div>
+            </div>
+
+            <div class="threecol">
+              <div class="mini-card compact-actions">
+                <strong>Leads</strong>
+                <div class="tiny">Captação, item, placement, score, origem, download e conversão continuam representados como parte real do CRM, mas dependem de façade administrativa para leitura conectada.</div>
+                <button class="btn btn--soft" id="btn-load-leads">Listagem de leads — não publicada</button>
+                <button class="btn btn--soft" data-admin-action="crm_list_leads">Abrir diagnóstico da listagem de leads</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Contatos</strong>
+                <div class="tiny">Identidade, normalização de email e telefone, merge e relacionamento permanecem modelados corretamente no painel, sem assumir publicação administrativa inexistente.</div>
+                <button class="btn btn--soft" id="btn-load-contacts">Listagem de contatos — não publicada</button>
+                <button class="btn btn--soft" data-admin-action="crm_list_contacts">Abrir diagnóstico da listagem de contatos</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Tickets</strong>
+                <div class="tiny">Suporte, prioridade, problema técnico, contexto do script e status fazem parte do CRM operacional, mas a leitura administrativa ainda depende de façade explícita no deploy.</div>
+                <button class="btn btn--soft" id="btn-load-tickets">Listagem de tickets — não publicada</button>
+                <button class="btn btn--soft" data-admin-action="crm_list_tickets">Abrir diagnóstico da listagem de tickets</button>
+              </div>
+            </div>
+
+            <div class="section-note" style="margin-top:18px">
+              Esta seção deve comunicar que o CRM Core existe de forma real no ecossistema e que suas entidades continuam corretamente representadas na interface. Leads, contatos e tickets permanecem como núcleo operacional verdadeiro do projeto. O que ainda não existe neste endpoint é a façade administrativa HTTP publicada para leitura conectada dessas entidades, e não a existência do módulo ou da modelagem que o painel já preserva.
+            </div>
+
+            <div class="sep" style="margin:20px 0"></div>
+
+            <div class="grid">
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Leads</div>
+                  <div class="toolbar-right">
+                    <button class="btn btn--soft" data-local-export="leads">Exportar CSV local</button>
+                    <button class="btn btn--soft" data-admin-action="io_export_leads">Exportar via PUBIO — não publicado</button>
+                  </div>
+                </div>
+                <div class="toolbar" style="padding:0 18px 18px">
+                  <div class="filters" style="width:100%">
+                    <input class="input" id="filter-lead-search" placeholder="Buscar por nome, email, item ou ID" />
+                    <select class="select" id="filter-lead-item"><option value="">Todos os itens</option></select>
+                    <select class="select" id="filter-lead-placement"><option value="">Todos os placements</option></select>
+                    <select class="select" id="filter-lead-status">
+                      <option value="">Todos os status</option>
+                    </select>
+                    <select class="select" id="filter-lead-source">
+                      <option value="">Todas as origens</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="table-wrap" id="leads-table-wrap"></div>
+              </div>
+
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Contatos</div>
+                  <div class="toolbar-right">
+                    <button class="btn btn--soft" data-local-export="contacts">Exportar CSV local</button>
+                    <button class="btn btn--soft" data-admin-action="io_export_contacts">Exportar via PUBIO — não publicado</button>
+                  </div>
+                </div>
+                <div class="toolbar" style="padding:0 18px 18px">
+                  <div class="filters" style="width:100%">
+                    <input class="input" id="filter-contact-search" placeholder="Buscar por contato, email, empresa ou cidade" />
+                    <select class="select" id="filter-contact-status">
+                      <option value="">Todos os status</option>
+                    </select>
+                    <input class="input" id="filter-contact-company" placeholder="Filtrar empresa" />
+                    <input class="input" id="filter-contact-city" placeholder="Filtrar cidade" />
+                    <input class="input" id="filter-contact-source" placeholder="Filtrar source" />
+                  </div>
+                </div>
+                <div class="table-wrap" id="contacts-table-wrap"></div>
+              </div>
+
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Tickets</div>
+                  <div class="toolbar-right">
+                    <button class="btn btn--soft" data-local-export="tickets">Exportar CSV local</button>
+                    <button class="btn btn--soft" data-admin-action="io_export_tickets">Exportar via PUBIO — não publicado</button>
+                  </div>
+                </div>
+                <div class="toolbar" style="padding:0 18px 18px">
+                  <div class="filters" style="width:100%">
+                    <input class="input" id="filter-ticket-search" placeholder="Buscar por ticket, assunto, email ou item" />
+                    <select class="select" id="filter-ticket-priority"><option value="">Todas as prioridades</option></select>
+                    <select class="select" id="filter-ticket-status"><option value="">Todos os status</option></select>
+                    <input class="input" id="filter-ticket-item" placeholder="Filtrar item" />
+                    <input class="input" id="filter-ticket-script" placeholder="Filtrar script" />
+                  </div>
+                </div>
+                <div class="table-wrap" id="tickets-table-wrap"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="timeline">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Timeline</span>
+              <h2 class="h2">Eventos como eixo do sistema</h2>
+              <div class="muted">A timeline é tratada como entidade operacional central. Ela liga CRM, automação de emails e rastreabilidade geral. O painel preserva essa modelagem com clareza, sem assumir publicação administrativa que o deploy atual não comprova.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--internal">Entidade central real do ecossistema</span>
+                <span class="state-badge state-badge--blocked">Listagem administrativa não publicada</span>
+                <span class="state-badge state-badge--pending">Pronta para façade futura sem mudar a modelagem</span>
+              </div>
+            </div>
+
+            <div class="threecol">
+              <div class="mini-card compact-actions">
+                <strong>Papel da timeline</strong>
+                <div class="tiny">A timeline conecta CRM, automação de email e rastreabilidade geral. Ela continua representada como eixo transversal do sistema, mesmo sem façade administrativa publicada para leitura conectada.</div>
+                <button class="btn btn--soft" id="btn-load-timeline">Listagem da timeline — não publicada</button>
+                <button class="btn btn--soft" data-admin-action="crm_list_timeline">Abrir diagnóstico da listagem de timeline</button>
+              </div>
+
+              <div class="mini-card">
+                <strong>Filtros de leitura</strong>
+                <div class="tiny">A estrutura de busca e segmentação já está pronta para quando a listagem administrativa for publicada neste endpoint.</div>
+                <div class="toolbar" style="margin-bottom:0">
+                  <div class="filters" style="width:100%">
+                    <input class="input" id="filter-timeline-search" placeholder="Buscar por timeline_id, entity_id, event_type ou payload" />
+                    <select class="select" id="filter-timeline-entity">
+                      <option value="">Todos os tipos de entidade</option>
+                    </select>
+                    <select class="select" id="filter-timeline-event">
+                      <option value="">Todos os eventos</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Saída operacional</strong>
+                <div class="tiny">A tabela de eventos recentes continua pronta para receber dados reais do deploy quando houver publicação explícita da façade administrativa correspondente.</div>
+                <button class="btn btn--soft" data-local-export="timeline">Exportar CSV local</button>
+              </div>
+            </div>
+
+            <div class="section-note" style="margin-top:18px">
+              Esta seção deve deixar claro que a timeline já é tratada como entidade central real do sistema, conectando CRM, automação de email e rastreabilidade geral. O que ainda depende de publicação explícita neste endpoint não é a existência da timeline como eixo do ecossistema, mas apenas sua façade administrativa HTTP para leitura conectada pelo painel.
+            </div>
+
+            <div class="table-card" style="margin-top:18px">
+              <div class="table-head">
+                <div class="table-title">Eventos recentes</div>
+              </div>
+              <div class="table-wrap" id="timeline-table-wrap"></div>
+            </div>
+          </section>
+
+          <section class="panel" id="mail-core">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">PUBMAIL</span>
+              <h2 class="h2">Orquestração de mensagens alinhada ao módulo real</h2>
+              <div class="muted">A área de email continua refletindo o módulo real: templates, campaigns, rules, policy, segments, suppressions, contact_state, queue, log e internal_log. O que muda é a rotulagem de disponibilidade real no endpoint consumido pelo painel.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--internal">Módulo real preservado</span>
+                <span class="state-badge state-badge--blocked">Listagens e comandos admin não publicados</span>
+                <span class="state-badge state-badge--pending">Façade administrativa futura compatível com esta UI</span>
+              </div>
+            </div>
+
+            <div class="threecol">
+              <div class="mini-card compact-actions">
+                <strong>Bootstrap e processamento</strong>
+                <div class="tiny">O módulo PUBMAIL possui bootstrap, scan de timeline, processamento de fila, criação de docs e gatilhos. No deploy atual, essas operações não estão publicadas neste endpoint.</div>
+                <button class="btn btn--soft" data-admin-action="mail_bootstrap">Abrir diagnóstico do bootstrap do PUBMAIL</button>
+                <button class="btn btn--soft" data-admin-action="mail_process">Abrir diagnóstico do processamento de fila</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Governança editorial</strong>
+                <div class="tiny">Templates, campaigns, rules, policy, segments e suppressions fazem parte do modelo real do módulo, mas não possuem leitura administrativa publicada neste endpoint.</div>
+                <button class="btn btn--soft" data-admin-action="mail_governance_model">Abrir diagnóstico da governança do PUBMAIL</button>
+                <button class="btn btn--soft" data-admin-action="mail_list_templates">Abrir diagnóstico da biblioteca editorial</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Estado operacional</strong>
+                <div class="tiny">Queue, mail_log, internal_log e contact_state permanecem representados na interface, mas dependem de façade admin real para leitura conectada.</div>
+                <button class="btn btn--soft" id="btn-load-mail-queue">Listagem da fila — não publicada</button>
+                <button class="btn btn--soft" data-admin-action="mail_list_log">Abrir diagnóstico dos logs do PUBMAIL</button>
+              </div>
+            </div>
+
+            <div class="section-note" style="margin-top:18px">
+              No deploy atual, esta seção deve comunicar sem ambiguidade que o PUBMAIL existe como módulo real do ecossistema, opera sobre a mesma base do PUB CRM, usa a timeline como gatilho de orquestração, mantém estruturas próprias como <span class="mono">mail_templates</span>, <span class="mono">mail_campaigns</span>, <span class="mono">mail_rules</span>, <span class="mono">mail_policy</span>, <span class="mono">mail_segments</span>, <span class="mono">mail_suppressions</span>, <span class="mono">mail_contact_state</span>, <span class="mono">mail_queue</span>, <span class="mono">mail_log</span> e <span class="mono">mail_internal_log</span>, e possui funções internas reais como bootstrap, geração de Docs padrão, scan da timeline e processamento da fila. O que ainda não existe neste endpoint é a publicação explícita de façades administrativas HTTP para essas operações.
+            </div>
+
+            <div class="table-card" style="margin-top:18px">
+              <div class="table-head">
+                <div class="table-title">Fila operacional do mailer</div>
+                <div class="toolbar-right">
+                  <button class="btn btn--soft" data-local-export="mailQueue">Exportar CSV local</button>
+                </div>
+              </div>
+              <div class="toolbar" style="padding:0 18px 18px">
+                <div class="filters" style="width:100%">
+                  <input class="input" id="filter-mail-search" placeholder="Buscar por queue_id, recipient, campaign, template ou mail_key" />
+                  <select class="select" id="filter-mail-status"><option value="">Todos os status</option></select>
+                  <select class="select" id="filter-mail-type"><option value="">Todos os tipos</option></select>
+                  <input class="input" id="filter-mail-campaign" placeholder="Filtrar campaign_key" />
+                  <input class="input" id="filter-mail-template" placeholder="Filtrar template_key" />
+                </div>
+              </div>
+              <div class="table-wrap" id="mail-table-wrap"></div>
+            </div>
+          </section>
+
+          <section class="panel" id="pubio-core">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">PUBIO</span>
+              <h2 class="h2">Importação, exportação, validação, snapshots e restore</h2>
+              <div class="muted">A seção de IO continua refletindo o módulo real: entity export, bundle export, CSV export, validate, preview, import, snapshots, restore points, jobs e inspect storage_ref. O que não se assume aqui é a publicação HTTP de cada operação no endpoint do painel sem confirmação explícita.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--internal">Módulo real preservado</span>
+                <span class="state-badge state-badge--blocked">Operações sensíveis não publicadas</span>
+                <span class="state-badge state-badge--pending">Façade administrativa futura por operação</span>
+              </div>
+            </div>
+
+            <div class="threecol">
+              <div class="mini-card compact-actions">
+                <strong>Exportação e inspeção</strong>
+                <div class="tiny">Entity export, bundle export, CSV export, validate, preview e inspect storage_ref pertencem ao módulo real, mas não possuem publicação administrativa confirmada neste endpoint.</div>
+                <button class="btn btn--soft" data-admin-action="io_export_entity">Abrir diagnóstico das exportações do PUBIO</button>
+                <button class="btn btn--soft" data-admin-action="io_validate_file">Abrir diagnóstico da validação e preview</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Importação e restore</strong>
+                <div class="tiny">Importações UPSERT e REPLACE, snapshots e restore são operações do módulo, porém ainda não estão publicadas nesta interface como ações administrativas conectadas.</div>
+                <button class="btn btn--soft" data-admin-action="io_import_bundle">Abrir diagnóstico da importação do PUBIO</button>
+                <button class="btn btn--soft" data-admin-action="io_restore_snapshot">Abrir diagnóstico do restore de snapshot</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Governança do módulo</strong>
+                <div class="tiny">Jobs, job_items, io_log, snapshots e restore_points continuam representados como arquitetura real do PUBIO, sem assumir listagem HTTP publicada.</div>
+                <button class="btn btn--soft" data-admin-action="io_list_jobs">Abrir diagnóstico dos jobs do PUBIO</button>
+                <button class="btn btn--soft" data-admin-action="io_list_logs">Abrir diagnóstico dos logs do PUBIO</button>
+              </div>
+            </div>
+
+            <div class="twocol" style="margin-top:18px">
+              <div class="mini-card">
+                <strong>Staging manual</strong>
+                <div class="tiny">Área de referência para payloads do PUBIO. O módulo real trabalha principalmente com arquivos persistidos e <span class="mono">storage_ref</span>. Este staging é apenas apoio visual e não representa fluxo administrativo HTTP publicado neste deploy.</div>
+                <textarea class="textarea" id="import-json" placeholder='Cole aqui um payload JSON apenas para inspeção visual local do painel.'></textarea>
+                <div class="toolbar-right">
+                  <button class="btn btn--soft" data-admin-action="io_validate_file">Abrir diagnóstico da validação</button>
+                  <button class="btn btn--soft" data-admin-action="io_preview_import">Abrir diagnóstico do preview</button>
+                  <button class="btn btn--soft" data-admin-action="io_import_bundle">Abrir diagnóstico da importação</button>
+                </div>
+              </div>
+
+              <div class="mini-card">
+                <strong>Observação contratual</strong>
+                <div class="tiny">PUBIO tem semântica própria e não deve ficar escondido sob botões genéricos de import/export.</div>
+                <div class="codebox">Operações reais esperadas no módulo PUBIO:
+exportEntity
+exportBundle
+exportEntityCsv
+validateImportFile
+previewJsonImport
+previewCsvImport
+importEntity
+importBundle
+importEntityCsv
+createEntitySnapshot
+restoreEntityFromSnapshot
+listIoLogs
+inspectStorageRef
+
+No painel, essas operações só devem ser tratadas como disponíveis
+quando houver façade administrativa explicitamente publicada.
+
+Entidades de governança esperadas:
+io_log
+io_snapshots
+io_restore_points
+io_jobs
+io_job_items</div>
+              </div>
+            </div>
+
+            <div class="section-note" style="margin-top:18px">
+              Esta seção deve comunicar com clareza que o PUBIO existe como módulo real, tem contrato próprio de importação e exportação, mantém entidades de governança como <span class="mono">io_log</span>, <span class="mono">io_snapshots</span>, <span class="mono">io_restore_points</span>, <span class="mono">io_jobs</span> e <span class="mono">io_job_items</span>, e já está representado corretamente na interface. O que ainda não existe neste endpoint é a publicação explícita de façades administrativas HTTP para operações como <span class="mono">exportEntity</span>, <span class="mono">exportBundle</span>, <span class="mono">validateImportFile</span>, <span class="mono">previewJsonImport</span>, <span class="mono">importEntity</span>, <span class="mono">importBundle</span>, <span class="mono">createEntitySnapshot</span> e <span class="mono">restoreEntityFromSnapshot</span>.
+            </div>
+          </section>
+
+          <section class="panel" id="observability">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Observabilidade</span>
+              <h2 class="h2">Logs, auditoria e diagnóstico separados da operação</h2>
+              <div class="muted">Esta área reúne a observabilidade estrutural do ecossistema e evita misturar monitoramento com comandos operacionais ou destrutivos. Também aqui a UI deve distinguir leitura real da camada pública e administração ainda não publicada.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--public">Diagnóstico público disponível por health e health_deep</span>
+                <span class="state-badge state-badge--internal">Camada de logs preservada por arquitetura</span>
+                <span class="state-badge state-badge--blocked">Listagens de observabilidade não publicadas</span>
+              </div>
+            </div>
+
+            <div class="threecol">
+              <div class="mini-card compact-actions">
+                <strong>Observabilidade do CRM</strong>
+                <div class="tiny">api_log, install_log, health_log, safe_fail_log e audit_log pertencem à arquitetura real do ecossistema, mas não possuem leitura administrativa publicada neste endpoint.</div>
+                <button class="btn btn--soft" data-admin-action="obs_api_log">Abrir diagnóstico dos logs do CRM</button>
+                <button class="btn btn--soft" data-admin-action="obs_audit_log">Abrir diagnóstico da auditoria</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Observabilidade do PUBMAIL</strong>
+                <div class="tiny">mail_log, mail_internal_log e mail_contact_state continuam sendo partes reais do módulo PUBMAIL, porém sem façade administrativa publicada para leitura conectada.</div>
+                <button class="btn btn--soft" data-admin-action="mail_list_log">Abrir diagnóstico dos logs do PUBMAIL</button>
+                <button class="btn btn--soft" data-admin-action="mail_list_internal_log">Abrir diagnóstico do internal log do PUBMAIL</button>
+              </div>
+
+              <div class="mini-card compact-actions">
+                <strong>Painel de diagnóstico</strong>
+                <div class="tiny">Resumo do estado do front, URL ativa, última ação, último erro, histórico recente e matriz do deploy atual.</div>
+                <button class="btn btn--soft" id="btn-show-diagnostics">Mostrar diagnóstico</button>
+              </div>
+            </div>
+
+            <div class="section-note" style="margin-top:18px">
+              Observabilidade deve permanecer semanticamente separada de operação administrativa. Nesta interface, health e health_deep já oferecem leitura pública real, enquanto logs e trilhas internas continuam representados como arquitetura do sistema sem assumir publicação HTTP inexistente.
+            </div>
+          </section>
+
+          <section class="panel" id="history">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Histórico local</span>
+              <h2 class="h2">Rastro das ações do próprio painel</h2>
+              <div class="muted">Registro local de consultas, tentativas de ações administrativas, exportações CSV, cópias e falhas do front.</div>
+            </div>
+
+            <div class="toolbar">
+              <div class="toolbar-left">
+                <div class="tiny">Exibe as últimas 30 ações registradas no navegador.</div>
+              </div>
+              <div class="toolbar-right">
+                <button class="btn btn--soft" id="btn-refresh-history">Atualizar histórico</button>
+                <button class="btn btn--danger" id="btn-clear-history">Limpar histórico</button>
+              </div>
+            </div>
+
+            <div id="history-wrap"></div>
+          </section>
+
+          <section class="panel" id="settings">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Configurações</span>
+              <h2 class="h2">Parâmetros do painel e observações técnicas</h2>
+              <div class="muted">Tudo centralizado para manter o painel desacoplado, coerente com o projeto e pronto para expansão administrativa real, sem induzir disponibilidade inexistente.</div>
+
+              <div class="section-state">
+                <span class="state-badge state-badge--public">Configuração local do front</span>
+                <span class="state-badge state-badge--internal">Arquitetura preservada por módulo</span>
+                <span class="state-badge state-badge--pending">Pronto para expansão administrativa futura</span>
+              </div>
+            </div>
+
+            <div class="threecol">
+              <div class="mini-card">
+                <strong>Persistência local</strong>
+                <div class="codebox">localStorage:
+PUBPANEL_API_BASE
+PUBPANEL_UI_HISTORY</div>
+              </div>
+              <div class="mini-card">
+                <strong>Camadas já funcionais</strong>
+                <div class="tiny">Leitura imediata por status, health, health_deep e contract.</div>
+                <div class="tiny">As camadas administrativas só devem ser tratadas como disponíveis quando a publicação real da façade estiver comprovada no deploy.</div>
+              </div>
+              <div class="mini-card">
+                <strong>Próximo passo recomendado</strong>
+                <div class="tiny">Expor endpoints admin por módulo real: CRM Core, Timeline, PUBMAIL, PUBIO e Observabilidade. O painel já está preparado para consumir essa estrutura sem novo redesenho.</div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer" id="drawer">
+    <div class="drawer-card" id="drawer-card">
+      <div class="drawer-title" id="drawer-title">Diagnóstico</div>
+      <div class="tiny" id="drawer-text"></div>
+      <div class="drawer-actions">
+        <button class="btn btn--soft" id="drawer-close">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+const PUBPANEL = {
+  VERSION: "2.0.0",
+  STORAGE: {
+    API_BASE: "PUBPANEL_API_BASE",
+    HISTORY: "PUBPANEL_UI_HISTORY"
+  }
+};
+
+const DATASETS = {
+  contacts: {
+    key: "contacts",
+    label: "Contatos",
+    adminListAction: "crm_list_contacts",
+    defaultSort: { key: "name", dir: "asc" }
+  },
+  leads: {
+    key: "leads",
+    label: "Leads",
+    adminListAction: "crm_list_leads",
+    defaultSort: { key: "created_at", dir: "desc" }
+  },
+  tickets: {
+    key: "tickets",
+    label: "Tickets",
+    adminListAction: "crm_list_tickets",
+    defaultSort: { key: "created_at", dir: "desc" }
+  },
+  timeline: {
+    key: "timeline",
+    label: "Timeline",
+    adminListAction: "crm_list_timeline",
+    defaultSort: { key: "event_at", dir: "desc" }
+  },
+  mailQueue: {
+    key: "mailQueue",
+    label: "Fila mail",
+    adminListAction: "mail_list_queue",
+    defaultSort: { key: "scheduled_at", dir: "desc" }
+  }
+};
+
+const ACTION_PUBLICATION = {
+  status: {
+    scope: "public_get",
+    published: true,
+    label: "Status — leitura pública publicada",
+    publicEndpoint: "mode=status"
+  },
+  health: {
+    scope: "public_get",
+    published: true,
+    label: "Health — leitura pública publicada",
+    publicEndpoint: "mode=health"
+  },
+  health_deep: {
+    scope: "public_get",
+    published: true,
+    label: "Health profundo — leitura pública publicada",
+    publicEndpoint: "mode=health_deep"
+  },
+  contract: {
+    scope: "public_get",
+    published: true,
+    label: "Contrato — leitura pública publicada",
+    publicEndpoint: "mode=contract"
+  },
+
+  crm_install: {
+    scope: "crm_admin",
+    published: false,
+    label: "Instalar CRM — função interna do módulo, façade admin pendente",
+    facadeFuture: "admin_install_crm"
+  },
+  crm_summary: {
+    scope: "crm_admin",
+    published: false,
+    label: "Resumo administrativo do CRM — não publicado neste endpoint",
+    facadeFuture: "admin_dashboard_summary"
+  },
+  crm_list_contacts: {
+    scope: "crm_admin",
+    published: false,
+    label: "Listagem de contatos — não publicada neste endpoint",
+    facadeFuture: "admin_list_contacts"
+  },
+  crm_list_leads: {
+    scope: "crm_admin",
+    published: false,
+    label: "Listagem de leads — não publicada neste endpoint",
+    facadeFuture: "admin_list_leads"
+  },
+  crm_list_tickets: {
+    scope: "crm_admin",
+    published: false,
+    label: "Listagem de tickets — não publicada neste endpoint",
+    facadeFuture: "admin_list_tickets"
+  },
+  crm_list_timeline: {
+    scope: "crm_admin",
+    published: false,
+    label: "Listagem administrativa da timeline — não publicada neste endpoint",
+    facadeFuture: "admin_list_timeline"
+  },
+
+  mail_bootstrap: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Bootstrap do PUBMAIL — função interna do módulo, façade admin pendente",
+    facadeFuture: "admin_mail_bootstrap"
+  },
+  mail_health: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Health interno do PUBMAIL — função interna do módulo, não publicado neste endpoint",
+    facadeFuture: "admin_mail_health"
+  },
+  mail_checklist: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Checklist de implementação do PUBMAIL — função interna do módulo, façade admin pendente",
+    facadeFuture: "admin_mail_checklist"
+  },
+  mail_scan: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Scan da timeline pelo PUBMAIL — operação interna do módulo",
+    facadeFuture: "admin_mail_scan_timeline"
+  },
+  mail_process: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Processamento da fila do PUBMAIL — operação interna do módulo",
+    facadeFuture: "admin_mail_process_queue"
+  },
+  mail_create_docs: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Criação de Docs padrão do PUBMAIL — função interna do módulo",
+    facadeFuture: "admin_mail_create_docs"
+  },
+  mail_create_triggers: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Criação de triggers do PUBMAIL — função interna do módulo",
+    facadeFuture: "admin_mail_create_triggers"
+  },
+  mail_governance_model: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Modelo de governança do PUBMAIL — função interna do módulo",
+    facadeFuture: "admin_mail_governance_model"
+  },
+  mail_usage_notes: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Notas de uso do PUBMAIL — função interna do módulo",
+    facadeFuture: "admin_mail_usage_notes"
+  },
+  mail_list_queue: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem da fila do PUBMAIL — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_queue"
+  },
+  mail_list_log: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de mail_log — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_log"
+  },
+  mail_list_internal_log: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de mail_internal_log — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_internal_log"
+  },
+  mail_list_templates: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de templates do PUBMAIL — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_templates"
+  },
+  mail_list_campaigns: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de campaigns do PUBMAIL — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_campaigns"
+  },
+  mail_list_rules: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de rules do PUBMAIL — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_rules"
+  },
+  mail_list_policy: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de policy do PUBMAIL — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_policy"
+  },
+  mail_list_segments: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de segments do PUBMAIL — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_segments"
+  },
+  mail_list_suppressions: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de suppressions do PUBMAIL — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_suppressions"
+  },
+  mail_list_contact_state: {
+    scope: "pubmail_admin",
+    published: false,
+    label: "Listagem de contact_state do PUBMAIL — não publicada neste endpoint",
+    facadeFuture: "admin_mail_list_contact_state"
+  },
+
+  io_export_leads: {
+    scope: "pubio_admin",
+    published: false,
+    label: "Exportação de leads via PUBIO — função existente no módulo, façade admin pendente",
+    facadeFuture: "admin_io_export_entity"
+  },
+  io_export_contacts: {
+    scope: "pubio_admin",
+    published: false,
+    label: "Exportação de contatos via PUBIO — função existente no módulo, façade admin pendente",
+    facadeFuture: "admin_io_export_entity"
+  },
+  io_export_tickets: {
+    scope: "pubio_admin",
+    published: false,
+    label: "Exportação de tickets via PUBIO — função existente no módulo, façade admin pendente",
+    facadeFuture: "admin_io_export_entity"
+  },
+  io_export_entity: {
+    scope: "pubio_admin",
+    published: false,
+    label: "exportEntity — função interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_export_entity"
+  },
+  io_export_bundle: {
+    scope: "pubio_admin",
+    published: false,
+    label: "exportBundle — função interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_export_bundle"
+  },
+  io_export_csv: {
+    scope: "pubio_admin",
+    published: false,
+    label: "exportEntityCsv — função interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_export_csv"
+  },
+  io_validate_file: {
+    scope: "pubio_admin",
+    published: false,
+    label: "validateImportFile — função interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_validate_file"
+  },
+  io_preview_import: {
+    scope: "pubio_admin",
+    published: false,
+    label: "previewJsonImport ou previewCsvImport — função interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_preview_import"
+  },
+  io_inspect_ref: {
+    scope: "pubio_admin",
+    published: false,
+    label: "inspectStorageRef — função interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_inspect_storage_ref"
+  },
+  io_import_entity: {
+    scope: "pubio_admin",
+    published: false,
+    label: "importEntity — operação interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_import_entity"
+  },
+  io_import_bundle: {
+    scope: "pubio_admin",
+    published: false,
+    label: "importBundle — operação interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_import_bundle"
+  },
+  io_import_csv: {
+    scope: "pubio_admin",
+    published: false,
+    label: "importEntityCsv — operação interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_import_csv"
+  },
+  io_create_snapshot: {
+    scope: "pubio_admin",
+    published: false,
+    label: "createEntitySnapshot — operação interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_create_snapshot"
+  },
+  io_restore_snapshot: {
+    scope: "pubio_admin",
+    published: false,
+    label: "restoreEntityFromSnapshot — operação interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_restore_snapshot"
+  },
+  io_list_jobs: {
+    scope: "pubio_admin",
+    published: false,
+    label: "Listagem de io_jobs — não publicada neste endpoint",
+    facadeFuture: "admin_io_list_jobs"
+  },
+  io_list_job_items: {
+    scope: "pubio_admin",
+    published: false,
+    label: "Listagem de io_job_items — não publicada neste endpoint",
+    facadeFuture: "admin_io_list_job_items"
+  },
+  io_list_snapshots: {
+    scope: "pubio_admin",
+    published: false,
+    label: "Listagem de io_snapshots — não publicada neste endpoint",
+    facadeFuture: "admin_io_list_snapshots"
+  },
+  io_list_restore_points: {
+    scope: "pubio_admin",
+    published: false,
+    label: "Listagem de io_restore_points — não publicada neste endpoint",
+    facadeFuture: "admin_io_list_restore_points"
+  },
+  io_list_logs: {
+    scope: "pubio_admin",
+    published: false,
+    label: "Listagem de io_log — não publicada neste endpoint",
+    facadeFuture: "admin_io_list_logs"
+  },
+  io_contract: {
+    scope: "pubio_admin",
+    published: false,
+    label: "getPubioImportContract — função interna do PUBIO, não publicada neste endpoint",
+    facadeFuture: "admin_io_contract"
+  },
+
+  obs_api_log: {
+    scope: "observability_admin",
+    published: false,
+    label: "Listagem de api_log — não publicada neste endpoint",
+    facadeFuture: "admin_obs_api_log"
+  },
+  obs_safe_fail_log: {
+    scope: "observability_admin",
+    published: false,
+    label: "Listagem de safe_fail_log — não publicada neste endpoint",
+    facadeFuture: "admin_obs_safe_fail_log"
+  },
+  obs_audit_log: {
+    scope: "observability_admin",
+    published: false,
+    label: "Listagem de audit_log — não publicada neste endpoint",
+    facadeFuture: "admin_obs_audit_log"
+  }
+};
+
+function getActionAvailability(key){
+  const item = ACTION_PUBLICATION[key];
+
+  if(!item){
+    return {
+      key,
+      state: "unknown",
+      published: false,
+      publicEndpoint: null,
+      facadeFuture: null,
+      label: "ação não mapeada"
+    };
+  }
+
+  if(item.published && item.publicEndpoint){
+    return {
+      key,
+      state: "published",
+      published: true,
+      publicEndpoint: item.publicEndpoint,
+      facadeFuture: item.facadeFuture || null,
+      label: item.label || ""
+    };
+  }
+
+  if(!item.published && item.facadeFuture){
+    return {
+      key,
+      state: "planned",
+      published: false,
+      publicEndpoint: null,
+      facadeFuture: item.facadeFuture,
+      label: item.label || ""
+    };
+  }
+
+  return {
+    key,
+    state: "undefined",
+    published: !!item.published,
+    publicEndpoint: item.publicEndpoint || null,
+    facadeFuture: item.facadeFuture || null,
+    label: item.label || ""
+  };
+}
+
+const state = {
+  apiBase: "",
+  status: null,
+  contract: null,
+  health: null,
+  healthDeep: null,
+
+  contacts: [],
+  leads: [],
+  tickets: [],
+  timeline: [],
+  mailQueue: [],
+
+  filtered: {
+    contacts: [],
+    leads: [],
+    tickets: [],
+    timeline: [],
+    mailQueue: []
+  },
+
+  datasetAvailability: {
+    contacts: "unpublished",
+    leads: "unpublished",
+    tickets: "unpublished",
+    timeline: "unpublished",
+    mailQueue: "unpublished"
+  },
+
+  paging: {
+    contacts: { page: 1, perPage: 10 },
+    leads: { page: 1, perPage: 10 },
+    tickets: { page: 1, perPage: 10 },
+    timeline: { page: 1, perPage: 10 },
+    mailQueue: { page: 1, perPage: 10 }
+  },
+
+  sort: {
+    contacts: { ...DATASETS.contacts.defaultSort },
+    leads: { ...DATASETS.leads.defaultSort },
+    tickets: { ...DATASETS.tickets.defaultSort },
+    timeline: { ...DATASETS.timeline.defaultSort },
+    mailQueue: { ...DATASETS.mailQueue.defaultSort }
+  },
+
+  ui: {
+    history: [],
+    lastAction: "",
+    lastError: ""
+  }
+};
+
+const $ = (s, root=document) => root.querySelector(s);
+const $$ = (s, root=document) => Array.from(root.querySelectorAll(s));
+
+function escapeHtml(v){
+  return String(v ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function safeJson(v){
+  try{
+    return JSON.stringify(v, null, 2);
+  }catch(_){
+    return String(v);
+  }
+}
+
+function tryParseJsonText(text){
+  try{
+    return JSON.parse(text);
+  }catch(_){
+    return null;
+  }
+}
+
+function extractRedirectUrlFromHtml(html){
+  const text = String(html || "");
+
+  const metaMatch = text.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["'][^"']*url=([^"']+)["']/i);
+  if(metaMatch && metaMatch[1]) return metaMatch[1].trim();
+
+  const jsMatch = text.match(/window\.location(?:\.href)?\s*=\s*["']([^"']+)["']/i);
+  if(jsMatch && jsMatch[1]) return jsMatch[1].trim();
+
+  const linkMatch = text.match(/<a[^>]+href=["']([^"']+)["']/i);
+  if(linkMatch && linkMatch[1]) return linkMatch[1].trim();
+
+  return "";
+}
+
+async function readResponsePayload(res){
+  const contentType = String(res.headers.get("content-type") || "").toLowerCase();
+  const text = await res.text();
+
+  if(!res.ok){
+    throw new Error("Falha HTTP " + res.status + " ao consultar o backend.");
+  }
+
+  if(contentType.includes("application/json")){
+    const parsed = tryParseJsonText(text);
+    if(parsed !== null) return parsed;
+    throw new Error("O backend declarou JSON, mas retornou conteúdo inválido.");
+  }
+
+  const parsedLoose = tryParseJsonText(text);
+  if(parsedLoose !== null) return parsedLoose;
+
+  const redirectUrl = extractRedirectUrlFromHtml(text);
+  if(redirectUrl){
+    return {
+      ok: true,
+      redirected: true,
+      redirect_url: redirectUrl,
+      raw_html: text
+    };
+  }
+
+  return {
+    ok: true,
+    raw_text: text
+  };
+}
+
+function describeBackendPayload(json){
+  if(json?.redirected && json?.redirect_url){
+    return "Resposta HTML com redirect detectado.";
+  }
+
+  if(typeof json?.raw_text === "string" && json.raw_text){
+    return "Resposta textual sem JSON estruturado.";
+  }
+
+  if(json && typeof json === "object"){
+    return "Resposta JSON estruturada.";
+  }
+
+  return "Resposta recebida.";
+}
+
+function nowLabel(){
+  return new Date().toLocaleString("pt-BR");
+}
+
+function stringValue(v){
+  return String(v ?? "").trim();
+}
+
+function normalizeArray(v){
+  return Array.isArray(v) ? v : [];
+}
+
+function formatDateTime(v){
+  if(!v) return "—";
+  const d = new Date(v);
+  if(Number.isNaN(d.getTime())) return String(v);
+  return d.toLocaleString("pt-BR");
+}
+
+function compareValues(a, b){
+  const av = stringValue(a);
+  const bv = stringValue(b);
+
+  const ad = Date.parse(av);
+  const bd = Date.parse(bv);
+  if(!Number.isNaN(ad) && !Number.isNaN(bd)) return ad - bd;
+
+  const an = Number(av);
+  const bn = Number(bv);
+  if(!Number.isNaN(an) && !Number.isNaN(bn)) return an - bn;
+
+  return av.localeCompare(bv, "pt-BR", { sensitivity: "base" });
+}
+
+function sortRows(rows, cfg){
+  const key = cfg?.key || "";
+  const dir = cfg?.dir === "asc" ? 1 : -1;
+  if(!key) return rows.slice();
+  return rows.slice().sort((a,b) => dir * compareValues(a?.[key], b?.[key]));
+}
+
+function paginateRows(kind, rows){
+  const page = Math.max(1, Number(state.paging[kind]?.page || 1));
+  const perPage = Math.max(1, Number(state.paging[kind]?.perPage || 10));
+  const total = rows.length;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  const safePage = Math.min(page, totalPages);
+  state.paging[kind].page = safePage;
+  const start = (safePage - 1) * perPage;
+  const end = start + perPage;
+
+  return {
+    rows: rows.slice(start, end),
+    total,
+    totalPages,
+    page: safePage,
+    perPage,
+    start: total ? start + 1 : 0,
+    end: Math.min(end, total)
+  };
+}
+
+function renderPager(kind, info){
+  if(!info || info.total <= info.perPage) return "";
+  return `
+    <div class="toolbar" style="margin-top:14px">
+      <div class="tiny">Mostrando ${info.start}-${info.end} de ${info.total}</div>
+      <div class="toolbar-right">
+        <button class="btn btn--soft" data-page-kind="${kind}" data-page-action="prev" ${info.page <= 1 ? "disabled" : ""}>Anterior</button>
+        <span class="tiny">Página ${info.page} / ${info.totalPages}</span>
+        <button class="btn btn--soft" data-page-kind="${kind}" data-page-action="next" ${info.page >= info.totalPages ? "disabled" : ""}>Próxima</button>
+      </div>
+    </div>
+  `;
+}
+
+function sortAttr(kind, key){
+  const cfg = state.sort[kind];
+  return cfg.key === key ? cfg.dir : "";
+}
+
+function runDatasetFilterPipeline(kind){
+  if(kind === "contacts") return applyContactFilters();
+  if(kind === "leads") return applyLeadFilters();
+  if(kind === "tickets") return applyTicketFilters();
+  if(kind === "timeline") return applyTimelineFilters();
+  if(kind === "mailQueue") return applyMailFilters();
+}
+
+function setSort(kind, key){
+  const current = state.sort[kind];
+  if(current.key === key){
+    current.dir = current.dir === "asc" ? "desc" : "asc";
+  } else {
+    current.key = key;
+    current.dir = "asc";
+  }
+
+  runDatasetFilterPipeline(kind);
+}
+
+function pillClass(v){
+  const s = String(v || "").toUpperCase();
+  if(["OK","SENT","ACTIVE","SIM","ONLINE","SUCCESS","ABERTO","OPEN","NOVO","READY","RESTORED","DELIVERED","ENGAGED"].includes(s)) return "pill pill--ok";
+  if(["ALTA","WARN","WARNING","MEDIA","PENDING","PROCESSING","QUIET_PERIOD","ACTIVATING","SUPPORT_OPEN"].includes(s)) return "pill pill--warn";
+  if(["ERROR","FALHA","FAILED","SUPPRESSED","CANCELLED","NÃO","NAO","INACTIVE","SKIPPED"].includes(s)) return "pill pill--error";
+  return "pill pill--info";
+}
+
+function notify(type, title, text){
+  const box = $("#global-status");
+  box.className = "status-banner show " + (type || "");
+  box.innerHTML =
+    "<strong>" + escapeHtml(title) + "</strong>" +
+    "<div class='tiny' style='margin-top:6px'>" + escapeHtml(text) + "</div>" +
+    "<div class='tiny' style='margin-top:6px'>Hora: " + escapeHtml(nowLabel()) + "</div>";
+}
+
+function drawer(title, text){
+  $("#drawer-title").textContent = title || "Diagnóstico";
+  $("#drawer-text").textContent = text || "";
+  $("#drawer-card").classList.add("show");
+}
+
+function drawerJson(title, intro, payload){
+  $("#drawer-title").textContent = title || "Inspeção";
+  $("#drawer-text").textContent = [
+    intro || "",
+    "",
+    safeJson(payload)
+  ].join("\n");
+  $("#drawer-card").classList.add("show");
+}
+
+function closeDrawer(){
+  $("#drawer-card").classList.remove("show");
+}
+
+function setLastAction(action){
+  state.ui.lastAction = action || "";
+}
+
+function setLastError(message){
+  state.ui.lastError = message || "";
+}
+
+function loadPersistedHistory(){
+  try{
+    const raw = localStorage.getItem(PUBPANEL.STORAGE.HISTORY) || "[]";
+    const parsed = JSON.parse(raw);
+    state.ui.history = Array.isArray(parsed) ? parsed.slice(0, 30) : [];
+  }catch(_){
+    state.ui.history = [];
+  }
+}
+
+function persistHistory(){
+  try{
+    localStorage.setItem(PUBPANEL.STORAGE.HISTORY, JSON.stringify(state.ui.history.slice(0, 30)));
+  }catch(_){}
+}
+
+function clearPersistedHistory(){
+  try{
+    localStorage.removeItem(PUBPANEL.STORAGE.HISTORY);
+  }catch(_){}
+}
+
+function pushHistory(type, action, status, detail, extra={}){
+  state.ui.history.unshift({
+    at: nowLabel(),
+    type: type || "",
+    action: action || "",
+    status: status || "",
+    detail: detail || "",
+    duration_ms: Number(extra.duration_ms || 0),
+    rows_count: Number(extra.rows_count || 0)
+  });
+  state.ui.history = state.ui.history.slice(0, 30);
+  persistHistory();
+  renderHistory();
+  renderSummary();
+  updateSideCounts();
+}
+
+function renderHistory(){
+  const wrap = $("#history-wrap");
+  if(!wrap) return;
+
+  if(!state.ui.history.length){
+    wrap.innerHTML = `<div class="empty">Ainda não há ações registradas no histórico local do painel.</div>`;
+    return;
+  }
+
+  wrap.innerHTML = `
+    <div class="history-list">
+      ${state.ui.history.map(item => `
+        <div class="history-item">
+          <strong>${escapeHtml(item.action || "ação")}</strong>
+          <div class="history-meta">
+            <span><strong>Quando:</strong> ${escapeHtml(item.at || "—")}</span>
+            <span><strong>Tipo:</strong> ${escapeHtml(item.type || "—")}</span>
+            <span><strong>Status:</strong> ${escapeHtml(item.status || "—")}</span>
+            <span><strong>Duração:</strong> ${escapeHtml(String(item.duration_ms || 0))} ms</span>
+            <span><strong>Linhas:</strong> ${escapeHtml(String(item.rows_count || 0))}</span>
+          </div>
+          <div class="history-detail">${escapeHtml(item.detail || "")}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function loadSettings(){
+  state.apiBase = localStorage.getItem(PUBPANEL.STORAGE.API_BASE) || "";
+  $("#api-base").value = state.apiBase;
+}
+
+function saveSettings(){
+  const v = ($("#api-base").value || "").trim();
+  localStorage.setItem(PUBPANEL.STORAGE.API_BASE, v);
+  state.apiBase = v;
+  notify("success", "URL salva", "A URL base do Apps Script foi armazenada no navegador.");
+  pushHistory("UI", "save_api_base", "ok", v || "sem valor");
+  renderSummary();
+}
+
+function clearSettings(){
+  localStorage.removeItem(PUBPANEL.STORAGE.API_BASE);
+  state.apiBase = "";
+  $("#api-base").value = "";
+  notify("warn", "URL removida", "A configuração local foi limpa.");
+  pushHistory("UI", "clear_api_base", "ok", "configuração removida");
+  renderSummary();
+}
+
+async function withBusyButton(button, busyLabel, fn){
+  if(!button) return fn();
+  const original = button.dataset.originalLabel || button.textContent;
+  button.dataset.originalLabel = original;
+  button.disabled = true;
+  button.textContent = busyLabel || "Carregando...";
+  try{
+    return await fn();
+  } finally {
+    button.disabled = false;
+    button.textContent = original;
+  }
+}
+
+function confirmAdminAction(action){
+  const labels = {
+    crm_install: "Instalar/atualizar CRM",
+    mail_bootstrap: "Bootstrap do PUBMAIL",
+    mail_process: "Processar fila do PUBMAIL",
+    io_import_entity: "Import entity",
+    io_import_bundle: "Import bundle",
+    io_import_csv: "Import CSV",
+    io_restore_snapshot: "Restore de snapshot"
+  };
+  if(!labels[action]) return true;
+  return window.confirm(`Confirmar ação: ${labels[action]}\n\nAtenção: o painel não assume que esta operação esteja publicada neste deploy.`);
+}
+
+const api = {
+  requireBase(){
+    if(!state.apiBase){
+      throw new Error("Defina a URL base do Apps Script para usar o painel em modo conectado.");
+    }
+  },
+
+  async getMode(mode){
+    this.requireBase();
+    const url = new URL(state.apiBase);
+    url.searchParams.set("mode", mode);
+
+    const res = await fetch(url.toString(), {
+      method: "GET"
+    });
+
+    return readResponsePayload(res);
+  },
+
+  async postAction(action, payload={}){
+    this.requireBase();
+
+    const res = await fetch(state.apiBase, {
+      method: "POST",
+      headers: { "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ action, ...payload })
+    });
+
+    return readResponsePayload(res);
+  },
+
+  status(){
+    return this.getMode("status");
+  },
+
+  health(){
+    return this.getMode("health");
+  },
+
+  healthDeep(){
+    return this.getMode("health_deep");
+  },
+
+  contract(){
+    return this.getMode("contract");
+  },
+
+  admin(action, payload={}){
+    return this.postAction(action, payload);
+  }
+};
+
+function normalizeRowsFromResponse(json){
+  const candidates = [
+    json?.rows,
+    json?.items,
+    json?.logs,
+    json?.data?.rows,
+    json?.data?.items,
+    json?.data?.logs,
+    json?.data?.queue,
+    json?.data?.templates,
+    json?.data?.campaigns,
+    json?.data?.rules,
+    json?.data?.policy,
+    json?.data?.segments,
+    json?.data?.suppressions,
+    json?.data?.contact_state,
+    json?.data?.jobs,
+    json?.data?.job_items,
+    json?.data?.snapshots,
+    json?.data?.restore_points
+  ];
+
+  for(const value of candidates){
+    if(Array.isArray(value)) return value;
+  }
+
+  return [];
+}
+
+function markDatasetAsLoaded(kind, rows){
+  if(!state.datasetAvailability[kind]) return;
+
+  const safeRows = Array.isArray(rows) ? rows.slice() : [];
+
+  state.datasetAvailability[kind] = "loaded";
+  state[kind] = safeRows;
+  state.filtered[kind] = safeRows.slice();
+  state.paging[kind].page = 1;
+
+  fillDataDrivenFilters();
+  applyDatasetFilters(kind);
+}
+
+function renderDatasetByKind(kind){
+  if(kind === "contacts") return renderContacts(state.filtered.contacts);
+  if(kind === "leads") return renderLeads(state.filtered.leads);
+  if(kind === "tickets") return renderTickets(state.filtered.tickets);
+  if(kind === "timeline") return renderTimeline(state.filtered.timeline);
+  if(kind === "mailQueue") return renderMailQueue(state.filtered.mailQueue);
+}
+
+async function loadPublishedDataset(kind, action, payload={}, button){
+  const startedAt = performance.now();
+
+  try{
+    setLastAction(action);
+    setLastError("");
+
+    await withBusyButton(button, "Carregando...", async () => {
+      const json = await api.admin(action, payload);
+      const rows = normalizeRowsFromResponse(json);
+      const durationMs = Math.round(performance.now() - startedAt);
+
+      markDatasetAsLoaded(kind, rows);
+      renderDatasetByKind(kind);
+
+      notify(
+        "success",
+        "Dataset carregado",
+        DATASETS[kind].label + " carregado com " + rows.length + " linha(s)."
+      );
+
+      pushHistory(
+        "POST",
+        action,
+        "ok",
+        "Dataset carregado com sucesso.",
+        {
+          duration_ms: durationMs,
+          rows_count: rows.length
+        }
+      );
+    });
+  }catch(err){
+    const durationMs = Math.round(performance.now() - startedAt);
+
+    setLastError(err.message || "Erro desconhecido");
+    notify("error", "Falha ao carregar dataset", err.message || "Erro desconhecido");
+
+    pushHistory(
+      "POST",
+      action,
+      "erro",
+      err.message || "erro",
+      {
+        duration_ms: durationMs,
+        rows_count: 0
+      }
+    );
+  } finally {
+    renderSummary();
+  }
+}
+
+function readContractData(){
+  const data = state.contract?.data || {};
+
+  return {
+    leadItems: normalizeArray(data.leadItems),
+    ticketItems: normalizeArray(data.ticketItems),
+    leadPlacements: normalizeArray(data.leadPlacements)
+  };
+}
+
+function readHealthData(){
+  const data = state.health?.data || {};
+  const safe = data.safe_failures || {};
+
+  return {
+    app: data.app || "",
+    version: data.version || "",
+    db_file_id: data.db_file_id || "",
+    schema_ready: data.schema_ready,
+    now: data.now || "",
+    safe_failures: {
+      timeline_count: Number(safe.timeline_count || 0),
+      api_log_count: Number(safe.api_log_count || 0),
+      install_log_count: Number(safe.install_log_count || 0)
+    }
+  };
+}
+
+function readHealthDeepData(){
+  const data = state.healthDeep?.data || {};
+  const safe = data.safe_failures || {};
+
+  return {
+    app: data.app || "",
+    version: data.version || "",
+    check_type: data.check_type || "",
+    started_at: data.started_at || "",
+    finished_at: data.finished_at || "",
+    tests: normalizeArray(data.tests),
+    safe_failures: safe
+  };
+}
+
+function countSafeFailures(healthData){
+  const safe = healthData?.safe_failures || {};
+  return Number(safe.timeline_count || 0)
+    + Number(safe.api_log_count || 0)
+    + Number(safe.install_log_count || 0);
+}
+
+function uniqueValues(rows, key){
+  return Array.from(new Set(rows.map(r => stringValue(r[key])).filter(Boolean))).sort((a,b) => a.localeCompare(b,"pt-BR"));
+}
+
+function fillContractFilters(){
+  const contract = readContractData();
+  const leadItems = contract.leadItems;
+  const placements = contract.leadPlacements;
+  const ticketItems = contract.ticketItems;
+
+  $("#filter-lead-item").innerHTML = `<option value="">Todos os itens</option>` + leadItems.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  $("#filter-lead-placement").innerHTML = `<option value="">Todos os placements</option>` + placements.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  $("#filter-ticket-item").setAttribute("placeholder", ticketItems.length ? "Filtrar item (ex.: PROBLEMA TECNICO)" : "Filtrar item");
+}
+
+function fillDataDrivenFilters(){
+  $("#filter-lead-status").innerHTML = `<option value="">Todos os status</option>` + uniqueValues(state.leads, "status").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  $("#filter-lead-source").innerHTML = `<option value="">Todas as origens</option>` + uniqueValues(state.leads, "source").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+
+  $("#filter-contact-status").innerHTML = `<option value="">Todos os status</option>` + uniqueValues(state.contacts, "status").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+
+  $("#filter-ticket-priority").innerHTML = `<option value="">Todas as prioridades</option>` + uniqueValues(state.tickets, "priority").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  $("#filter-ticket-status").innerHTML = `<option value="">Todos os status</option>` + uniqueValues(state.tickets, "status").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+
+  $("#filter-timeline-entity").innerHTML = `<option value="">Todos os tipos de entidade</option>` + uniqueValues(state.timeline, "entity_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  $("#filter-timeline-event").innerHTML = `<option value="">Todos os eventos</option>` + uniqueValues(state.timeline, "event_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+
+  $("#filter-mail-status").innerHTML = `<option value="">Todos os status</option>` + uniqueValues(state.mailQueue, "status").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  $("#filter-mail-type").innerHTML = `<option value="">Todos os tipos</option>` + uniqueValues(state.mailQueue, "message_type").map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+}
+
+function renderOverviewMeta(){
+  $("#meta-front-version").textContent = "PUBPANEL " + PUBPANEL.VERSION;
+  $("#meta-crm-version").textContent = state.status?.data?.version || state.health?.data?.version || "—";
+  $("#meta-mail-version").textContent = "não publicado neste endpoint";
+  $("#meta-io-version").textContent = "não publicado neste endpoint";
+  $("#meta-status").textContent = state.status?.ok ? "online" : "desconectado";
+}
+
+function renderSummary(){
+  const contract = readContractData();
+  const healthData = readHealthData();
+  const healthDeepData = readHealthDeepData();
+  const safeTotal = countSafeFailures(healthData);
+
+  const sumStatus = $("#sum-status");
+  const sumSchema = $("#sum-schema");
+  const sumContacts = $("#sum-contacts");
+  const sumLeads = $("#sum-leads");
+  const sumTickets = $("#sum-tickets");
+  const sumTimeline = $("#sum-timeline");
+  const sumMail = $("#sum-mail");
+  const sumContract = $("#sum-contract");
+  const sumHealth = $("#sum-health");
+  const sumLastAction = $("#sum-last-action");
+  const sumLastError = $("#sum-last-error");
+
+  if(sumStatus) sumStatus.textContent = state.status?.ok ? "ONLINE" : "—";
+  if(sumSchema) sumSchema.textContent = healthData.schema_ready === true ? "SIM" : healthData.schema_ready === false ? "NÃO" : "—";
+  if(sumContacts) sumContacts.textContent = String(state.filtered.contacts.length || 0);
+  if(sumLeads) sumLeads.textContent = String(state.filtered.leads.length || 0);
+  if(sumTickets) sumTickets.textContent = String(state.filtered.tickets.length || 0);
+  if(sumTimeline) sumTimeline.textContent = String(state.filtered.timeline.length || 0);
+  if(sumMail) sumMail.textContent = String(state.filtered.mailQueue.length || 0);
+
+  if(sumContract){
+    sumContract.textContent = state.contract
+      ? `leadItems: ${contract.leadItems.length} · ticketItems: ${contract.ticketItems.length} · placements: ${contract.leadPlacements.length}`
+      : "Contrato ainda não carregado.";
+  }
+
+  if(sumHealth){
+    if(state.health || state.healthDeep){
+      const deepInfo = state.healthDeep
+        ? ` · health_deep: ${healthDeepData.check_type || "carregado"}`
+        : "";
+      sumHealth.textContent = `schema_ready: ${healthData.schema_ready === true ? "SIM" : healthData.schema_ready === false ? "NÃO" : "—"} · safe_failures: ${safeTotal}${deepInfo}`;
+    } else {
+      sumHealth.textContent = "Health ainda não carregado.";
+    }
+  }
+
+  if(sumLastAction) sumLastAction.textContent = "Última ação: " + (state.ui.lastAction || "—");
+  if(sumLastError) sumLastError.textContent = "Último erro: " + (state.ui.lastError || "—");
+
+  renderOverviewMeta();
+  updateSideCounts();
+}
+
+function setMetric(id, value){
+  const el = $(id);
+  if(!el) return;
+  el.textContent = value ?? "—";
+}
+
+function assignPublicModeResult(mode, json){
+  if(mode === "status") state.status = json;
+  if(mode === "contract") state.contract = json;
+  if(mode === "health") state.health = json;
+  if(mode === "health_deep") state.healthDeep = json;
+
+  if(mode === "contract") fillContractFilters();
+
+  renderHealth();
+}
+
+function publicModeSuccessMessage(mode){
+  if(mode === "status") return "O endpoint status respondeu com sucesso.";
+  if(mode === "contract") return "O contrato do front foi carregado.";
+  if(mode === "health") return "A leitura resumida de saúde estrutural foi carregada.";
+  if(mode === "health_deep") return "O diagnóstico funcional detalhado foi carregado separadamente.";
+  return "Consulta concluída.";
+}
+
+function publicModeSuccessTitle(mode){
+  if(mode === "status") return "Status lido";
+  if(mode === "contract") return "Contrato lido";
+  if(mode === "health") return "Health lido";
+  if(mode === "health_deep") return "Health profundo concluído";
+  return "Consulta concluída";
+}
+
+function publicModeBusyLabel(mode){
+  if(mode === "health_deep") return "Rodando...";
+  return "Lendo...";
+}
+
+async function runPublicMode(mode, button){
+  const startedAt = performance.now();
+
+  try{
+    setLastAction("mode=" + mode);
+    setLastError("");
+
+    await withBusyButton(button, publicModeBusyLabel(mode), async () => {
+      const json = await api.getMode(mode);
+      const durationMs = Math.round(performance.now() - startedAt);
+
+      assignPublicModeResult(mode, json);
+
+      notify(
+        "success",
+        publicModeSuccessTitle(mode),
+        publicModeSuccessMessage(mode) + " " + describeBackendPayload(json)
+      );
+
+      pushHistory(
+        "GET",
+        "mode=" + mode,
+        "ok",
+        describeBackendPayload(json),
+        {
+          duration_ms: durationMs,
+          rows_count: 0
+        }
+      );
+    });
+  }catch(err){
+    const durationMs = Math.round(performance.now() - startedAt);
+
+    setLastError(err.message || "Erro desconhecido");
+    notify("error", "Falha em mode=" + mode, err.message || "Erro desconhecido");
+    pushHistory(
+      "GET",
+      "mode=" + mode,
+      "erro",
+      err.message || "erro",
+      {
+        duration_ms: durationMs,
+        rows_count: 0
+      }
+    );
+  } finally {
+    renderSummary();
+  }
+}
+
+function renderHealth(){
+  const status = state.status;
+  const healthData = readHealthData();
+  const contract = readContractData();
+  const safeTotal = countSafeFailures(healthData);
+
+  setMetric("#metric-app", healthData.app || status?.data?.app || "—");
+  setMetric("#metric-version", healthData.version || status?.data?.version || "—");
+  setMetric("#metric-schema", healthData.schema_ready === true ? "SIM" : healthData.schema_ready === false ? "NÃO" : "—");
+  setMetric("#metric-safe", String(safeTotal));
+
+  const contractScore = [
+    contract.leadItems.length,
+    contract.ticketItems.length,
+    contract.leadPlacements.length
+  ]
+  .filter(v => v > 0)
+  .join(" / ");
+
+  setMetric("#metric-contract", contractScore || "—");
+
+  $("#health-json-box").textContent = safeJson({
+    status: state.status,
+    health: state.health,
+    health_deep: state.healthDeep
+  });
+
+  if(state.contract){
+    $("#contract-box").textContent = safeJson(state.contract);
+  }
+
+  renderSummary();
+}
+
+function applyLeadFilters(){
+  const q = stringValue($("#filter-lead-search")?.value).toLowerCase();
+  const item = stringValue($("#filter-lead-item")?.value);
+  const placement = stringValue($("#filter-lead-placement")?.value);
+  const status = stringValue($("#filter-lead-status")?.value);
+  const source = stringValue($("#filter-lead-source")?.value);
+
+  let rows = state.leads.slice().filter(r => {
+    const hay = [
+      r.lead_id, r.request_id, r.contact_id, r.name, r.email, r.item, r.placement, r.status, r.source
+    ].join(" ").toLowerCase();
+
+    if(q && !hay.includes(q)) return false;
+    if(item && stringValue(r.item) !== item) return false;
+    if(placement && stringValue(r.placement) !== placement) return false;
+    if(status && stringValue(r.status) !== status) return false;
+    if(source && stringValue(r.source) !== source) return false;
+    return true;
+  });
+
+  rows = sortRows(rows, state.sort.leads);
+  state.filtered.leads = rows;
+  renderLeads(rows);
+}
+
+function applyContactFilters(){
+  const q = stringValue($("#filter-contact-search")?.value).toLowerCase();
+  const status = stringValue($("#filter-contact-status")?.value);
+  const company = stringValue($("#filter-contact-company")?.value).toLowerCase();
+  const city = stringValue($("#filter-contact-city")?.value).toLowerCase();
+  const source = stringValue($("#filter-contact-source")?.value).toLowerCase();
+
+  let rows = state.contacts.slice().filter(r => {
+    const hay = [
+      r.contact_id, r.name, r.email, r.whatsapp, r.company, r.city, r.state, r.status, r.source
+    ].join(" ").toLowerCase();
+
+    if(q && !hay.includes(q)) return false;
+    if(status && stringValue(r.status) !== status) return false;
+    if(company && !stringValue(r.company).toLowerCase().includes(company)) return false;
+    if(city && !stringValue(r.city).toLowerCase().includes(city)) return false;
+    if(source && !stringValue(r.source).toLowerCase().includes(source)) return false;
+    return true;
+  });
+
+  rows = sortRows(rows, state.sort.contacts);
+  state.filtered.contacts = rows;
+  renderContacts(rows);
+}
+
+function applyTicketFilters(){
+  const q = stringValue($("#filter-ticket-search")?.value).toLowerCase();
+  const priority = stringValue($("#filter-ticket-priority")?.value);
+  const status = stringValue($("#filter-ticket-status")?.value);
+  const item = stringValue($("#filter-ticket-item")?.value).toLowerCase();
+  const script = stringValue($("#filter-ticket-script")?.value).toLowerCase();
+
+  let rows = state.tickets.slice().filter(r => {
+    const hay = [
+      r.ticket_id, r.request_id, r.contact_id, r.name, r.email, r.item, r.subject, r.message, r.priority, r.status, r.script_name, r.script_version
+    ].join(" ").toLowerCase();
+
+    if(q && !hay.includes(q)) return false;
+    if(priority && stringValue(r.priority) !== priority) return false;
+    if(status && stringValue(r.status) !== status) return false;
+    if(item && !stringValue(r.item).toLowerCase().includes(item)) return false;
+    if(script && ![r.script_name, r.script_version, r.script_id].join(" ").toLowerCase().includes(script)) return false;
+    return true;
+  });
+
+  rows = sortRows(rows, state.sort.tickets);
+  state.filtered.tickets = rows;
+  renderTickets(rows);
+}
+
+function applyTimelineFilters(){
+  const q = stringValue($("#filter-timeline-search")?.value).toLowerCase();
+  const entity = stringValue($("#filter-timeline-entity")?.value);
+  const eventType = stringValue($("#filter-timeline-event")?.value);
+
+  let rows = state.timeline.slice().filter(r => {
+    const hay = [
+      r.timeline_id, r.entity_type, r.entity_id, r.event_type, r.payload_json
+    ].join(" ").toLowerCase();
+
+    if(q && !hay.includes(q)) return false;
+    if(entity && stringValue(r.entity_type) !== entity) return false;
+    if(eventType && stringValue(r.event_type) !== eventType) return false;
+    return true;
+  });
+
+  rows = sortRows(rows, state.sort.timeline);
+  state.filtered.timeline = rows;
+  renderTimeline(rows);
+}
+
+function applyMailFilters(){
+  const q = stringValue($("#filter-mail-search")?.value).toLowerCase();
+  const status = stringValue($("#filter-mail-status")?.value);
+  const type = stringValue($("#filter-mail-type")?.value);
+  const campaign = stringValue($("#filter-mail-campaign")?.value).toLowerCase();
+  const template = stringValue($("#filter-mail-template")?.value).toLowerCase();
+
+  let rows = state.mailQueue.slice().filter(r => {
+    const hay = [
+      r.queue_id, r.mail_key, r.recipient, r.campaign_key, r.template_key, r.message_type, r.status, r.entity_type, r.entity_id
+    ].join(" ").toLowerCase();
+
+    if(q && !hay.includes(q)) return false;
+    if(status && stringValue(r.status) !== status) return false;
+    if(type && stringValue(r.message_type) !== type) return false;
+    if(campaign && !stringValue(r.campaign_key).toLowerCase().includes(campaign)) return false;
+    if(template && !stringValue(r.template_key).toLowerCase().includes(template)) return false;
+    return true;
+  });
+
+  rows = sortRows(rows, state.sort.mailQueue);
+  state.filtered.mailQueue = rows;
+  renderMailQueue(rows);
+}
+function renderLeads(rows){
+  if(state.datasetAvailability.leads === "unpublished"){
+    $("#leads-table-wrap").innerHTML = `
+      <div class="empty">
+        A listagem administrativa de leads não está publicada no endpoint atualmente consumido pelo painel. A estrutura da tabela permanece pronta para uma façade admin real quando ela existir.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Módulo real</strong>
+            <span>Leads continuam existindo como entidade real do CRM Core.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Façade admin</strong>
+            <span>Não publicada neste endpoint.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Dados conectados</strong>
+            <span>Indisponíveis neste deploy para leitura administrativa pelo painel.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  if(!rows.length){
+    $("#leads-table-wrap").innerHTML = `
+      <div class="empty">
+        Nenhum lead corresponde aos filtros atuais.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Status da façade</strong>
+            <span>Publicada e carregada, mas sem linhas visíveis com os filtros atuais.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Sugestão</strong>
+            <span>Revise busca, item, placement, status e origem.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  const info = paginateRows("leads", rows);
+  const pageRows = info.rows;
+
+  $("#leads-table-wrap").innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="lead_id" data-dir="${sortAttr("leads","lead_id")}">Lead</button></th>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="name" data-dir="${sortAttr("leads","name")}">Contato</button></th>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="item" data-dir="${sortAttr("leads","item")}">Item</button></th>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="placement" data-dir="${sortAttr("leads","placement")}">Placement</button></th>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="source" data-dir="${sortAttr("leads","source")}">Origem</button></th>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="status" data-dir="${sortAttr("leads","status")}">Status</button></th>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="score" data-dir="${sortAttr("leads","score")}">Score</button></th>
+          <th><button class="th-sort" data-sort-kind="leads" data-sort-key="created_at" data-dir="${sortAttr("leads","created_at")}">Criado em</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${pageRows.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.lead_id || "")}</strong><div class="tiny mono">${escapeHtml(r.request_id || "")}</div></td>
+            <td>${escapeHtml(r.name || "")}<div class="tiny">${escapeHtml(r.email || "")}</div></td>
+            <td>${escapeHtml(r.item || "")}</td>
+            <td><span class="${pillClass(r.placement)}">${escapeHtml(r.placement || "")}</span></td>
+            <td class="tiny">${escapeHtml(r.source || "")}</td>
+            <td><span class="${pillClass(r.status)}">${escapeHtml(r.status || "")}</span></td>
+            <td>${escapeHtml(r.score || "")}</td>
+            <td class="tiny">${escapeHtml(formatDateTime(r.created_at || ""))}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+    <div class="table-foot">
+      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+    </div>
+    ${renderPager("leads", info)}
+  `;
+  updateSideCounts();
+}
+
+function renderContacts(rows){
+  if(state.datasetAvailability.contacts === "unpublished"){
+    $("#contacts-table-wrap").innerHTML = `
+      <div class="empty">
+        A listagem administrativa de contatos não está publicada no endpoint atualmente consumido pelo painel. A estrutura da tabela permanece pronta para uma façade admin real quando ela existir.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Módulo real</strong>
+            <span>Contatos continuam existindo como entidade real do CRM Core.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Façade admin</strong>
+            <span>Não publicada neste endpoint.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Dados conectados</strong>
+            <span>Indisponíveis neste deploy para leitura administrativa pelo painel.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  if(!rows.length){
+    $("#contacts-table-wrap").innerHTML = `
+      <div class="empty">
+        Nenhum contato corresponde aos filtros atuais.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Status da façade</strong>
+            <span>Publicada e carregada, mas sem linhas visíveis com os filtros atuais.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Sugestão</strong>
+            <span>Revise busca, status, empresa, cidade e source.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  const info = paginateRows("contacts", rows);
+  const pageRows = info.rows;
+
+  $("#contacts-table-wrap").innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="contact_id" data-dir="${sortAttr("contacts","contact_id")}">Contato</button></th>
+          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="email" data-dir="${sortAttr("contacts","email")}">Email</button></th>
+          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="whatsapp" data-dir="${sortAttr("contacts","whatsapp")}">WhatsApp</button></th>
+          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="company" data-dir="${sortAttr("contacts","company")}">Empresa</button></th>
+          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="city" data-dir="${sortAttr("contacts","city")}">Cidade</button></th>
+          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="status" data-dir="${sortAttr("contacts","status")}">Status</button></th>
+          <th><button class="th-sort" data-sort-kind="contacts" data-sort-key="source" data-dir="${sortAttr("contacts","source")}">Origem</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${pageRows.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.contact_id || "")}</strong><div class="tiny">${escapeHtml(r.name || "")}</div></td>
+            <td>${escapeHtml(r.email || "")}</td>
+            <td>${escapeHtml(r.whatsapp || "")}</td>
+            <td>${escapeHtml(r.company || "")}</td>
+            <td>${escapeHtml([r.city, r.state].filter(Boolean).join(" / "))}</td>
+            <td><span class="${pillClass(r.status)}">${escapeHtml(r.status || "")}</span></td>
+            <td class="tiny">${escapeHtml(r.source || "")}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+    <div class="table-foot">
+      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+    </div>
+    ${renderPager("contacts", info)}
+  `;
+  updateSideCounts();
+}
+
+function renderTickets(rows){
+  if(state.datasetAvailability.tickets === "unpublished"){
+    $("#tickets-table-wrap").innerHTML = `
+      <div class="empty">
+        A listagem administrativa de tickets não está publicada no endpoint atualmente consumido pelo painel. A estrutura da tabela permanece pronta para uma façade admin real quando ela existir.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Módulo real</strong>
+            <span>Tickets continuam existindo como entidade real do CRM Core.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Façade admin</strong>
+            <span>Não publicada neste endpoint.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Dados conectados</strong>
+            <span>Indisponíveis neste deploy para leitura administrativa pelo painel.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  if(!rows.length){
+    $("#tickets-table-wrap").innerHTML = `
+      <div class="empty">
+        Nenhum ticket corresponde aos filtros atuais.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Status da façade</strong>
+            <span>Publicada e carregada, mas sem linhas visíveis com os filtros atuais.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Sugestão</strong>
+            <span>Revise busca, prioridade, status, item e script.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  const info = paginateRows("tickets", rows);
+  const pageRows = info.rows;
+
+  $("#tickets-table-wrap").innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="ticket_id" data-dir="${sortAttr("tickets","ticket_id")}">Ticket</button></th>
+          <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="name" data-dir="${sortAttr("tickets","name")}">Contato</button></th>
+          <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="item" data-dir="${sortAttr("tickets","item")}">Item</button></th>
+          <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="subject" data-dir="${sortAttr("tickets","subject")}">Assunto</button></th>
+          <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="priority" data-dir="${sortAttr("tickets","priority")}">Prioridade</button></th>
+          <th><button class="th-sort" data-sort-kind="tickets" data-sort-key="status" data-dir="${sortAttr("tickets","status")}">Status</button></th>
+          <th>Contexto técnico</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${pageRows.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.ticket_id || "")}</strong><div class="tiny mono">${escapeHtml(r.request_id || "")}</div></td>
+            <td>${escapeHtml(r.name || "")}<div class="tiny">${escapeHtml(r.email || "")}</div></td>
+            <td>${escapeHtml(r.item || "")}</td>
+            <td>${escapeHtml(r.subject || "")}</td>
+            <td><span class="${pillClass(r.priority)}">${escapeHtml(r.priority || "")}</span></td>
+            <td><span class="${pillClass(r.status)}">${escapeHtml(r.status || "")}</span></td>
+            <td class="tiny">${escapeHtml([r.script_name, r.script_version, r.script_id, r.indesign_version, r.os_name].filter(Boolean).join(" · "))}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+    <div class="table-foot">
+      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+    </div>
+    ${renderPager("tickets", info)}
+  `;
+  updateSideCounts();
+}
+
+function renderMailQueue(rows){
+  if(state.datasetAvailability.mailQueue === "unpublished"){
+    $("#mail-table-wrap").innerHTML = `
+      <div class="empty">
+        A leitura administrativa da fila de email não está publicada no endpoint atualmente consumido pelo painel. A estrutura da tabela permanece pronta para uma façade admin real quando ela existir.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Módulo real</strong>
+            <span>PUBMAIL continua existindo como módulo real com fila operacional própria.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Façade admin</strong>
+            <span>Não publicada neste endpoint.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Dados conectados</strong>
+            <span>Indisponíveis neste deploy para leitura administrativa pelo painel.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  if(!rows.length){
+    $("#mail-table-wrap").innerHTML = `
+      <div class="empty">
+        Nenhum item de fila corresponde aos filtros atuais.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Status da façade</strong>
+            <span>Publicada e carregada, mas sem linhas visíveis com os filtros atuais.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Sugestão</strong>
+            <span>Revise busca, status, tipo, campaign_key e template_key.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  const info = paginateRows("mailQueue", rows);
+  const pageRows = info.rows;
+
+  $("#mail-table-wrap").innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="queue_id" data-dir="${sortAttr("mailQueue","queue_id")}">Queue</button></th>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="recipient" data-dir="${sortAttr("mailQueue","recipient")}">Destinatário</button></th>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="campaign_key" data-dir="${sortAttr("mailQueue","campaign_key")}">Campanha</button></th>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="template_key" data-dir="${sortAttr("mailQueue","template_key")}">Template</button></th>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="message_type" data-dir="${sortAttr("mailQueue","message_type")}">Tipo</button></th>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="status" data-dir="${sortAttr("mailQueue","status")}">Status</button></th>
+          <th><button class="th-sort" data-sort-kind="mailQueue" data-sort-key="scheduled_at" data-dir="${sortAttr("mailQueue","scheduled_at")}">Agendado</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${pageRows.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.queue_id || "")}</strong><div class="tiny mono">${escapeHtml(r.mail_key || "")}</div></td>
+            <td>${escapeHtml(r.recipient || "")}</td>
+            <td>${escapeHtml(r.campaign_key || "")}</td>
+            <td>${escapeHtml(r.template_key || "")}</td>
+            <td><span class="${pillClass(r.message_type)}">${escapeHtml(r.message_type || "")}</span></td>
+            <td><span class="${pillClass(r.status)}">${escapeHtml(r.status || "")}</span></td>
+            <td class="tiny">${escapeHtml(formatDateTime(r.scheduled_at || ""))}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+    <div class="table-foot">
+      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+    </div>
+    ${renderPager("mailQueue", info)}
+  `;
+  updateSideCounts();
+}
+
+function renderTimeline(rows){
+  if(state.datasetAvailability.timeline === "unpublished"){
+    $("#timeline-table-wrap").innerHTML = `
+      <div class="empty">
+        A listagem administrativa da timeline não está publicada no endpoint atualmente consumido pelo painel. A estrutura da tabela permanece pronta para uma façade admin real quando ela existir.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Módulo real</strong>
+            <span>A timeline continua existindo como entidade central real do ecossistema.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Façade admin</strong>
+            <span>Não publicada neste endpoint.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Dados conectados</strong>
+            <span>Indisponíveis neste deploy para leitura administrativa pelo painel.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  if(!rows.length){
+    $("#timeline-table-wrap").innerHTML = `
+      <div class="empty">
+        Nenhum evento de timeline corresponde aos filtros atuais.
+        <div class="empty-meta">
+          <div class="empty-meta-row">
+            <strong>Status da façade</strong>
+            <span>Publicada e carregada, mas sem linhas visíveis com os filtros atuais.</span>
+          </div>
+          <div class="empty-meta-row">
+            <strong>Sugestão</strong>
+            <span>Revise busca, tipo de entidade e tipo de evento.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    updateSideCounts();
+    return;
+  }
+
+  const info = paginateRows("timeline", rows);
+  const pageRows = info.rows;
+
+  $("#timeline-table-wrap").innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="timeline_id" data-dir="${sortAttr("timeline","timeline_id")}">Timeline</button></th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="entity_type" data-dir="${sortAttr("timeline","entity_type")}">Entity type</button></th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="entity_id" data-dir="${sortAttr("timeline","entity_id")}">Entity ID</button></th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="event_type" data-dir="${sortAttr("timeline","event_type")}">Event type</button></th>
+          <th><button class="th-sort" data-sort-kind="timeline" data-sort-key="event_at" data-dir="${sortAttr("timeline","event_at")}">Event at</button></th>
+          <th>Payload</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${pageRows.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.timeline_id || "")}</strong></td>
+            <td><span class="${pillClass(r.entity_type)}">${escapeHtml(r.entity_type || "")}</span></td>
+            <td class="mono">${escapeHtml(r.entity_id || "")}</td>
+            <td>${escapeHtml(r.event_type || "")}</td>
+            <td class="tiny">${escapeHtml(formatDateTime(r.event_at || ""))}</td>
+            <td class="tiny mono">${escapeHtml(stringValue(r.payload_json).slice(0, 220))}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+    <div class="table-foot">
+      <div class="tiny">Linhas filtradas: ${rows.length}</div>
+    </div>
+    ${renderPager("timeline", info)}
+  `;
+  updateSideCounts();
+}
+
+function updateSideCounts(){
+  const labels = {
+    "#overview": "01",
+    "#summary": "02",
+    "#installation": "03",
+    "#health": "04",
+    "#crm-core": "05",
+    "#timeline": "06",
+    "#mail-core": "07",
+    "#pubio-core": "08",
+    "#observability": "09",
+    "#history": "10",
+    "#settings": "11"
+  };
+
+  const nav = $$("#nav a");
+  nav.forEach(a => {
+    const href = a.getAttribute("href");
+    const small = $("small", a);
+    if(!small) return;
+    small.textContent = labels[href] || "—";
+  });
+}
+
+function rowsToCsv(rows, columns, delimiter=";"){
+  const csvEscape = (v) => {
+    const s = String(v ?? "");
+    if(/[",;\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  };
+  const header = columns.map(col => csvEscape(col.label)).join(delimiter);
+  const body = rows.map(row => columns.map(col => csvEscape(row?.[col.key] ?? "")).join(delimiter));
+  return [header].concat(body).join("\r\n");
+}
+
+function downloadTextFile(filename, text, mime="text/plain;charset=utf-8"){
+  const blob = new Blob([text], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function exportCurrentDataset(kind){
+  const map = {
+    leads: {
+      file: "pubpanel-leads.csv",
+      rows: state.filtered.leads,
+      columns: [
+        { key:"lead_id", label:"lead_id" },
+        { key:"request_id", label:"request_id" },
+        { key:"contact_id", label:"contact_id" },
+        { key:"name", label:"name" },
+        { key:"email", label:"email" },
+        { key:"item", label:"item" },
+        { key:"placement", label:"placement" },
+        { key:"source", label:"source" },
+        { key:"status", label:"status" },
+        { key:"score", label:"score" },
+        { key:"created_at", label:"created_at" }
+      ]
+    },
+    contacts: {
+      file: "pubpanel-contacts.csv",
+      rows: state.filtered.contacts,
+      columns: [
+        { key:"contact_id", label:"contact_id" },
+        { key:"name", label:"name" },
+        { key:"email", label:"email" },
+        { key:"whatsapp", label:"whatsapp" },
+        { key:"company", label:"company" },
+        { key:"city", label:"city" },
+        { key:"state", label:"state" },
+        { key:"status", label:"status" },
+        { key:"source", label:"source" }
+      ]
+    },
+    tickets: {
+      file: "pubpanel-tickets.csv",
+      rows: state.filtered.tickets,
+      columns: [
+        { key:"ticket_id", label:"ticket_id" },
+        { key:"request_id", label:"request_id" },
+        { key:"contact_id", label:"contact_id" },
+        { key:"name", label:"name" },
+        { key:"email", label:"email" },
+        { key:"item", label:"item" },
+        { key:"subject", label:"subject" },
+        { key:"priority", label:"priority" },
+        { key:"status", label:"status" },
+        { key:"script_name", label:"script_name" },
+        { key:"script_version", label:"script_version" },
+        { key:"created_at", label:"created_at" }
+      ]
+    },
+    timeline: {
+      file: "pubpanel-timeline.csv",
+      rows: state.filtered.timeline,
+      columns: [
+        { key:"timeline_id", label:"timeline_id" },
+        { key:"entity_type", label:"entity_type" },
+        { key:"entity_id", label:"entity_id" },
+        { key:"event_type", label:"event_type" },
+        { key:"event_at", label:"event_at" },
+        { key:"payload_json", label:"payload_json" }
+      ]
+    },
+    mailQueue: {
+      file: "pubpanel-mail-queue.csv",
+      rows: state.filtered.mailQueue,
+      columns: [
+        { key:"queue_id", label:"queue_id" },
+        { key:"mail_key", label:"mail_key" },
+        { key:"recipient", label:"recipient" },
+        { key:"campaign_key", label:"campaign_key" },
+        { key:"template_key", label:"template_key" },
+        { key:"message_type", label:"message_type" },
+        { key:"status", label:"status" },
+        { key:"scheduled_at", label:"scheduled_at" }
+      ]
+    }
+  };
+
+  const cfg = map[kind];
+  if(!cfg) return;
+
+  if(!cfg.rows.length){
+    notify("warn", "Nada para exportar", "Não há linhas filtradas em " + kind + ".");
+    pushHistory("UI", "export_csv_" + kind, "vazio", "Nenhuma linha disponível.");
+    return;
+  }
+
+  const csv = rowsToCsv(cfg.rows, cfg.columns, ";");
+  downloadTextFile(cfg.file, csv, "text/csv;charset=utf-8");
+  notify("success", "CSV exportado", "Arquivo local gerado com os dados filtrados de " + kind + ".");
+  pushHistory("UI", "export_csv_" + kind, "ok", "Exportação local com " + cfg.rows.length + " linhas.");
+}
+
+function mapAdminAction(action){
+  const availability = getActionAvailability(action);
+
+  if(availability.state === "unknown"){
+    throw new Error("Ação administrativa sem mapeamento explícito no painel: " + action);
+  }
+
+  if(availability.state !== "planned"){
+    throw new Error("A ação não está em estado planejado para façade administrativa: " + action);
+  }
+
+  if(!availability.facadeFuture){
+    throw new Error("Ação administrativa sem facadeFuture definida no painel: " + action);
+  }
+
+  return "façade_admin_pendente::" + availability.facadeFuture;
+}
+
+function buildAdminPayload(action){
+  const mapped = mapAdminAction(action);
+  const payload = {};
+  const importField = $("#import-json");
+  const importJson = importField ? String(importField.value || "").trim() : "";
+
+  if(String(mapped).includes("admin_io_") && importJson){
+    payload.import_json = importJson;
+  }
+
+  if(action === "io_export_leads") payload.entity_type = "leads";
+  if(action === "io_export_contacts") payload.entity_type = "contacts";
+  if(action === "io_export_tickets") payload.entity_type = "tickets";
+
+  return payload;
+}
+
+async function handleAdminAction(action, button){
+  if(!confirmAdminAction(action)) return;
+
+  const availability = getActionAvailability(action);
+  if(availability.state === "unknown"){
+    notify("error", "Ação administrativa sem cadastro", "A ação não está registrada em ACTION_PUBLICATION.");
+    return;
+  }
+
+  const startedAt = performance.now();
+  let mapped = "";
+  let payload = {};
+
+  try{
+    setLastAction(action);
+    setLastError("");
+
+    mapped = mapAdminAction(action);
+    payload = buildAdminPayload(action);
+
+    await withBusyButton(button, "Abrindo diagnóstico...", async () => {
+      const durationMs = Math.round(performance.now() - startedAt);
+
+      drawer(
+        "Operação administrativa não publicada neste deploy",
+        [
+          "AÇÃO VISUAL DO PAINEL",
+          action,
+          "",
+          "ESTADO DE DISPONIBILIDADE",
+          availability.state,
+          "",
+          "RÓTULO DE DISPONIBILIDADE",
+          availability.label,
+          "",
+          "FAÇADE ADMINISTRATIVA FUTURA MAPEADA",
+          mapped,
+          "",
+          "STATUS REAL",
+          "Função existente na arquitetura do projeto, mas sem publicação HTTP confirmada neste endpoint.",
+          "",
+          "CONTEXTO DO DEPLOY",
+          "GETs públicos confirmados: mode=status, mode=health, mode=health_deep e mode=contract.",
+          "POSTs públicos confirmados: action=capture_lead e action=create_ticket.",
+          "Funções internas do CRM, do PUBMAIL, do PUBIO e da observabilidade não devem ser tratadas aqui como endpoints já publicados.",
+          "",
+          "LEITURA CORRETA",
+          "O painel preserva a arquitetura real do sistema.",
+          "A função pode existir no módulo.",
+          "O que não existe neste deploy é a façade administrativa HTTP explicitamente publicada para esta operação.",
+          "",
+          "DADOS DE EXECUÇÃO",
+          "Hora: " + nowLabel(),
+          "URL base: " + (state.apiBase || "não definida"),
+          "Duração: " + durationMs + " ms",
+          "",
+          "PAYLOAD PREPARADO PELO PAINEL",
+          safeJson(payload)
+        ].join("\n")
+      );
+
+      notify(
+        "warn",
+        "Operação não publicada",
+        "Função interna preservada no modelo do painel, mas sem façade administrativa publicada neste endpoint."
+      );
+
+      pushHistory(
+        "UI",
+        mapped,
+        "não_publicado",
+        "Ação administrativa bloqueada para evitar sugerir publicação HTTP inexistente.",
+        {
+          duration_ms: durationMs,
+          rows_count: 0
+        }
+      );
+    });
+  }catch(err){
+    const durationMs = Math.round(performance.now() - startedAt);
+
+    setLastError(err.message || "Erro desconhecido");
+
+    drawer(
+      "Falha ao abrir diagnóstico administrativo",
+      [
+        "AÇÃO VISUAL DO PAINEL",
+        action,
+        "",
+        "ESTADO DE DISPONIBILIDADE",
+        availability.state,
+        "",
+        "RÓTULO DE DISPONIBILIDADE",
+        availability.label,
+        "",
+        "FAÇADE ADMINISTRATIVA FUTURA MAPEADA",
+        mapped || "indisponível",
+        "",
+        "PAYLOAD PREPARADO PELO PAINEL",
+        safeJson(payload),
+        "",
+        "DADOS DE EXECUÇÃO",
+        "Hora: " + nowLabel(),
+        "URL base: " + (state.apiBase || "não definida"),
+        "Duração: " + durationMs + " ms",
+        "",
+        "MOTIVO TÉCNICO",
+        err.message || "Erro desconhecido"
+      ].join("\n")
+    );
+
+    notify(
+      "warn",
+      "Diagnóstico admin indisponível",
+      "Não foi possível abrir o diagnóstico da ação administrativa."
+    );
+
+    pushHistory(
+      "UI",
+      mapped || action,
+      "erro",
+      err.message || "erro",
+      {
+        duration_ms: durationMs,
+        rows_count: 0
+      }
+    );
+  } finally {
+    renderSummary();
+  }
+}
+
+async function handleUnavailableAdminDataset(kind, button){
+  const dataset = DATASETS[kind];
+  if(!dataset){
+    notify("error", "Dataset desconhecido", "O painel não reconhece o dataset solicitado: " + kind);
+    return;
+  }
+
+  const availability = getActionAvailability(dataset.adminListAction);
+  if(availability.state === "unknown"){
+    notify("error", "Dataset sem publicação mapeada", "A ação administrativa do dataset não está registrada em ACTION_PUBLICATION.");
+    return;
+  }
+
+  const startedAt = performance.now();
+  let mapped = "";
+
+  try{
+    setLastAction(dataset.adminListAction);
+    setLastError("");
+
+    mapped = mapAdminAction(dataset.adminListAction);
+
+    await withBusyButton(button, "Abrindo diagnóstico...", async () => {
+      state[kind] = [];
+      state.filtered[kind] = [];
+      state.datasetAvailability[kind] = "unpublished";
+      state.paging[kind].page = 1;
+
+      renderDatasetByKind(kind);
+
+      const durationMs = Math.round(performance.now() - startedAt);
+
+      drawer(
+        "Listagem administrativa não publicada",
+        [
+          "DATASET",
+          dataset.label,
+          "",
+          "ESTADO DE DISPONIBILIDADE",
+          availability.state,
+          "",
+          "RÓTULO DE DISPONIBILIDADE",
+          availability.label,
+          "",
+          "FAÇADE ADMINISTRATIVA FUTURA MAPEADA",
+          mapped,
+          "",
+          "LEITURA CORRETA",
+          "A entidade existe no ecossistema real e permanece representada no painel.",
+          "O que não existe neste endpoint é a listagem administrativa HTTP publicada para leitura conectada.",
+          "A estrutura visual da tabela foi preservada para futura façade sem necessidade de redesenho.",
+          "",
+          "DADOS DE EXECUÇÃO",
+          "Hora: " + nowLabel(),
+          "URL base: " + (state.apiBase || "não definida"),
+          "Duração: " + durationMs + " ms"
+        ].join("\n")
+      );
+
+      notify(
+        "warn",
+        "Listagem não publicada",
+        "A entidade permanece modelada no painel, mas sua listagem administrativa ainda não foi publicada neste endpoint."
+      );
+
+      pushHistory(
+        "UI",
+        mapped,
+        "não_publicado",
+        "Listagem administrativa bloqueada por ausência de façade HTTP publicada.",
+        {
+          duration_ms: durationMs,
+          rows_count: 0
+        }
+      );
+    });
+  }catch(err){
+    const durationMs = Math.round(performance.now() - startedAt);
+
+    setLastError(err.message || "Erro desconhecido");
+    state[kind] = [];
+    state.filtered[kind] = [];
+    state.datasetAvailability[kind] = "unpublished";
+
+    renderDatasetByKind(kind);
+
+    notify(
+      "warn",
+      "Falha na listagem informativa",
+      "Não foi possível abrir o diagnóstico de indisponibilidade da listagem."
+    );
+
+    pushHistory(
+      "UI",
+      mapped || dataset.adminListAction,
+      "erro",
+      err.message || "erro",
+      {
+        duration_ms: durationMs,
+        rows_count: 0
+      }
+    );
+  } finally {
+    renderSummary();
+  }
+}
+
+async function runStatus(button){
+  return runPublicMode("status", button);
+}
+
+async function runContract(button){
+  return runPublicMode("contract", button);
+}
+
+async function runHealth(button){
+  return runPublicMode("health", button);
+}
+
+async function runHealthDeep(button){
+  return runPublicMode("health_deep", button);
+}
+
+function applyDatasetFilters(kind){
+  return runDatasetFilterPipeline(kind);
+}
+
+function applyNav(){
+  const navLinks = $$("#nav a");
+  const sections = navLinks.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+
+  const io = new IntersectionObserver(entries => {
+    const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if(!visible) return;
+    navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + visible.target.id));
+  }, { threshold:[.2,.4,.6] });
+
+  sections.forEach(s => io.observe(s));
+}
+
+function bindPagerEvents(){
+  document.addEventListener("click", event => {
+    const btn = event.target.closest("[data-page-kind][data-page-action]");
+    if(!btn) return;
+
+    const kind = btn.getAttribute("data-page-kind");
+    const action = btn.getAttribute("data-page-action");
+    if(!state.paging[kind]) return;
+
+    if(action === "prev") state.paging[kind].page = Math.max(1, state.paging[kind].page - 1);
+    if(action === "next") state.paging[kind].page = state.paging[kind].page + 1;
+
+    renderDatasetByKind(kind);
+  });
+}
+
+function bindSortEvents(){
+  document.addEventListener("click", event => {
+    const btn = event.target.closest("[data-sort-kind][data-sort-key]");
+    if(!btn) return;
+    setSort(btn.getAttribute("data-sort-kind"), btn.getAttribute("data-sort-key"));
+  });
+}
+
+function bindTopbarActions(){
+  $("#save-api-base").addEventListener("click", saveSettings);
+  $("#clear-api-base").addEventListener("click", clearSettings);
+
+  $("#btn-status").addEventListener("click", e => runStatus(e.currentTarget));
+  $("#btn-contract").addEventListener("click", e => runContract(e.currentTarget));
+  $("#btn-health").addEventListener("click", e => runHealth(e.currentTarget));
+  $("#btn-health-deep").addEventListener("click", e => runHealthDeep(e.currentTarget));
+
+  $("#run-status-inline").addEventListener("click", e => runStatus(e.currentTarget));
+  $("#run-health-inline").addEventListener("click", e => runHealth(e.currentTarget));
+  $("#run-health-deep-inline").addEventListener("click", e => runHealthDeep(e.currentTarget));
+  $("#run-contract-inline").addEventListener("click", e => runContract(e.currentTarget));
+
+  $("#btn-load-leads").addEventListener("click", e => handleUnavailableAdminDataset("leads", e.currentTarget));
+  $("#btn-load-contacts").addEventListener("click", e => handleUnavailableAdminDataset("contacts", e.currentTarget));
+  $("#btn-load-tickets").addEventListener("click", e => handleUnavailableAdminDataset("tickets", e.currentTarget));
+  $("#btn-load-timeline").addEventListener("click", e => handleUnavailableAdminDataset("timeline", e.currentTarget));
+  $("#btn-load-mail-queue").addEventListener("click", e => handleUnavailableAdminDataset("mailQueue", e.currentTarget));
+}
+
+function bindFilterActions(){
+  [
+    ["#filter-lead-search", applyLeadFilters],
+    ["#filter-lead-item", applyLeadFilters],
+    ["#filter-lead-placement", applyLeadFilters],
+    ["#filter-lead-status", applyLeadFilters],
+    ["#filter-lead-source", applyLeadFilters],
+
+    ["#filter-contact-search", applyContactFilters],
+    ["#filter-contact-status", applyContactFilters],
+    ["#filter-contact-company", applyContactFilters],
+    ["#filter-contact-city", applyContactFilters],
+    ["#filter-contact-source", applyContactFilters],
+
+    ["#filter-ticket-search", applyTicketFilters],
+    ["#filter-ticket-priority", applyTicketFilters],
+    ["#filter-ticket-status", applyTicketFilters],
+    ["#filter-ticket-item", applyTicketFilters],
+    ["#filter-ticket-script", applyTicketFilters],
+
+    ["#filter-timeline-search", applyTimelineFilters],
+    ["#filter-timeline-entity", applyTimelineFilters],
+    ["#filter-timeline-event", applyTimelineFilters],
+
+    ["#filter-mail-search", applyMailFilters],
+    ["#filter-mail-status", applyMailFilters],
+    ["#filter-mail-type", applyMailFilters],
+    ["#filter-mail-campaign", applyMailFilters],
+    ["#filter-mail-template", applyMailFilters]
+  ].forEach(([selector, fn]) => {
+    const el = $(selector);
+    if(!el) return;
+    const eventName = (el.tagName === "SELECT") ? "change" : "input";
+    el.addEventListener(eventName, () => {
+      if(selector.includes("lead")) state.paging.leads.page = 1;
+      if(selector.includes("contact")) state.paging.contacts.page = 1;
+      if(selector.includes("ticket")) state.paging.tickets.page = 1;
+      if(selector.includes("timeline")) state.paging.timeline.page = 1;
+      if(selector.includes("mail")) state.paging.mailQueue.page = 1;
+      fn();
+    });
+  });
+}
+
+function bindUtilityActions(){
+  $("#copy-health-json").addEventListener("click", async () => {
+    try{
+      await navigator.clipboard.writeText($("#health-json-box").textContent || "");
+      notify("success", "Copiado", "O JSON foi copiado para a área de transferência.");
+      pushHistory("UI", "copy_health_json", "ok", "JSON copiado.");
+    }catch(err){
+      notify("warn", "Não foi possível copiar", "Copie manualmente o conteúdo do bloco.");
+      pushHistory("UI", "copy_health_json", "erro", err.message || "erro");
+    }
+  });
+
+  $("#btn-show-diagnostics").addEventListener("click", () => {
+    const historyLines = state.ui.history.slice(0, 8).map(h =>
+      `[${h.at}] ${h.type} ${h.action} -> ${h.status} :: ${h.detail} :: ${h.duration_ms || 0} ms :: ${h.rows_count || 0} linhas`
+    );
+
+    const publishedActions = Object.keys(ACTION_PUBLICATION)
+      .filter(key => getActionAvailability(key).state === "published")
+      .map(key => {
+        const availability = getActionAvailability(key);
+        return key + " => " + availability.label + " :: endpoint publicado = " + (availability.publicEndpoint || "não definido");
+      });
+
+    const plannedActions = Object.keys(ACTION_PUBLICATION)
+      .filter(key => getActionAvailability(key).state === "planned")
+      .map(key => {
+        const availability = getActionAvailability(key);
+        return key + " => " + availability.label + " :: façade futura mapeada = " + (availability.facadeFuture || "não definida");
+      });
+
+    drawer("Diagnóstico do painel", [
+      "MATRIZ DO DEPLOY ATUAL",
+      "GETs públicos publicados: mode=status, mode=health, mode=health_deep, mode=contract",
+      "POSTs públicos publicados para o FRONT: action=capture_lead, action=create_ticket",
+      "CRM Core como módulo real: preservado no painel",
+      "Timeline como entidade central do ecossistema: preservada no painel",
+      "PUBMAIL como módulo real: preservado no painel, sem façade administrativa HTTP publicada",
+      "PUBIO como módulo real: preservado no painel, sem façade administrativa HTTP publicada",
+      "Observabilidade estrutural: preservada no painel, sem listagens administrativas HTTP publicadas",
+      "",
+      "ESTADO DO PAINEL",
+      "URL base: " + (state.apiBase || "não definida"),
+      "Última ação: " + (state.ui.lastAction || "—"),
+      "Último erro: " + (state.ui.lastError || "—"),
+      "Disponibilidade datasets: contacts=" + state.datasetAvailability.contacts + " · leads=" + state.datasetAvailability.leads + " · tickets=" + state.datasetAvailability.tickets + " · timeline=" + state.datasetAvailability.timeline + " · mailQueue=" + state.datasetAvailability.mailQueue,
+      "Leitura semântica: unpublished = façade não publicada; loaded = façade publicada com carga realizada.",
+      "Datasets carregados: contacts=" + state.contacts.length + " · leads=" + state.leads.length + " · tickets=" + state.tickets.length + " · timeline=" + state.timeline.length + " · mailQueue=" + state.mailQueue.length,
+      "",
+      "AÇÕES PÚBLICAS PUBLICADAS",
+      publishedActions.join("\n"),
+      "",
+      "AÇÕES ADMINISTRATIVAS PLANEJADAS",
+      plannedActions.join("\n"),
+      "",
+      "LEITURA CORRETA",
+      "O painel representa módulos reais do ecossistema.",
+      "O painel não deve sugerir que funções internas de CRM, Timeline, PUBMAIL, PUBIO ou observabilidade já sejam endpoints HTTP administrativos publicados.",
+      "A ausência de façade publicada não invalida a existência real do módulo; apenas impede leitura ou execução conectada neste deploy.",
+      "",
+      "HISTÓRICO RECENTE",
+      historyLines.length ? historyLines.join("\n") : "Sem histórico ainda."
+    ].join("\n"));
+  });
+}
+
+function bindHistoryActions(){
+  $("#btn-refresh-history").addEventListener("click", () => {
+    renderHistory();
+    notify("success", "Histórico atualizado", "O histórico local foi redesenhado.");
+  });
+
+  $("#btn-clear-history").addEventListener("click", () => {
+    if(!window.confirm("Limpar o histórico local do painel?")) return;
+    state.ui.history = [];
+    state.ui.lastAction = "";
+    state.ui.lastError = "";
+    clearPersistedHistory();
+    renderHistory();
+    renderSummary();
+    notify("warn", "Histórico limpo", "O histórico local foi apagado.");
+  });
+}
+
+function bindAdminButtons(){
+  $$("[data-admin-action]").forEach(btn => {
+    btn.addEventListener("click", () => handleAdminAction(btn.getAttribute("data-admin-action"), btn));
+  });
+
+  $$("[data-local-export]").forEach(btn => {
+    btn.addEventListener("click", () => exportCurrentDataset(btn.getAttribute("data-local-export")));
+  });
+}
+
+function openSidebar(){
+  $("#sidebar").classList.add("open");
+  $("#sidebar-backdrop").classList.add("show");
+}
+
+function closeSidebar(){
+  $("#sidebar").classList.remove("open");
+  $("#sidebar-backdrop").classList.remove("show");
+}
+
+function bindShellActions(){
+  $("#open-sidebar").addEventListener("click", () => {
+    const isOpen = $("#sidebar").classList.contains("open");
+    if(isOpen) closeSidebar();
+    else openSidebar();
+  });
+
+  $("#sidebar-backdrop").addEventListener("click", closeSidebar);
+
+  $$("#nav a").forEach(link => {
+    link.addEventListener("click", () => {
+      if(window.innerWidth <= 1020) closeSidebar();
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    if(window.innerWidth > 1020) closeSidebar();
+  });
+
+  $("#drawer-close").addEventListener("click", closeDrawer);
+}
+
+function bind(){
+  bindTopbarActions();
+  bindFilterActions();
+  bindUtilityActions();
+  bindHistoryActions();
+  bindAdminButtons();
+  bindShellActions();
+  bindPagerEvents();
+  bindSortEvents();
+}
+
+function bootPlaceholders(){
+  state.filtered.contacts = [];
+  state.filtered.leads = [];
+  state.filtered.tickets = [];
+  state.filtered.timeline = [];
+  state.filtered.mailQueue = [];
+
+  state.datasetAvailability.contacts = "unpublished";
+  state.datasetAvailability.leads = "unpublished";
+  state.datasetAvailability.tickets = "unpublished";
+  state.datasetAvailability.timeline = "unpublished";
+  state.datasetAvailability.mailQueue = "unpublished";
+
+  renderContacts([]);
+  renderLeads([]);
+  renderTickets([]);
+  renderTimeline([]);
+  renderMailQueue([]);
+
+  $("#contract-box").textContent = "Contrato ainda não carregado.";
+  $("#health-json-box").textContent = "Nenhuma consulta executada ainda.";
+
+  renderOverviewMeta();
+  renderSummary();
+  renderHistory();
+}
+
+async function autoWarm(){
+  if(!state.apiBase){
+    renderSummary();
+    return;
+  }
+
+  try{ await runStatus(); }catch(_){}
+  try{ await runContract(); }catch(_){}
+  try{ await runHealth(); }catch(_){}
+
+  notify(
+    "success",
+    "Camada pública carregada",
+    "O painel executou somente warm-up de leituras públicas leves neste deploy: mode=status, mode=contract e mode=health. Nenhuma ação administrativa, nenhum health_deep e nenhum POST público do front foram executados automaticamente."
+  );
+
+  renderSummary();
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  loadSettings();
+  loadPersistedHistory();
+  bind();
+  applyNav();
+  bootPlaceholders();
+  autoWarm();
+});
+  </script>
+</body>
+</html>
