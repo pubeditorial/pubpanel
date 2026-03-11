@@ -10,35 +10,22 @@
   <style>
     :root{
       --bg:#f8fafc;
-      --bg-soft:#eef2ff;
       --fg:#0f172a;
       --muted:#475569;
-      --muted-2:#64748b;
       --line:#e2e8f0;
-      --border:rgba(15,23,42,.08);
-      --surface:#ffffff;
-      --surface-soft:rgba(255,255,255,.88);
+      --card:#ffffff;
+      --card2:#f8fafc;
       --blue:#2563eb;
-      --blue-2:#60a5fa;
       --violet:#7c3aed;
       --green:#059669;
       --amber:#d97706;
       --red:#dc2626;
-      --shadow:0 12px 36px rgba(15,23,42,.08);
-      --radius-xl:26px;
-      --radius-lg:20px;
-      --radius-md:16px;
+      --shadow:0 10px 28px rgba(15,23,42,.08);
+      --radius:18px;
       --radius-sm:12px;
-      --container:1380px;
-      --sidebar:290px;
-      --header:72px;
-      --gutter:clamp(16px,2.5vw,28px);
-      --text-hero:clamp(32px,4vw,52px);
-      --text-xl:clamp(24px,2vw,34px);
-      --text-lg:18px;
-      --text-md:15px;
-      --text-sm:13px;
-      --text-xs:12px;
+      --sidebar:270px;
+      --wrap:1320px;
+      --gap:18px;
     }
 
     *{box-sizing:border-box}
@@ -47,17 +34,16 @@
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--fg);
       background:
-        radial-gradient(900px 240px at 12% 0%, rgba(37,99,235,.08), transparent 60%),
-        radial-gradient(900px 240px at 88% 0%, rgba(124,58,237,.08), transparent 60%),
+        radial-gradient(700px 200px at 0% 0%, rgba(37,99,235,.08), transparent 60%),
+        radial-gradient(700px 200px at 100% 0%, rgba(124,58,237,.08), transparent 60%),
         var(--bg);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      overflow:hidden;
     }
 
     a{text-decoration:none;color:inherit}
     button,input,select,textarea{font:inherit}
-    :focus-visible{outline:3px solid rgba(96,165,250,.42);outline-offset:2px}
+    :focus-visible{outline:3px solid rgba(96,165,250,.35);outline-offset:2px}
 
     .app{
       display:grid;
@@ -70,28 +56,14 @@
       top:0;
       height:100vh;
       overflow:auto;
-      padding:20px 16px 18px;
+      background:linear-gradient(180deg,#091120,#07101d 60%,#060b14 100%);
       color:#fff;
-      background:linear-gradient(180deg,#0a1222 0%,#07111f 52%,#050b16 100%);
+      padding:18px 14px;
       border-right:1px solid rgba(255,255,255,.08);
-      z-index:20;
     }
-    .sidebar::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(460px 220px at 10% 8%, rgba(96,165,250,.18), transparent 64%),
-        radial-gradient(520px 260px at 88% 15%, rgba(167,139,250,.14), transparent 64%);
-    }
-    .sidebar-inner{position:relative;z-index:1;display:grid;gap:16px}
-    .brand{display:grid;gap:6px}
-    .logo{
-      font-weight:1000;
-      letter-spacing:-.04em;
-      font-size:28px;
-    }
+
+    .brand{display:grid;gap:4px;margin-bottom:18px}
+    .logo{font-size:28px;font-weight:1000;letter-spacing:-.04em}
     .grad{
       background:linear-gradient(90deg,#60a5fa,#a78bfa);
       -webkit-background-clip:text;
@@ -102,7 +74,7 @@
       font-size:11px;
       text-transform:uppercase;
       letter-spacing:.16em;
-      color:rgba(226,232,240,.72);
+      color:rgba(226,232,240,.7);
       font-weight:900;
     }
 
@@ -110,14 +82,14 @@
       display:inline-flex;
       align-items:center;
       gap:8px;
-      width:max-content;
-      padding:9px 12px;
+      padding:8px 12px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.06);
-      color:rgba(241,245,249,.92);
       font-size:12px;
-      font-weight:800;
+      font-weight:900;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.08);
+      margin-bottom:14px;
+      width:max-content;
     }
     .chip::before{
       content:"";
@@ -130,127 +102,80 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
       padding:12px 14px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      color:rgba(241,245,249,.92);
+      border-radius:14px;
       font-size:14px;
       font-weight:850;
-      transition:.18s ease;
-    }
-    .nav a:hover{
-      transform:translateY(-1px);
-      background:rgba(255,255,255,.08);
-      border-color:rgba(255,255,255,.14);
+      color:rgba(241,245,249,.92);
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
     }
     .nav a.active{
       background:rgba(96,165,250,.14);
-      border-color:rgba(96,165,250,.32);
+      border-color:rgba(96,165,250,.28);
       color:#fff;
     }
     .nav small{
       font-size:11px;
-      color:rgba(226,232,240,.62);
+      color:rgba(226,232,240,.65);
       font-weight:900;
     }
 
     .side-meta{
       display:grid;
       gap:10px;
-      padding-top:8px;
-      border-top:1px solid rgba(255,255,255,.10);
+      margin-top:18px;
+      padding-top:14px;
+      border-top:1px solid rgba(255,255,255,.1);
     }
     .meta-row{
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
       font-size:12px;
-      color:rgba(226,232,240,.78);
+      color:rgba(226,232,240,.8);
     }
 
-    .main{
-      min-width:0;
-      display:grid;
-      grid-template-rows:auto 1fr;
-      height:100vh;
-      overflow:hidden;
-    }
-
+    .main{min-width:0}
     .topbar{
       position:sticky;
       top:0;
-      z-index:15;
+      z-index:10;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:16px;
-      padding:14px var(--gutter);
-      border-bottom:1px solid var(--border);
-      background:rgba(248,250,252,.76);
-      backdrop-filter:blur(14px);
+      gap:14px;
+      padding:14px 18px;
+      background:rgba(248,250,252,.85);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(15,23,42,.08);
     }
-    .top-left{display:flex;align-items:center;gap:12px;min-width:0}
-    .top-title{
-      font-size:16px;
-      font-weight:950;
-      letter-spacing:-.02em;
-    }
-    .top-sub{
-      font-size:12px;
-      color:var(--muted-2);
-      line-height:1.45;
-    }
-    .top-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:flex-end;
-    }
+    .top-title{font-size:16px;font-weight:950}
+    .top-sub{font-size:12px;color:#64748b}
+    .top-actions{display:flex;flex-wrap:wrap;gap:10px}
 
-    .layout{overflow:auto;padding:var(--gutter)}
-    .wrap{
-      max-width:var(--container);
-      margin:0 auto;
-      display:grid;
-      gap:22px;
-    }
+    .layout{padding:18px}
+    .wrap{max-width:var(--wrap);margin:0 auto;display:grid;gap:18px}
 
+    .hero,.panel,.card,.table-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.94));
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow:var(--shadow);
+      border-radius:24px;
+    }
     .hero{
-      position:relative;
       overflow:hidden;
-      border-radius:32px;
-      background:linear-gradient(180deg,#0a1222 0%,#07111f 52%,#050b16 100%);
+      background:linear-gradient(180deg,#0a1222 0%,#07111f 58%,#050b16 100%);
       color:#fff;
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 28px 80px rgba(2,6,23,.20);
+      border-color:rgba(255,255,255,.08);
     }
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:-120px;
-      pointer-events:none;
-      background:
-        radial-gradient(580px 260px at 10% 12%, rgba(96,165,250,.18), transparent 62%),
-        radial-gradient(540px 260px at 88% 14%, rgba(167,139,250,.16), transparent 62%),
-        radial-gradient(460px 300px at 70% 88%, rgba(37,99,235,.14), transparent 58%);
-    }
-    .hero-inner{
-      position:relative;
-      z-index:1;
-      padding:28px;
-      display:grid;
-      gap:20px;
-    }
+    .hero-inner{padding:26px}
     .hero-grid{
       display:grid;
-      gap:20px;
+      gap:18px;
+      grid-template-columns:1.25fr .75fr;
       align-items:stretch;
-    }
-    @media (min-width:1100px){
-      .hero-grid{grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr)}
     }
     .tag{
       display:inline-flex;
@@ -259,76 +184,93 @@
       font-size:11px;
       text-transform:uppercase;
       letter-spacing:.12em;
+      font-weight:950;
       color:#bfdbfe;
-      font-weight:900;
     }
     .tag::before{
       content:"";
       width:10px;height:10px;border-radius:4px;
       background:linear-gradient(135deg,#60a5fa,#a78bfa);
     }
-    .h1{
-      margin:0;
-      font-size:var(--text-hero);
+    .hero h1{
+      margin:10px 0 8px;
+      font-size:clamp(30px,4vw,48px);
       line-height:1;
       letter-spacing:-.05em;
       font-weight:1000;
       max-width:14ch;
     }
-    .lead{
+    .hero p{
       margin:0;
       font-size:14px;
       line-height:1.7;
-      color:rgba(226,232,240,.90);
-      max-width:68ch;
+      color:rgba(226,232,240,.9);
+      max-width:70ch;
     }
-
     .hero-box{
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.12);
-      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border-radius:22px;
       padding:18px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.1);
       display:grid;
-      gap:14px;
-      box-shadow:0 20px 50px rgba(0,0,0,.18);
-      backdrop-filter:blur(12px);
+      gap:12px;
     }
-    .hero-box h3{margin:0;font-size:15px}
-    .hero-list{
-      margin:0;padding-left:18px;
-      display:grid;gap:8px;
-      font-size:13px;
-      color:rgba(226,232,240,.86);
-    }
-
-    .panel,.card,.table-card{
-      border:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.92));
-      box-shadow:var(--shadow);
-      border-radius:var(--radius-xl);
-    }
-    .panel{padding:24px}
-    .card{padding:18px}
-    .table-card{overflow:hidden}
-
-    .head{
-      display:flex;
-      flex-direction:column;
+    .hero-box ul{
+      margin:0;
+      padding-left:18px;
+      display:grid;
       gap:8px;
-      margin-bottom:18px;
+      font-size:13px;
+      color:rgba(226,232,240,.88);
     }
+
+    .panel{padding:22px}
+    .card{padding:16px}
+    .table-card{overflow:hidden}
+    .head{display:grid;gap:8px;margin-bottom:16px}
     .h2{
       margin:0;
-      font-size:var(--text-xl);
-      line-height:1.08;
-      letter-spacing:-.03em;
+      font-size:clamp(24px,2vw,34px);
+      line-height:1.05;
       font-weight:1000;
+      letter-spacing:-.03em;
     }
-    .muted{
-      font-size:14px;
-      line-height:1.6;
-      color:var(--muted);
+    .muted{font-size:14px;line-height:1.6;color:var(--muted)}
+    .tiny{font-size:12px;line-height:1.55;color:#64748b}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+    .grid-2,.grid-3,.grid-4,.grid-5,.metrics{
+      display:grid;
+      gap:14px;
     }
+    .grid-2{grid-template-columns:1fr 1fr}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    .grid-5{grid-template-columns:repeat(5,1fr)}
+    .metrics{grid-template-columns:repeat(4,1fr)}
+
+    .metric{
+      border:1px solid rgba(15,23,42,.08);
+      border-radius:18px;
+      background:linear-gradient(180deg,#fff,#f8fafc);
+      padding:16px;
+      display:grid;
+      gap:10px;
+    }
+    .eyebrow{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:950;
+      color:#1d4ed8;
+    }
+    .value{
+      font-size:clamp(22px,2vw,32px);
+      line-height:1;
+      font-weight:1000;
+      letter-spacing:-.04em;
+    }
+    .note{font-size:12px;color:#64748b;line-height:1.5}
 
     .toolbar{
       display:flex;
@@ -348,139 +290,61 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:10px;
-      min-height:44px;
-      padding:11px 14px;
-      border-radius:15px;
+      gap:8px;
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:14px;
       border:1px solid rgba(15,23,42,.12);
-      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(241,245,249,.92));
+      background:linear-gradient(180deg,#fff,#f1f5f9);
       color:#0f172a;
       font-weight:900;
-      letter-spacing:-.01em;
       cursor:pointer;
-      transition:.18s ease;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.75), 0 8px 20px rgba(15,23,42,.05);
     }
-    .btn:hover{transform:translateY(-1px);border-color:rgba(37,99,235,.20)}
-    .btn:active{transform:none}
+    .btn:hover{transform:translateY(-1px)}
     .btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
     .btn--primary{
-      background:linear-gradient(135deg,#2563eb 0%,#3b82f6 56%,#60a5fa 100%);
-      border-color:transparent;
       color:#fff;
-      box-shadow:0 16px 34px rgba(37,99,235,.24), inset 0 1px 0 rgba(255,255,255,.18);
+      border-color:transparent;
+      background:linear-gradient(135deg,#2563eb 0%,#3b82f6 55%,#60a5fa 100%);
+      box-shadow:0 14px 28px rgba(37,99,235,.22);
     }
     .btn--violet{
-      background:linear-gradient(135deg,#6d28d9 0%,#7c3aed 56%,#a78bfa 100%);
-      border-color:transparent;
       color:#fff;
+      border-color:transparent;
+      background:linear-gradient(135deg,#6d28d9 0%,#7c3aed 55%,#a78bfa 100%);
     }
     .btn--soft{
-      background:rgba(37,99,235,.06);
-      border-color:rgba(37,99,235,.12);
       color:#1d4ed8;
-      box-shadow:none;
+      border-color:rgba(37,99,235,.12);
+      background:rgba(37,99,235,.06);
     }
     .btn--danger{
-      background:rgba(220,38,38,.06);
-      border-color:rgba(220,38,38,.12);
       color:var(--red);
-      box-shadow:none;
+      border-color:rgba(220,38,38,.12);
+      background:rgba(220,38,38,.06);
     }
     .btn--ok{
-      background:rgba(5,150,105,.08);
-      border-color:rgba(5,150,105,.16);
       color:var(--green);
-      box-shadow:none;
+      border-color:rgba(5,150,105,.14);
+      background:rgba(5,150,105,.08);
     }
 
     .input,.select,.textarea{
       width:100%;
-      min-height:44px;
-      padding:11px 13px;
-      border-radius:14px;
+      min-height:42px;
+      padding:10px 12px;
+      border-radius:13px;
       border:1px solid rgba(15,23,42,.12);
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.96));
+      background:linear-gradient(180deg,#fff,#f8fafc);
       color:#0f172a;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.75), 0 1px 2px rgba(15,23,42,.03);
     }
-    .textarea{min-height:108px;resize:vertical}
-    .input::placeholder,.textarea::placeholder{color:#94a3b8}
-
-    .metrics{
-      display:grid;
-      gap:14px;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-    .metric{
-      border:1px solid var(--border);
-      border-radius:22px;
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94));
-      padding:18px;
-      display:grid;
-      gap:10px;
-    }
-    .metric .eyebrow{
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-weight:950;
-      color:#1d4ed8;
-    }
-    .metric .value{
-      font-size:clamp(22px,2vw,34px);
-      line-height:1;
-      font-weight:1000;
-      letter-spacing:-.04em;
-    }
-    .metric .note{
-      font-size:12px;
-      color:var(--muted-2);
-      line-height:1.5;
-    }
-
-    .grid-2,.grid-3,.grid-4,.grid-5{
-      display:grid;
-      gap:14px;
-    }
-    .grid-2{grid-template-columns:1.1fr .9fr}
-    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
-
-    .section-state{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:8px;
-    }
-    .state{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:7px 11px;
-      border-radius:999px;
-      border:1px solid rgba(15,23,42,.10);
-      background:#fff;
-      font-size:12px;
-      font-weight:900;
-      line-height:1;
-    }
-    .state::before{
-      content:"";
-      width:9px;height:9px;border-radius:99px;
-      background:currentColor;
-    }
-    .state--ok{color:#047857;background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.16)}
-    .state--warn{color:#b45309;background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.16)}
-    .state--error{color:#b91c1c;background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.16)}
-    .state--info{color:#1d4ed8;background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.16)}
+    .textarea{min-height:110px;resize:vertical}
+    .sep{height:1px;background:var(--line);margin:16px 0}
 
     .pill{
       display:inline-flex;
       align-items:center;
-      gap:8px;
+      gap:7px;
       padding:7px 10px;
       border-radius:999px;
       font-size:11px;
@@ -491,30 +355,30 @@
       background:#fff;
       white-space:nowrap;
     }
+    .pill::before{
+      content:"";
+      width:8px;height:8px;border-radius:99px;background:currentColor;
+    }
     .pill--ok{color:#047857;background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.16)}
     .pill--warn{color:#b45309;background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.16)}
     .pill--error{color:#b91c1c;background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.16)}
     .pill--info{color:#1d4ed8;background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.16)}
     .pill--muted{color:#475569;background:rgba(148,163,184,.12);border-color:rgba(148,163,184,.18)}
 
-    .sep{height:1px;background:var(--line);margin:18px 0}
-    .tiny{font-size:12px;color:var(--muted-2);line-height:1.55}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
-
     .banner{
       display:none;
       padding:14px 16px;
-      border-radius:18px;
-      border:1px solid rgba(37,99,235,.12);
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.95));
+      border-radius:16px;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
     }
     .banner.show{display:block}
-    .banner.success{border-color:rgba(5,150,105,.16);background:rgba(5,150,105,.05)}
-    .banner.warn{border-color:rgba(217,119,6,.16);background:rgba(217,119,6,.05)}
-    .banner.error{border-color:rgba(220,38,38,.16);background:rgba(220,38,38,.05)}
+    .banner.success{background:rgba(5,150,105,.05);border-color:rgba(5,150,105,.16)}
+    .banner.warn{background:rgba(217,119,6,.05);border-color:rgba(217,119,6,.16)}
+    .banner.error{background:rgba(220,38,38,.05);border-color:rgba(220,38,38,.16)}
 
     .table-head{
-      padding:16px 18px;
+      padding:16px;
       border-bottom:1px solid var(--line);
       display:flex;
       align-items:center;
@@ -522,50 +386,42 @@
       gap:10px;
       flex-wrap:wrap;
     }
-    .table-title{
-      font-size:16px;
-      font-weight:950;
-      letter-spacing:-.02em;
-    }
+    .table-title{font-size:16px;font-weight:950}
     .table-wrap{overflow:auto}
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:860px;
-    }
+    table{width:100%;border-collapse:collapse;min-width:760px}
     th,td{
-      padding:13px 15px;
+      padding:12px 14px;
       border-bottom:1px solid var(--line);
       text-align:left;
       vertical-align:top;
     }
     th{
+      background:#f8fafc;
       font-size:11px;
       text-transform:uppercase;
       letter-spacing:.12em;
-      color:#64748b;
       font-weight:950;
-      background:#f8fafc;
+      color:#64748b;
     }
     td{font-size:14px}
     tbody tr:hover{background:rgba(37,99,235,.03)}
 
     .empty{
-      padding:18px;
+      padding:16px;
+      border-radius:16px;
       border:1px dashed rgba(15,23,42,.14);
-      border-radius:20px;
-      color:var(--muted-2);
+      background:#f8fafc;
+      color:#64748b;
       font-size:13px;
       line-height:1.6;
-      background:rgba(248,250,252,.84);
     }
 
     .codebox{
-      padding:14px 16px;
-      border-radius:16px;
+      padding:14px;
+      border-radius:14px;
       background:#0f172a;
       color:#e2e8f0;
-      font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;
+      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
       overflow:auto;
       white-space:pre-wrap;
       word-break:break-word;
@@ -574,30 +430,33 @@
     .history-list{display:grid;gap:10px}
     .history-item{
       padding:14px 16px;
-      border:1px solid var(--border);
-      border-radius:18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.95));
+      border:1px solid rgba(15,23,42,.08);
+      border-radius:16px;
+      background:linear-gradient(180deg,#fff,#f8fafc);
     }
-    .history-item strong{display:block;font-size:13px;margin-bottom:6px}
+    .history-item strong{display:block;margin-bottom:6px;font-size:13px}
     .history-meta{
       display:flex;
       flex-wrap:wrap;
       gap:8px 14px;
-      margin-bottom:8px;
       font-size:12px;
-      color:var(--muted-2);
+      color:#64748b;
+      margin-bottom:8px;
     }
     .history-detail{
       font-size:13px;
       line-height:1.55;
-      color:var(--fg);
       white-space:pre-wrap;
       word-break:break-word;
     }
 
-    .hidden{display:none !important}
-    body[data-role="business"] .dev-only{display:none !important}
+    .admin-only{display:none}
+    body[data-role="admin"] .admin-only{display:block}
+    body[data-role="admin"] .admin-only-inline{display:inline-flex}
+    body[data-role="business"] .admin-only-inline{display:none !important}
+    body[data-role="business"] .admin-only-section{display:none !important}
 
+    .mobile-show{display:none}
     .sidebar-backdrop{
       position:fixed;
       inset:0;
@@ -605,21 +464,17 @@
       backdrop-filter:blur(2px);
       opacity:0;
       pointer-events:none;
-      transition:opacity .22s ease;
+      transition:opacity .2s ease;
       z-index:19;
     }
-    .sidebar-backdrop.show{
-      opacity:1;
-      pointer-events:auto;
-    }
-    .mobile-show{display:none}
+    .sidebar-backdrop.show{opacity:1;pointer-events:auto}
 
-    @media (max-width:1240px){
-      .metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
-      .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .grid-5{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media (max-width:1180px){
+      .metrics,.grid-5{grid-template-columns:repeat(2,1fr)}
+      .grid-4{grid-template-columns:repeat(2,1fr)}
+      .hero-grid{grid-template-columns:1fr}
     }
-    @media (max-width:1020px){
+    @media (max-width:980px){
       .app{grid-template-columns:1fr}
       .sidebar{
         position:fixed;
@@ -627,21 +482,11 @@
         width:min(320px,88vw);
         transform:translateX(-100%);
         transition:transform .22s ease;
+        z-index:20;
       }
       .sidebar.open{transform:translateX(0)}
       .mobile-show{display:inline-flex}
-      .grid-2,.grid-3,.grid-4,.grid-5,.metrics{grid-template-columns:1fr}
-    }
-    @media (max-width:640px){
-      .topbar{
-        align-items:flex-start;
-        flex-direction:column;
-      }
-      .top-actions{
-        width:100%;
-        justify-content:flex-start;
-      }
-      .top-actions .btn{flex:1 1 auto}
+      .metrics,.grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -650,52 +495,49 @@
 
   <div class="app">
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-inner">
-        <div class="brand">
-          <div class="logo">PUB<span class="grad">PANEL</span></div>
-          <div class="sub">Gestão do negócio</div>
-        </div>
+      <div class="brand">
+        <div class="logo">PUB<span class="grad">PANEL</span></div>
+        <div class="sub">Gestão do negócio</div>
+      </div>
 
-        <div class="chip">v1.0 · foco operacional</div>
+      <div class="chip">v1.0 · operação útil</div>
 
-        <nav class="nav" id="nav">
-          <a href="#inicio" class="active"><span>Início</span><small>01</small></a>
-          <a href="#instalacao"><span>Instalação</span><small>02</small></a>
-          <a href="#operacao"><span>Operação</span><small>03</small></a>
-          <a href="#relacionamento"><span>Relacionamento</span><small>04</small></a>
-          <a href="#comunicacao"><span>Comunicação</span><small>05</small></a>
-          <a href="#dados"><span>Dados e backup</span><small>06</small></a>
-          <a href="#sistema"><span>Sistema</span><small>07</small></a>
-          <a href="#historico"><span>Histórico</span><small>08</small></a>
-        </nav>
+      <nav class="nav" id="nav">
+        <a href="#inicio" class="active"><span>Início</span><small>01</small></a>
+        <a href="#visao-geral"><span>Visão geral</span><small>02</small></a>
+        <a href="#contatos"><span>Contatos</span><small>03</small></a>
+        <a href="#interesses"><span>Interesses</span><small>04</small></a>
+        <a href="#chamados"><span>Chamados</span><small>05</small></a>
+        <a href="#comunicacao"><span>Comunicação</span><small>06</small></a>
+        <a href="#dados"><span>Dados</span><small>07</small></a>
+        <a href="#historico"><span>Histórico</span><small>08</small></a>
+        <a href="#administracao" class="admin-only-section"><span>Administração</span><small>09</small></a>
+      </nav>
 
-        <div class="side-meta">
-          <div class="meta-row"><span>Painel</span><strong id="meta-panel-version">PUBPANEL 1.0</strong></div>
-          <div class="meta-row"><span>Perfil</span><strong id="meta-role">negócio</strong></div>
-          <div class="meta-row"><span>Conexão</span><strong id="meta-connection">não configurada</strong></div>
-          <div class="meta-row"><span>CRM</span><strong id="meta-crm-version">—</strong></div>
-          <div class="meta-row"><span>PUBMAIL</span><strong id="meta-mail-version">—</strong></div>
-          <div class="meta-row"><span>PUBIO</span><strong id="meta-io-version">—</strong></div>
-        </div>
+      <div class="side-meta">
+        <div class="meta-row"><span>Painel</span><strong id="meta-panel-version">PUBPANEL 1.0</strong></div>
+        <div class="meta-row"><span>Perfil</span><strong id="meta-role">negócio</strong></div>
+        <div class="meta-row"><span>Conexão</span><strong id="meta-connection">não configurada</strong></div>
+        <div class="meta-row"><span>CRM</span><strong id="meta-crm-version">—</strong></div>
+        <div class="meta-row"><span>PUBMAIL</span><strong id="meta-mail-version">—</strong></div>
+        <div class="meta-row"><span>PUBIO</span><strong id="meta-io-version">—</strong></div>
       </div>
     </aside>
 
-    <div class="main">
+    <main class="main">
       <header class="topbar">
-        <div class="top-left">
-          <button class="btn mobile-show" id="open-sidebar">Menu</button>
-          <div>
-            <div class="top-title">PUBPANEL 1.0</div>
-            <div class="top-sub">Painel do negócio promovido pelo front, com instalação central, acompanhamento comercial e área técnica separada para desenvolvimento.</div>
-          </div>
+        <div>
+          <div class="top-title">PUBPANEL 1.0</div>
+          <div class="top-sub">Backend central unificado, painel simples para operar o negócio e área administrativa separada.</div>
         </div>
 
         <div class="top-actions">
+          <button class="btn mobile-show" id="open-sidebar">Menu</button>
           <button class="btn btn--soft" id="btn-test-connection">Testar conexão</button>
-          <button class="btn btn--primary" id="btn-install-all">Instalar tudo</button>
           <button class="btn btn--soft" id="btn-refresh-summary">Atualizar resumo</button>
           <button class="btn btn--soft" id="btn-role-business">Perfil negócio</button>
-          <button class="btn btn--violet" id="btn-role-dev">Perfil desenvolvedor</button>
+          <button class="btn btn--violet" id="btn-role-admin">Perfil administrador</button>
+          <button class="btn btn--primary admin-only-inline" id="btn-install-all">Instalar tudo</button>
         </div>
       </header>
 
@@ -705,27 +547,26 @@
           <section class="hero" id="inicio">
             <div class="hero-inner">
               <div class="hero-grid">
-                <div style="display:grid;gap:16px">
+                <div>
                   <span class="tag">Painel central do negócio</span>
-                  <h1 class="h1">Operar, acompanhar e manter o ecossistema PUB</h1>
-                  <p class="lead">
-                    Este painel deixa de ser um console destrinchado do sistema e passa a ser a superfície principal de gestão do negócio:
-                    instalar tudo, acompanhar captação, atendimento, comunicação e backup, com a camada técnica escondida por padrão.
+                  <h1>Operar, acompanhar e manter o ecossistema PUB</h1>
+                  <p>
+                    Esta versão 1.0 mostra apenas o que ajuda na rotina: visão geral, base comercial, comunicação, exportação,
+                    backup e histórico. Instalação, contrato técnico e ações de risco ficam separados no perfil administrador.
                   </p>
                 </div>
 
                 <aside class="hero-box">
-                  <h3>Fluxo principal</h3>
-                  <ul class="hero-list">
-                    <li>1. Configurar a URL do Web App</li>
-                    <li>2. Instalar CRM, PUBMAIL e PUBIO com um único botão</li>
-                    <li>3. Acompanhar leads, contatos e tickets</li>
-                    <li>4. Processar comunicação e fila</li>
-                    <li>5. Exportar, validar, snapshotar e restaurar dados</li>
+                  <strong>Fluxo principal</strong>
+                  <ul>
+                    <li>Configurar a URL do Web App</li>
+                    <li>Atualizar a visão geral</li>
+                    <li>Ler contatos, interesses e chamados</li>
+                    <li>Operar comunicação manual e fila</li>
+                    <li>Exportar, validar, snapshotar e restaurar dados</li>
                   </ul>
-                  <div class="tiny">
-                    O perfil <strong>negócio</strong> mostra o essencial. O perfil <strong>desenvolvedor</strong> revela detalhes técnicos e payloads.
-                    Isso organiza a interface, mas não substitui autenticação real no backend.
+                  <div class="tiny" style="color:rgba(226,232,240,.86)">
+                    O perfil negócio esconde detalhes internos. O perfil administrador mostra instalação, contrato e leituras técnicas.
                   </div>
                 </aside>
               </div>
@@ -734,62 +575,57 @@
 
           <div id="global-banner" class="banner"></div>
 
-          <section class="panel">
+          <section class="panel" id="visao-geral">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Resumo</span>
-              <h2 class="h2">Leitura rápida do negócio</h2>
-              <div class="muted">Em poucos segundos, veja se o sistema está conectado, instalado e em condição de operar captação, relacionamento, comunicação e dados.</div>
-              <div class="section-state">
-                <span class="state state--ok">Painel simplificado</span>
-                <span class="state state--ok">Instalação central</span>
-                <span class="state state--info">Área técnica separada</span>
-              </div>
+              <span class="tag" style="color:#1d4ed8">Visão geral</span>
+              <h2 class="h2">Leitura rápida do sistema e do negócio</h2>
+              <div class="muted">Veja em poucos segundos se o ambiente está conectado, quantos registros existem e se comunicação e dados estão prontos para uso.</div>
             </div>
 
             <div class="metrics">
               <div class="metric">
                 <div class="eyebrow">Conexão</div>
                 <div class="value" id="sum-connection">—</div>
-                <div class="note">URL salva e resposta básica do backend.</div>
+                <div class="note">Status básico do backend.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Instalação</div>
-                <div class="value" id="sum-install">—</div>
-                <div class="note">Estado geral do ecossistema no painel.</div>
-              </div>
-              <div class="metric">
-                <div class="eyebrow">Leads</div>
-                <div class="value" id="sum-leads">—</div>
-                <div class="note">Base visível para acompanhamento comercial.</div>
-              </div>
-              <div class="metric">
-                <div class="eyebrow">Tickets</div>
-                <div class="value" id="sum-tickets">—</div>
-                <div class="note">Pedidos de suporte e atendimento.</div>
-              </div>
-              <div class="metric">
-                <div class="eyebrow">Fila de email</div>
-                <div class="value" id="sum-mail-queue">—</div>
-                <div class="note">Itens pendentes de comunicação.</div>
-              </div>
-              <div class="metric">
-                <div class="eyebrow">Health</div>
+                <div class="eyebrow">Sistema</div>
                 <div class="value" id="sum-health">—</div>
-                <div class="note">Leitura geral de saúde do backend.</div>
+                <div class="note">Leitura geral de saúde.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Contatos</div>
+                <div class="value" id="sum-contacts">—</div>
+                <div class="note">Base consolidada do negócio.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Interesses</div>
+                <div class="value" id="sum-leads">—</div>
+                <div class="note">Entradas de captação.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Chamados</div>
+                <div class="value" id="sum-tickets">—</div>
+                <div class="note">Pedidos de suporte.</div>
+              </div>
+              <div class="metric">
+                <div class="eyebrow">Fila</div>
+                <div class="value" id="sum-mail-queue">—</div>
+                <div class="note">Mensagens aguardando processamento.</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">PUBMAIL</div>
                 <div class="value" id="sum-mail">—</div>
-                <div class="note">Prontidão do módulo de comunicação.</div>
+                <div class="note">Saúde da comunicação.</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">PUBIO</div>
                 <div class="value" id="sum-io">—</div>
-                <div class="note">Prontidão do módulo de dados.</div>
+                <div class="note">Saúde do módulo de dados.</div>
               </div>
             </div>
 
-            <div class="grid-4" style="margin-top:16px">
+            <div class="grid-4" style="margin-top:14px">
               <div class="card">
                 <strong>Última ação</strong>
                 <div class="tiny" id="sum-last-action">—</div>
@@ -807,23 +643,31 @@
                 <div class="tiny" id="sum-last-refresh">—</div>
               </div>
             </div>
+
+            <div class="sep"></div>
+
+            <div class="toolbar">
+              <div class="toolbar-left tiny">Leituras principais do painel.</div>
+              <div class="toolbar-right">
+                <button class="btn btn--soft" id="btn-run-status">Status</button>
+                <button class="btn btn--soft" id="btn-run-health">Health</button>
+                <button class="btn btn--soft" id="btn-mail-overview">Resumo do PUBMAIL</button>
+                <button class="btn btn--soft" id="btn-io-health">Health do PUBIO</button>
+              </div>
+            </div>
           </section>
 
-          <section class="panel" id="instalacao">
+          <section class="panel">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Instalação</span>
-              <h2 class="h2">Instalar e manter tudo em funcionamento</h2>
-              <div class="muted">O painel assume uma instalação central. Em vez de exigir múltiplas ações espalhadas, a operação principal parte de um único botão.</div>
-              <div class="section-state">
-                <span class="state state--ok">Fluxo principal unificado</span>
-                <span class="state state--warn">Autenticação real deve ser validada no backend</span>
-              </div>
+              <span class="tag" style="color:#1d4ed8">Conexão</span>
+              <h2 class="h2">Configuração do Web App</h2>
+              <div class="muted">A URL fica salva apenas neste navegador.</div>
             </div>
 
             <div class="grid-3">
-              <div class="card">
+              <div class="card" style="grid-column:span 2">
                 <strong>URL do Web App</strong>
-                <div class="tiny">Esta configuração fica salva apenas neste navegador.</div>
+                <div class="tiny">Exemplo: <span class="mono">https://script.google.com/macros/s/.../exec</span></div>
                 <div style="height:10px"></div>
                 <input class="input" id="api-base" placeholder="https://script.google.com/macros/s/.../exec" />
                 <div style="height:10px"></div>
@@ -834,116 +678,41 @@
               </div>
 
               <div class="card">
-                <strong>Instalação central</strong>
-                <div class="tiny">Executa a instalação principal do CRM e, em seguida, o bootstrap do PUBMAIL e a instalação do PUBIO.</div>
-                <div style="height:10px"></div>
-                <div class="toolbar-right">
-                  <button class="btn btn--primary" id="btn-install-all-inline">Instalar tudo agora</button>
-                </div>
-                <div class="sep"></div>
+                <strong>Operação principal</strong>
                 <div class="tiny">
-                  Sequência executada pelo painel:
-                  <br>1. <span class="mono">admin_install_crm</span>
-                  <br>2. <span class="mono">admin_mail_bootstrap</span>
-                  <br>3. <span class="mono">admin_io_install</span>
-                </div>
-              </div>
-
-              <div class="card">
-                <strong>Perfis de acesso no front</strong>
-                <div class="tiny">
-                  O painel separa <strong>perfil negócio</strong> e <strong>perfil desenvolvedor</strong>.
-                  Isso organiza a interface e reduz ruído.
-                  <br><br>
-                  <strong>Importante:</strong> segurança real não pode depender só do HTML.
-                  Se você quiser dois acessos reais, a autorização precisa ser aplicada também no backend.
+                  O painel opera sobre:
+                  <br><span class="mono">mode=status</span>
+                  <br><span class="mono">mode=health</span>
+                  <br><span class="mono">dispatchAdminAction_</span>
                 </div>
               </div>
             </div>
           </section>
 
-          <section class="panel" id="operacao">
+          <section class="panel" id="contatos">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Operação</span>
-              <h2 class="h2">Comandos do dia a dia</h2>
-              <div class="muted">Esta área concentra as ações que mais interessam para manter o negócio vivo: atualizar visão geral, varrer novas entradas, processar fila e ver o que aconteceu.</div>
-            </div>
-
-            <div class="grid-4">
-              <div class="card">
-                <strong>Conexão e saúde</strong>
-                <div class="tiny">Consulta status e health do backend.</div>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-run-status">Status</button>
-                <button class="btn btn--soft" id="btn-run-health">Health</button>
-              </div>
-
-              <div class="card">
-                <strong>Captação e suporte</strong>
-                <div class="tiny">Carrega leads, contatos e tickets.</div>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-load-leads">Carregar leads</button>
-                <button class="btn btn--soft" id="btn-load-contacts">Carregar contatos</button>
-                <button class="btn btn--soft" id="btn-load-tickets">Carregar tickets</button>
-              </div>
-
-              <div class="card">
-                <strong>Comunicação</strong>
-                <div class="tiny">Executa o ciclo básico do PUBMAIL.</div>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-overview">Resumo do PUBMAIL</button>
-                <button class="btn btn--soft" id="btn-mail-scan">Varrer entradas</button>
-                <button class="btn btn--violet" id="btn-mail-process">Processar fila</button>
-              </div>
-
-              <div class="card">
-                <strong>Dados e backup</strong>
-                <div class="tiny">Consulta saúde do PUBIO e lista logs operacionais.</div>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-health">Health do PUBIO</button>
-                <button class="btn btn--soft" id="btn-io-list-logs">Ver logs do PUBIO</button>
-              </div>
-            </div>
-          </section>
-
-          <section class="panel" id="relacionamento">
-            <div class="head">
-              <span class="tag" style="color:#1d4ed8">Relacionamento</span>
-              <h2 class="h2">Pessoas, interesse e atendimento</h2>
-              <div class="muted">Acompanhe o que entra no negócio e como está a relação com a base. Esta é a área principal para o usuário final.</div>
+              <span class="tag" style="color:#1d4ed8">Contatos</span>
+              <h2 class="h2">Base consolidada de relacionamento</h2>
+              <div class="muted">Leitura simples, busca rápida, exportação e estado do relacionamento.</div>
             </div>
 
             <div class="grid-3">
               <div class="card">
-                <strong>Leads</strong>
-                <div class="tiny">Registros de interesse vindos do front.</div>
+                <strong>Busca</strong>
+                <div class="tiny">Nome, e-mail, WhatsApp ou ID.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="filter-leads" placeholder="Buscar por nome, e-mail, item ou ID" />
+                <input class="input" id="filter-contacts" placeholder="Buscar contato" />
               </div>
               <div class="card">
-                <strong>Contatos</strong>
-                <div class="tiny">Base consolidada de relacionamento.</div>
+                <strong>Ações</strong>
                 <div style="height:10px"></div>
-                <input class="input" id="filter-contacts" placeholder="Buscar por nome, e-mail ou ID" />
+                <button class="btn btn--soft" id="btn-load-contacts">Carregar contatos</button>
+                <button class="btn btn--soft" data-export="contacts">Exportar CSV</button>
               </div>
               <div class="card">
-                <strong>Tickets</strong>
-                <div class="tiny">Pedidos de ajuda e mensagens técnicas.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="filter-tickets" placeholder="Buscar por ticket, e-mail ou item" />
+                <strong>Leitura do negócio</strong>
+                <div class="tiny" id="contacts-note">Ainda não há leitura suficiente.</div>
               </div>
-            </div>
-
-            <div class="sep"></div>
-
-            <div class="table-card">
-              <div class="table-head">
-                <div class="table-title">Leads</div>
-                <div class="toolbar-right">
-                  <button class="btn btn--soft" data-export="leads">Exportar CSV</button>
-                </div>
-              </div>
-              <div class="table-wrap" id="table-leads"></div>
             </div>
 
             <div style="height:14px"></div>
@@ -951,21 +720,78 @@
             <div class="table-card">
               <div class="table-head">
                 <div class="table-title">Contatos</div>
-                <div class="toolbar-right">
-                  <button class="btn btn--soft" data-export="contacts">Exportar CSV</button>
-                </div>
               </div>
               <div class="table-wrap" id="table-contacts"></div>
+            </div>
+          </section>
+
+          <section class="panel" id="interesses">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Interesses</span>
+              <h2 class="h2">Entradas de captação</h2>
+              <div class="muted">Lista de interesses, leitura rápida e exportação simples.</div>
+            </div>
+
+            <div class="grid-3">
+              <div class="card">
+                <strong>Busca</strong>
+                <div class="tiny">Nome, e-mail, item ou ID.</div>
+                <div style="height:10px"></div>
+                <input class="input" id="filter-leads" placeholder="Buscar interesse" />
+              </div>
+              <div class="card">
+                <strong>Ações</strong>
+                <div style="height:10px"></div>
+                <button class="btn btn--soft" id="btn-load-leads">Carregar interesses</button>
+                <button class="btn btn--soft" data-export="leads">Exportar CSV</button>
+              </div>
+              <div class="card">
+                <strong>Leitura do negócio</strong>
+                <div class="tiny" id="leads-note">Ainda não há leitura suficiente.</div>
+              </div>
             </div>
 
             <div style="height:14px"></div>
 
             <div class="table-card">
               <div class="table-head">
-                <div class="table-title">Tickets</div>
-                <div class="toolbar-right">
-                  <button class="btn btn--soft" data-export="tickets">Exportar CSV</button>
-                </div>
+                <div class="table-title">Interesses</div>
+              </div>
+              <div class="table-wrap" id="table-leads"></div>
+            </div>
+          </section>
+
+          <section class="panel" id="chamados">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Chamados</span>
+              <h2 class="h2">Pedidos de ajuda e atendimento</h2>
+              <div class="muted">Acompanhe chamados abertos, filtros simples e exportação.</div>
+            </div>
+
+            <div class="grid-3">
+              <div class="card">
+                <strong>Busca</strong>
+                <div class="tiny">Ticket, e-mail, item ou texto.</div>
+                <div style="height:10px"></div>
+                <input class="input" id="filter-tickets" placeholder="Buscar chamado" />
+              </div>
+              <div class="card">
+                <strong>Ações</strong>
+                <div style="height:10px"></div>
+                <button class="btn btn--soft" id="btn-load-tickets">Carregar chamados</button>
+                <button class="btn btn--soft" data-export="tickets">Exportar CSV</button>
+              </div>
+              <div class="card">
+                <strong>Leitura do negócio</strong>
+                <div class="tiny" id="tickets-note">Ainda não há leitura suficiente.</div>
+              </div>
+            </div>
+
+            <div style="height:14px"></div>
+
+            <div class="table-card">
+              <div class="table-head">
+                <div class="table-title">Chamados</div>
               </div>
               <div class="table-wrap" id="table-tickets"></div>
             </div>
@@ -975,7 +801,7 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Comunicação</span>
               <h2 class="h2">PUBMAIL para acompanhar e agir</h2>
-              <div class="muted">Aqui o foco deixa de ser arquitetura do mailer e passa a ser operação: saúde, fila, histórico, bloqueios e leitura do estado dos contatos.</div>
+              <div class="muted">Fila, histórico, bloqueios, estado do contato, envio manual e listas manuais sem expor a complexidade interna.</div>
             </div>
 
             <div class="grid-5">
@@ -987,64 +813,117 @@
               <div class="metric">
                 <div class="eyebrow">Templates</div>
                 <div class="value" id="mail-templates-box">—</div>
-                <div class="note">Base editorial de mensagens.</div>
+                <div class="note">Modelos disponíveis.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Suppressions</div>
+                <div class="eyebrow">Bloqueios</div>
                 <div class="value" id="mail-suppressions-box">—</div>
-                <div class="note">Bloqueios e pausas.</div>
+                <div class="note">Suppressions ativas.</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Fila</div>
                 <div class="value" id="mail-queue-box">—</div>
-                <div class="note">Itens ainda não concluídos.</div>
+                <div class="note">Mensagens pendentes.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Logs</div>
+                <div class="eyebrow">Histórico</div>
                 <div class="value" id="mail-log-box">—</div>
-                <div class="note">Histórico de envios e processamento.</div>
+                <div class="note">Registros de envio.</div>
               </div>
             </div>
 
             <div class="grid-4" style="margin-top:16px">
               <div class="card">
                 <strong>Leituras principais</strong>
-                <div class="tiny">Use estas leituras para acompanhar o estado geral do PUBMAIL.</div>
                 <div style="height:10px"></div>
                 <button class="btn btn--soft" id="btn-mail-health">Health</button>
                 <button class="btn btn--soft" id="btn-mail-templates">Templates</button>
-                <button class="btn btn--soft" id="btn-mail-suppressions">Suppressions</button>
+                <button class="btn btn--soft" id="btn-mail-suppressions">Bloqueios</button>
+                <button class="btn btn--soft" id="btn-mail-contact-state">Estado do contato</button>
               </div>
 
               <div class="card">
-                <strong>Fila e logs</strong>
-                <div class="tiny">Visão direta do que está para sair e do que já aconteceu.</div>
+                <strong>Fila e histórico</strong>
                 <div style="height:10px"></div>
                 <button class="btn btn--soft" id="btn-mail-queue">Fila</button>
-                <button class="btn btn--soft" id="btn-mail-log">Logs</button>
-                <button class="btn btn--soft" id="btn-mail-contact-state">Estado dos contatos</button>
+                <button class="btn btn--soft" id="btn-mail-log">Histórico</button>
+                <button class="btn btn--soft" id="btn-mail-scan">Varrer entradas</button>
+                <button class="btn btn--violet" id="btn-mail-process">Processar fila</button>
               </div>
 
               <div class="card">
-                <strong>Ação operacional</strong>
-                <div class="tiny">Execute o ciclo básico do módulo sem abrir o sistema por dentro.</div>
+                <strong>Envio manual</strong>
+                <div class="tiny">Ação operacional simples para uma mensagem direta.</div>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-bootstrap-inline">Bootstrap do PUBMAIL</button>
-                <button class="btn btn--soft" id="btn-mail-scan-inline">Varrer entradas</button>
-                <button class="btn btn--violet" id="btn-mail-process-inline">Processar fila</button>
+                <input class="input" id="mail-send-to" placeholder="E-mail do destinatário" />
+                <div style="height:10px"></div>
+                <input class="input" id="mail-send-subject" placeholder="Assunto" />
+                <div style="height:10px"></div>
+                <textarea class="textarea" id="mail-send-body" placeholder="Mensagem"></textarea>
+                <div style="height:10px"></div>
+                <button class="btn btn--primary" id="btn-mail-send-manual">Enviar mensagem manual</button>
               </div>
 
               <div class="card">
-                <strong>Leitura do negócio</strong>
-                <div class="tiny" id="mail-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
+                <strong>Bloqueio simples</strong>
+                <div class="tiny">Adiciona suppression para um contato.</div>
+                <div style="height:10px"></div>
+                <input class="input" id="mail-suppression-email" placeholder="E-mail para bloquear" />
+                <div style="height:10px"></div>
+                <input class="input" id="mail-suppression-reason" placeholder="Motivo do bloqueio" />
+                <div style="height:10px"></div>
+                <button class="btn btn--danger" id="btn-mail-add-suppression">Bloquear contato</button>
               </div>
             </div>
 
             <div class="sep"></div>
 
+            <div class="grid-3">
+              <div class="card">
+                <strong>Lista manual</strong>
+                <div class="tiny">Cria uma lista simples para disparos operacionais.</div>
+                <div style="height:10px"></div>
+                <input class="input" id="manual-list-name" placeholder="Nome da lista" />
+                <div style="height:10px"></div>
+                <textarea class="textarea" id="manual-list-note" placeholder="Observação opcional"></textarea>
+                <div style="height:10px"></div>
+                <button class="btn btn--soft" id="btn-mail-create-manual-list">Criar lista manual</button>
+                <button class="btn btn--soft" id="btn-mail-list-manual-lists">Atualizar listas</button>
+              </div>
+
+              <div class="card">
+                <strong>Entrada da lista</strong>
+                <div class="tiny">Atualiza ou cria uma entrada em lista manual.</div>
+                <div style="height:10px"></div>
+                <input class="input" id="manual-entry-list-id" placeholder="ID da lista" />
+                <div style="height:10px"></div>
+                <input class="input" id="manual-entry-email" placeholder="E-mail" />
+                <div style="height:10px"></div>
+                <input class="input" id="manual-entry-name" placeholder="Nome" />
+                <div style="height:10px"></div>
+                <button class="btn btn--soft" id="btn-mail-update-manual-entry">Salvar entrada</button>
+              </div>
+
+              <div class="card">
+                <strong>Ativar ou pausar entrada</strong>
+                <div class="tiny">Ativa ou desativa uma entrada já existente.</div>
+                <div style="height:10px"></div>
+                <input class="input" id="manual-active-entry-id" placeholder="ID da entrada" />
+                <div style="height:10px"></div>
+                <select class="select" id="manual-active-value">
+                  <option value="true">ativa</option>
+                  <option value="false">inativa</option>
+                </select>
+                <div style="height:10px"></div>
+                <button class="btn btn--soft" id="btn-mail-set-manual-entry-active">Aplicar</button>
+              </div>
+            </div>
+
+            <div style="height:14px"></div>
+
             <div class="table-card">
               <div class="table-head">
-                <div class="table-title">Fila atual do PUBMAIL</div>
+                <div class="table-title">Fila atual</div>
                 <div class="toolbar-right">
                   <button class="btn btn--soft" data-export="mailQueue">Exportar CSV</button>
                 </div>
@@ -1052,11 +931,26 @@
               <div class="table-wrap" id="table-mail-queue"></div>
             </div>
 
-            <div class="sep dev-only"></div>
+            <div style="height:14px"></div>
 
-            <div class="card dev-only">
+            <div class="grid-2">
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Listas manuais</div>
+                </div>
+                <div class="table-wrap" id="table-manual-lists"></div>
+              </div>
+              <div class="card">
+                <strong>Leitura do negócio</strong>
+                <div class="tiny" id="mail-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
+              </div>
+            </div>
+
+            <div class="sep admin-only-section"></div>
+
+            <div class="card admin-only-section">
               <strong>Payload técnico do PUBMAIL</strong>
-              <div class="tiny">Área visível apenas no perfil desenvolvedor.</div>
+              <div class="tiny">Visível apenas no perfil administrador.</div>
               <div style="height:10px"></div>
               <div class="codebox" id="box-mail-json">Nenhuma leitura técnica ainda.</div>
             </div>
@@ -1064,15 +958,14 @@
 
           <section class="panel" id="dados">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Dados e backup</span>
-              <h2 class="h2">PUBIO para exportar, validar, snapshotar e restaurar</h2>
-              <div class="muted">A área do usuário final foca nas tarefas compreensíveis: exportar dados, validar arquivo, criar backup e restaurar backup. O detalhamento técnico fica escondido por padrão.</div>
+              <span class="tag" style="color:#1d4ed8">Dados</span>
+              <h2 class="h2">PUBIO para exportar, validar, conferir e restaurar</h2>
+              <div class="muted">O foco do usuário final é claro: exportar, validar, pré-visualizar, criar backup e restaurar com o menor risco possível.</div>
             </div>
 
             <div class="grid-4">
               <div class="card">
                 <strong>Exportar dados</strong>
-                <div class="tiny">Exporte uma entidade ou um conjunto em bundle.</div>
                 <div style="height:10px"></div>
                 <select class="select" id="io-export-entity">
                   <option value="contacts">contacts</option>
@@ -1082,13 +975,13 @@
                 <div style="height:10px"></div>
                 <button class="btn btn--soft" id="btn-io-export-entity">Exportar entidade</button>
                 <button class="btn btn--soft" id="btn-io-export-bundle">Exportar bundle</button>
+                <button class="btn btn--soft admin-only-inline" id="btn-io-export-entity-csv">Exportar CSV do backend</button>
               </div>
 
               <div class="card">
                 <strong>Validar arquivo</strong>
-                <div class="tiny">Valide um arquivo já existente em <span class="mono">storage_ref</span>.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="io-storage-ref" placeholder="drive:..." />
+                <input class="input" id="io-storage-ref" placeholder="storage_ref" />
                 <div style="height:10px"></div>
                 <select class="select" id="io-validate-entity">
                   <option value="contacts">contacts</option>
@@ -1096,12 +989,12 @@
                   <option value="tickets">tickets</option>
                 </select>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-validate">Validar</button>
+                <button class="btn btn--soft" id="btn-io-validate">Validar arquivo</button>
+                <button class="btn btn--soft" id="btn-io-inspect-storage-ref">Inspecionar storage_ref</button>
               </div>
 
               <div class="card">
                 <strong>Backup</strong>
-                <div class="tiny">Crie um snapshot operacional por entidade.</div>
                 <div style="height:10px"></div>
                 <select class="select" id="io-snapshot-entity">
                   <option value="contacts">contacts</option>
@@ -1110,13 +1003,14 @@
                 </select>
                 <div style="height:10px"></div>
                 <button class="btn btn--soft" id="btn-io-snapshot">Criar snapshot</button>
+                <button class="btn btn--soft" id="btn-io-list-logs">Ver registros</button>
               </div>
 
               <div class="card">
                 <strong>Restauração</strong>
-                <div class="tiny">Restaure uma entidade a partir de <span class="mono">snapshot_id</span>.</div>
+                <div class="tiny">Use um snapshot já existente.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="io-snapshot-id" placeholder="S-..." />
+                <input class="input" id="io-snapshot-id" placeholder="snapshot_id" />
                 <div style="height:10px"></div>
                 <button class="btn btn--danger" id="btn-io-restore">Restaurar snapshot</button>
               </div>
@@ -1124,72 +1018,108 @@
 
             <div class="sep"></div>
 
-            <div class="card">
-              <strong>Resumo do PUBIO</strong>
-              <div class="tiny" id="io-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
+            <div class="grid-3">
+              <div class="card">
+                <strong>Pré-visualização</strong>
+                <div class="tiny">Conferência antes de aplicar qualquer mudança.</div>
+                <div style="height:10px"></div>
+                <button class="btn btn--soft" id="btn-io-preview-json">Preview JSON</button>
+                <button class="btn btn--soft" id="btn-io-preview-csv">Preview CSV</button>
+                <button class="btn btn--soft" id="btn-io-read-storage-ref">Ler storage_ref</button>
+              </div>
+
+              <div class="card">
+                <strong>Dry run de importação</strong>
+                <div class="tiny">Validação operacional antes da importação.</div>
+                <div style="height:10px"></div>
+                <input class="input" id="io-dry-run-storage-ref" placeholder="storage_ref" />
+                <div style="height:10px"></div>
+                <select class="select" id="io-dry-run-entity">
+                  <option value="contacts">contacts</option>
+                  <option value="leads">leads</option>
+                  <option value="tickets">tickets</option>
+                </select>
+                <div style="height:10px"></div>
+                <button class="btn btn--soft" id="btn-io-dry-run-import">Executar dry run</button>
+              </div>
+
+              <div class="card">
+                <strong>Leitura do módulo</strong>
+                <div class="tiny" id="io-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
+              </div>
             </div>
 
-            <div class="sep dev-only"></div>
+            <div style="height:14px"></div>
 
-            <div class="grid-2 dev-only">
+            <div class="grid-2">
               <div class="card">
-                <strong>Ações técnicas do PUBIO</strong>
-                <div class="tiny">Visível apenas no perfil desenvolvedor.</div>
+                <strong>Resultado operacional do PUBIO</strong>
                 <div style="height:10px"></div>
-                <div class="codebox">admin_io_install
-admin_io_health
-admin_io_contract
-admin_io_export_entity
-admin_io_export_bundle
-admin_io_validate_file
-admin_io_create_snapshot
-admin_io_restore_snapshot
-admin_io_list_logs</div>
+                <div class="codebox" id="box-io-result">Nenhuma leitura ainda.</div>
               </div>
-              <div class="card">
+
+              <div class="card admin-only-section">
                 <strong>Payload técnico do PUBIO</strong>
-                <div class="tiny">Última resposta retornada pelo módulo.</div>
                 <div style="height:10px"></div>
                 <div class="codebox" id="box-io-json">Nenhuma leitura técnica ainda.</div>
               </div>
             </div>
           </section>
 
-          <section class="panel" id="sistema">
+          <section class="panel" id="historico">
             <div class="head">
-              <span class="tag" style="color:#1d4ed8">Sistema</span>
-              <h2 class="h2">Condição geral e área do desenvolvedor</h2>
-              <div class="muted">A parte técnica foi agrupada aqui. No perfil negócio, você vê apenas o resumo. No perfil desenvolvedor, aparecem contrato, payloads e observações de integração.</div>
+              <span class="tag" style="color:#1d4ed8">Histórico</span>
+              <h2 class="h2">Ações recentes do painel</h2>
+              <div class="muted">Histórico local salvo apenas neste navegador.</div>
+            </div>
+
+            <div class="toolbar" style="margin-bottom:14px">
+              <div class="toolbar-left tiny">Exibe as 40 ações mais recentes.</div>
+              <div class="toolbar-right">
+                <button class="btn btn--soft" id="btn-refresh-history">Atualizar</button>
+                <button class="btn btn--danger" id="btn-clear-history">Limpar histórico</button>
+              </div>
+            </div>
+
+            <div id="history-wrap"></div>
+          </section>
+
+          <section class="panel admin-only-section" id="administracao">
+            <div class="head">
+              <span class="tag" style="color:#1d4ed8">Administração</span>
+              <h2 class="h2">Instalação, contrato e leitura técnica</h2>
+              <div class="muted">Área reservada para instalação do ambiente, validação estrutural e payloads internos.</div>
             </div>
 
             <div class="grid-3">
               <div class="card">
-                <strong>Perfil atual</strong>
-                <div class="tiny" id="role-note">
-                  Perfil negócio ativo. A interface esconde detalhes internos e mostra apenas o necessário para operar.
-                </div>
+                <strong>Instalação central</strong>
+                <div class="tiny">Executa CRM, PUBMAIL e PUBIO em sequência.</div>
+                <div style="height:10px"></div>
+                <button class="btn btn--primary" id="btn-install-all-inline">Instalar tudo agora</button>
               </div>
 
               <div class="card">
-                <strong>Leitura geral</strong>
-                <div class="tiny" id="system-note">
-                  Ainda não há leitura consolidada suficiente.
-                </div>
+                <strong>Ações administrativas</strong>
+                <div style="height:10px"></div>
+                <button class="btn btn--soft" id="btn-admin-contract">Contrato do backend</button>
+                <button class="btn btn--soft" id="btn-admin-io-contract">Contrato do PUBIO</button>
+                <button class="btn btn--soft" id="btn-admin-mail-bootstrap">Bootstrap do PUBMAIL</button>
+                <button class="btn btn--soft" id="btn-admin-io-install">Instalar PUBIO</button>
               </div>
 
               <div class="card">
                 <strong>Observação importante</strong>
                 <div class="tiny">
                   Separação de interface não equivale a permissão real.
-                  Para haver um acesso de desenvolvedor e outro de usuário final de forma segura,
-                  o backend também precisa validar o perfil e restringir actions.
+                  Para haver acesso de administrador com segurança, o backend também precisa validar o perfil e restringir actions.
                 </div>
               </div>
             </div>
 
-            <div class="sep dev-only"></div>
+            <div class="sep"></div>
 
-            <div class="grid-2 dev-only">
+            <div class="grid-2">
               <div class="card">
                 <strong>Payload geral do backend</strong>
                 <div style="height:10px"></div>
@@ -1203,32 +1133,13 @@ admin_io_list_logs</div>
             </div>
           </section>
 
-          <section class="panel" id="historico">
-            <div class="head">
-              <span class="tag" style="color:#1d4ed8">Histórico</span>
-              <h2 class="h2">Ações recentes do painel</h2>
-              <div class="muted">Histórico local salvo apenas neste navegador.</div>
-            </div>
-
-            <div class="toolbar" style="margin-bottom:14px">
-              <div class="toolbar-left">
-                <div class="tiny">Exibe as 40 ações mais recentes.</div>
-              </div>
-              <div class="toolbar-right">
-                <button class="btn btn--soft" id="btn-refresh-history">Atualizar</button>
-                <button class="btn btn--danger" id="btn-clear-history">Limpar histórico</button>
-              </div>
-            </div>
-
-            <div id="history-wrap"></div>
-          </section>
-
           <section class="panel">
-            <div class="tiny">PUBPANEL 1.0 · foco em operação do negócio · interface estática · autenticação real deve ser aplicada também no backend.</div>
+            <div class="tiny">PUBPANEL 1.0 · painel operacional do negócio com administração separada · segurança real deve existir também no backend.</div>
           </section>
+
         </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <script>
@@ -1244,6 +1155,7 @@ admin_io_list_logs</div>
     const state = {
       apiBase: "",
       role: "business",
+
       status: null,
       health: null,
       contract: null,
@@ -1253,6 +1165,7 @@ admin_io_list_logs</div>
       leads: [],
       tickets: [],
       mailQueue: [],
+      manualLists: [],
 
       mailOverview: null,
       mailHealth: null,
@@ -1260,6 +1173,7 @@ admin_io_list_logs</div>
       mailSuppressions: [],
       mailContactState: [],
       mailLog: [],
+      mailLast: null,
 
       ioHealth: null,
       ioContract: null,
@@ -1289,29 +1203,32 @@ admin_io_list_logs</div>
       catch(_) { return String(v); }
     }
 
-    function stringValue(v){
-      return String(v ?? "").trim();
-    }
+    function stringValue(v){ return String(v ?? "").trim(); }
 
     function normalizeRowsFromResponse(json){
-      const candidates = [
+      const bag = [
         json?.rows,
         json?.items,
-        json?.logs,
         json?.data?.rows,
         json?.data?.items,
+        json?.data?.queue,
         json?.data?.logs,
-        json?.data?.queue
+        json?.logs,
+        json?.queue,
+        json?.manual_lists,
+        json?.data?.manual_lists,
+        json?.data?.list,
+        json?.list
       ];
-      for(const v of candidates){
-        if(Array.isArray(v)) return v;
+      for(const item of bag){
+        if(Array.isArray(item)) return item;
       }
       return [];
     }
 
     function extractEnvelope(json){
       if(json && typeof json === "object" && json.data && typeof json.data === "object") return json.data;
-      return json;
+      return json || {};
     }
 
     function formatDate(v){
@@ -1323,9 +1240,10 @@ admin_io_list_logs</div>
 
     function pillClass(v){
       const s = String(v || "").toUpperCase();
-      if(["OK","SUCCESS","SENT","ACTIVE","TRUE","READY","OPEN","DELIVERED","ENGAGED","RESTORED"].includes(s)) return "pill pill--ok";
-      if(["WARN","WARNING","PENDING","PROCESSING","PARTIAL","UPSERT","REPLACE"].includes(s)) return "pill pill--warn";
-      if(["ERROR","FAILED","SUPPRESSED","CANCELLED","FALSE","INVALID","SKIPPED"].includes(s)) return "pill pill--error";
+      if(["OK","SUCCESS","SENT","ACTIVE","TRUE","READY","OPEN","DELIVERED","ENGAGED","RESTORED","VALID"].includes(s)) return "pill pill--ok";
+      if(["WARN","WARNING","PENDING","PROCESSING","PARTIAL","UPSERT","REPLACE","QUEUED","PAUSED"].includes(s)) return "pill pill--warn";
+      if(["ERROR","FAILED","SUPPRESSED","CANCELLED","FALSE","INVALID","SKIPPED","BLOCKED"].includes(s)) return "pill pill--error";
+      if(!s) return "pill pill--muted";
       return "pill pill--info";
     }
 
@@ -1342,9 +1260,7 @@ admin_io_list_logs</div>
 
     function setLastAction(v){ state.ui.lastAction = v || ""; }
     function setLastError(v){ state.ui.lastError = v || ""; }
-    function setLastRefresh(){
-      state.ui.lastRefresh = new Date().toLocaleString("pt-BR");
-    }
+    function setLastRefresh(){ state.ui.lastRefresh = new Date().toLocaleString("pt-BR"); }
 
     function loadPersisted(){
       state.apiBase = localStorage.getItem(PUBPANEL.STORAGE.API_BASE) || "";
@@ -1380,28 +1296,21 @@ admin_io_list_logs</div>
     }
 
     function requireApiBase(){
-      if(!state.apiBase){
-        throw new Error("Defina a URL do Web App antes de usar o painel.");
-      }
+      if(!state.apiBase) throw new Error("Defina a URL do Web App antes de usar o painel.");
     }
 
     async function readResponsePayload(res){
       const contentType = String(res.headers.get("content-type") || "").toLowerCase();
       const text = await res.text();
 
-      if(!res.ok){
-        throw new Error("Falha HTTP " + res.status + " ao consultar o sistema.");
-      }
+      if(!res.ok) throw new Error("Falha HTTP " + res.status + " ao consultar o sistema.");
 
       if(contentType.includes("application/json")){
         return JSON.parse(text || "{}");
       }
 
-      try{
-        return JSON.parse(text || "{}");
-      }catch(_){
-        return { ok:true, raw_text:text };
-      }
+      try { return JSON.parse(text || "{}"); }
+      catch(_) { return { ok:true, raw_text:text }; }
     }
 
     const api = {
@@ -1432,6 +1341,7 @@ admin_io_list_logs</div>
             ...payload
           })
         });
+
         return readResponsePayload(res);
       }
     };
@@ -1446,6 +1356,19 @@ admin_io_list_logs</div>
         button.disabled = false;
         button.textContent = original;
       });
+    }
+
+    function filterRows(rows, q, keys){
+      const query = stringValue(q).toLowerCase();
+      if(!query) return rows.slice();
+      return rows.filter(row => {
+        const hay = keys.map(k => String(row?.[k] ?? "")).join(" ").toLowerCase();
+        return hay.includes(query);
+      });
+    }
+
+    function renderEmpty(text){
+      return `<div class="empty">${escapeHtml(text)}</div>`;
     }
 
     function renderHistory(){
@@ -1473,17 +1396,50 @@ admin_io_list_logs</div>
       `;
     }
 
-    function renderEmpty(text){
-      return `<div class="empty">${escapeHtml(text)}</div>`;
+    function getContactStage(email){
+      const normalized = stringValue(email).toLowerCase();
+      return state.mailContactState.find(row => stringValue(row.email).toLowerCase() === normalized) || null;
     }
 
-    function filterRows(rows, q, keys){
-      const query = stringValue(q).toLowerCase();
-      if(!query) return rows.slice();
-      return rows.filter(row => {
-        const hay = keys.map(k => row?.[k]).join(" ").toLowerCase();
-        return hay.includes(query);
-      });
+    function renderContacts(){
+      const rows = filterRows(state.contacts, $("#filter-contacts").value, ["contact_id","name","email","whatsapp"]);
+      const wrap = $("#table-contacts");
+
+      if(!state.contacts.length){
+        wrap.innerHTML = renderEmpty("Nenhum contato carregado ainda.");
+        $("#contacts-note").textContent = "Ainda não há leitura suficiente.";
+        return;
+      }
+
+      $("#contacts-note").textContent = `Base carregada com ${state.contacts.length} contato(s).`;
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Contato</th>
+              <th>Email</th>
+              <th>WhatsApp</th>
+              <th>Relacionamento</th>
+              <th>Atualizado</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => {
+              const cs = getContactStage(r.email);
+              return `
+                <tr>
+                  <td><strong>${escapeHtml(r.contact_id || "")}</strong><div class="tiny">${escapeHtml(r.name || "")}</div></td>
+                  <td>${escapeHtml(r.email || "")}</td>
+                  <td>${escapeHtml(r.whatsapp || "")}</td>
+                  <td>${cs ? `<span class="${pillClass(cs.relationship_stage || cs.status)}">${escapeHtml(cs.relationship_stage || cs.status || "")}</span>` : `<span class="tiny">—</span>`}</td>
+                  <td class="tiny">${escapeHtml(formatDate(r.updated_at || r.created_at || ""))}</td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      `;
     }
 
     function renderLeads(){
@@ -1491,15 +1447,18 @@ admin_io_list_logs</div>
       const wrap = $("#table-leads");
 
       if(!state.leads.length){
-        wrap.innerHTML = renderEmpty("Nenhum lead carregado ainda.");
+        wrap.innerHTML = renderEmpty("Nenhum interesse carregado ainda.");
+        $("#leads-note").textContent = "Ainda não há leitura suficiente.";
         return;
       }
+
+      $("#leads-note").textContent = `Base carregada com ${state.leads.length} interesse(s).`;
 
       wrap.innerHTML = `
         <table>
           <thead>
             <tr>
-              <th>Lead</th>
+              <th>Interesse</th>
               <th>Contato</th>
               <th>Item</th>
               <th>Email</th>
@@ -1521,63 +1480,23 @@ admin_io_list_logs</div>
       `;
     }
 
-    function getContactStage(email){
-      const normalized = stringValue(email).toLowerCase();
-      return state.mailContactState.find(row => stringValue(row.email).toLowerCase() === normalized) || null;
-    }
-
-    function renderContacts(){
-      const rows = filterRows(state.contacts, $("#filter-contacts").value, ["contact_id","name","email","whatsapp"]);
-      const wrap = $("#table-contacts");
-
-      if(!state.contacts.length){
-        wrap.innerHTML = renderEmpty("Nenhum contato carregado ainda.");
-        return;
-      }
-
-      wrap.innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>Contato</th>
-              <th>Email</th>
-              <th>WhatsApp</th>
-              <th>Stage</th>
-              <th>Atualizado</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(r => {
-              const cs = getContactStage(r.email);
-              return `
-                <tr>
-                  <td><strong>${escapeHtml(r.contact_id || "")}</strong><div class="tiny">${escapeHtml(r.name || "")}</div></td>
-                  <td>${escapeHtml(r.email || "")}</td>
-                  <td>${escapeHtml(r.whatsapp || "")}</td>
-                  <td>${cs ? `<span class="${pillClass(cs.relationship_stage)}">${escapeHtml(cs.relationship_stage || "")}</span>` : `<span class="tiny">—</span>`}</td>
-                  <td class="tiny">${escapeHtml(formatDate(r.updated_at || r.created_at || ""))}</td>
-                </tr>
-              `;
-            }).join("")}
-          </tbody>
-        </table>
-      `;
-    }
-
     function renderTickets(){
-      const rows = filterRows(state.tickets, $("#filter-tickets").value, ["ticket_id","name","email","item","message"]);
+      const rows = filterRows(state.tickets, $("#filter-tickets").value, ["ticket_id","name","email","item","message","status"]);
       const wrap = $("#table-tickets");
 
       if(!state.tickets.length){
-        wrap.innerHTML = renderEmpty("Nenhum ticket carregado ainda.");
+        wrap.innerHTML = renderEmpty("Nenhum chamado carregado ainda.");
+        $("#tickets-note").textContent = "Ainda não há leitura suficiente.";
         return;
       }
+
+      $("#tickets-note").textContent = `Base carregada com ${state.tickets.length} chamado(s).`;
 
       wrap.innerHTML = `
         <table>
           <thead>
             <tr>
-              <th>Ticket</th>
+              <th>Chamado</th>
               <th>Contato</th>
               <th>Item</th>
               <th>Status</th>
@@ -1622,12 +1541,46 @@ admin_io_list_logs</div>
           <tbody>
             ${state.mailQueue.map(r => `
               <tr>
-                <td><strong>${escapeHtml(r.queue_id || "")}</strong></td>
-                <td>${escapeHtml(r.recipient || "")}</td>
-                <td><span class="${pillClass(r.message_type)}">${escapeHtml(r.message_type || "")}</span></td>
-                <td>${escapeHtml(r.template_key || "")}</td>
+                <td><strong>${escapeHtml(r.queue_id || r.id || "")}</strong></td>
+                <td>${escapeHtml(r.recipient || r.email || "")}</td>
+                <td><span class="${pillClass(r.message_type || r.type)}">${escapeHtml(r.message_type || r.type || "")}</span></td>
+                <td>${escapeHtml(r.template_key || r.template || "")}</td>
                 <td><span class="${pillClass(r.status)}">${escapeHtml(r.status || "")}</span></td>
-                <td class="tiny">${escapeHtml(formatDate(r.scheduled_at || ""))}</td>
+                <td class="tiny">${escapeHtml(formatDate(r.scheduled_at || r.created_at || ""))}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderManualLists(){
+      const wrap = $("#table-manual-lists");
+
+      if(!state.manualLists.length){
+        wrap.innerHTML = renderEmpty("Nenhuma lista manual carregada ainda.");
+        return;
+      }
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Lista</th>
+              <th>Nome</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th>Atualizado</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.manualLists.map(r => `
+              <tr>
+                <td><strong>${escapeHtml(r.list_id || r.id || "")}</strong></td>
+                <td>${escapeHtml(r.name || r.title || "")}</td>
+                <td><span class="${pillClass(r.status || r.active)}">${escapeHtml(String(r.status || r.active || ""))}</span></td>
+                <td>${escapeHtml(r.total_entries || r.count || "—")}</td>
+                <td class="tiny">${escapeHtml(formatDate(r.updated_at || r.created_at || ""))}</td>
               </tr>
             `).join("")}
           </tbody>
@@ -1647,6 +1600,7 @@ admin_io_list_logs</div>
         if(/[",;\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
         return s;
       };
+
       const header = keys.map(csvEscape).join(";");
       const body = rows.map(row => keys.map(k => csvEscape(row[k])).join(";")).join("\r\n");
       const csv = header + "\r\n" + body;
@@ -1666,16 +1620,17 @@ admin_io_list_logs</div>
     }
 
     function renderSummary(){
-      const healthData = extractEnvelope(state.health) || {};
-      const mailOverviewData = extractEnvelope(state.mailOverview) || {};
-      const ioHealthData = extractEnvelope(state.ioHealth) || {};
+      const healthData = extractEnvelope(state.health);
+      const statusData = extractEnvelope(state.status);
+      const mailOverviewData = extractEnvelope(state.mailOverview);
+      const ioHealthData = extractEnvelope(state.ioHealth);
 
       $("#sum-connection").textContent = !state.apiBase ? "PENDENTE" : state.status?.ok ? "OK" : state.ui.lastError ? "ERRO" : "ATENÇÃO";
-      $("#sum-install").textContent = state.status?.ok && (state.mailOverview || state.ioHealth) ? "PRONTO" : state.status?.ok ? "PARCIAL" : "—";
+      $("#sum-health").textContent = state.health?.ok ? "OK" : state.health ? "ATENÇÃO" : "—";
+      $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : "—";
       $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : "—";
       $("#sum-tickets").textContent = state.tickets.length ? String(state.tickets.length) : "—";
-      $("#sum-mail-queue").textContent = state.mailQueue.length ? String(state.mailQueue.length) : "—";
-      $("#sum-health").textContent = state.health?.ok ? "OK" : state.health ? "ATENÇÃO" : "—";
+      $("#sum-mail-queue").textContent = state.mailQueue.length ? String(state.mailQueue.length) : (mailOverviewData.queue_count ? String(mailOverviewData.queue_count) : "—");
       $("#sum-mail").textContent = state.mailHealth?.ok ? "OK" : state.mailOverview ? "PARCIAL" : "—";
       $("#sum-io").textContent = state.ioHealth?.ok ? "OK" : state.ioHealth ? "ATENÇÃO" : "—";
 
@@ -1694,9 +1649,10 @@ admin_io_list_logs</div>
         state.mailOverview ? "overview carregado" : "",
         state.mailHealth?.ok ? "saúde OK" : (state.mailHealth ? "saúde com atenção" : ""),
         state.mailTemplates.length ? `templates: ${state.mailTemplates.length}` : "",
-        state.mailSuppressions.length ? `suppressions: ${state.mailSuppressions.length}` : "",
+        state.mailSuppressions.length ? `bloqueios: ${state.mailSuppressions.length}` : "",
+        state.manualLists.length ? `listas manuais: ${state.manualLists.length}` : "",
         state.mailQueue.length ? `fila: ${state.mailQueue.length}` : "",
-        state.mailLog.length ? `logs: ${state.mailLog.length}` : ""
+        state.mailLog.length ? `histórico: ${state.mailLog.length}` : ""
       ].filter(Boolean).join(" · ") || "Ainda não há leitura suficiente para resumir o módulo.";
 
       $("#io-business-note").textContent = [
@@ -1705,22 +1661,10 @@ admin_io_list_logs</div>
         state.ioLast ? `última ação: ${state.ioLast.action}` : ""
       ].filter(Boolean).join(" · ") || "Ainda não há leitura suficiente para resumir o módulo.";
 
-      $("#role-note").textContent =
-        state.role === "developer"
-          ? "Perfil desenvolvedor ativo. A interface mostra payloads, contrato e detalhes internos."
-          : "Perfil negócio ativo. A interface esconde detalhes internos e mostra apenas o necessário para operar.";
-
-      $("#system-note").textContent = [
-        state.status?.ok ? "status OK" : "",
-        state.health?.ok ? "health OK" : (state.health ? "health com atenção" : ""),
-        state.mailHealth?.ok ? "PUBMAIL OK" : "",
-        state.ioHealth?.ok ? "PUBIO OK" : ""
-      ].filter(Boolean).join(" · ") || "Ainda não há leitura consolidada suficiente.";
-
-      $("#meta-role").textContent = state.role === "developer" ? "desenvolvedor" : "negócio";
+      $("#meta-role").textContent = state.role === "admin" ? "administrador" : "negócio";
       $("#meta-connection").textContent = !state.apiBase ? "não configurada" : state.status?.ok ? "conectada" : "com atenção";
-      $("#meta-crm-version").textContent = healthData.version || extractEnvelope(state.status)?.version || "—";
-      $("#meta-mail-version").textContent = state.mailHealth?.version || extractEnvelope(state.mailHealth)?.version || (state.mailOverview ? "carregado" : "—");
+      $("#meta-crm-version").textContent = healthData.version || statusData.version || "—";
+      $("#meta-mail-version").textContent = state.mailHealth?.version || extractEnvelope(state.mailHealth).version || (state.mailOverview ? "carregado" : "—");
       $("#meta-io-version").textContent = state.ioHealth?.version || ioHealthData.version || (state.ioContract ? "carregado" : "—");
 
       $("#box-mail-json").textContent = safeJson({
@@ -1730,10 +1674,13 @@ admin_io_list_logs</div>
         suppressions_count: state.mailSuppressions.length,
         contact_state_count: state.mailContactState.length,
         queue_count: state.mailQueue.length,
-        log_count: state.mailLog.length
+        log_count: state.mailLog.length,
+        manual_lists_count: state.manualLists.length,
+        last: state.mailLast
       });
 
       $("#box-io-json").textContent = safeJson(state.ioLast || {});
+      $("#box-io-result").textContent = safeJson((state.ioLast && state.ioLast.payload) || {});
       $("#box-system-json").textContent = safeJson({
         status: state.status,
         health: state.health,
@@ -1762,14 +1709,11 @@ admin_io_list_logs</div>
         await withBusy(button, "Lendo...", async () => {
           const json = await api.getMode(mode);
           state.systemPayload = json;
-
           if(mode === "status") state.status = json;
           if(mode === "health") state.health = json;
           if(mode === "contract") state.contract = json;
-
           setLastRefresh();
           renderSummary();
-
           setBanner("success", titleMap[mode], detailMap[mode]);
           pushHistory("GET", "mode=" + mode, "ok", detailMap[mode]);
         });
@@ -1789,15 +1733,14 @@ admin_io_list_logs</div>
         await withBusy(button, "Carregando...", async () => {
           const json = await api.postAction(action, {});
           const rows = normalizeRowsFromResponse(json);
-
           state[targetKey] = rows;
-          setLastRefresh();
 
-          if(targetKey === "leads") renderLeads();
           if(targetKey === "contacts") renderContacts();
+          if(targetKey === "leads") renderLeads();
           if(targetKey === "tickets") renderTickets();
           if(targetKey === "mailQueue") renderMailQueue();
 
+          setLastRefresh();
           renderSummary();
           setBanner("success", "Leitura concluída", successText + " (" + rows.length + " linha(s)).");
           pushHistory("POST", action, "ok", successText + " (" + rows.length + " linha(s)).");
@@ -1810,27 +1753,15 @@ admin_io_list_logs</div>
       }
     }
 
-    async function runMailAction(action, button){
-      const map = {
-        admin_mail_overview: { kind:"overview", title:"Resumo do PUBMAIL carregado." },
-        admin_mail_health: { kind:"health", title:"Health do PUBMAIL carregado." },
-        admin_mail_list_templates: { kind:"templates", title:"Templates do PUBMAIL carregados." },
-        admin_mail_list_suppressions: { kind:"suppressions", title:"Suppressions carregadas." },
-        admin_mail_list_contact_state: { kind:"contact_state", title:"Estado dos contatos carregado." },
-        admin_mail_list_queue: { kind:"queue", title:"Fila do PUBMAIL carregada." },
-        admin_mail_list_log: { kind:"log", title:"Logs do PUBMAIL carregados." },
-        admin_mail_bootstrap: { kind:"op", title:"Bootstrap do PUBMAIL concluído." },
-        admin_mail_scan: { kind:"op", title:"Varredura de entradas concluída." },
-        admin_mail_process_queue: { kind:"op", title:"Processamento da fila concluído." }
-      };
-
+    async function runMailAction(action, payload, button, successText){
       try{
         setLastAction(action);
         setLastError("");
 
         await withBusy(button, "Executando...", async () => {
-          const json = await api.postAction(action, {});
+          const json = await api.postAction(action, payload || {});
           const rows = normalizeRowsFromResponse(json);
+          state.mailLast = { action, payload: json };
 
           if(action === "admin_mail_overview") state.mailOverview = json;
           if(action === "admin_mail_health") state.mailHealth = json;
@@ -1839,15 +1770,16 @@ admin_io_list_logs</div>
           if(action === "admin_mail_list_contact_state") state.mailContactState = rows;
           if(action === "admin_mail_list_queue") state.mailQueue = rows;
           if(action === "admin_mail_list_log") state.mailLog = rows;
+          if(action === "admin_mail_list_manual_lists") state.manualLists = rows;
 
           if(action === "admin_mail_list_queue") renderMailQueue();
           if(action === "admin_mail_list_contact_state") renderContacts();
+          if(action === "admin_mail_list_manual_lists") renderManualLists();
 
           setLastRefresh();
           renderSummary();
-
-          setBanner("success", "PUBMAIL", map[action].title);
-          pushHistory("POST", action, "ok", map[action].title);
+          setBanner("success", "PUBMAIL", successText);
+          pushHistory("POST", action, "ok", successText);
         });
       }catch(err){
         setLastError(err.message || "Erro desconhecido");
@@ -1871,7 +1803,6 @@ admin_io_list_logs</div>
 
           setLastRefresh();
           renderSummary();
-
           setBanner("success", "PUBIO", successText);
           pushHistory("POST", action, "ok", successText);
         });
@@ -1894,11 +1825,13 @@ admin_io_list_logs</div>
           const io = await api.postAction("admin_io_install", {});
 
           state.systemPayload = { crm, mail, io };
-          state.mailOverview = mail;
+          state.mailLast = { action:"admin_mail_bootstrap", payload:mail };
           state.ioLast = { action:"admin_io_install", payload:io };
-          state.ioHealth = await api.postAction("admin_io_health", {});
+
           state.status = await api.getMode("status");
           state.health = await api.getMode("health");
+          state.ioHealth = await api.postAction("admin_io_health", {});
+          state.mailOverview = await api.postAction("admin_mail_overview", {});
 
           setLastRefresh();
           renderSummary();
@@ -1932,17 +1865,17 @@ admin_io_list_logs</div>
     }
 
     function setRole(role){
-      state.role = role === "developer" ? "developer" : "business";
+      state.role = role === "admin" ? "admin" : "business";
       document.body.setAttribute("data-role", state.role);
       persist();
       renderSummary();
-      setBanner("success", "Perfil alterado", state.role === "developer" ? "Perfil desenvolvedor ativado." : "Perfil negócio ativado.");
+      setBanner("success", "Perfil alterado", state.role === "admin" ? "Perfil administrador ativado." : "Perfil negócio ativado.");
       pushHistory("UI", "set_role", "ok", state.role);
     }
 
     function bindFilters(){
-      $("#filter-leads").addEventListener("input", renderLeads);
       $("#filter-contacts").addEventListener("input", renderContacts);
+      $("#filter-leads").addEventListener("input", renderLeads);
       $("#filter-tickets").addEventListener("input", renderTickets);
     }
 
@@ -1950,8 +1883,8 @@ admin_io_list_logs</div>
       $$("[data-export]").forEach(btn => {
         btn.addEventListener("click", () => {
           const kind = btn.getAttribute("data-export");
-          if(kind === "leads") exportRows("pubpanel-leads.csv", state.leads);
           if(kind === "contacts") exportRows("pubpanel-contacts.csv", state.contacts);
+          if(kind === "leads") exportRows("pubpanel-leads.csv", state.leads);
           if(kind === "tickets") exportRows("pubpanel-tickets.csv", state.tickets);
           if(kind === "mailQueue") exportRows("pubpanel-mail-queue.csv", state.mailQueue);
         });
@@ -1971,7 +1904,7 @@ admin_io_list_logs</div>
 
       $$("#nav a").forEach(link => {
         link.addEventListener("click", () => {
-          if(window.innerWidth <= 1020){
+          if(window.innerWidth <= 980){
             $("#sidebar").classList.remove("open");
             $("#sidebar-backdrop").classList.remove("show");
           }
@@ -1985,7 +1918,7 @@ admin_io_list_logs</div>
         const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
         if(!visible) return;
         navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + visible.target.id));
-      }, { threshold:[.2,.4,.6] });
+      }, { threshold:[.2,.45,.7] });
 
       sections.forEach(s => io.observe(s));
     }
@@ -1994,50 +1927,74 @@ admin_io_list_logs</div>
       $("#btn-save-api-base").addEventListener("click", saveApiBase);
       $("#btn-clear-api-base").addEventListener("click", clearApiBase);
 
+      $("#btn-role-business").addEventListener("click", () => setRole("business"));
+      $("#btn-role-admin").addEventListener("click", () => setRole("admin"));
+
       $("#btn-test-connection").addEventListener("click", e => runPublicMode("status", e.currentTarget));
-      $("#btn-run-status").addEventListener("click", e => runPublicMode("status", e.currentTarget));
-      $("#btn-run-health").addEventListener("click", e => runPublicMode("health", e.currentTarget));
       $("#btn-refresh-summary").addEventListener("click", async e => {
         await runPublicMode("status", e.currentTarget);
         await runPublicMode("health");
+        await runMailAction("admin_mail_overview", {}, null, "Resumo do PUBMAIL carregado.");
+        await runIoAction("admin_io_health", {}, null, "Health do PUBIO carregado.");
       });
+      $("#btn-run-status").addEventListener("click", e => runPublicMode("status", e.currentTarget));
+      $("#btn-run-health").addEventListener("click", e => runPublicMode("health", e.currentTarget));
 
-      $("#btn-install-all").addEventListener("click", e => runInstallAll(e.currentTarget));
-      $("#btn-install-all-inline").addEventListener("click", e => runInstallAll(e.currentTarget));
-
-      $("#btn-role-business").addEventListener("click", () => setRole("business"));
-      $("#btn-role-dev").addEventListener("click", () => setRole("developer"));
-
-      $("#btn-load-leads").addEventListener("click", e => runAdminList("admin_list_leads", "leads", e.currentTarget, "Leads carregados"));
       $("#btn-load-contacts").addEventListener("click", e => runAdminList("admin_list_contacts", "contacts", e.currentTarget, "Contatos carregados"));
-      $("#btn-load-tickets").addEventListener("click", e => runAdminList("admin_list_tickets", "tickets", e.currentTarget, "Tickets carregados"));
+      $("#btn-load-leads").addEventListener("click", e => runAdminList("admin_list_leads", "leads", e.currentTarget, "Interesses carregados"));
+      $("#btn-load-tickets").addEventListener("click", e => runAdminList("admin_list_tickets", "tickets", e.currentTarget, "Chamados carregados"));
 
-      $("#btn-mail-overview").addEventListener("click", e => runMailAction("admin_mail_overview", e.currentTarget));
-      $("#btn-mail-health").addEventListener("click", e => runMailAction("admin_mail_health", e.currentTarget));
-      $("#btn-mail-templates").addEventListener("click", e => runMailAction("admin_mail_list_templates", e.currentTarget));
-      $("#btn-mail-suppressions").addEventListener("click", e => runMailAction("admin_mail_list_suppressions", e.currentTarget));
-      $("#btn-mail-contact-state").addEventListener("click", e => runMailAction("admin_mail_list_contact_state", e.currentTarget));
-      $("#btn-mail-queue").addEventListener("click", e => runMailAction("admin_mail_list_queue", e.currentTarget));
-      $("#btn-mail-log").addEventListener("click", e => runMailAction("admin_mail_list_log", e.currentTarget));
-
-      $("#btn-mail-bootstrap-inline").addEventListener("click", e => runMailAction("admin_mail_bootstrap", e.currentTarget));
-      $("#btn-mail-scan").addEventListener("click", e => runMailAction("admin_mail_scan", e.currentTarget));
-      $("#btn-mail-scan-inline").addEventListener("click", e => runMailAction("admin_mail_scan", e.currentTarget));
-      $("#btn-mail-process").addEventListener("click", e => runMailAction("admin_mail_process_queue", e.currentTarget));
-      $("#btn-mail-process-inline").addEventListener("click", e => runMailAction("admin_mail_process_queue", e.currentTarget));
+      $("#btn-mail-overview").addEventListener("click", e => runMailAction("admin_mail_overview", {}, e.currentTarget, "Resumo do PUBMAIL carregado."));
+      $("#btn-mail-health").addEventListener("click", e => runMailAction("admin_mail_health", {}, e.currentTarget, "Health do PUBMAIL carregado."));
+      $("#btn-mail-templates").addEventListener("click", e => runMailAction("admin_mail_list_templates", {}, e.currentTarget, "Templates carregados."));
+      $("#btn-mail-suppressions").addEventListener("click", e => runMailAction("admin_mail_list_suppressions", {}, e.currentTarget, "Bloqueios carregados."));
+      $("#btn-mail-contact-state").addEventListener("click", e => runMailAction("admin_mail_list_contact_state", {}, e.currentTarget, "Estado dos contatos carregado."));
+      $("#btn-mail-queue").addEventListener("click", e => runMailAction("admin_mail_list_queue", {}, e.currentTarget, "Fila carregada."));
+      $("#btn-mail-log").addEventListener("click", e => runMailAction("admin_mail_list_log", {}, e.currentTarget, "Histórico carregado."));
+      $("#btn-mail-scan").addEventListener("click", e => runMailAction("admin_mail_scan", {}, e.currentTarget, "Varredura concluída."));
+      $("#btn-mail-process").addEventListener("click", e => runMailAction("admin_mail_process_queue", {}, e.currentTarget, "Processamento da fila concluído."));
+      $("#btn-mail-create-manual-list").addEventListener("click", e => runMailAction("admin_mail_create_manual_list", {
+        name: stringValue($("#manual-list-name").value),
+        note: stringValue($("#manual-list-note").value)
+      }, e.currentTarget, "Lista manual criada."));
+      $("#btn-mail-list-manual-lists").addEventListener("click", e => runMailAction("admin_mail_list_manual_lists", {}, e.currentTarget, "Listas manuais carregadas."));
+      $("#btn-mail-update-manual-entry").addEventListener("click", e => runMailAction("admin_mail_update_manual_list_entry", {
+        list_id: stringValue($("#manual-entry-list-id").value),
+        email: stringValue($("#manual-entry-email").value),
+        name: stringValue($("#manual-entry-name").value)
+      }, e.currentTarget, "Entrada da lista atualizada."));
+      $("#btn-mail-set-manual-entry-active").addEventListener("click", e => runMailAction("admin_mail_set_manual_list_entry_active", {
+        entry_id: stringValue($("#manual-active-entry-id").value),
+        active: $("#manual-active-value").value === "true"
+      }, e.currentTarget, "Estado da entrada atualizado."));
+      $("#btn-mail-add-suppression").addEventListener("click", e => runMailAction("admin_mail_add_suppression", {
+        email: stringValue($("#mail-suppression-email").value),
+        reason: stringValue($("#mail-suppression-reason").value)
+      }, e.currentTarget, "Contato bloqueado."));
+      $("#btn-mail-send-manual").addEventListener("click", e => runMailAction("admin_mail_send_manual", {
+        recipient: stringValue($("#mail-send-to").value),
+        subject: stringValue($("#mail-send-subject").value),
+        body: stringValue($("#mail-send-body").value)
+      }, e.currentTarget, "Mensagem manual enviada ou enfileirada."));
 
       $("#btn-io-health").addEventListener("click", e => runIoAction("admin_io_health", {}, e.currentTarget, "Health do PUBIO carregado."));
-      $("#btn-io-list-logs").addEventListener("click", e => runIoAction("admin_io_list_logs", {}, e.currentTarget, "Logs do PUBIO carregados."));
+      $("#btn-io-list-logs").addEventListener("click", e => runIoAction("admin_io_list_logs", {}, e.currentTarget, "Registros do PUBIO carregados."));
       $("#btn-io-export-entity").addEventListener("click", e => runIoAction("admin_io_export_entity", {
         entity_type: $("#io-export-entity").value
       }, e.currentTarget, "Exportação por entidade concluída."));
       $("#btn-io-export-bundle").addEventListener("click", e => runIoAction("admin_io_export_bundle", {
         entities: "contacts,leads,tickets"
       }, e.currentTarget, "Exportação de bundle concluída."));
+      $("#btn-io-export-entity-csv").addEventListener("click", e => runIoAction("admin_io_export_entity_csv", {
+        entity_type: $("#io-export-entity").value
+      }, e.currentTarget, "Exportação CSV do backend concluída."));
       $("#btn-io-validate").addEventListener("click", e => runIoAction("admin_io_validate_file", {
         storage_ref: stringValue($("#io-storage-ref").value),
         entity_type: $("#io-validate-entity").value
       }, e.currentTarget, "Validação concluída."));
+      $("#btn-io-inspect-storage-ref").addEventListener("click", e => runIoAction("admin_io_inspect_storage_ref", {
+        storage_ref: stringValue($("#io-storage-ref").value)
+      }, e.currentTarget, "Inspeção do storage_ref concluída."));
       $("#btn-io-snapshot").addEventListener("click", e => runIoAction("admin_io_create_snapshot", {
         entity_type: $("#io-snapshot-entity").value,
         created_by: "panel",
@@ -2047,6 +2004,27 @@ admin_io_list_logs</div>
         snapshot_id: stringValue($("#io-snapshot-id").value),
         created_by: "panel"
       }, e.currentTarget, "Restauração solicitada."));
+      $("#btn-io-preview-json").addEventListener("click", e => runIoAction("admin_io_preview_json", {
+        storage_ref: stringValue($("#io-storage-ref").value)
+      }, e.currentTarget, "Pré-visualização JSON concluída."));
+      $("#btn-io-preview-csv").addEventListener("click", e => runIoAction("admin_io_preview_csv", {
+        storage_ref: stringValue($("#io-storage-ref").value)
+      }, e.currentTarget, "Pré-visualização CSV concluída."));
+      $("#btn-io-read-storage-ref").addEventListener("click", e => runIoAction("admin_io_read_storage_ref", {
+        storage_ref: stringValue($("#io-storage-ref").value)
+      }, e.currentTarget, "Leitura do storage_ref concluída."));
+      $("#btn-io-dry-run-import").addEventListener("click", e => runIoAction("admin_io_dry_run_import_entity", {
+        storage_ref: stringValue($("#io-dry-run-storage-ref").value),
+        entity_type: $("#io-dry-run-entity").value
+      }, e.currentTarget, "Dry run concluído."));
+
+      $("#btn-install-all").addEventListener("click", e => runInstallAll(e.currentTarget));
+      $("#btn-install-all-inline").addEventListener("click", e => runInstallAll(e.currentTarget));
+      $("#btn-admin-contract").addEventListener("click", e => runPublicMode("contract", e.currentTarget));
+      $("#btn-admin-io-contract").addEventListener("click", e => runIoAction("admin_io_contract", {}, e.currentTarget, "Contrato do PUBIO carregado."));
+      $("#btn-admin-mail-bootstrap").addEventListener("click", e => runMailAction("admin_mail_bootstrap", {}, e.currentTarget, "Bootstrap do PUBMAIL concluído."));
+      $("#btn-admin-io-install").addEventListener("click", e => runIoAction("admin_io_install", {}, e.currentTarget, "Instalação do PUBIO concluída."));
+
       $("#btn-refresh-history").addEventListener("click", renderHistory);
       $("#btn-clear-history").addEventListener("click", () => {
         state.ui.history = [];
@@ -2060,11 +2038,11 @@ admin_io_list_logs</div>
     function bootPlaceholders(){
       $("#api-base").value = state.apiBase;
       document.body.setAttribute("data-role", state.role);
-
-      renderLeads();
       renderContacts();
+      renderLeads();
       renderTickets();
       renderMailQueue();
+      renderManualLists();
       renderHistory();
       renderSummary();
     }
@@ -2077,7 +2055,7 @@ admin_io_list_logs</div>
 
       try { await runPublicMode("status"); } catch(_) {}
       try { await runPublicMode("health"); } catch(_) {}
-      try { await runMailAction("admin_mail_overview"); } catch(_) {}
+      try { await runMailAction("admin_mail_overview", {}, null, "Resumo do PUBMAIL carregado."); } catch(_) {}
       try { await runIoAction("admin_io_health", {}, null, "Health do PUBIO carregado."); } catch(_) {}
       clearBanner();
     }
