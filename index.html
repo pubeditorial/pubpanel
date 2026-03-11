@@ -770,9 +770,10 @@
                 <input class="input" id="admin-token" type="password" placeholder="Token administrativo" />
                 <div style="height:10px"></div>
                 <div class="toolbar-right">
-                  <button class="btn btn--soft" id="btn-save-admin-token">Aplicar token</button>
-                  <button class="btn btn--soft" id="btn-clear-admin-token">Limpar token</button>
-                </div>
+  <button class="btn btn--soft" id="btn-save-admin-token">Aplicar token</button>
+  <button class="btn btn--soft" id="btn-clear-admin-token">Limpar token</button>
+  <button class="btn btn--violet" id="btn-set-backend-token">Gravar token no backend</button>
+</div>
               </div>
 
               <div class="card">
@@ -1932,7 +1933,8 @@ function friendlyActionName(action){
     "refresh_mail":"Atualização da comunicação",
     "refresh_mail_admin_details":"Atualização dos detalhes administrativos da comunicação",
 
-    "admin_install_crm":"Instalação central",
+        "admin_install_crm":"Instalação central",
+    "admin_set_token_once":"Gravação do token administrativo no backend",
 
     "admin_list_contacts":"Atualização de contatos",
     "admin_list_leads":"Atualização de interesses",
@@ -3970,6 +3972,47 @@ function renderSummary(){
       pushHistory("UI", "clear_admin_token", "ok", "token removido da memória", { rerenderSummary:true });
     }
 
+    async function setBackendTokenOnce(button){
+  try{
+    requireApiBase();
+
+    var token = stringValue($("#admin-token")?.value || state.adminToken || "");
+    validateRequired("token administrativo", token);
+
+    setLastAction("Gravação do token administrativo no backend");
+    setLastError("");
+
+    await withBusy(button, "Gravando...", async () => {
+      var json = await api.postAction("admin_set_token_once", {
+        token: token
+      });
+
+      setLastRefresh();
+      renderSummary();
+
+      setBanner("success", "Token gravado no backend", json?.data?.message || "O token administrativo foi definido com sucesso.");
+      pushHistory("POST", "admin_set_token_once", "ok", json?.data?.message || "Token administrativo definido no backend.");
+    });
+  }catch(err){
+    if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
+      return;
+    }
+
+    if(err?.name === "LogicalPartialError"){
+      setLastError(err.message || "Sucesso parcial");
+      renderSummary();
+      setBanner("warn", "Gravação parcial", err.message || "O backend respondeu parcialmente.");
+      pushHistory("POST", "admin_set_token_once", "parcial", err.message || "resposta parcial");
+      return;
+    }
+
+    setLastError(err.message || "Erro desconhecido");
+    renderSummary();
+    setBanner("error", "Falha ao gravar token no backend", err.message || "Erro desconhecido");
+    pushHistory("POST", "admin_set_token_once", "erro", err.message || "erro");
+  }
+}
+
 function setRole(role){
   state.role = role === "admin" ? "admin" : "business";
   document.body.setAttribute("data-role", state.role);
@@ -4141,6 +4184,10 @@ async function refreshAllData(opts={}){
 
       $("#btn-role-business")?.addEventListener("click", () => setRole("business"));
       $("#btn-role-admin")?.addEventListener("click", () => setRole("admin"));
+
+      $("#btn-set-backend-token")?.addEventListener("click", (e) => {
+        setBackendTokenOnce(e.currentTarget);
+      });
 
      $("#btn-refresh-all")?.addEventListener("click", async (e) => {
         await withBusy(e.currentTarget, "Atualizando...", async () => {
