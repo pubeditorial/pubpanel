@@ -13,19 +13,12 @@
       --fg:#0f172a;
       --muted:#475569;
       --line:#e2e8f0;
-      --card:#ffffff;
-      --card2:#f8fafc;
       --blue:#2563eb;
-      --violet:#7c3aed;
       --green:#059669;
-      --amber:#d97706;
       --red:#dc2626;
       --shadow:0 10px 28px rgba(15,23,42,.08);
-      --radius:18px;
-      --radius-sm:12px;
       --sidebar:270px;
       --wrap:1320px;
-      --gap:18px;
     }
 
     *{box-sizing:border-box}
@@ -299,6 +292,7 @@
       color:#0f172a;
       font-weight:900;
       cursor:pointer;
+      transition:.18s ease;
     }
     .btn:hover{transform:translateY(-1px)}
     .btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
@@ -322,11 +316,6 @@
       color:var(--red);
       border-color:rgba(220,38,38,.12);
       background:rgba(220,38,38,.06);
-    }
-    .btn--ok{
-      color:var(--green);
-      border-color:rgba(5,150,105,.14);
-      background:rgba(5,150,105,.08);
     }
 
     .input,.select,.textarea{
@@ -450,11 +439,10 @@
       word-break:break-word;
     }
 
-    .admin-only{display:none}
-    body[data-role="admin"] .admin-only{display:block}
-    body[data-role="admin"] .admin-only-inline{display:inline-flex}
-    body[data-role="business"] .admin-only-inline{display:none !important}
-    body[data-role="business"] .admin-only-section{display:none !important}
+    .admin-only{display:none !important}
+    body[data-role="admin"] .admin-only{display:block !important}
+    body[data-role="admin"] .admin-inline{display:inline-flex !important}
+    body[data-role="business"] .admin-inline{display:none !important}
 
     .mobile-show{display:none}
     .sidebar-backdrop{
@@ -500,7 +488,7 @@
         <div class="sub">Gestão do negócio</div>
       </div>
 
-      <div class="chip">v1.0 · operação útil</div>
+      <div class="chip">v1.0 · leitura automática</div>
 
       <nav class="nav" id="nav">
         <a href="#inicio" class="active"><span>Início</span><small>01</small></a>
@@ -511,7 +499,7 @@
         <a href="#comunicacao"><span>Comunicação</span><small>06</small></a>
         <a href="#dados"><span>Dados</span><small>07</small></a>
         <a href="#historico"><span>Histórico</span><small>08</small></a>
-        <a href="#administracao" class="admin-only-section"><span>Administração</span><small>09</small></a>
+        <a href="#administracao" class="admin-only"><span>Administração</span><small>09</small></a>
       </nav>
 
       <div class="side-meta">
@@ -528,16 +516,15 @@
       <header class="topbar">
         <div>
           <div class="top-title">PUBPANEL 1.0</div>
-          <div class="top-sub">Backend central unificado, painel simples para operar o negócio e área administrativa separada.</div>
+          <div class="top-sub">Painel simples para operar o negócio, abrir já preenchido e separar a administração da rotina do usuário final.</div>
         </div>
 
         <div class="top-actions">
           <button class="btn mobile-show" id="open-sidebar">Menu</button>
-          <button class="btn btn--soft" id="btn-test-connection">Testar conexão</button>
-          <button class="btn btn--soft" id="btn-refresh-summary">Atualizar resumo</button>
+          <button class="btn btn--soft" id="btn-refresh-all">Atualizar painel</button>
           <button class="btn btn--soft" id="btn-role-business">Perfil negócio</button>
           <button class="btn btn--violet" id="btn-role-admin">Perfil administrador</button>
-          <button class="btn btn--primary admin-only-inline" id="btn-install-all">Instalar tudo</button>
+          <button class="btn btn--primary admin-inline" id="btn-install-all">Instalar tudo</button>
         </div>
       </header>
 
@@ -551,8 +538,8 @@
                   <span class="tag">Painel central do negócio</span>
                   <h1>Operar, acompanhar e manter o ecossistema PUB</h1>
                   <p>
-                    Esta versão 1.0 mostra apenas o que ajuda na rotina: visão geral, base comercial, comunicação, exportação,
-                    backup e histórico. Instalação, contrato técnico e ações de risco ficam separados no perfil administrador.
+                    Esta versão 1.0 abre mostrando o essencial: visão geral, base comercial, fila, listas de envio, comunicação,
+                    exportação, backup e histórico. Instalação e detalhes técnicos ficam no perfil administrador.
                   </p>
                 </div>
 
@@ -560,13 +547,13 @@
                   <strong>Fluxo principal</strong>
                   <ul>
                     <li>Configurar a URL do Web App</li>
-                    <li>Atualizar a visão geral</li>
-                    <li>Ler contatos, interesses e chamados</li>
-                    <li>Operar comunicação manual e fila</li>
-                    <li>Exportar, validar, snapshotar e restaurar dados</li>
+                    <li>Entrar e ver o painel já preenchido</li>
+                    <li>Encontrar contatos, interesses e chamados</li>
+                    <li>Enviar mensagem e operar a fila</li>
+                    <li>Exportar, validar, simular, salvar e restaurar dados</li>
                   </ul>
                   <div class="tiny" style="color:rgba(226,232,240,.86)">
-                    O perfil negócio esconde detalhes internos. O perfil administrador mostra instalação, contrato e leituras técnicas.
+                    O usuário vê a operação. O administrador vê instalação, contrato e retornos técnicos.
                   </div>
                 </aside>
               </div>
@@ -579,24 +566,24 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Visão geral</span>
               <h2 class="h2">Leitura rápida do sistema e do negócio</h2>
-              <div class="muted">Veja em poucos segundos se o ambiente está conectado, quantos registros existem e se comunicação e dados estão prontos para uso.</div>
+              <div class="muted">Entre no painel e veja o estado principal do ambiente, da base e da comunicação sem precisar pedir leituras básicas.</div>
             </div>
 
             <div class="metrics">
               <div class="metric">
                 <div class="eyebrow">Conexão</div>
                 <div class="value" id="sum-connection">—</div>
-                <div class="note">Status básico do backend.</div>
+                <div class="note">Conectado, com alerta ou pendente.</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Sistema</div>
                 <div class="value" id="sum-health">—</div>
-                <div class="note">Leitura geral de saúde.</div>
+                <div class="note">Saúde geral do backend.</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Contatos</div>
                 <div class="value" id="sum-contacts">—</div>
-                <div class="note">Base consolidada do negócio.</div>
+                <div class="note">Base visível do negócio.</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Interesses</div>
@@ -606,22 +593,22 @@
               <div class="metric">
                 <div class="eyebrow">Chamados</div>
                 <div class="value" id="sum-tickets">—</div>
-                <div class="note">Pedidos de suporte.</div>
+                <div class="note">Pedidos de ajuda e suporte.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Fila</div>
+                <div class="eyebrow">Mensagens na fila</div>
                 <div class="value" id="sum-mail-queue">—</div>
-                <div class="note">Mensagens aguardando processamento.</div>
+                <div class="note">Itens aguardando envio.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">PUBMAIL</div>
+                <div class="eyebrow">Comunicação</div>
                 <div class="value" id="sum-mail">—</div>
-                <div class="note">Saúde da comunicação.</div>
+                <div class="note">Saúde do PUBMAIL.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">PUBIO</div>
+                <div class="eyebrow">Dados</div>
                 <div class="value" id="sum-io">—</div>
-                <div class="note">Saúde do módulo de dados.</div>
+                <div class="note">Saúde do PUBIO.</div>
               </div>
             </div>
 
@@ -641,18 +628,6 @@
               <div class="card">
                 <strong>Última atualização</strong>
                 <div class="tiny" id="sum-last-refresh">—</div>
-              </div>
-            </div>
-
-            <div class="sep"></div>
-
-            <div class="toolbar">
-              <div class="toolbar-left tiny">Leituras principais do painel.</div>
-              <div class="toolbar-right">
-                <button class="btn btn--soft" id="btn-run-status">Status</button>
-                <button class="btn btn--soft" id="btn-run-health">Health</button>
-                <button class="btn btn--soft" id="btn-mail-overview">Resumo do PUBMAIL</button>
-                <button class="btn btn--soft" id="btn-io-health">Health do PUBIO</button>
               </div>
             </div>
           </section>
@@ -678,12 +653,16 @@
               </div>
 
               <div class="card">
-                <strong>Operação principal</strong>
+                <strong>Leitura automática</strong>
                 <div class="tiny">
-                  O painel opera sobre:
-                  <br><span class="mono">mode=status</span>
-                  <br><span class="mono">mode=health</span>
-                  <br><span class="mono">dispatchAdminAction_</span>
+                  Ao abrir o painel, ele tenta buscar:
+                  <br><span class="mono">status</span>
+                  <br><span class="mono">saúde</span>
+                  <br><span class="mono">contatos</span>
+                  <br><span class="mono">interesses</span>
+                  <br><span class="mono">chamados</span>
+                  <br><span class="mono">fila</span>
+                  <br><span class="mono">listas de envio</span>
                 </div>
               </div>
             </div>
@@ -693,7 +672,7 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Contatos</span>
               <h2 class="h2">Base consolidada de relacionamento</h2>
-              <div class="muted">Leitura simples, busca rápida, exportação e estado do relacionamento.</div>
+              <div class="muted">Lista aberta com e-mail visível, busca rápida e exportação simples.</div>
             </div>
 
             <div class="grid-3">
@@ -706,12 +685,12 @@
               <div class="card">
                 <strong>Ações</strong>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-load-contacts">Carregar contatos</button>
+                <button class="btn btn--soft" id="btn-refresh-contacts">Atualizar contatos</button>
                 <button class="btn btn--soft" data-export="contacts">Exportar CSV</button>
               </div>
               <div class="card">
                 <strong>Leitura do negócio</strong>
-                <div class="tiny" id="contacts-note">Ainda não há leitura suficiente.</div>
+                <div class="tiny" id="contacts-note">Ainda não há contatos para mostrar.</div>
               </div>
             </div>
 
@@ -729,7 +708,7 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Interesses</span>
               <h2 class="h2">Entradas de captação</h2>
-              <div class="muted">Lista de interesses, leitura rápida e exportação simples.</div>
+              <div class="muted">Lista aberta dos interesses recebidos, com filtro e exportação.</div>
             </div>
 
             <div class="grid-3">
@@ -742,12 +721,12 @@
               <div class="card">
                 <strong>Ações</strong>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-load-leads">Carregar interesses</button>
+                <button class="btn btn--soft" id="btn-refresh-leads">Atualizar interesses</button>
                 <button class="btn btn--soft" data-export="leads">Exportar CSV</button>
               </div>
               <div class="card">
                 <strong>Leitura do negócio</strong>
-                <div class="tiny" id="leads-note">Ainda não há leitura suficiente.</div>
+                <div class="tiny" id="leads-note">Ainda não há interesses para mostrar.</div>
               </div>
             </div>
 
@@ -765,7 +744,7 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Chamados</span>
               <h2 class="h2">Pedidos de ajuda e atendimento</h2>
-              <div class="muted">Acompanhe chamados abertos, filtros simples e exportação.</div>
+              <div class="muted">Lista aberta de chamados, com filtro e exportação.</div>
             </div>
 
             <div class="grid-3">
@@ -778,12 +757,12 @@
               <div class="card">
                 <strong>Ações</strong>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-load-tickets">Carregar chamados</button>
+                <button class="btn btn--soft" id="btn-refresh-tickets">Atualizar chamados</button>
                 <button class="btn btn--soft" data-export="tickets">Exportar CSV</button>
               </div>
               <div class="card">
                 <strong>Leitura do negócio</strong>
-                <div class="tiny" id="tickets-note">Ainda não há leitura suficiente.</div>
+                <div class="tiny" id="tickets-note">Ainda não há chamados para mostrar.</div>
               </div>
             </div>
 
@@ -801,59 +780,57 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Comunicação</span>
               <h2 class="h2">PUBMAIL para acompanhar e agir</h2>
-              <div class="muted">Fila, histórico, bloqueios, estado do contato, envio manual e listas manuais sem expor a complexidade interna.</div>
+              <div class="muted">Fila, histórico, contatos bloqueados, situação do relacionamento, envio manual e listas de envio.</div>
             </div>
 
             <div class="grid-5">
               <div class="metric">
                 <div class="eyebrow">Saúde</div>
                 <div class="value" id="mail-health-box">—</div>
-                <div class="note">Leitura estrutural do módulo.</div>
+                <div class="note">Saúde da comunicação.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Templates</div>
+                <div class="eyebrow">Modelos</div>
                 <div class="value" id="mail-templates-box">—</div>
                 <div class="note">Modelos disponíveis.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Bloqueios</div>
+                <div class="eyebrow">Contatos bloqueados</div>
                 <div class="value" id="mail-suppressions-box">—</div>
-                <div class="note">Suppressions ativas.</div>
+                <div class="note">Bloqueios ativos.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Fila</div>
+                <div class="eyebrow">Mensagens na fila</div>
                 <div class="value" id="mail-queue-box">—</div>
-                <div class="note">Mensagens pendentes.</div>
+                <div class="note">Itens aguardando envio.</div>
               </div>
               <div class="metric">
-                <div class="eyebrow">Histórico</div>
+                <div class="eyebrow">Histórico de envio</div>
                 <div class="value" id="mail-log-box">—</div>
-                <div class="note">Registros de envio.</div>
+                <div class="note">Registros de envio e processamento.</div>
               </div>
             </div>
 
             <div class="grid-4" style="margin-top:16px">
               <div class="card">
-                <strong>Leituras principais</strong>
+                <strong>Atualizar comunicação</strong>
+                <div class="tiny">Atualiza resumo, fila, listas de envio e histórico.</div>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-health">Health</button>
-                <button class="btn btn--soft" id="btn-mail-templates">Templates</button>
-                <button class="btn btn--soft" id="btn-mail-suppressions">Bloqueios</button>
-                <button class="btn btn--soft" id="btn-mail-contact-state">Estado do contato</button>
+                <button class="btn btn--soft" id="btn-refresh-mail">Atualizar comunicação</button>
+                <button class="btn btn--soft admin-inline" id="btn-mail-more-data">Carregar mais detalhes</button>
               </div>
 
               <div class="card">
-                <strong>Fila e histórico</strong>
+                <strong>Operação da fila</strong>
+                <div class="tiny">Buscar novas entradas e enviar os itens pendentes.</div>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-queue">Fila</button>
-                <button class="btn btn--soft" id="btn-mail-log">Histórico</button>
-                <button class="btn btn--soft" id="btn-mail-scan">Varrer entradas</button>
-                <button class="btn btn--violet" id="btn-mail-process">Processar fila</button>
+                <button class="btn btn--soft" id="btn-mail-scan">Buscar novas entradas</button>
+                <button class="btn btn--violet" id="btn-mail-process">Enviar itens pendentes</button>
               </div>
 
               <div class="card">
                 <strong>Envio manual</strong>
-                <div class="tiny">Ação operacional simples para uma mensagem direta.</div>
+                <div class="tiny">Envie ou enfileire uma mensagem simples.</div>
                 <div style="height:10px"></div>
                 <input class="input" id="mail-send-to" placeholder="E-mail do destinatário" />
                 <div style="height:10px"></div>
@@ -861,12 +838,12 @@
                 <div style="height:10px"></div>
                 <textarea class="textarea" id="mail-send-body" placeholder="Mensagem"></textarea>
                 <div style="height:10px"></div>
-                <button class="btn btn--primary" id="btn-mail-send-manual">Enviar mensagem manual</button>
+                <button class="btn btn--primary" id="btn-mail-send-manual">Enviar mensagem</button>
               </div>
 
               <div class="card">
-                <strong>Bloqueio simples</strong>
-                <div class="tiny">Adiciona suppression para um contato.</div>
+                <strong>Bloquear contato</strong>
+                <div class="tiny">Impede novo envio para um contato.</div>
                 <div style="height:10px"></div>
                 <input class="input" id="mail-suppression-email" placeholder="E-mail para bloquear" />
                 <div style="height:10px"></div>
@@ -880,39 +857,39 @@
 
             <div class="grid-3">
               <div class="card">
-                <strong>Lista manual</strong>
-                <div class="tiny">Cria uma lista simples para disparos operacionais.</div>
+                <strong>Lista de envio</strong>
+                <div class="tiny">Cria uma lista simples para uso operacional.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="manual-list-name" placeholder="Nome da lista" />
+                <input class="input" id="manual-list-name" placeholder="Nome da lista de envio" />
                 <div style="height:10px"></div>
                 <textarea class="textarea" id="manual-list-note" placeholder="Observação opcional"></textarea>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-create-manual-list">Criar lista manual</button>
+                <button class="btn btn--soft" id="btn-mail-create-manual-list">Criar lista</button>
                 <button class="btn btn--soft" id="btn-mail-list-manual-lists">Atualizar listas</button>
               </div>
 
               <div class="card">
-                <strong>Entrada da lista</strong>
-                <div class="tiny">Atualiza ou cria uma entrada em lista manual.</div>
+                <strong>Contato da lista</strong>
+                <div class="tiny">Cria ou atualiza um contato dentro da lista de envio.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="manual-entry-list-id" placeholder="ID da lista" />
+                <input class="input" id="manual-entry-list-id" placeholder="ID da lista de envio" />
                 <div style="height:10px"></div>
                 <input class="input" id="manual-entry-email" placeholder="E-mail" />
                 <div style="height:10px"></div>
                 <input class="input" id="manual-entry-name" placeholder="Nome" />
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-update-manual-entry">Salvar entrada</button>
+                <button class="btn btn--soft" id="btn-mail-update-manual-entry">Salvar contato da lista</button>
               </div>
 
               <div class="card">
-                <strong>Ativar ou pausar entrada</strong>
-                <div class="tiny">Ativa ou desativa uma entrada já existente.</div>
+                <strong>Ativar ou desativar contato</strong>
+                <div class="tiny">Altera o estado de um contato já criado na lista.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="manual-active-entry-id" placeholder="ID da entrada" />
+                <input class="input" id="manual-active-entry-id" placeholder="ID do contato da lista" />
                 <div style="height:10px"></div>
                 <select class="select" id="manual-active-value">
-                  <option value="true">ativa</option>
-                  <option value="false">inativa</option>
+                  <option value="true">ativo</option>
+                  <option value="false">inativo</option>
                 </select>
                 <div style="height:10px"></div>
                 <button class="btn btn--soft" id="btn-mail-set-manual-entry-active">Aplicar</button>
@@ -923,7 +900,7 @@
 
             <div class="table-card">
               <div class="table-head">
-                <div class="table-title">Fila atual</div>
+                <div class="table-title">Mensagens na fila</div>
                 <div class="toolbar-right">
                   <button class="btn btn--soft" data-export="mailQueue">Exportar CSV</button>
                 </div>
@@ -936,20 +913,20 @@
             <div class="grid-2">
               <div class="table-card">
                 <div class="table-head">
-                  <div class="table-title">Listas manuais</div>
+                  <div class="table-title">Listas de envio</div>
                 </div>
                 <div class="table-wrap" id="table-manual-lists"></div>
               </div>
               <div class="card">
-                <strong>Leitura do negócio</strong>
+                <strong>Leitura da comunicação</strong>
                 <div class="tiny" id="mail-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
               </div>
             </div>
 
-            <div class="sep admin-only-section"></div>
+            <div class="sep admin-only"></div>
 
-            <div class="card admin-only-section">
-              <strong>Payload técnico do PUBMAIL</strong>
+            <div class="card admin-only">
+              <strong>Retorno técnico do PUBMAIL</strong>
               <div class="tiny">Visível apenas no perfil administrador.</div>
               <div style="height:10px"></div>
               <div class="codebox" id="box-mail-json">Nenhuma leitura técnica ainda.</div>
@@ -959,8 +936,8 @@
           <section class="panel" id="dados">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Dados</span>
-              <h2 class="h2">PUBIO para exportar, validar, conferir e restaurar</h2>
-              <div class="muted">O foco do usuário final é claro: exportar, validar, pré-visualizar, criar backup e restaurar com o menor risco possível.</div>
+              <h2 class="h2">PUBIO para exportar, conferir, salvar e restaurar</h2>
+              <div class="muted">Exporte dados, confira arquivos, simule importações, crie cópias de segurança e restaure com o menor risco possível.</div>
             </div>
 
             <div class="grid-4">
@@ -974,14 +951,15 @@
                 </select>
                 <div style="height:10px"></div>
                 <button class="btn btn--soft" id="btn-io-export-entity">Exportar entidade</button>
-                <button class="btn btn--soft" id="btn-io-export-bundle">Exportar bundle</button>
-                <button class="btn btn--soft admin-only-inline" id="btn-io-export-entity-csv">Exportar CSV do backend</button>
+                <button class="btn btn--soft" id="btn-io-export-bundle">Exportar base completa</button>
+                <button class="btn btn--soft admin-inline" id="btn-io-export-entity-csv">Exportar CSV do backend</button>
               </div>
 
               <div class="card">
-                <strong>Validar arquivo</strong>
+                <strong>Conferir arquivo</strong>
+                <div class="tiny">Use a referência do arquivo salvo.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="io-storage-ref" placeholder="storage_ref" />
+                <input class="input" id="io-storage-ref" placeholder="Referência do arquivo" />
                 <div style="height:10px"></div>
                 <select class="select" id="io-validate-entity">
                   <option value="contacts">contacts</option>
@@ -990,11 +968,11 @@
                 </select>
                 <div style="height:10px"></div>
                 <button class="btn btn--soft" id="btn-io-validate">Validar arquivo</button>
-                <button class="btn btn--soft" id="btn-io-inspect-storage-ref">Inspecionar storage_ref</button>
+                <button class="btn btn--soft" id="btn-io-inspect-storage-ref">Inspecionar arquivo</button>
               </div>
 
               <div class="card">
-                <strong>Backup</strong>
+                <strong>Cópia de segurança</strong>
                 <div style="height:10px"></div>
                 <select class="select" id="io-snapshot-entity">
                   <option value="contacts">contacts</option>
@@ -1002,17 +980,17 @@
                   <option value="tickets">tickets</option>
                 </select>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-snapshot">Criar snapshot</button>
+                <button class="btn btn--soft" id="btn-io-snapshot">Criar cópia</button>
                 <button class="btn btn--soft" id="btn-io-list-logs">Ver registros</button>
               </div>
 
               <div class="card">
-                <strong>Restauração</strong>
-                <div class="tiny">Use um snapshot já existente.</div>
+                <strong>Restaurar cópia</strong>
+                <div class="tiny">Use o ID de uma cópia já existente.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="io-snapshot-id" placeholder="snapshot_id" />
+                <input class="input" id="io-snapshot-id" placeholder="ID da cópia de segurança" />
                 <div style="height:10px"></div>
-                <button class="btn btn--danger" id="btn-io-restore">Restaurar snapshot</button>
+                <button class="btn btn--danger" id="btn-io-restore">Restaurar cópia</button>
               </div>
             </div>
 
@@ -1020,19 +998,19 @@
 
             <div class="grid-3">
               <div class="card">
-                <strong>Pré-visualização</strong>
-                <div class="tiny">Conferência antes de aplicar qualquer mudança.</div>
+                <strong>Ver conteúdo do arquivo</strong>
+                <div class="tiny">Somente leitura. Não aplica mudança.</div>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-preview-json">Preview JSON</button>
-                <button class="btn btn--soft" id="btn-io-preview-csv">Preview CSV</button>
-                <button class="btn btn--soft" id="btn-io-read-storage-ref">Ler storage_ref</button>
+                <button class="btn btn--soft" id="btn-io-preview-json">Ver conteúdo JSON</button>
+                <button class="btn btn--soft" id="btn-io-preview-csv">Ver conteúdo CSV</button>
+                <button class="btn btn--soft" id="btn-io-read-storage-ref">Ler arquivo salvo</button>
               </div>
 
               <div class="card">
-                <strong>Dry run de importação</strong>
-                <div class="tiny">Validação operacional antes da importação.</div>
+                <strong>Simular importação</strong>
+                <div class="tiny">Testa a importação sem aplicar mudança.</div>
                 <div style="height:10px"></div>
-                <input class="input" id="io-dry-run-storage-ref" placeholder="storage_ref" />
+                <input class="input" id="io-dry-run-storage-ref" placeholder="Referência do arquivo" />
                 <div style="height:10px"></div>
                 <select class="select" id="io-dry-run-entity">
                   <option value="contacts">contacts</option>
@@ -1040,11 +1018,11 @@
                   <option value="tickets">tickets</option>
                 </select>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-dry-run-import">Executar dry run</button>
+                <button class="btn btn--soft" id="btn-io-dry-run-import">Simular sem aplicar</button>
               </div>
 
               <div class="card">
-                <strong>Leitura do módulo</strong>
+                <strong>Leitura dos dados</strong>
                 <div class="tiny" id="io-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
               </div>
             </div>
@@ -1053,13 +1031,13 @@
 
             <div class="grid-2">
               <div class="card">
-                <strong>Resultado operacional do PUBIO</strong>
+                <strong>Resultado da última ação</strong>
                 <div style="height:10px"></div>
                 <div class="codebox" id="box-io-result">Nenhuma leitura ainda.</div>
               </div>
 
-              <div class="card admin-only-section">
-                <strong>Payload técnico do PUBIO</strong>
+              <div class="card admin-only">
+                <strong>Retorno técnico do PUBIO</strong>
                 <div style="height:10px"></div>
                 <div class="codebox" id="box-io-json">Nenhuma leitura técnica ainda.</div>
               </div>
@@ -1070,7 +1048,7 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Histórico</span>
               <h2 class="h2">Ações recentes do painel</h2>
-              <div class="muted">Histórico local salvo apenas neste navegador.</div>
+              <div class="muted">Mostra apenas ações manuais e erros relevantes. Leituras automáticas não poluem o histórico.</div>
             </div>
 
             <div class="toolbar" style="margin-bottom:14px">
@@ -1084,11 +1062,11 @@
             <div id="history-wrap"></div>
           </section>
 
-          <section class="panel admin-only-section" id="administracao">
+          <section class="panel admin-only" id="administracao">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Administração</span>
               <h2 class="h2">Instalação, contrato e leitura técnica</h2>
-              <div class="muted">Área reservada para instalação do ambiente, validação estrutural e payloads internos.</div>
+              <div class="muted">Área reservada para instalação do ambiente, contrato técnico e retornos internos.</div>
             </div>
 
             <div class="grid-3">
@@ -1102,17 +1080,16 @@
               <div class="card">
                 <strong>Ações administrativas</strong>
                 <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-admin-contract">Contrato do backend</button>
-                <button class="btn btn--soft" id="btn-admin-io-contract">Contrato do PUBIO</button>
-                <button class="btn btn--soft" id="btn-admin-mail-bootstrap">Bootstrap do PUBMAIL</button>
-                <button class="btn btn--soft" id="btn-admin-io-install">Instalar PUBIO</button>
+                <button class="btn btn--soft" id="btn-admin-contract">Ver contrato técnico</button>
+                <button class="btn btn--soft" id="btn-admin-io-contract">Ver contrato dos dados</button>
+                <button class="btn btn--soft" id="btn-admin-mail-bootstrap">Preparar comunicação</button>
+                <button class="btn btn--soft" id="btn-admin-io-install">Preparar módulo de dados</button>
               </div>
 
               <div class="card">
                 <strong>Observação importante</strong>
                 <div class="tiny">
-                  Separação de interface não equivale a permissão real.
-                  Para haver acesso de administrador com segurança, o backend também precisa validar o perfil e restringir actions.
+                  A separação de perfis na interface organiza o painel, mas a permissão real precisa existir também no backend.
                 </div>
               </div>
             </div>
@@ -1121,7 +1098,7 @@
 
             <div class="grid-2">
               <div class="card">
-                <strong>Payload geral do backend</strong>
+                <strong>Retorno geral do backend</strong>
                 <div style="height:10px"></div>
                 <div class="codebox" id="box-system-json">Nenhuma leitura técnica ainda.</div>
               </div>
@@ -1134,7 +1111,7 @@
           </section>
 
           <section class="panel">
-            <div class="tiny">PUBPANEL 1.0 · painel operacional do negócio com administração separada · segurança real deve existir também no backend.</div>
+            <div class="tiny">PUBPANEL 1.0 · painel operacional do negócio com leitura automática e administração separada · segurança real deve existir também no backend.</div>
           </section>
 
         </div>
@@ -1280,11 +1257,55 @@
       localStorage.setItem(PUBPANEL.STORAGE.HISTORY, JSON.stringify(state.ui.history.slice(0,40)));
     }
 
+    function friendlyActionName(action){
+      const map = {
+        "mode=status":"Leitura de status",
+        "mode=health":"Leitura de saúde",
+        "mode=contract":"Leitura de contrato técnico",
+        "admin_list_contacts":"Atualização de contatos",
+        "admin_list_leads":"Atualização de interesses",
+        "admin_list_tickets":"Atualização de chamados",
+        "admin_mail_overview":"Atualização do resumo da comunicação",
+        "admin_mail_health":"Atualização da saúde da comunicação",
+        "admin_mail_list_templates":"Leitura de modelos",
+        "admin_mail_list_suppressions":"Leitura de contatos bloqueados",
+        "admin_mail_list_contact_state":"Leitura da situação do relacionamento",
+        "admin_mail_list_queue":"Atualização da fila de mensagens",
+        "admin_mail_list_log":"Leitura do histórico de envio",
+        "admin_mail_scan":"Busca de novas entradas",
+        "admin_mail_process_queue":"Envio de itens pendentes",
+        "admin_mail_create_manual_list":"Criação de lista de envio",
+        "admin_mail_list_manual_lists":"Atualização de listas de envio",
+        "admin_mail_update_manual_list_entry":"Atualização de contato da lista",
+        "admin_mail_set_manual_list_entry_active":"Alteração do estado do contato da lista",
+        "admin_mail_add_suppression":"Bloqueio de contato",
+        "admin_mail_send_manual":"Envio manual de mensagem",
+        "admin_mail_bootstrap":"Preparação da comunicação",
+        "admin_io_health":"Atualização da saúde dos dados",
+        "admin_io_contract":"Leitura do contrato dos dados",
+        "admin_io_export_entity":"Exportação por entidade",
+        "admin_io_export_bundle":"Exportação da base completa",
+        "admin_io_export_entity_csv":"Exportação CSV do backend",
+        "admin_io_validate_file":"Validação de arquivo",
+        "admin_io_inspect_storage_ref":"Inspeção de arquivo",
+        "admin_io_read_storage_ref":"Leitura de arquivo salvo",
+        "admin_io_preview_json":"Visualização JSON",
+        "admin_io_preview_csv":"Visualização CSV",
+        "admin_io_dry_run_import_entity":"Simulação de importação",
+        "admin_io_create_snapshot":"Criação de cópia de segurança",
+        "admin_io_restore_snapshot":"Restauração de cópia de segurança",
+        "admin_io_list_logs":"Leitura de registros",
+        "admin_io_install":"Preparação do módulo de dados",
+        "install_all":"Instalação central"
+      };
+      return map[action] || action;
+    }
+
     function pushHistory(type, action, status, detail){
       state.ui.history.unshift({
         at: new Date().toLocaleString("pt-BR"),
         type,
-        action,
+        action: friendlyActionName(action),
         status,
         detail,
         api_base: state.apiBase || ""
@@ -1297,6 +1318,34 @@
 
     function requireApiBase(){
       if(!state.apiBase) throw new Error("Defina a URL do Web App antes de usar o painel.");
+    }
+
+    function validateRequired(label, value){
+      if(!stringValue(value)) throw new Error("Preencha: " + label + ".");
+    }
+
+    function validateEmail(label, value){
+      validateRequired(label, value);
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
+      if(!ok) throw new Error("Informe um e-mail válido em: " + label + ".");
+    }
+
+    function isLogicalOk(json){
+      if(json == null) return false;
+      if(json.ok === true) return true;
+      if(json.success === true) return true;
+      if(String(json.status || "").toLowerCase() === "ok") return true;
+      if(String(json.result || "").toLowerCase() === "ok") return true;
+      if(json.ok === false || json.success === false) return false;
+      if(String(json.status || "").toLowerCase() === "error") return false;
+      return true;
+    }
+
+    function ensureLogicalOk(json){
+      if(!isLogicalOk(json)){
+        throw new Error(json?.message || json?.error || "O backend respondeu sem confirmar sucesso lógico.");
+      }
+      return json;
     }
 
     async function readResponsePayload(res){
@@ -1325,7 +1374,7 @@
           redirect: "follow"
         });
 
-        return readResponsePayload(res);
+        return ensureLogicalOk(await readResponsePayload(res));
       },
 
       async postAction(action, payload={}){
@@ -1342,7 +1391,7 @@
           })
         });
 
-        return readResponsePayload(res);
+        return ensureLogicalOk(await readResponsePayload(res));
       }
     };
 
@@ -1406,12 +1455,12 @@
       const wrap = $("#table-contacts");
 
       if(!state.contacts.length){
-        wrap.innerHTML = renderEmpty("Nenhum contato carregado ainda.");
-        $("#contacts-note").textContent = "Ainda não há leitura suficiente.";
+        wrap.innerHTML = renderEmpty("Ainda não há contatos para mostrar.");
+        $("#contacts-note").textContent = "Ainda não há contatos para mostrar.";
         return;
       }
 
-      $("#contacts-note").textContent = `Base carregada com ${state.contacts.length} contato(s).`;
+      $("#contacts-note").textContent = `Base com ${state.contacts.length} contato(s).`;
 
       wrap.innerHTML = `
         <table>
@@ -1420,8 +1469,8 @@
               <th>Contato</th>
               <th>Email</th>
               <th>WhatsApp</th>
-              <th>Relacionamento</th>
-              <th>Atualizado</th>
+              <th>Situação</th>
+              <th>Última atualização</th>
             </tr>
           </thead>
           <tbody>
@@ -1447,12 +1496,12 @@
       const wrap = $("#table-leads");
 
       if(!state.leads.length){
-        wrap.innerHTML = renderEmpty("Nenhum interesse carregado ainda.");
-        $("#leads-note").textContent = "Ainda não há leitura suficiente.";
+        wrap.innerHTML = renderEmpty("Ainda não há interesses para mostrar.");
+        $("#leads-note").textContent = "Ainda não há interesses para mostrar.";
         return;
       }
 
-      $("#leads-note").textContent = `Base carregada com ${state.leads.length} interesse(s).`;
+      $("#leads-note").textContent = `Base com ${state.leads.length} interesse(s).`;
 
       wrap.innerHTML = `
         <table>
@@ -1485,12 +1534,12 @@
       const wrap = $("#table-tickets");
 
       if(!state.tickets.length){
-        wrap.innerHTML = renderEmpty("Nenhum chamado carregado ainda.");
-        $("#tickets-note").textContent = "Ainda não há leitura suficiente.";
+        wrap.innerHTML = renderEmpty("Ainda não há chamados para mostrar.");
+        $("#tickets-note").textContent = "Ainda não há chamados para mostrar.";
         return;
       }
 
-      $("#tickets-note").textContent = `Base carregada com ${state.tickets.length} chamado(s).`;
+      $("#tickets-note").textContent = `Base com ${state.tickets.length} chamado(s).`;
 
       wrap.innerHTML = `
         <table>
@@ -1522,7 +1571,7 @@
       const wrap = $("#table-mail-queue");
 
       if(!state.mailQueue.length){
-        wrap.innerHTML = renderEmpty("Nenhum item de fila carregado ainda.");
+        wrap.innerHTML = renderEmpty("Ainda não há mensagens na fila.");
         return;
       }
 
@@ -1558,7 +1607,7 @@
       const wrap = $("#table-manual-lists");
 
       if(!state.manualLists.length){
-        wrap.innerHTML = renderEmpty("Nenhuma lista manual carregada ainda.");
+        wrap.innerHTML = renderEmpty("Ainda não há listas de envio para mostrar.");
         return;
       }
 
@@ -1625,14 +1674,14 @@
       const mailOverviewData = extractEnvelope(state.mailOverview);
       const ioHealthData = extractEnvelope(state.ioHealth);
 
-      $("#sum-connection").textContent = !state.apiBase ? "PENDENTE" : state.status?.ok ? "OK" : state.ui.lastError ? "ERRO" : "ATENÇÃO";
-      $("#sum-health").textContent = state.health?.ok ? "OK" : state.health ? "ATENÇÃO" : "—";
-      $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : "—";
-      $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : "—";
-      $("#sum-tickets").textContent = state.tickets.length ? String(state.tickets.length) : "—";
+      $("#sum-connection").textContent = !state.apiBase ? "PENDENTE" : state.status?.ok ? "CONECTADO" : state.ui.lastError ? "COM ALERTA" : "ATENÇÃO";
+      $("#sum-health").textContent = state.health?.ok ? "OK" : state.health ? "COM ALERTA" : "—";
+      $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : (mailOverviewData.contacts_count ? String(mailOverviewData.contacts_count) : "—");
+      $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : (mailOverviewData.leads_count ? String(mailOverviewData.leads_count) : "—");
+      $("#sum-tickets").textContent = state.tickets.length ? String(state.tickets.length) : (mailOverviewData.tickets_count ? String(mailOverviewData.tickets_count) : "—");
       $("#sum-mail-queue").textContent = state.mailQueue.length ? String(state.mailQueue.length) : (mailOverviewData.queue_count ? String(mailOverviewData.queue_count) : "—");
       $("#sum-mail").textContent = state.mailHealth?.ok ? "OK" : state.mailOverview ? "PARCIAL" : "—";
-      $("#sum-io").textContent = state.ioHealth?.ok ? "OK" : state.ioHealth ? "ATENÇÃO" : "—";
+      $("#sum-io").textContent = state.ioHealth?.ok ? "OK" : state.ioHealth ? "COM ALERTA" : "—";
 
       $("#sum-last-action").textContent = state.ui.lastAction || "—";
       $("#sum-last-error").textContent = state.ui.lastError || "—";
@@ -1646,19 +1695,19 @@
       $("#mail-log-box").textContent = state.mailLog.length ? String(state.mailLog.length) : (mailOverviewData.log_count ? String(mailOverviewData.log_count) : "—");
 
       $("#mail-business-note").textContent = [
-        state.mailOverview ? "overview carregado" : "",
+        state.mailOverview ? "resumo carregado" : "",
         state.mailHealth?.ok ? "saúde OK" : (state.mailHealth ? "saúde com atenção" : ""),
-        state.mailTemplates.length ? `templates: ${state.mailTemplates.length}` : "",
-        state.mailSuppressions.length ? `bloqueios: ${state.mailSuppressions.length}` : "",
-        state.manualLists.length ? `listas manuais: ${state.manualLists.length}` : "",
+        state.mailTemplates.length ? `modelos: ${state.mailTemplates.length}` : "",
+        state.mailSuppressions.length ? `contatos bloqueados: ${state.mailSuppressions.length}` : "",
+        state.manualLists.length ? `listas de envio: ${state.manualLists.length}` : "",
         state.mailQueue.length ? `fila: ${state.mailQueue.length}` : "",
         state.mailLog.length ? `histórico: ${state.mailLog.length}` : ""
       ].filter(Boolean).join(" · ") || "Ainda não há leitura suficiente para resumir o módulo.";
 
       $("#io-business-note").textContent = [
-        state.ioHealth?.ok ? "health OK" : (state.ioHealth ? "health com atenção" : ""),
+        state.ioHealth?.ok ? "saúde OK" : (state.ioHealth ? "saúde com atenção" : ""),
         state.ioContract ? "contrato carregado" : "",
-        state.ioLast ? `última ação: ${state.ioLast.action}` : ""
+        state.ioLast ? `última ação: ${friendlyActionName(state.ioLast.action)}` : ""
       ].filter(Boolean).join(" · ") || "Ainda não há leitura suficiente para resumir o módulo.";
 
       $("#meta-role").textContent = state.role === "admin" ? "administrador" : "negócio";
@@ -1667,43 +1716,41 @@
       $("#meta-mail-version").textContent = state.mailHealth?.version || extractEnvelope(state.mailHealth).version || (state.mailOverview ? "carregado" : "—");
       $("#meta-io-version").textContent = state.ioHealth?.version || ioHealthData.version || (state.ioContract ? "carregado" : "—");
 
-      $("#box-mail-json").textContent = safeJson({
-        overview: state.mailOverview,
-        health: state.mailHealth,
-        templates_count: state.mailTemplates.length,
-        suppressions_count: state.mailSuppressions.length,
-        contact_state_count: state.mailContactState.length,
-        queue_count: state.mailQueue.length,
-        log_count: state.mailLog.length,
-        manual_lists_count: state.manualLists.length,
-        last: state.mailLast
-      });
+      const mailBox = $("#box-mail-json");
+      if(mailBox){
+        mailBox.textContent = safeJson({
+          overview: state.mailOverview,
+          health: state.mailHealth,
+          templates_count: state.mailTemplates.length,
+          suppressions_count: state.mailSuppressions.length,
+          contact_state_count: state.mailContactState.length,
+          queue_count: state.mailQueue.length,
+          log_count: state.mailLog.length,
+          manual_lists_count: state.manualLists.length,
+          last: state.mailLast
+        });
+      }
 
-      $("#box-io-json").textContent = safeJson(state.ioLast || {});
+      const ioBox = $("#box-io-json");
+      if(ioBox) ioBox.textContent = safeJson(state.ioLast || {});
       $("#box-io-result").textContent = safeJson((state.ioLast && state.ioLast.payload) || {});
-      $("#box-system-json").textContent = safeJson({
-        status: state.status,
-        health: state.health,
-        contract: state.contract
-      });
-      $("#box-contract-json").textContent = safeJson(state.contract || {});
+      const sysBox = $("#box-system-json");
+      if(sysBox){
+        sysBox.textContent = safeJson({
+          status: state.status,
+          health: state.health,
+          contract: state.contract
+        });
+      }
+      const contractBox = $("#box-contract-json");
+      if(contractBox) contractBox.textContent = safeJson(state.contract || {});
     }
 
-    async function runPublicMode(mode, button){
-      const titleMap = {
-        status: "Status carregado",
-        health: "Health carregado",
-        contract: "Contrato carregado"
-      };
-
-      const detailMap = {
-        status: "A conexão respondeu com sucesso.",
-        health: "A leitura de saúde foi concluída.",
-        contract: "O contrato do backend foi carregado."
-      };
+    async function runPublicMode(mode, button, opts={}){
+      const options = { log:true, banner:true, ...opts };
 
       try{
-        setLastAction("mode=" + mode);
+        if(options.log) setLastAction(friendlyActionName("mode=" + mode));
         setLastError("");
 
         await withBusy(button, "Lendo...", async () => {
@@ -1712,25 +1759,44 @@
           if(mode === "status") state.status = json;
           if(mode === "health") state.health = json;
           if(mode === "contract") state.contract = json;
+
           setLastRefresh();
           renderSummary();
-          setBanner("success", titleMap[mode], detailMap[mode]);
-          pushHistory("GET", "mode=" + mode, "ok", detailMap[mode]);
+
+          if(options.banner){
+            const titleMap = {
+              status: "Status carregado",
+              health: "Saúde carregada",
+              contract: "Contrato carregado"
+            };
+            const detailMap = {
+              status: "A conexão respondeu com sucesso.",
+              health: "A leitura de saúde foi concluída.",
+              contract: "O contrato do backend foi carregado."
+            };
+            setBanner("success", titleMap[mode], detailMap[mode]);
+          }
+
+          if(options.log){
+            pushHistory("GET", "mode=" + mode, "ok", "Leitura concluída.");
+          }
         });
       }catch(err){
         setLastError(err.message || "Erro desconhecido");
         renderSummary();
-        setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
-        pushHistory("GET", "mode=" + mode, "erro", err.message || "erro");
+        if(options.banner) setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
+        if(options.log) pushHistory("GET", "mode=" + mode, "erro", err.message || "erro");
       }
     }
 
-    async function runAdminList(action, targetKey, button, successText){
+    async function runAdminList(action, targetKey, button, successText, opts={}){
+      const options = { log:true, banner:true, ...opts };
+
       try{
-        setLastAction(action);
+        if(options.log) setLastAction(friendlyActionName(action));
         setLastError("");
 
-        await withBusy(button, "Carregando...", async () => {
+        await withBusy(button, "Atualizando...", async () => {
           const json = await api.postAction(action, {});
           const rows = normalizeRowsFromResponse(json);
           state[targetKey] = rows;
@@ -1742,20 +1808,23 @@
 
           setLastRefresh();
           renderSummary();
-          setBanner("success", "Leitura concluída", successText + " (" + rows.length + " linha(s)).");
-          pushHistory("POST", action, "ok", successText + " (" + rows.length + " linha(s)).");
+
+          if(options.banner) setBanner("success", "Leitura concluída", successText + " (" + rows.length + " linha(s)).");
+          if(options.log) pushHistory("POST", action, "ok", successText + " (" + rows.length + " linha(s)).");
         });
       }catch(err){
         setLastError(err.message || "Erro desconhecido");
         renderSummary();
-        setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
-        pushHistory("POST", action, "erro", err.message || "erro");
+        if(options.banner) setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
+        if(options.log) pushHistory("POST", action, "erro", err.message || "erro");
       }
     }
 
-    async function runMailAction(action, payload, button, successText){
+    async function runMailAction(action, payload, button, successText, opts={}){
+      const options = { log:true, banner:true, ...opts };
+
       try{
-        setLastAction(action);
+        if(options.log) setLastAction(friendlyActionName(action));
         setLastError("");
 
         await withBusy(button, "Executando...", async () => {
@@ -1778,20 +1847,23 @@
 
           setLastRefresh();
           renderSummary();
-          setBanner("success", "PUBMAIL", successText);
-          pushHistory("POST", action, "ok", successText);
+
+          if(options.banner) setBanner("success", "Comunicação", successText);
+          if(options.log) pushHistory("POST", action, "ok", successText);
         });
       }catch(err){
         setLastError(err.message || "Erro desconhecido");
         renderSummary();
-        setBanner("error", "Falha no PUBMAIL", err.message || "Erro desconhecido");
-        pushHistory("POST", action, "erro", err.message || "erro");
+        if(options.banner) setBanner("error", "Falha na comunicação", err.message || "Erro desconhecido");
+        if(options.log) pushHistory("POST", action, "erro", err.message || "erro");
       }
     }
 
-    async function runIoAction(action, payload, button, successText){
+    async function runIoAction(action, payload, button, successText, opts={}){
+      const options = { log:true, banner:true, ...opts };
+
       try{
-        setLastAction(action);
+        if(options.log) setLastAction(friendlyActionName(action));
         setLastError("");
 
         await withBusy(button, "Executando...", async () => {
@@ -1803,20 +1875,21 @@
 
           setLastRefresh();
           renderSummary();
-          setBanner("success", "PUBIO", successText);
-          pushHistory("POST", action, "ok", successText);
+
+          if(options.banner) setBanner("success", "Dados", successText);
+          if(options.log) pushHistory("POST", action, "ok", successText);
         });
       }catch(err){
         setLastError(err.message || "Erro desconhecido");
         renderSummary();
-        setBanner("error", "Falha no PUBIO", err.message || "Erro desconhecido");
-        pushHistory("POST", action, "erro", err.message || "erro");
+        if(options.banner) setBanner("error", "Falha nos dados", err.message || "Erro desconhecido");
+        if(options.log) pushHistory("POST", action, "erro", err.message || "erro");
       }
     }
 
     async function runInstallAll(button){
       try{
-        setLastAction("install_all");
+        setLastAction(friendlyActionName("install_all"));
         setLastError("");
 
         await withBusy(button, "Instalando...", async () => {
@@ -1828,13 +1901,7 @@
           state.mailLast = { action:"admin_mail_bootstrap", payload:mail };
           state.ioLast = { action:"admin_io_install", payload:io };
 
-          state.status = await api.getMode("status");
-          state.health = await api.getMode("health");
-          state.ioHealth = await api.postAction("admin_io_health", {});
-          state.mailOverview = await api.postAction("admin_mail_overview", {});
-
-          setLastRefresh();
-          renderSummary();
+          await refreshAllData({ log:false, banner:false });
 
           setBanner("success", "Instalação concluída", "CRM, PUBMAIL e PUBIO foram instalados ou atualizados em sequência.");
           pushHistory("POST", "install_all", "ok", "CRM, PUBMAIL e PUBIO instalados ou atualizados.");
@@ -1873,6 +1940,25 @@
       pushHistory("UI", "set_role", "ok", state.role);
     }
 
+    async function refreshMailSection(opts={}){
+      await runMailAction("admin_mail_overview", {}, null, "Resumo da comunicação carregado.", opts);
+      await runMailAction("admin_mail_list_queue", {}, null, "Fila atualizada.", opts);
+      await runMailAction("admin_mail_list_manual_lists", {}, null, "Listas de envio atualizadas.", opts);
+      await runMailAction("admin_mail_list_log", {}, null, "Histórico de envio atualizado.", opts);
+    }
+
+    async function refreshAllData(opts={}){
+      await runPublicMode("status", null, opts);
+      await runPublicMode("health", null, opts);
+      await runMailAction("admin_mail_overview", {}, null, "Resumo da comunicação carregado.", opts);
+      await runIoAction("admin_io_health", {}, null, "Saúde dos dados carregada.", opts);
+      await runAdminList("admin_list_contacts", "contacts", null, "Contatos atualizados", opts);
+      await runAdminList("admin_list_leads", "leads", null, "Interesses atualizados", opts);
+      await runAdminList("admin_list_tickets", "tickets", null, "Chamados atualizados", opts);
+      await runMailAction("admin_mail_list_queue", {}, null, "Fila atualizada.", opts);
+      await runMailAction("admin_mail_list_manual_lists", {}, null, "Listas de envio atualizadas.", opts);
+    }
+
     function bindFilters(){
       $("#filter-contacts").addEventListener("input", renderContacts);
       $("#filter-leads").addEventListener("input", renderLeads);
@@ -1884,18 +1970,21 @@
         btn.addEventListener("click", () => {
           const kind = btn.getAttribute("data-export");
           if(kind === "contacts") exportRows("pubpanel-contacts.csv", state.contacts);
-          if(kind === "leads") exportRows("pubpanel-leads.csv", state.leads);
-          if(kind === "tickets") exportRows("pubpanel-tickets.csv", state.tickets);
-          if(kind === "mailQueue") exportRows("pubpanel-mail-queue.csv", state.mailQueue);
+          if(kind === "leads") exportRows("pubpanel-interesses.csv", state.leads);
+          if(kind === "tickets") exportRows("pubpanel-chamados.csv", state.tickets);
+          if(kind === "mailQueue") exportRows("pubpanel-fila.csv", state.mailQueue);
         });
       });
     }
 
     function bindShell(){
-      $("#open-sidebar").addEventListener("click", () => {
-        $("#sidebar").classList.toggle("open");
-        $("#sidebar-backdrop").classList.toggle("show");
-      });
+      const openBtn = $("#open-sidebar");
+      if(openBtn){
+        openBtn.addEventListener("click", () => {
+          $("#sidebar").classList.toggle("open");
+          $("#sidebar-backdrop").classList.toggle("show");
+        });
+      }
 
       $("#sidebar-backdrop").addEventListener("click", () => {
         $("#sidebar").classList.remove("open");
@@ -1914,13 +2003,13 @@
       const navLinks = $$("#nav a");
       const sections = navLinks.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
 
-      const io = new IntersectionObserver(entries => {
+      const observer = new IntersectionObserver(entries => {
         const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
         if(!visible) return;
         navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + visible.target.id));
       }, { threshold:[.2,.45,.7] });
 
-      sections.forEach(s => io.observe(s));
+      sections.forEach(s => observer.observe(s));
     }
 
     function bindButtons(){
@@ -1930,100 +2019,219 @@
       $("#btn-role-business").addEventListener("click", () => setRole("business"));
       $("#btn-role-admin").addEventListener("click", () => setRole("admin"));
 
-      $("#btn-test-connection").addEventListener("click", e => runPublicMode("status", e.currentTarget));
-      $("#btn-refresh-summary").addEventListener("click", async e => {
-        await runPublicMode("status", e.currentTarget);
-        await runPublicMode("health");
-        await runMailAction("admin_mail_overview", {}, null, "Resumo do PUBMAIL carregado.");
-        await runIoAction("admin_io_health", {}, null, "Health do PUBIO carregado.");
+      $("#btn-refresh-all").addEventListener("click", async e => {
+        await withBusy(e.currentTarget, "Atualizando...", async () => {
+          await refreshAllData({ log:true, banner:false });
+          setBanner("success", "Painel atualizado", "As leituras principais foram atualizadas.");
+        });
       });
-      $("#btn-run-status").addEventListener("click", e => runPublicMode("status", e.currentTarget));
-      $("#btn-run-health").addEventListener("click", e => runPublicMode("health", e.currentTarget));
 
-      $("#btn-load-contacts").addEventListener("click", e => runAdminList("admin_list_contacts", "contacts", e.currentTarget, "Contatos carregados"));
-      $("#btn-load-leads").addEventListener("click", e => runAdminList("admin_list_leads", "leads", e.currentTarget, "Interesses carregados"));
-      $("#btn-load-tickets").addEventListener("click", e => runAdminList("admin_list_tickets", "tickets", e.currentTarget, "Chamados carregados"));
+      const listButtons = [
+        ["#btn-refresh-contacts", "admin_list_contacts", "contacts", "Contatos atualizados"],
+        ["#btn-refresh-leads", "admin_list_leads", "leads", "Interesses atualizados"],
+        ["#btn-refresh-tickets", "admin_list_tickets", "tickets", "Chamados atualizados"]
+      ];
+      listButtons.forEach(([selector, action, key, text]) => {
+        $(selector).addEventListener("click", e => runAdminList(action, key, e.currentTarget, text));
+      });
 
-      $("#btn-mail-overview").addEventListener("click", e => runMailAction("admin_mail_overview", {}, e.currentTarget, "Resumo do PUBMAIL carregado."));
-      $("#btn-mail-health").addEventListener("click", e => runMailAction("admin_mail_health", {}, e.currentTarget, "Health do PUBMAIL carregado."));
-      $("#btn-mail-templates").addEventListener("click", e => runMailAction("admin_mail_list_templates", {}, e.currentTarget, "Templates carregados."));
-      $("#btn-mail-suppressions").addEventListener("click", e => runMailAction("admin_mail_list_suppressions", {}, e.currentTarget, "Bloqueios carregados."));
-      $("#btn-mail-contact-state").addEventListener("click", e => runMailAction("admin_mail_list_contact_state", {}, e.currentTarget, "Estado dos contatos carregado."));
-      $("#btn-mail-queue").addEventListener("click", e => runMailAction("admin_mail_list_queue", {}, e.currentTarget, "Fila carregada."));
-      $("#btn-mail-log").addEventListener("click", e => runMailAction("admin_mail_list_log", {}, e.currentTarget, "Histórico carregado."));
-      $("#btn-mail-scan").addEventListener("click", e => runMailAction("admin_mail_scan", {}, e.currentTarget, "Varredura concluída."));
-      $("#btn-mail-process").addEventListener("click", e => runMailAction("admin_mail_process_queue", {}, e.currentTarget, "Processamento da fila concluído."));
-      $("#btn-mail-create-manual-list").addEventListener("click", e => runMailAction("admin_mail_create_manual_list", {
-        name: stringValue($("#manual-list-name").value),
-        note: stringValue($("#manual-list-note").value)
-      }, e.currentTarget, "Lista manual criada."));
-      $("#btn-mail-list-manual-lists").addEventListener("click", e => runMailAction("admin_mail_list_manual_lists", {}, e.currentTarget, "Listas manuais carregadas."));
-      $("#btn-mail-update-manual-entry").addEventListener("click", e => runMailAction("admin_mail_update_manual_list_entry", {
-        list_id: stringValue($("#manual-entry-list-id").value),
-        email: stringValue($("#manual-entry-email").value),
-        name: stringValue($("#manual-entry-name").value)
-      }, e.currentTarget, "Entrada da lista atualizada."));
-      $("#btn-mail-set-manual-entry-active").addEventListener("click", e => runMailAction("admin_mail_set_manual_list_entry_active", {
-        entry_id: stringValue($("#manual-active-entry-id").value),
-        active: $("#manual-active-value").value === "true"
-      }, e.currentTarget, "Estado da entrada atualizado."));
-      $("#btn-mail-add-suppression").addEventListener("click", e => runMailAction("admin_mail_add_suppression", {
-        email: stringValue($("#mail-suppression-email").value),
-        reason: stringValue($("#mail-suppression-reason").value)
-      }, e.currentTarget, "Contato bloqueado."));
-      $("#btn-mail-send-manual").addEventListener("click", e => runMailAction("admin_mail_send_manual", {
-        recipient: stringValue($("#mail-send-to").value),
-        subject: stringValue($("#mail-send-subject").value),
-        body: stringValue($("#mail-send-body").value)
-      }, e.currentTarget, "Mensagem manual enviada ou enfileirada."));
+      $("#btn-refresh-mail").addEventListener("click", async e => {
+        await withBusy(e.currentTarget, "Atualizando...", async () => {
+          await refreshMailSection({ log:true, banner:false });
+          setBanner("success", "Comunicação atualizada", "Resumo, fila, listas de envio e histórico foram atualizados.");
+        });
+      });
 
-      $("#btn-io-health").addEventListener("click", e => runIoAction("admin_io_health", {}, e.currentTarget, "Health do PUBIO carregado."));
-      $("#btn-io-list-logs").addEventListener("click", e => runIoAction("admin_io_list_logs", {}, e.currentTarget, "Registros do PUBIO carregados."));
-      $("#btn-io-export-entity").addEventListener("click", e => runIoAction("admin_io_export_entity", {
-        entity_type: $("#io-export-entity").value
-      }, e.currentTarget, "Exportação por entidade concluída."));
-      $("#btn-io-export-bundle").addEventListener("click", e => runIoAction("admin_io_export_bundle", {
-        entities: "contacts,leads,tickets"
-      }, e.currentTarget, "Exportação de bundle concluída."));
-      $("#btn-io-export-entity-csv").addEventListener("click", e => runIoAction("admin_io_export_entity_csv", {
-        entity_type: $("#io-export-entity").value
-      }, e.currentTarget, "Exportação CSV do backend concluída."));
-      $("#btn-io-validate").addEventListener("click", e => runIoAction("admin_io_validate_file", {
-        storage_ref: stringValue($("#io-storage-ref").value),
-        entity_type: $("#io-validate-entity").value
-      }, e.currentTarget, "Validação concluída."));
-      $("#btn-io-inspect-storage-ref").addEventListener("click", e => runIoAction("admin_io_inspect_storage_ref", {
-        storage_ref: stringValue($("#io-storage-ref").value)
-      }, e.currentTarget, "Inspeção do storage_ref concluída."));
-      $("#btn-io-snapshot").addEventListener("click", e => runIoAction("admin_io_create_snapshot", {
-        entity_type: $("#io-snapshot-entity").value,
-        created_by: "panel",
-        message: "snapshot criado pelo painel"
-      }, e.currentTarget, "Snapshot criado."));
-      $("#btn-io-restore").addEventListener("click", e => runIoAction("admin_io_restore_snapshot", {
-        snapshot_id: stringValue($("#io-snapshot-id").value),
-        created_by: "panel"
-      }, e.currentTarget, "Restauração solicitada."));
-      $("#btn-io-preview-json").addEventListener("click", e => runIoAction("admin_io_preview_json", {
-        storage_ref: stringValue($("#io-storage-ref").value)
-      }, e.currentTarget, "Pré-visualização JSON concluída."));
-      $("#btn-io-preview-csv").addEventListener("click", e => runIoAction("admin_io_preview_csv", {
-        storage_ref: stringValue($("#io-storage-ref").value)
-      }, e.currentTarget, "Pré-visualização CSV concluída."));
-      $("#btn-io-read-storage-ref").addEventListener("click", e => runIoAction("admin_io_read_storage_ref", {
-        storage_ref: stringValue($("#io-storage-ref").value)
-      }, e.currentTarget, "Leitura do storage_ref concluída."));
-      $("#btn-io-dry-run-import").addEventListener("click", e => runIoAction("admin_io_dry_run_import_entity", {
-        storage_ref: stringValue($("#io-dry-run-storage-ref").value),
-        entity_type: $("#io-dry-run-entity").value
-      }, e.currentTarget, "Dry run concluído."));
+      $("#btn-mail-more-data").addEventListener("click", async e => {
+        await withBusy(e.currentTarget, "Carregando...", async () => {
+          await runMailAction("admin_mail_health", {}, null, "Saúde da comunicação carregada.", { log:true, banner:false });
+          await runMailAction("admin_mail_list_templates", {}, null, "Modelos carregados.", { log:true, banner:false });
+          await runMailAction("admin_mail_list_suppressions", {}, null, "Contatos bloqueados carregados.", { log:true, banner:false });
+          await runMailAction("admin_mail_list_contact_state", {}, null, "Situação do relacionamento carregada.", { log:true, banner:false });
+          setBanner("success", "Mais detalhes carregados", "A leitura detalhada da comunicação foi atualizada.");
+        });
+      });
+
+      $("#btn-mail-scan").addEventListener("click", e => runMailAction("admin_mail_scan", {}, e.currentTarget, "Novas entradas foram buscadas."));
+      $("#btn-mail-process").addEventListener("click", e => runMailAction("admin_mail_process_queue", {}, e.currentTarget, "Os itens pendentes foram processados."));
+
+      $("#btn-mail-create-manual-list").addEventListener("click", e => {
+        try{
+          validateRequired("nome da lista de envio", $("#manual-list-name").value);
+          runMailAction("admin_mail_create_manual_list", {
+            name: stringValue($("#manual-list-name").value),
+            note: stringValue($("#manual-list-note").value)
+          }, e.currentTarget, "Lista de envio criada.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-mail-list-manual-lists").addEventListener("click", e => runMailAction("admin_mail_list_manual_lists", {}, e.currentTarget, "Listas de envio atualizadas."));
+
+      $("#btn-mail-update-manual-entry").addEventListener("click", e => {
+        try{
+          validateRequired("ID da lista de envio", $("#manual-entry-list-id").value);
+          validateEmail("e-mail", $("#manual-entry-email").value);
+          validateRequired("nome", $("#manual-entry-name").value);
+          runMailAction("admin_mail_update_manual_list_entry", {
+            list_id: stringValue($("#manual-entry-list-id").value),
+            email: stringValue($("#manual-entry-email").value),
+            name: stringValue($("#manual-entry-name").value)
+          }, e.currentTarget, "Contato da lista atualizado.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-mail-set-manual-entry-active").addEventListener("click", e => {
+        try{
+          validateRequired("ID do contato da lista", $("#manual-active-entry-id").value);
+          runMailAction("admin_mail_set_manual_list_entry_active", {
+            entry_id: stringValue($("#manual-active-entry-id").value),
+            active: $("#manual-active-value").value === "true"
+          }, e.currentTarget, "Estado do contato da lista atualizado.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-mail-add-suppression").addEventListener("click", e => {
+        try{
+          validateEmail("e-mail para bloquear", $("#mail-suppression-email").value);
+          runMailAction("admin_mail_add_suppression", {
+            email: stringValue($("#mail-suppression-email").value),
+            reason: stringValue($("#mail-suppression-reason").value)
+          }, e.currentTarget, "Contato bloqueado.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-mail-send-manual").addEventListener("click", e => {
+        try{
+          validateEmail("e-mail do destinatário", $("#mail-send-to").value);
+          validateRequired("assunto", $("#mail-send-subject").value);
+          validateRequired("mensagem", $("#mail-send-body").value);
+          runMailAction("admin_mail_send_manual", {
+            recipient: stringValue($("#mail-send-to").value),
+            subject: stringValue($("#mail-send-subject").value),
+            body: stringValue($("#mail-send-body").value)
+          }, e.currentTarget, "Mensagem manual enviada ou enfileirada.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      const ioSimpleActions = [
+        ["#btn-io-health", "admin_io_health", () => ({}), "Saúde dos dados carregada."],
+        ["#btn-io-list-logs", "admin_io_list_logs", () => ({}), "Registros carregados."],
+        ["#btn-io-export-entity", "admin_io_export_entity", () => ({
+          entity_type: $("#io-export-entity").value
+        }), "Exportação por entidade concluída."],
+        ["#btn-io-export-bundle", "admin_io_export_bundle", () => ({
+          entities: "contacts,leads,tickets"
+        }), "Exportação da base completa concluída."],
+        ["#btn-io-export-entity-csv", "admin_io_export_entity_csv", () => ({
+          entity_type: $("#io-export-entity").value
+        }), "Exportação CSV do backend concluída."],
+        ["#btn-io-snapshot", "admin_io_create_snapshot", () => ({
+          entity_type: $("#io-snapshot-entity").value,
+          created_by: "panel",
+          message: "snapshot criado pelo painel"
+        }), "Cópia de segurança criada."],
+        ["#btn-admin-io-contract", "admin_io_contract", () => ({}), "Contrato dos dados carregado."],
+        ["#btn-admin-io-install", "admin_io_install", () => ({}), "Módulo de dados preparado."]
+      ];
+      ioSimpleActions.forEach(([selector, action, payloadFactory, text]) => {
+        const el = $(selector);
+        if(el) el.addEventListener("click", e => runIoAction(action, payloadFactory(), e.currentTarget, text));
+      });
+
+      $("#btn-io-validate").addEventListener("click", e => {
+        try{
+          validateRequired("referência do arquivo", $("#io-storage-ref").value);
+          runIoAction("admin_io_validate_file", {
+            storage_ref: stringValue($("#io-storage-ref").value),
+            entity_type: $("#io-validate-entity").value
+          }, e.currentTarget, "Arquivo validado.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-io-inspect-storage-ref").addEventListener("click", e => {
+        try{
+          validateRequired("referência do arquivo", $("#io-storage-ref").value);
+          runIoAction("admin_io_inspect_storage_ref", {
+            storage_ref: stringValue($("#io-storage-ref").value)
+          }, e.currentTarget, "Arquivo inspecionado.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-io-restore").addEventListener("click", e => {
+        try{
+          validateRequired("ID da cópia de segurança", $("#io-snapshot-id").value);
+          runIoAction("admin_io_restore_snapshot", {
+            snapshot_id: stringValue($("#io-snapshot-id").value),
+            created_by: "panel"
+          }, e.currentTarget, "Restauração solicitada.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-io-preview-json").addEventListener("click", e => {
+        try{
+          validateRequired("referência do arquivo", $("#io-storage-ref").value);
+          runIoAction("admin_io_preview_json", {
+            storage_ref: stringValue($("#io-storage-ref").value)
+          }, e.currentTarget, "Conteúdo JSON carregado.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-io-preview-csv").addEventListener("click", e => {
+        try{
+          validateRequired("referência do arquivo", $("#io-storage-ref").value);
+          runIoAction("admin_io_preview_csv", {
+            storage_ref: stringValue($("#io-storage-ref").value)
+          }, e.currentTarget, "Conteúdo CSV carregado.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-io-read-storage-ref").addEventListener("click", e => {
+        try{
+          validateRequired("referência do arquivo", $("#io-storage-ref").value);
+          runIoAction("admin_io_read_storage_ref", {
+            storage_ref: stringValue($("#io-storage-ref").value)
+          }, e.currentTarget, "Arquivo salvo lido.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
+
+      $("#btn-io-dry-run-import").addEventListener("click", e => {
+        try{
+          validateRequired("referência do arquivo", $("#io-dry-run-storage-ref").value);
+          runIoAction("admin_io_dry_run_import_entity", {
+            storage_ref: stringValue($("#io-dry-run-storage-ref").value),
+            entity_type: $("#io-dry-run-entity").value
+          }, e.currentTarget, "Simulação concluída.");
+        }catch(err){
+          setBanner("warn", "Campo obrigatório", err.message);
+        }
+      });
 
       $("#btn-install-all").addEventListener("click", e => runInstallAll(e.currentTarget));
       $("#btn-install-all-inline").addEventListener("click", e => runInstallAll(e.currentTarget));
       $("#btn-admin-contract").addEventListener("click", e => runPublicMode("contract", e.currentTarget));
-      $("#btn-admin-io-contract").addEventListener("click", e => runIoAction("admin_io_contract", {}, e.currentTarget, "Contrato do PUBIO carregado."));
-      $("#btn-admin-mail-bootstrap").addEventListener("click", e => runMailAction("admin_mail_bootstrap", {}, e.currentTarget, "Bootstrap do PUBMAIL concluído."));
-      $("#btn-admin-io-install").addEventListener("click", e => runIoAction("admin_io_install", {}, e.currentTarget, "Instalação do PUBIO concluída."));
+      $("#btn-admin-mail-bootstrap").addEventListener("click", e => runMailAction("admin_mail_bootstrap", {}, e.currentTarget, "Comunicação preparada."));
 
       $("#btn-refresh-history").addEventListener("click", renderHistory);
       $("#btn-clear-history").addEventListener("click", () => {
@@ -2049,15 +2257,17 @@
 
     async function autoWarm(){
       if(!state.apiBase){
-        setBanner("warn", "Conexão não configurada", "Informe a URL do Web App para ativar as leituras do painel.");
+        setBanner("warn", "Conexão não configurada", "Informe a URL do Web App para ativar o painel.");
         return;
       }
 
-      try { await runPublicMode("status"); } catch(_) {}
-      try { await runPublicMode("health"); } catch(_) {}
-      try { await runMailAction("admin_mail_overview", {}, null, "Resumo do PUBMAIL carregado."); } catch(_) {}
-      try { await runIoAction("admin_io_health", {}, null, "Health do PUBIO carregado."); } catch(_) {}
-      clearBanner();
+      try{
+        await refreshAllData({ log:false, banner:false });
+        clearBanner();
+      }catch(_){
+        renderSummary();
+        setBanner("warn", "Painel parcialmente carregado", "Algumas leituras automáticas não puderam ser concluídas.");
+      }
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
