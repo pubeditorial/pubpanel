@@ -462,10 +462,15 @@
       word-break:break-word;
     }
 
-    .admin-only{display:none !important}
-    body[data-role="admin"] .admin-only{display:block !important}
+      .admin-only{display:none !important}
+    .admin-inline{display:none !important}
+
+    body[data-role="admin"] .admin-only{display:inherit !important}
     body[data-role="admin"] .admin-inline{display:inline-flex !important}
     body[data-role="business"] .admin-inline{display:none !important}
+
+    body[data-role="admin"] .tab-panel.admin-only{display:none !important}
+    body[data-role="admin"] .tab-panel.admin-only.is-active{display:block !important}
 
     .module-disabled{
       opacity:.58;
@@ -758,14 +763,14 @@
                 </div>
               </div>
 
-              <div class="card">
+                            <div class="card">
                 <strong>Token administrativo</strong>
-                <div class="tiny">Necessário para base operacional, módulos e administração.</div>
+                <div class="tiny">Necessário para base operacional, módulos e administração. Por segurança, este token fica apenas em memória enquanto a página estiver aberta.</div>
                 <div style="height:10px"></div>
                 <input class="input" id="admin-token" type="password" placeholder="Token administrativo" />
                 <div style="height:10px"></div>
                 <div class="toolbar-right">
-                  <button class="btn btn--soft" id="btn-save-admin-token">Salvar token</button>
+                  <button class="btn btn--soft" id="btn-save-admin-token">Aplicar token</button>
                   <button class="btn btn--soft" id="btn-clear-admin-token">Limpar token</button>
                 </div>
               </div>
@@ -1454,11 +1459,10 @@
   </div>
 
   <script>
-    const PUBPANEL = {
+       const PUBPANEL = {
       VERSION: "1.1",
       STORAGE: {
         API_BASE: "PUBPANEL_V11_API_BASE",
-        ADMIN_TOKEN: "PUBPANEL_V11_SESSION_ADMIN_TOKEN",
         ROLE: "PUBPANEL_V11_ROLE",
         HISTORY: "PUBPANEL_V11_HISTORY"
       }
@@ -1476,7 +1480,7 @@
       IO_LOGS: 150
     };
 
-    const state = {
+        const state = {
       apiBase: "",
       adminToken: "",
       role: "business",
@@ -1507,6 +1511,11 @@
       ioLogs: [],
       ioLast: null,
 
+      requests: {
+        publicMode: Object.create(null),
+        action: Object.create(null)
+      },
+
       ui: {
         history: [],
         lastAction: "",
@@ -1530,6 +1539,83 @@
       try { return JSON.stringify(v, null, 2); }
       catch(_) { return String(v); }
     }
+
+    function abortPreviousRequest(bucket, key){
+  const map = state.requests[bucket];
+  if(!map) return null;
+
+  const previous = map[key];
+  if(previous && previous.controller){
+    previous.controller.abort();
+  }
+
+  const controller = new AbortController();
+  const seq = (previous?.seq || 0) + 1;
+
+  map[key] = { controller, seq };
+  return { controller, seq };
+}
+
+function isLatestRequest(bucket, key, seq){
+  const current = state.requests[bucket]?.[key];
+  return !!current && current.seq === seq;
+}
+
+    function clearTrackedRequest(bucket, key, seq){
+  const current = state.requests[bucket]?.[key];
+  if(current && current.seq === seq){
+    delete state.requests[bucket][key];
+  }
+}
+
+async function fetchWithTimeout(url, options={}, timeoutMs=30000){
+  const controller = new AbortController();
+  const externalSignal = options.signal;
+
+  let timeoutId = null;
+  let abortedByTimeout = false;
+
+  const abortFromExternal = () => controller.abort();
+
+  if(externalSignal){
+    if(externalSignal.aborted){
+      controller.abort();
+    }else{
+      externalSignal.addEventListener("abort", abortFromExternal, { once:true });
+    }
+  }
+
+  try{
+    timeoutId = window.setTimeout(() => {
+      abortedByTimeout = true;
+      controller.abort();
+    }, timeoutMs);
+
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+  }catch(err){
+    if(abortedByTimeout){
+      const timeoutError = new Error("Tempo limite excedido ao consultar o backend.");
+      timeoutError.name = "RequestTimeoutError";
+      throw timeoutError;
+    }
+
+    if(err?.name === "AbortError"){
+      throw err;
+    }
+
+    throw err;
+  }finally{
+    if(timeoutId !== null){
+      window.clearTimeout(timeoutId);
+    }
+    if(externalSignal){
+      externalSignal.removeEventListener("abort", abortFromExternal);
+    }
+  }
+}
 
     function stringValue(v){
       return String(v ?? "").trim();
@@ -1570,9 +1656,9 @@
     function setLastError(v){ state.ui.lastError = v || ""; }
     function setLastRefresh(){ state.ui.lastRefresh = new Date().toLocaleString("pt-BR"); }
 
-    function loadPersisted(){
+        function loadPersisted(){
       state.apiBase = localStorage.getItem(PUBPANEL.STORAGE.API_BASE) || "";
-      state.adminToken = sessionStorage.getItem(PUBPANEL.STORAGE.ADMIN_TOKEN) || "";
+      state.adminToken = "";
       state.role = localStorage.getItem(PUBPANEL.STORAGE.ROLE) || "business";
 
       try{
@@ -1584,16 +1670,10 @@
       }
     }
 
-    function persist(){
+        function persist(){
       localStorage.setItem(PUBPANEL.STORAGE.API_BASE, state.apiBase);
       localStorage.setItem(PUBPANEL.STORAGE.ROLE, state.role);
       localStorage.setItem(PUBPANEL.STORAGE.HISTORY, JSON.stringify(state.ui.history.slice(0,40)));
-
-      if(state.adminToken){
-        sessionStorage.setItem(PUBPANEL.STORAGE.ADMIN_TOKEN, state.adminToken);
-      }else{
-        sessionStorage.removeItem(PUBPANEL.STORAGE.ADMIN_TOKEN);
-      }
     }
 
     function normalizeRowsFromResponse(json){
@@ -1684,170 +1764,223 @@
       }
     }
 
-    function isAdminActionName(action){
-      return String(action || "").toLowerCase().startsWith("admin_");
-    }
+   function isAdminActionName(action){
+  return String(action || "").toLowerCase().startsWith("admin_");
+}
 
-  function isLogicalOk(json){
-  if(json == null || typeof json !== "object") return false;
-  if(json.ok === true) return true;
-  if(json.success === true) return true;
+function getLogicalState(json){
+  if(json == null || typeof json !== "object"){
+    return "error";
+  }
+
+  if(json.ok === true || json.success === true){
+    return "ok";
+  }
 
   const status = String(json.status || "").trim().toLowerCase();
   const result = String(json.result || "").trim().toLowerCase();
 
-  if(["ok","success","ready","valid","partial"].includes(status)) return true;
-  if(["ok","success","ready","valid","partial"].includes(result)) return true;
+  const okValues = ["ok","success","ready","valid"];
+  const partialValues = ["partial"];
+  const errorValues = ["error","failed","invalid","denied","forbidden","unauthorized"];
 
-  return false;
+  if(okValues.includes(status) || okValues.includes(result)){
+    return "ok";
+  }
+
+  if(partialValues.includes(status) || partialValues.includes(result)){
+    return "partial";
+  }
+
+  if(errorValues.includes(status) || errorValues.includes(result)){
+    return "error";
+  }
+
+  return "error";
 }
 
-    function ensureLogicalOk(json){
-      if(!isLogicalOk(json)){
-        const errObj = json?.error && typeof json.error === "object" ? json.error : null;
-        throw new Error(
-          json?.message ||
-          json?.error?.message ||
-          errObj?.code ||
-          json?.error ||
-          "O backend respondeu sem confirmar sucesso lógico."
-        );
-      }
-      return json;
-    }
+function isLogicalOk(json){
+  return getLogicalState(json) === "ok";
+}
 
-    function filterRows(rows, q, keys){
-      const query = stringValue(q).toLowerCase();
-      if(!query) return Array.isArray(rows) ? rows.slice() : [];
-      return (Array.isArray(rows) ? rows : []).filter(row => {
-        const hay = keys.map(k => String(row?.[k] ?? "")).join(" ").toLowerCase();
-        return hay.includes(query);
-      });
-    }
+function ensureLogicalOk(json){
+  const logicalState = getLogicalState(json);
 
-    function countByKey(rows, key){
-      const out = {};
-      (rows || []).forEach(row => {
-        const value = stringValue(row?.[key]).toUpperCase() || "SEM_VALOR";
-        out[value] = (out[value] || 0) + 1;
-      });
-      return out;
-    }
+  if(logicalState === "ok"){
+    return json;
+  }
 
-    function limitRowsForRender(rows, maxRows){
-      rows = Array.isArray(rows) ? rows : [];
-      maxRows = Number(maxRows || 100);
+  if(logicalState === "partial"){
+    const message =
+      json?.message ||
+      json?.warning ||
+      json?.error?.message ||
+      "O backend respondeu com sucesso parcial.";
 
-      return {
-        total: rows.length,
-        visible: rows.slice(0, maxRows),
-        hidden: Math.max(0, rows.length - maxRows)
-      };
-    }
+    const error = new Error(message);
+    error.name = "LogicalPartialError";
+    error.logicalState = "partial";
+    error.payload = json;
+    throw error;
+  }
 
-    function renderLimitedTableNote(total, hidden){
-      if(!total) return "";
-      if(!hidden){
-        return `<div class="tiny" style="padding:12px 16px;border-bottom:1px solid var(--line)">Mostrando ${total} linha(s).</div>`;
-      }
-      return `<div class="tiny" style="padding:12px 16px;border-bottom:1px solid var(--line)">Mostrando ${total - hidden} de ${total} linha(s). As demais continuam carregadas em memória, mas não são desenhadas na tela.</div>`;
-    }
+  const errObj = json?.error && typeof json.error === "object" ? json.error : null;
 
-    function renderEmpty(text){
-      return `<div class="empty">${escapeHtml(text)}</div>`;
-    }
+  const error = new Error(
+    json?.message ||
+    json?.error?.message ||
+    errObj?.code ||
+    json?.error ||
+    "O backend respondeu sem confirmar sucesso lógico."
+  );
+  error.name = "LogicalError";
+  error.logicalState = "error";
+  error.payload = json;
+  throw error;
+}
 
-    function withBusy(button, label, fn){
-      if(!button) return fn();
-      const original = button.dataset.label || button.textContent;
-      button.dataset.label = original;
-      button.disabled = true;
-      button.textContent = label || "Carregando...";
-      return Promise.resolve(fn()).finally(() => {
-        button.disabled = false;
-        button.textContent = original;
-      });
-    }
+function filterRows(rows, q, keys){
+  const query = stringValue(q).toLowerCase();
+  if(!query) return Array.isArray(rows) ? rows.slice() : [];
+  return (Array.isArray(rows) ? rows : []).filter(row => {
+    const hay = keys.map(k => String(row?.[k] ?? "")).join(" ").toLowerCase();
+    return hay.includes(query);
+  });
+}
 
-    function renderSimpleTable({ wrap, rows, columns, emptyText, noteHtml="" }){
-      if(!wrap) return;
+function countByKey(rows, key){
+  const out = {};
+  (rows || []).forEach(row => {
+    const value = stringValue(row?.[key]).toUpperCase() || "SEM_VALOR";
+    out[value] = (out[value] || 0) + 1;
+  });
+  return out;
+}
 
-      if(!rows.length){
-        wrap.innerHTML = renderEmpty(emptyText);
-        return;
-      }
+function limitRowsForRender(rows, maxRows){
+  rows = Array.isArray(rows) ? rows : [];
+  maxRows = Number(maxRows || 100);
 
-      const thead = columns.map(col => `<th>${escapeHtml(col.label)}</th>`).join("");
-      const tbody = rows.map(row => `
-        <tr>
-          ${columns.map(col => `<td>${col.render(row)}</td>`).join("")}
-        </tr>
-      `).join("");
+  return {
+    total: rows.length,
+    visible: rows.slice(0, maxRows),
+    hidden: Math.max(0, rows.length - maxRows)
+  };
+}
 
-      wrap.innerHTML = `
-        ${noteHtml}
-        <table>
-          <thead><tr>${thead}</tr></thead>
-          <tbody>${tbody}</tbody>
-        </table>
-      `;
-    }
+function renderLimitedTableNote(total, hidden){
+  if(!total) return "";
+  if(!hidden){
+    return `<div class="tiny" style="padding:12px 16px;border-bottom:1px solid var(--line)">Mostrando ${total} linha(s).</div>`;
+  }
+  return `<div class="tiny" style="padding:12px 16px;border-bottom:1px solid var(--line)">Mostrando ${total - hidden} de ${total} linha(s). As demais continuam carregadas em memória, mas não são desenhadas na tela.</div>`;
+}
 
-    function friendlyActionName(action){
-      const map = {
-        "mode=status":"Leitura de status",
-        "mode=health":"Leitura de saúde",
-        "mode=contract":"Leitura de contrato técnico",
+function renderEmpty(text){
+  return `<div class="empty">${escapeHtml(text)}</div>`;
+}
 
-        "admin_install_crm":"Instalação central",
+function withBusy(button, label, fn){
+  if(!button) return fn();
+  const original = button.dataset.label || button.textContent;
+  button.dataset.label = original;
+  button.disabled = true;
+  button.textContent = label || "Carregando...";
+  return Promise.resolve(fn()).finally(() => {
+    button.disabled = false;
+    button.textContent = original;
+  });
+}
 
-        "admin_list_contacts":"Atualização de contatos",
-        "admin_list_leads":"Atualização de interesses",
-        "admin_list_tickets":"Atualização de chamados",
+function renderSimpleTable({ wrap, rows, columns, emptyText, noteHtml="" }){
+  if(!wrap) return;
 
-        "admin_mail_overview":"Atualização do resumo da comunicação",
-        "admin_mail_health":"Atualização da saúde da comunicação",
-        "admin_mail_list_templates":"Leitura de modelos",
-        "admin_mail_list_suppressions":"Leitura de contatos bloqueados",
-        "admin_mail_list_contact_state":"Leitura da situação do relacionamento",
-        "admin_mail_list_queue":"Atualização da fila de mensagens",
-        "admin_mail_list_log":"Leitura do histórico de envio",
-        "admin_mail_list_internal_log":"Leitura do log interno",
-        "admin_mail_scan":"Busca de novas entradas",
-        "admin_mail_process_queue":"Envio de itens pendentes",
-        "admin_mail_create_manual_list":"Criação de entradas de lista manual",
-        "admin_mail_list_manual_lists":"Atualização de entradas de listas manuais",
-        "admin_mail_update_manual_list_entry":"Atualização de entrada da lista manual",
-        "admin_mail_set_manual_list_entry_active":"Alteração do estado da entrada da lista",
-        "admin_mail_add_suppression":"Bloqueio de contato",
-        "admin_mail_send_manual":"Envio manual de mensagem",
-        "admin_mail_bootstrap":"Preparação da comunicação",
-        "admin_mail_create_template_docs":"Criação de docs padrão",
-        "admin_mail_checklist":"Leitura de checklist",
-        "admin_mail_governance_model":"Leitura de governança",
-        "admin_mail_usage_notes":"Leitura de notas de uso",
+  if(!rows.length){
+    wrap.innerHTML = renderEmpty(emptyText);
+    return;
+  }
 
-        "admin_io_health":"Atualização da saúde dos dados",
-        "admin_io_contract":"Leitura do contrato dos dados",
-        "admin_io_export_entity":"Exportação por entidade",
-        "admin_io_export_bundle":"Exportação do pacote técnico completo",
-        "admin_io_export_entity_csv":"Exportação CSV do backend",
-        "admin_io_validate_file":"Validação de arquivo",
-        "admin_io_inspect_storage_ref":"Inspeção de arquivo",
-        "admin_io_read_storage_ref":"Leitura de arquivo salvo",
-        "admin_io_preview_json":"Visualização JSON",
-        "admin_io_preview_csv":"Visualização CSV",
-        "admin_io_dry_run_import_entity":"Simulação de importação",
-        "admin_io_create_snapshot":"Criação de cópia de segurança",
-        "admin_io_restore_snapshot":"Restauração de cópia de segurança",
-        "admin_io_list_logs":"Leitura de registros",
-        "admin_io_install":"Preparação do módulo de dados"
-      };
+  const thead = columns.map(col => `<th>${escapeHtml(col.label)}</th>`).join("");
+  const tbody = rows.map(row => `
+    <tr>
+      ${columns.map(col => `<td>${col.render(row)}</td>`).join("")}
+    </tr>
+  `).join("");
 
-      return map[action] || action;
-    }
+  wrap.innerHTML = `
+    ${noteHtml}
+    <table>
+      <thead><tr>${thead}</tr></thead>
+      <tbody>${tbody}</tbody>
+    </table>
+  `;
+}
 
-    function pushHistory(type, action, status, detail, opts={}){
+function friendlyActionName(action){
+  const map = {
+    "mode=status":"Leitura de status",
+    "mode=health":"Leitura de saúde",
+    "mode=contract":"Leitura de contrato técnico",
+
+    "save_api_base":"Salvar URL do Web App",
+    "clear_api_base":"Limpar URL do Web App",
+    "save_admin_token":"Aplicar token administrativo",
+    "clear_admin_token":"Limpar token administrativo",
+    "set_role":"Troca de perfil",
+    "export_csv":"Exportação CSV",
+    "refresh_all":"Atualização geral do painel",
+    "refresh_mail":"Atualização da comunicação",
+    "refresh_mail_admin_details":"Atualização dos detalhes administrativos da comunicação",
+
+    "admin_install_crm":"Instalação central",
+
+    "admin_list_contacts":"Atualização de contatos",
+    "admin_list_leads":"Atualização de interesses",
+    "admin_list_tickets":"Atualização de chamados",
+
+    "admin_mail_overview":"Atualização do resumo da comunicação",
+    "admin_mail_health":"Atualização da saúde da comunicação",
+    "admin_mail_list_templates":"Leitura de modelos",
+    "admin_mail_list_suppressions":"Leitura de contatos bloqueados",
+    "admin_mail_list_contact_state":"Leitura da situação do relacionamento",
+    "admin_mail_list_queue":"Atualização da fila de mensagens",
+    "admin_mail_list_log":"Leitura do histórico de envio",
+    "admin_mail_list_internal_log":"Leitura do log interno",
+    "admin_mail_scan":"Busca de novas entradas",
+    "admin_mail_process_queue":"Envio de itens pendentes",
+    "admin_mail_create_manual_list":"Criação de entradas de lista manual",
+    "admin_mail_list_manual_lists":"Atualização de entradas de listas manuais",
+    "admin_mail_update_manual_list_entry":"Atualização de entrada da lista manual",
+    "admin_mail_set_manual_list_entry_active":"Alteração do estado da entrada da lista",
+    "admin_mail_add_suppression":"Bloqueio de contato",
+    "admin_mail_send_manual":"Envio manual de mensagem",
+    "admin_mail_bootstrap":"Preparação da comunicação",
+    "admin_mail_create_template_docs":"Criação de docs padrão",
+    "admin_mail_checklist":"Leitura de checklist",
+    "admin_mail_governance_model":"Leitura de governança",
+    "admin_mail_usage_notes":"Leitura de notas de uso",
+
+    "admin_io_health":"Atualização da saúde dos dados",
+    "admin_io_contract":"Leitura do contrato dos dados",
+    "admin_io_export_entity":"Exportação por entidade",
+    "admin_io_export_bundle":"Exportação do pacote técnico completo",
+    "admin_io_export_entity_csv":"Exportação CSV do backend",
+    "admin_io_validate_file":"Validação de arquivo",
+    "admin_io_inspect_storage_ref":"Inspeção de arquivo",
+    "admin_io_read_storage_ref":"Leitura de arquivo salvo",
+    "admin_io_preview_json":"Visualização JSON",
+    "admin_io_preview_csv":"Visualização CSV",
+    "admin_io_dry_run_import_entity":"Simulação de importação",
+    "admin_io_create_snapshot":"Criação de cópia de segurança",
+    "admin_io_restore_snapshot":"Restauração de cópia de segurança",
+    "admin_io_list_logs":"Leitura de registros",
+    "admin_io_install":"Preparação do módulo de dados"
+  };
+
+  return map[action] || action;
+}
+
+function pushHistory(type, action, status, detail, opts={}){
   const options = {
     rerenderSummary: false,
     ...opts
@@ -1871,252 +2004,278 @@
   }
 }
 
-    function getBackendModules(){
-      const statusData = extractEnvelope(state.status);
-      const modules = statusData && statusData.modules ? statusData.modules : {};
+function getBackendModules(){
+  const statusData = extractEnvelope(state.status);
+  const modules = statusData && statusData.modules ? statusData.modules : {};
 
-      return {
-        core: true,
-        pubmailAvailable: modules.pubmail_available === true,
-        pubioAvailable: modules.pubio_available === true,
-        pubmailReady: modules.pubmail_ready === true,
-        pubioReady: modules.pubio_ready === true
-      };
-    }
+  return {
+    core: true,
+    pubmailAvailable: modules.pubmail_available === true,
+    pubioAvailable: modules.pubio_available === true,
+    pubmailReady: modules.pubmail_ready === true,
+    pubioReady: modules.pubio_ready === true
+  };
+}
 
-    function getCoreHealthData(){
-      return state.health?.data?.core || null;
-    }
+function getCoreHealthData(){
+  return state.health?.data?.core || null;
+}
 
-    function getModulesHealthData(){
-      return state.health?.data?.modules || null;
-    }
+function getModulesHealthData(){
+  return state.health?.data?.modules || null;
+}
 
-    function getPublicMailHealthData(){
-      return getModulesHealthData()?.pubmail_health || null;
-    }
+function getPublicMailHealthData(){
+  return getModulesHealthData()?.pubmail_health || null;
+}
 
-    function getPublicIoHealthData(){
-      return getModulesHealthData()?.pubio_health || null;
-    }
+function getPublicIoHealthData(){
+  return getModulesHealthData()?.pubio_health || null;
+}
 
-    function isCoreHealthy(){
-      return getCoreHealthData()?.ok === true;
-    }
+function isCoreHealthy(){
+  return getCoreHealthData()?.ok === true;
+}
 
-    function isPubmailHealthyFromHealth(){
-      return getPublicMailHealthData()?.ok === true;
-    }
+function isPubmailHealthyFromHealth(){
+  return getPublicMailHealthData()?.ok === true;
+}
 
-    function isPubioHealthyFromHealth(){
-      return getPublicIoHealthData()?.ok === true;
-    }
+function isPubioHealthyFromHealth(){
+  return getPublicIoHealthData()?.ok === true;
+}
 
-    function getMailHealthState(){
-      if(state.mailHealth?.ok === true) return "OK";
-      if(state.mailHealth) return "ATENÇÃO";
-      if(isPubmailHealthyFromHealth()) return "OK";
-      if(getPublicMailHealthData()) return "ATENÇÃO";
-      return "—";
-    }
+function getMailHealthState(){
+  if(state.mailHealth?.ok === true) return "OK";
+  if(state.mailHealth) return "ATENÇÃO";
+  if(isPubmailHealthyFromHealth()) return "OK";
+  if(getPublicMailHealthData()) return "ATENÇÃO";
+  return "—";
+}
 
-    function getIoHealthState(){
-      if(state.ioHealth?.ok === true) return "OK";
-      if(state.ioHealth) return "ATENÇÃO";
-      if(isPubioHealthyFromHealth()) return "OK";
-      if(getPublicIoHealthData()) return "ATENÇÃO";
-      return "—";
-    }
+function getIoHealthState(){
+  if(state.ioHealth?.ok === true) return "OK";
+  if(state.ioHealth) return "ATENÇÃO";
+  if(isPubioHealthyFromHealth()) return "OK";
+  if(getPublicIoHealthData()) return "ATENÇÃO";
+  return "—";
+}
 
-    function canUseMail(){
-      const m = getBackendModules();
-      return hasAdminToken() && m.pubmailAvailable;
-    }
+function canUseMail(){
+  const m = getBackendModules();
+  return hasAdminToken() && m.pubmailAvailable;
+}
 
-    function canUseIo(){
-      const m = getBackendModules();
-      return hasAdminToken() && m.pubioAvailable;
-    }
+function canUseIo(){
+  const m = getBackendModules();
+  return hasAdminToken() && m.pubioAvailable;
+}
 
-    function warnUnavailableModule(kind){
-      if(kind === "mail"){
-        setBanner("warn", "PUBMAIL indisponível", "O backend informou que o módulo de comunicação não está disponível ou não está liberado para uso administrativo.");
-        return;
-      }
-      if(kind === "io"){
-        setBanner("warn", "PUBIO indisponível", "O backend informou que o módulo de dados não está disponível ou não está liberado para uso administrativo.");
-        return;
-      }
-      setBanner("warn", "Módulo indisponível", "O backend informou que este módulo não está disponível.");
-    }
+function warnUnavailableModule(kind){
+  if(kind === "mail"){
+    setBanner("warn", "PUBMAIL indisponível", "O backend informou que o módulo de comunicação não está disponível ou não está liberado para uso administrativo.");
+    return;
+  }
+  if(kind === "io"){
+    setBanner("warn", "PUBIO indisponível", "O backend informou que o módulo de dados não está disponível ou não está liberado para uso administrativo.");
+    return;
+  }
+  setBanner("warn", "Módulo indisponível", "O backend informou que este módulo não está disponível.");
+}
 
-    function getContactStage(email){
-      const normalized = stringValue(email).toLowerCase();
-      return state.mailContactState.find(row => stringValue(row.email).toLowerCase() === normalized) || null;
-    }
+function getContactStage(email){
+  const normalized = stringValue(email).toLowerCase();
+  return state.mailContactState.find(row => stringValue(row.email).toLowerCase() === normalized) || null;
+}
 
-    function countActiveTemplates(){
-      return state.mailTemplates.filter(row => String(row.active).toLowerCase() === "true").length;
-    }
+function countActiveTemplates(){
+  return state.mailTemplates.filter(row => String(row.active).toLowerCase() === "true").length;
+}
 
-    function countActiveSuppressions(){
-      return state.mailSuppressions.filter(row => String(row.active).toLowerCase() === "true").length;
-    }
+function countActiveSuppressions(){
+  return state.mailSuppressions.filter(row => String(row.active).toLowerCase() === "true").length;
+}
 
-    function getMailRelationshipStageCounts(){
-      const base = {
-        NEW_LEAD: 0,
-        DELIVERED: 0,
-        ACTIVATING: 0,
-        ENGAGED: 0,
-        SUPPORT_OPEN: 0,
-        MANUAL_SENT: 0
-      };
+function getMailRelationshipStageCounts(){
+  const base = {
+    NEW_LEAD: 0,
+    DELIVERED: 0,
+    ACTIVATING: 0,
+    ENGAGED: 0,
+    SUPPORT_OPEN: 0,
+    MANUAL_SENT: 0
+  };
 
-      state.mailContactState.forEach(row => {
-        const stage = stringValue(row.relationship_stage).toUpperCase();
-        if(Object.prototype.hasOwnProperty.call(base, stage)) base[stage] += 1;
-      });
+  state.mailContactState.forEach(row => {
+    const stage = stringValue(row.relationship_stage).toUpperCase();
+    if(Object.prototype.hasOwnProperty.call(base, stage)) base[stage] += 1;
+  });
 
-      return base;
-    }
+  return base;
+}
 
-    function getQueueStatusCounts(){
-      const counts = {
-        PENDING: 0,
-        PROCESSING: 0,
-        SENT: 0,
-        ERROR: 0,
-        SUPPRESSED: 0,
-        CANCELLED: 0,
-        SKIPPED: 0
-      };
+function getQueueStatusCounts(){
+  const counts = {
+    PENDING: 0,
+    PROCESSING: 0,
+    SENT: 0,
+    ERROR: 0,
+    SUPPRESSED: 0,
+    CANCELLED: 0,
+    SKIPPED: 0
+  };
 
-      state.mailQueue.forEach(row => {
-        const status = stringValue(row.status).toUpperCase();
-        if(Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
-      });
+  state.mailQueue.forEach(row => {
+    const status = stringValue(row.status).toUpperCase();
+    if(Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
+  });
 
-      return counts;
-    }
+  return counts;
+}
 
-    function getLogStatusCounts(){
-      const counts = {
-        SENT: 0,
-        ERROR: 0,
-        SUPPRESSED: 0,
-        SKIPPED: 0,
-        CANCELLED: 0
-      };
+function getLogStatusCounts(){
+  const counts = {
+    SENT: 0,
+    ERROR: 0,
+    SUPPRESSED: 0,
+    SKIPPED: 0,
+    CANCELLED: 0
+  };
 
-      state.mailLog.forEach(row => {
-        const status = stringValue(row.status).toUpperCase();
-        if(Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
-      });
+  state.mailLog.forEach(row => {
+    const status = stringValue(row.status).toUpperCase();
+    if(Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
+  });
 
-      return counts;
-    }
+  return counts;
+}
 
-    async function readResponsePayload(res){
-      const text = await res.text();
-      const contentType = String(res.headers.get("content-type") || "").toLowerCase();
+async function readResponsePayload(res){
+  const text = await res.text();
+  const contentType = String(res.headers.get("content-type") || "").toLowerCase();
 
-      if(!text.trim()){
-        return {
-          ok_http: res.ok,
-          status_http: res.status,
-          payload: {}
-        };
-      }
-
-      let payload;
-
-      if(contentType.includes("application/json")){
-        try{
-          payload = JSON.parse(text);
-        }catch(_){
-          throw new Error("O backend respondeu JSON inválido.");
-        }
-      }else{
-        try{
-          payload = JSON.parse(text);
-        }catch(_){
-          throw new Error("O backend respondeu em formato não JSON.");
-        }
-      }
-
-      return {
-        ok_http: res.ok,
-        status_http: res.status,
-        payload
-      };
-    }
-
-    const api = {
-      async getMode(mode){
-        requireApiBase();
-
-        const url = new URL(state.apiBase);
-        url.searchParams.set("mode", mode);
-
-        const res = await fetch(url.toString(), {
-          method: "GET",
-          cache: "no-store",
-          redirect: "follow"
-        });
-
-        const responseData = await readResponsePayload(res);
-        const json = responseData.payload;
-
-        if(!responseData.ok_http){
-          throw new Error(
-            json?.message ||
-            json?.error?.message ||
-            json?.error?.code ||
-            "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
-          );
-        }
-
-        return ensureLogicalOk(json);
-      },
-
-      async postAction(action, payload={}){
-        requireApiBase();
-
-        const bodyPayload = {
-          action,
-          request_id: action.toUpperCase() + "-" + Date.now(),
-          ...payload
-        };
-
-        if(isAdminActionName(action)){
-          requireAdminToken();
-          bodyPayload.admin_token = state.adminToken;
-        }
-
-        const res = await fetch(state.apiBase, {
-          method: "POST",
-          cache: "no-store",
-          redirect: "follow",
-          headers: { "Content-Type":"text/plain;charset=utf-8" },
-          body: JSON.stringify(bodyPayload)
-        });
-
-        const responseData = await readResponsePayload(res);
-        const json = responseData.payload;
-
-        if(!responseData.ok_http){
-          throw new Error(
-            json?.message ||
-            json?.error?.message ||
-            json?.error?.code ||
-            "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
-          );
-        }
-
-        return ensureLogicalOk(json);
-      }
+  if(!text.trim()){
+    return {
+      ok_http: res.ok,
+      status_http: res.status,
+      payload: {}
     };
+  }
+
+  let payload;
+
+  if(contentType.includes("application/json")){
+    try{
+      payload = JSON.parse(text);
+    }catch(_){
+      throw new Error("O backend respondeu JSON inválido.");
+    }
+  }else{
+    try{
+      payload = JSON.parse(text);
+    }catch(_){
+      throw new Error("O backend respondeu em formato não JSON.");
+    }
+  }
+
+  return {
+    ok_http: res.ok,
+    status_http: res.status,
+    payload
+  };
+}
+
+const api = {
+  async getMode(mode){
+    requireApiBase();
+
+    const request = abortPreviousRequest("publicMode", mode);
+
+    try{
+      const url = new URL(state.apiBase);
+      url.searchParams.set("mode", mode);
+
+      const res = await fetchWithTimeout(url.toString(), {
+        method: "GET",
+        cache: "no-store",
+        redirect: "follow",
+        signal: request.controller.signal
+      }, 30000);
+
+      const responseData = await readResponsePayload(res);
+      const json = responseData.payload;
+
+      if(!responseData.ok_http){
+        throw new Error(
+          json?.message ||
+          json?.error?.message ||
+          json?.error?.code ||
+          "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
+        );
+      }
+
+      if(!isLatestRequest("publicMode", mode, request.seq)){
+        const staleError = new Error("Resposta descartada por estar desatualizada.");
+        staleError.name = "StaleResponseError";
+        throw staleError;
+      }
+
+      return ensureLogicalOk(json);
+    }finally{
+      clearTrackedRequest("publicMode", mode, request.seq);
+    }
+  },
+
+  async postAction(action, payload={}){
+    requireApiBase();
+
+    const request = abortPreviousRequest("action", action);
+
+    try{
+      const bodyPayload = {
+        action,
+        request_id: action.toUpperCase() + "-" + Date.now(),
+        ...payload
+      };
+
+      if(isAdminActionName(action)){
+        requireAdminToken();
+        bodyPayload.admin_token = state.adminToken;
+      }
+
+      const res = await fetchWithTimeout(state.apiBase, {
+        method: "POST",
+        cache: "no-store",
+        redirect: "follow",
+        headers: { "Content-Type":"text/plain;charset=utf-8" },
+        body: JSON.stringify(bodyPayload),
+        signal: request.controller.signal
+      }, 30000);
+
+      const responseData = await readResponsePayload(res);
+      const json = responseData.payload;
+
+      if(!responseData.ok_http){
+        throw new Error(
+          json?.message ||
+          json?.error?.message ||
+          json?.error?.code ||
+          "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
+        );
+      }
+
+      if(!isLatestRequest("action", action, request.seq)){
+        const staleError = new Error("Resposta descartada por estar desatualizada.");
+        staleError.name = "StaleResponseError";
+        throw staleError;
+      }
+
+      return ensureLogicalOk(json);
+    }finally{
+      clearTrackedRequest("action", action, request.seq);
+    }
+  }
+};
 
     function applyModuleUiState(){
       const modules = getBackendModules();
@@ -2851,7 +3010,6 @@
     }
 
 function renderTopSummary(){
-  const coreHealth = getCoreHealthData();
   const mailOverviewData = extractEnvelope(state.mailOverview);
   const adminReady = hasAdminToken();
   const modules = getBackendModules();
@@ -3168,116 +3326,24 @@ function rerenderAll(){
 function renderSummary(){
   rerenderAll();
 }
-    async function runPublicMode(mode, button, opts={}){
-      const options = { log:true, banner:true, ...opts };
-
-      try{
-        if(options.log) setLastAction(friendlyActionName("mode=" + mode));
-        setLastError("");
-
-        await withBusy(button, "Lendo...", async () => {
-          const json = await api.getMode(mode);
-
-          state.systemPayload = json;
-
-          if(mode === "status") state.status = json;
-          if(mode === "health") state.health = json;
-          if(mode === "contract") state.contract = json;
-
-          setLastRefresh();
-          renderSummary();
-
-          if(options.banner){
-            const titleMap = {
-              status: "Status carregado",
-              health: "Saúde carregada",
-              contract: "Contrato carregado"
-            };
-
-            const detailMap = {
-              status: "A conexão respondeu com sucesso.",
-              health: "A leitura de saúde foi concluída.",
-              contract: "O contrato do backend foi carregado."
-            };
-
-            setBanner("success", titleMap[mode], detailMap[mode]);
-          }
-
-          if(options.log){
-            pushHistory("GET", "mode=" + mode, "ok", "Leitura concluída.");
-          }
-        });
-      }catch(err){
-        setLastError(err.message || "Erro desconhecido");
-        renderSummary();
-
-        if(options.banner){
-          setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
-        }
-
-        if(options.log){
-          pushHistory("GET", "mode=" + mode, "erro", err.message || "erro");
-        }
-      }
-    }
-
- async function runAdminList(action, targetKey, button, successText, opts={}){
-  const options = { log:true, banner:true, ...opts };
-
-  try{
-    requireAdminToken();
-
-    if(options.log) setLastAction(friendlyActionName(action));
-    setLastError("");
-
-    await withBusy(button, "Atualizando...", async () => {
-      const json = await api.postAction(action, {});
-      const rows = normalizeRowsFromResponse(json);
-      state[targetKey] = rows;
-
-      setLastRefresh();
-
-      if(targetKey === "contacts") renderContacts();
-      if(targetKey === "leads") renderLeads();
-      if(targetKey === "tickets") renderTickets();
-
-      renderTopSummary();
-      renderSidebarMeta();
-      renderTechnicalBoxes();
-      applyModuleUiState();
-
-      if(options.banner) setBanner("success", "Leitura concluída", successText + " (" + rows.length + " linha(s)).");
-      if(options.log) pushHistory("POST", action, "ok", successText + " (" + rows.length + " linha(s)).");
-    });
-  }catch(err){
-    setLastError(err.message || "Erro desconhecido");
-
-    renderTopSummary();
-    renderSidebarMeta();
-    renderTechnicalBoxes();
-    applyModuleUiState();
-
-    if(options.banner) setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
-    if(options.log) pushHistory("POST", action, "erro", err.message || "erro");
-  }
-}
-
-    async function runMailAction(action, payload, button, successText, opts={}){
-  const options = { log:true, banner:true, ...opts };
+  async function runMailAction(action, payload, button, successText, opts={}){
+  const options = { log:true, banner:true, silentRender:false, ...opts };
 
   try{
     requireAdminToken();
 
     if(!canUseMail()){
-      renderTopSummary();
-      renderSidebarMeta();
-      renderMailSummaryCards();
-      renderTechnicalBoxes();
-      applyModuleUiState();
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderMailSummaryCards();
+        renderTechnicalBoxes();
+        applyModuleUiState();
+      }
 
       if(options.banner) warnUnavailableModule("mail");
       if(options.log) pushHistory("POST", action, "indisp.", "PUBMAIL indisponível neste backend.");
-      return;
+      return { status:"indisp.", message:"PUBMAIL indisponível neste backend." };
     }
 
     if(options.log) setLastAction(friendlyActionName(action));
@@ -3286,37 +3352,10 @@ function renderSummary(){
     await withBusy(button, "Executando...", async () => {
       requireApiBase();
 
-      const bodyPayload = {
-        action,
-        request_id: action.toUpperCase() + "-" + Date.now(),
-        ...(payload || {}),
-        admin_token: state.adminToken
-      };
-
-      const res = await fetch(state.apiBase, {
-        method: "POST",
-        cache: "no-store",
-        redirect: "follow",
-        headers: { "Content-Type":"text/plain;charset=utf-8" },
-        body: JSON.stringify(bodyPayload)
-      });
-
-      const responseData = await readResponsePayload(res);
-      const rawJson = responseData.payload;
-
-      state.mailLast = { action, payload: rawJson };
-
-      if(!responseData.ok_http){
-        throw new Error(
-          rawJson?.message ||
-          rawJson?.error?.message ||
-          rawJson?.error?.code ||
-          "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
-        );
-      }
-
-      const json = ensureLogicalOk(rawJson);
+      const json = await api.postAction(action, payload || {});
       const rows = normalizeRowsFromResponse(json);
+
+      state.mailLast = { action, payload: json };
 
       if(action === "admin_mail_overview") state.mailOverview = json;
       if(action === "admin_mail_health") state.mailHealth = json;
@@ -3342,6 +3381,68 @@ function renderSummary(){
 
       setLastRefresh();
 
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderMailSummaryCards();
+        renderTechnicalBoxes();
+        renderMailQueue();
+        renderMailLog();
+        renderManualLists();
+        renderMailSuppressions();
+        renderMailTemplates();
+        renderMailRelationshipTable();
+        renderMailQueueStatusTable();
+        renderMailLogStatusTable();
+        renderMailAdminReadings();
+        applyModuleUiState();
+      }
+
+      if(options.banner) setBanner("success", "Comunicação", successText);
+      if(options.log) pushHistory("POST", action, "ok", successText);
+    });
+
+    return { status:"ok", message:successText };
+  }catch(err){
+    if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
+      return { status:"abortado", message:"Resposta descartada." };
+    }
+
+    if(err?.name === "LogicalPartialError"){
+      state.mailLast = { action, payload: err.payload || null };
+      setLastError(err.message || "Sucesso parcial");
+
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderMailSummaryCards();
+        renderTechnicalBoxes();
+        renderMailQueue();
+        renderMailLog();
+        renderManualLists();
+        renderMailSuppressions();
+        renderMailTemplates();
+        renderMailRelationshipTable();
+        renderMailQueueStatusTable();
+        renderMailLogStatusTable();
+        renderMailAdminReadings();
+        applyModuleUiState();
+      }
+
+      if(options.banner){
+        setBanner("warn", "Comunicação com resposta parcial", err.message || "O backend respondeu parcialmente.");
+      }
+
+      if(options.log){
+        pushHistory("POST", action, "parcial", err.message || "resposta parcial");
+      }
+
+      return { status:"parcial", message:err.message || "Resposta parcial." };
+    }
+
+    setLastError(err.message || "Erro desconhecido");
+
+    if(!options.silentRender){
       renderTopSummary();
       renderSidebarMeta();
       renderMailSummaryCards();
@@ -3356,27 +3457,232 @@ function renderSummary(){
       renderMailLogStatusTable();
       renderMailAdminReadings();
       applyModuleUiState();
+    }
+
+    if(options.banner){
+      const technical = state.mailLast?.payload || {};
+      const technicalError = technical?.error && typeof technical.error === "object" ? technical.error : null;
+
+      let extraParts = [
+        technicalError?.message || "",
+        technicalError?.code || "",
+        err.message || "Erro desconhecido",
+        technical?.template_folder_id ? "template_folder_id: " + technical.template_folder_id : "",
+        technical?.pubcrm_root_folder_id ? "pubcrm_root_folder_id: " + technical.pubcrm_root_folder_id : "",
+        technical?.pubcrm_mail_folder_id ? "pubcrm_mail_folder_id: " + technical.pubcrm_mail_folder_id : ""
+      ].filter(Boolean);
+
+      const seen = new Set();
+      extraParts = extraParts.filter(part => {
+        if(seen.has(part)) return false;
+        seen.add(part);
+        return true;
+      });
+
+      setBanner("error", "Falha na comunicação", extraParts.join(" · "));
+    }
+
+    if(options.log){
+      pushHistory("POST", action, "erro", err.message || "erro");
+    }
+
+    return { status:"erro", message:err.message || "Erro desconhecido." };
+  }
+}
+
+ async function runAdminList(action, targetKey, button, successText, opts={}){
+  const options = { log:true, banner:true, silentRender:false, ...opts };
+
+  try{
+    requireAdminToken();
+
+    if(options.log) setLastAction(friendlyActionName(action));
+    setLastError("");
+
+    await withBusy(button, "Atualizando...", async () => {
+      const json = await api.postAction(action, {});
+      const rows = normalizeRowsFromResponse(json);
+      state[targetKey] = rows;
+
+      setLastRefresh();
+
+      if(!options.silentRender){
+        if(targetKey === "contacts") renderContacts();
+        if(targetKey === "leads") renderLeads();
+        if(targetKey === "tickets") renderTickets();
+
+        renderTopSummary();
+        renderSidebarMeta();
+        renderTechnicalBoxes();
+        applyModuleUiState();
+      }
+
+      if(options.banner) setBanner("success", "Leitura concluída", successText + " (" + rows.length + " linha(s)).");
+      if(options.log) pushHistory("POST", action, "ok", successText + " (" + rows.length + " linha(s)).");
+    });
+  }catch(err){
+    if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
+      return;
+    }
+
+    if(err?.name === "LogicalPartialError"){
+      setLastError(err.message || "Sucesso parcial");
+
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderTechnicalBoxes();
+        applyModuleUiState();
+      }
+
+      if(options.banner) setBanner("warn", "Leitura parcial", err.message || "O backend respondeu parcialmente.");
+      if(options.log) pushHistory("POST", action, "parcial", err.message || "resposta parcial");
+      return;
+    }
+
+    setLastError(err.message || "Erro desconhecido");
+
+    if(!options.silentRender){
+      renderTopSummary();
+      renderSidebarMeta();
+      renderTechnicalBoxes();
+      applyModuleUiState();
+    }
+
+    if(options.banner) setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
+    if(options.log) pushHistory("POST", action, "erro", err.message || "erro");
+  }
+}
+
+    async function runMailAction(action, payload, button, successText, opts={}){
+  const options = { log:true, banner:true, silentRender:false, ...opts };
+
+  try{
+    requireAdminToken();
+
+    if(!canUseMail()){
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderMailSummaryCards();
+        renderTechnicalBoxes();
+        applyModuleUiState();
+      }
+
+      if(options.banner) warnUnavailableModule("mail");
+      if(options.log) pushHistory("POST", action, "indisp.", "PUBMAIL indisponível neste backend.");
+      return;
+    }
+
+    if(options.log) setLastAction(friendlyActionName(action));
+    setLastError("");
+
+    await withBusy(button, "Executando...", async () => {
+      requireApiBase();
+
+      const json = await api.postAction(action, payload || {});
+      const rows = normalizeRowsFromResponse(json);
+
+      state.mailLast = { action, payload: json };
+
+      if(action === "admin_mail_overview") state.mailOverview = json;
+      if(action === "admin_mail_health") state.mailHealth = json;
+      if(action === "admin_mail_list_templates") state.mailTemplates = rows;
+      if(action === "admin_mail_list_suppressions") state.mailSuppressions = rows;
+      if(action === "admin_mail_list_contact_state") state.mailContactState = rows;
+      if(action === "admin_mail_list_queue") state.mailQueue = rows;
+      if(action === "admin_mail_list_log") state.mailLog = rows;
+      if(action === "admin_mail_list_internal_log") state.mailInternalLog = rows;
+      if(action === "admin_mail_list_manual_lists") state.manualLists = rows;
+
+      if([
+        "admin_mail_health",
+        "admin_mail_bootstrap",
+        "admin_mail_create_template_docs",
+        "admin_mail_checklist",
+        "admin_mail_governance_model",
+        "admin_mail_usage_notes",
+        "admin_mail_list_internal_log"
+      ].includes(action)){
+        upsertMailAdminReading(friendlyActionName(action), buildAdminReadingSummary(action, json, rows));
+      }
+
+      setLastRefresh();
+
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderMailSummaryCards();
+        renderTechnicalBoxes();
+        renderMailQueue();
+        renderMailLog();
+        renderManualLists();
+        renderMailSuppressions();
+        renderMailTemplates();
+        renderMailRelationshipTable();
+        renderMailQueueStatusTable();
+        renderMailLogStatusTable();
+        renderMailAdminReadings();
+        applyModuleUiState();
+      }
 
       if(options.banner) setBanner("success", "Comunicação", successText);
       if(options.log) pushHistory("POST", action, "ok", successText);
     });
   }catch(err){
+    if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
+      return;
+    }
+
+    if(err?.name === "LogicalPartialError"){
+      state.mailLast = { action, payload: err.payload || null };
+      setLastError(err.message || "Sucesso parcial");
+
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderMailSummaryCards();
+        renderTechnicalBoxes();
+        renderMailQueue();
+        renderMailLog();
+        renderManualLists();
+        renderMailSuppressions();
+        renderMailTemplates();
+        renderMailRelationshipTable();
+        renderMailQueueStatusTable();
+        renderMailLogStatusTable();
+        renderMailAdminReadings();
+        applyModuleUiState();
+      }
+
+      if(options.banner){
+        setBanner("warn", "Comunicação com resposta parcial", err.message || "O backend respondeu parcialmente.");
+      }
+
+      if(options.log){
+        pushHistory("POST", action, "parcial", err.message || "resposta parcial");
+      }
+      return;
+    }
+
     setLastError(err.message || "Erro desconhecido");
 
-    renderTopSummary();
-    renderSidebarMeta();
-    renderMailSummaryCards();
-    renderTechnicalBoxes();
-    renderMailQueue();
-    renderMailLog();
-    renderManualLists();
-    renderMailSuppressions();
-    renderMailTemplates();
-    renderMailRelationshipTable();
-    renderMailQueueStatusTable();
-    renderMailLogStatusTable();
-    renderMailAdminReadings();
-    applyModuleUiState();
+    if(!options.silentRender){
+      renderTopSummary();
+      renderSidebarMeta();
+      renderMailSummaryCards();
+      renderTechnicalBoxes();
+      renderMailQueue();
+      renderMailLog();
+      renderManualLists();
+      renderMailSuppressions();
+      renderMailTemplates();
+      renderMailRelationshipTable();
+      renderMailQueueStatusTable();
+      renderMailLogStatusTable();
+      renderMailAdminReadings();
+      applyModuleUiState();
+    }
 
     if(options.banner){
       const technical = state.mailLast?.payload || {};
@@ -3406,22 +3712,24 @@ function renderSummary(){
     }
   }
 }
-    async function runIoAction(action, payload, button, successText, opts={}){
-  const options = { log:true, banner:true, ...opts };
+  async function runIoAction(action, payload, button, successText, opts={}){
+  const options = { log:true, banner:true, silentRender:false, ...opts };
 
   try{
     requireAdminToken();
 
     if(!canUseIo()){
-      renderTopSummary();
-      renderSidebarMeta();
-      renderIoSummaryCards();
-      renderTechnicalBoxes();
-      applyModuleUiState();
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderIoSummaryCards();
+        renderTechnicalBoxes();
+        applyModuleUiState();
+      }
 
       if(options.banner) warnUnavailableModule("io");
       if(options.log) pushHistory("POST", action, "indisp.", "PUBIO indisponível neste backend.");
-      return;
+      return { status:"indisp.", message:"PUBIO indisponível neste backend." };
     }
 
     if(options.log) setLastAction(friendlyActionName(action));
@@ -3439,32 +3747,63 @@ function renderSummary(){
 
       setLastRefresh();
 
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderIoSummaryCards();
+        renderTechnicalBoxes();
+        renderIoLogs();
+        applyModuleUiState();
+      }
+
+      if(options.banner) setBanner("success", "Dados", successText);
+      if(options.log) pushHistory("POST", action, "ok", successText);
+    });
+
+    return { status:"ok", message:successText };
+  }catch(err){
+    if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
+      return { status:"abortado", message:"Resposta descartada." };
+    }
+
+    if(err?.name === "LogicalPartialError"){
+      state.ioLast = { action, payload: err.payload || null };
+      setLastError(err.message || "Sucesso parcial");
+
+      if(!options.silentRender){
+        renderTopSummary();
+        renderSidebarMeta();
+        renderIoSummaryCards();
+        renderTechnicalBoxes();
+        renderIoLogs();
+        applyModuleUiState();
+      }
+
+      if(options.banner) setBanner("warn", "Dados com resposta parcial", err.message || "O backend respondeu parcialmente.");
+      if(options.log) pushHistory("POST", action, "parcial", err.message || "resposta parcial");
+
+      return { status:"parcial", message:err.message || "Resposta parcial." };
+    }
+
+    setLastError(err.message || "Erro desconhecido");
+
+    if(!options.silentRender){
       renderTopSummary();
       renderSidebarMeta();
       renderIoSummaryCards();
       renderTechnicalBoxes();
       renderIoLogs();
       applyModuleUiState();
-
-      if(options.banner) setBanner("success", "Dados", successText);
-      if(options.log) pushHistory("POST", action, "ok", successText);
-    });
-  }catch(err){
-    setLastError(err.message || "Erro desconhecido");
-
-    renderTopSummary();
-    renderSidebarMeta();
-    renderIoSummaryCards();
-    renderTechnicalBoxes();
-    renderIoLogs();
-    applyModuleUiState();
+    }
 
     if(options.banner) setBanner("error", "Falha nos dados", err.message || "Erro desconhecido");
     if(options.log) pushHistory("POST", action, "erro", err.message || "erro");
+
+    return { status:"erro", message:err.message || "Erro desconhecido." };
   }
 }
 
-   async function runInstallAll(button){
+  async function runInstallAll(button){
   try{
     requireAdminToken();
 
@@ -3492,17 +3831,30 @@ function renderSummary(){
 
       await refreshAllData({ log:false, banner:false });
 
+      setLastRefresh();
+
       setBanner("success", "Instalação concluída", "A instalação central do backend foi executada.");
       pushHistory("POST", "admin_install_crm", "ok", "Instalação central executada.");
     });
   }catch(err){
+    if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
+      return;
+    }
+
+    if(err?.name === "LogicalPartialError"){
+      setLastError(err.message || "Sucesso parcial");
+      renderSummary();
+      setBanner("warn", "Instalação parcial", err.message || "O backend respondeu parcialmente.");
+      pushHistory("POST", "admin_install_crm", "parcial", err.message || "resposta parcial");
+      return;
+    }
+
     setLastError(err.message || "Erro desconhecido");
     renderSummary();
     setBanner("error", "Falha na instalação central", err.message || "Erro desconhecido");
     pushHistory("POST", "admin_install_crm", "erro", err.message || "erro");
   }
 }
-
    function saveApiBase(){
   state.apiBase = stringValue($("#api-base")?.value || "");
   persist();
@@ -3511,6 +3863,17 @@ function renderSummary(){
 }
 
   function clearApiBase(){
+  Object.values(state.requests.publicMode || {}).forEach(entry => {
+    if(entry?.controller) entry.controller.abort();
+  });
+
+  Object.values(state.requests.action || {}).forEach(entry => {
+    if(entry?.controller) entry.controller.abort();
+  });
+
+  state.requests.publicMode = Object.create(null);
+  state.requests.action = Object.create(null);
+
   state.apiBase = "";
   if($("#api-base")) $("#api-base").value = "";
 
@@ -3549,47 +3912,63 @@ function renderSummary(){
   pushHistory("UI", "clear_api_base", "ok", "configuração removida", { rerenderSummary:true });
 }
 
-   function saveAdminToken(){
-  state.adminToken = stringValue($("#admin-token")?.value || "");
-  persist();
-  setBanner("success", "Token salvo", "O token administrativo foi armazenado apenas nesta sessão da aba.");
-  pushHistory("UI", "save_admin_token", "ok", state.adminToken ? "token configurado na sessão" : "token vazio", { rerenderSummary:true });
-}
+     function saveAdminToken(){
+      state.adminToken = stringValue($("#admin-token")?.value || "");
+      persist();
 
- function clearAdminToken(){
-  state.adminToken = "";
-  if($("#admin-token")) $("#admin-token").value = "";
+      if(state.adminToken){
+        setBanner("success", "Token aplicado", "O token administrativo foi carregado apenas em memória enquanto esta página permanecer aberta.");
+        pushHistory("UI", "save_admin_token", "ok", "token carregado em memória", { rerenderSummary:true });
+      }else{
+        setBanner("warn", "Token vazio", "Nenhum token foi informado.");
+        pushHistory("UI", "save_admin_token", "warn", "token vazio", { rerenderSummary:true });
+      }
+    }
 
-  state.contacts = [];
-  state.leads = [];
-  state.tickets = [];
+     function clearAdminToken(){
+      Object.values(state.requests.publicMode || {}).forEach(entry => {
+        if(entry?.controller) entry.controller.abort();
+      });
 
-  state.mailOverview = null;
-  state.mailHealth = null;
-  state.mailTemplates = [];
-  state.mailSuppressions = [];
-  state.mailContactState = [];
-  state.mailQueue = [];
-  state.mailLog = [];
-  state.mailInternalLog = [];
-  state.manualLists = [];
-  state.mailAdminReadings = [];
-  state.mailLast = null;
+      Object.values(state.requests.action || {}).forEach(entry => {
+        if(entry?.controller) entry.controller.abort();
+      });
 
-  state.ioHealth = null;
-  state.ioContract = null;
-  state.ioLogs = [];
-  state.ioLast = null;
+      state.requests.publicMode = Object.create(null);
+      state.requests.action = Object.create(null);
 
-  setLastAction("");
-  setLastError("");
-  setLastRefresh();
+      state.adminToken = "";
+      if($("#admin-token")) $("#admin-token").value = "";
 
-  persist();
-  setBanner("warn", "Token removido", "O token administrativo foi removido da sessão atual.");
-  pushHistory("UI", "clear_admin_token", "ok", "token removido da sessão", { rerenderSummary:true });
-}
+      state.contacts = [];
+      state.leads = [];
+      state.tickets = [];
 
+      state.mailOverview = null;
+      state.mailHealth = null;
+      state.mailTemplates = [];
+      state.mailSuppressions = [];
+      state.mailContactState = [];
+      state.mailQueue = [];
+      state.mailLog = [];
+      state.mailInternalLog = [];
+      state.manualLists = [];
+      state.mailAdminReadings = [];
+      state.mailLast = null;
+
+      state.ioHealth = null;
+      state.ioContract = null;
+      state.ioLogs = [];
+      state.ioLast = null;
+
+      setLastAction("");
+      setLastError("");
+      setLastRefresh();
+
+      persist();
+      setBanner("warn", "Token removido", "O token administrativo foi removido da memória desta página.");
+      pushHistory("UI", "clear_admin_token", "ok", "token removido da memória", { rerenderSummary:true });
+    }
 
 function setRole(role){
   state.role = role === "admin" ? "admin" : "business";
@@ -3604,46 +3983,78 @@ function setRole(role){
 }
     
 
-    async function refreshMailSection(opts={}){
-      if(!canUseMail()) return;
+ async function refreshMailSection(opts={}){
+  if(!canUseMail()){
+    return { status:"indisp.", message:"PUBMAIL indisponível neste backend." };
+  }
 
-      await runMailAction("admin_mail_overview", {}, null, "Resumo da comunicação carregado.", opts);
-      await runMailAction("admin_mail_health", {}, null, "Saúde da comunicação carregada.", opts);
-      await runMailAction("admin_mail_list_queue", {}, null, "Fila atualizada.", opts);
-      await runMailAction("admin_mail_list_contact_state", {}, null, "Situação do relacionamento carregada.", opts);
-      await runMailAction("admin_mail_list_log", {}, null, "Histórico de envio atualizado.", opts);
-      await runMailAction("admin_mail_list_suppressions", {}, null, "Contatos bloqueados carregados.", opts);
-      await runMailAction("admin_mail_list_manual_lists", {}, null, "Entradas de listas atualizadas.", opts);
-      await runMailAction("admin_mail_list_templates", {}, null, "Templates carregados.", opts);
-    }
+  const batchOpts = {
+    ...opts,
+    log:false,
+    silentRender:true
+  };
 
-    async function refreshAdminData(opts={}){
-      requireAdminToken();
+  const results = [];
 
-      const modules = getBackendModules();
+  results.push(await runMailAction("admin_mail_overview", {}, null, "Resumo da comunicação carregado.", batchOpts));
+  results.push(await runMailAction("admin_mail_health", {}, null, "Saúde da comunicação carregada.", batchOpts));
+  results.push(await runMailAction("admin_mail_list_queue", {}, null, "Fila atualizada.", batchOpts));
+  results.push(await runMailAction("admin_mail_list_contact_state", {}, null, "Situação do relacionamento carregada.", batchOpts));
+  results.push(await runMailAction("admin_mail_list_log", {}, null, "Histórico de envio atualizado.", batchOpts));
+  results.push(await runMailAction("admin_mail_list_suppressions", {}, null, "Contatos bloqueados carregados.", batchOpts));
+  results.push(await runMailAction("admin_mail_list_manual_lists", {}, null, "Entradas de listas atualizadas.", batchOpts));
+  results.push(await runMailAction("admin_mail_list_templates", {}, null, "Templates carregados.", batchOpts));
 
-      await runAdminList("admin_list_contacts", "contacts", null, "Contatos atualizados", opts);
-      await runAdminList("admin_list_leads", "leads", null, "Interesses atualizados", opts);
-      await runAdminList("admin_list_tickets", "tickets", null, "Chamados atualizados", opts);
+  renderSummary();
 
-      if(modules.pubmailAvailable){
-        await refreshMailSection(opts);
-      }
+  const statuses = results.map(item => item?.status).filter(Boolean);
 
-      if(modules.pubioAvailable){
-        await runIoAction("admin_io_health", {}, null, "Saúde dos dados carregada.", opts);
-        await runIoAction("admin_io_list_logs", {}, null, "Registros carregados.", opts);
-      }
-    }
+  if(statuses.includes("erro")) return { status:"parcial", message:"A atualização da comunicação terminou com falhas." };
+  if(statuses.includes("parcial")) return { status:"parcial", message:"A atualização da comunicação terminou parcialmente." };
+  if(statuses.includes("indisp.")) return { status:"indisp.", message:"PUBMAIL indisponível neste backend." };
 
-    async function refreshAllData(opts={}){
-      await runPublicMode("status", null, opts);
-      await runPublicMode("health", null, opts);
+  return { status:"ok", message:"Comunicação atualizada." };
+}
 
-      if(hasAdminToken()){
-        await refreshAdminData(opts);
-      }
-    }
+async function refreshAdminData(opts={}){
+  requireAdminToken();
+
+  const modules = getBackendModules();
+  const batchOpts = {
+    ...opts,
+    log:false,
+    silentRender:true
+  };
+
+  await runAdminList("admin_list_contacts", "contacts", null, "Contatos atualizados", batchOpts);
+  await runAdminList("admin_list_leads", "leads", null, "Interesses atualizados", batchOpts);
+  await runAdminList("admin_list_tickets", "tickets", null, "Chamados atualizados", batchOpts);
+
+  if(modules.pubmailAvailable){
+    await refreshMailSection(batchOpts);
+  }
+
+  if(modules.pubioAvailable){
+    await runIoAction("admin_io_health", {}, null, "Saúde dos dados carregada.", batchOpts);
+    await runIoAction("admin_io_list_logs", {}, null, "Registros carregados.", batchOpts);
+  }
+}
+
+async function refreshAllData(opts={}){
+  const batchOpts = {
+    ...opts,
+    log:false
+  };
+
+  await runPublicMode("status", null, batchOpts);
+  await runPublicMode("health", null, batchOpts);
+
+  if(hasAdminToken()){
+    await refreshAdminData(batchOpts);
+  }
+
+  renderSummary();
+}
 
     function bindTabs(){
       $$("[data-tab-group]").forEach(group => {
@@ -3731,13 +4142,17 @@ function setRole(role){
       $("#btn-role-business")?.addEventListener("click", () => setRole("business"));
       $("#btn-role-admin")?.addEventListener("click", () => setRole("admin"));
 
-      $("#btn-refresh-all")?.addEventListener("click", async (e) => {
+     $("#btn-refresh-all")?.addEventListener("click", async (e) => {
         await withBusy(e.currentTarget, "Atualizando...", async () => {
-          await refreshAllData({ log:true, banner:false });
+          setLastAction("Atualização geral do painel");
+          setLastError("");
+
+          await refreshAllData({ log:false, banner:false });
 
           const modules = getBackendModules();
 
           if(!hasAdminToken()){
+            pushHistory("UI", "refresh_all", "ok", "Leituras públicas atualizadas.");
             setBanner("warn", "Painel atualizado parcialmente", "Somente leituras públicas foram atualizadas. Para ações administrativas, informe o token.");
             return;
           }
@@ -3746,6 +4161,7 @@ function setRole(role){
           if(modules.pubmailAvailable) parts.push("PUBMAIL");
           if(modules.pubioAvailable) parts.push("PUBIO");
 
+          pushHistory("UI", "refresh_all", "ok", "Atualização consolidada do painel: " + parts.join(", ") + ".");
           setBanner("success", "Painel atualizado", "Foram atualizados: " + parts.join(", ") + ".");
         });
       });
@@ -3762,30 +4178,53 @@ function setRole(role){
         });
       });
 
-      $("#btn-refresh-mail")?.addEventListener("click", async (e) => {
+    $("#btn-refresh-mail")?.addEventListener("click", async (e) => {
         if(!canUseMail()){
           warnUnavailableModule("mail");
           return;
         }
 
         await withBusy(e.currentTarget, "Atualizando...", async () => {
-          await refreshMailSection({ log:true, banner:false });
-          setBanner("success", "Comunicação atualizada", "Resumo, fila, histórico, bloqueios, listas, templates e relacionamento foram atualizados.");
+          setLastAction("Atualização consolidada da comunicação");
+          setLastError("");
+
+          const result = await refreshMailSection({ log:false, banner:false });
+
+          if(result?.status === "ok"){
+            pushHistory("UI", "refresh_mail", "ok", "Resumo, fila, histórico, bloqueios, listas, templates e relacionamento foram atualizados.");
+            setBanner("success", "Comunicação atualizada", "Resumo, fila, histórico, bloqueios, listas, templates e relacionamento foram atualizados.");
+            return;
+          }
+
+          if(result?.status === "parcial"){
+            pushHistory("UI", "refresh_mail", "parcial", result.message || "A atualização da comunicação terminou parcialmente.");
+            setBanner("warn", "Comunicação atualizada parcialmente", result.message || "A atualização da comunicação terminou parcialmente.");
+            return;
+          }
+
+          pushHistory("UI", "refresh_mail", "indisp.", result?.message || "PUBMAIL indisponível neste backend.");
+          setBanner("warn", "Comunicação indisponível", result?.message || "PUBMAIL indisponível neste backend.");
         });
       });
 
-      $("#btn-mail-more-data")?.addEventListener("click", async (e) => {
+     $("#btn-mail-more-data")?.addEventListener("click", async (e) => {
         if(!canUseMail()){
           warnUnavailableModule("mail");
           return;
         }
 
         await withBusy(e.currentTarget, "Carregando...", async () => {
-          await runMailAction("admin_mail_health", {}, null, "Saúde técnica carregada.", { log:true, banner:false });
-          await runMailAction("admin_mail_checklist", {}, null, "Checklist carregado.", { log:true, banner:false });
-          await runMailAction("admin_mail_governance_model", {}, null, "Governança carregada.", { log:true, banner:false });
-          await runMailAction("admin_mail_usage_notes", {}, null, "Notas de uso carregadas.", { log:true, banner:false });
-          await runMailAction("admin_mail_list_internal_log", {}, null, "Log interno carregado.", { log:true, banner:false });
+          setLastAction("Atualização dos detalhes administrativos da comunicação");
+          setLastError("");
+
+          await runMailAction("admin_mail_health", {}, null, "Saúde técnica carregada.", { log:false, banner:false });
+          await runMailAction("admin_mail_checklist", {}, null, "Checklist carregado.", { log:false, banner:false });
+          await runMailAction("admin_mail_governance_model", {}, null, "Governança carregada.", { log:false, banner:false });
+          await runMailAction("admin_mail_usage_notes", {}, null, "Notas de uso carregadas.", { log:false, banner:false });
+          await runMailAction("admin_mail_list_internal_log", {}, null, "Log interno carregado.", { log:false, banner:false });
+
+          renderSummary();
+          pushHistory("UI", "refresh_mail_admin_details", "ok", "Saúde técnica, checklist, governança, notas de uso e log interno foram atualizados.");
           setBanner("success", "Detalhes administrativos carregados", "As leituras administrativas da comunicação foram atualizadas.");
         });
       });
