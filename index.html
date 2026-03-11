@@ -1677,6 +1677,41 @@ async function fetchWithTimeout(url, options={}, timeoutMs=30000){
       localStorage.setItem(PUBPANEL.STORAGE.HISTORY, JSON.stringify(state.ui.history.slice(0,40)));
     }
 
+  function resetAdminOperationalState(){
+    state.contacts = [];
+    state.leads = [];
+    state.tickets = [];
+
+    state.mailOverview = null;
+    state.mailHealth = null;
+    state.mailTemplates = [];
+    state.mailSuppressions = [];
+    state.mailContactState = [];
+    state.mailQueue = [];
+    state.mailLog = [];
+    state.mailInternalLog = [];
+    state.manualLists = [];
+    state.mailAdminReadings = [];
+    state.mailLast = null;
+
+    state.ioHealth = null;
+    state.ioContract = null;
+    state.ioLogs = [];
+    state.ioLast = null;
+  }
+
+  function resetAllStateForDisconnectedPanel(){
+    state.status = null;
+    state.health = null;
+    state.contract = null;
+    state.systemPayload = null;
+
+    resetAdminOperationalState();
+
+    setLastAction("");
+    setLastError("");
+    setLastRefresh();
+  }
     function normalizeRowsFromResponse(json){
       const bag = [
         json?.rows,
@@ -2229,55 +2264,152 @@ const api = {
   },
 
   async postAction(action, payload={}){
-    requireApiBase();
+  requireApiBase();
 
-    const request = abortPreviousRequest("action", action);
+  const actionName = String(action || "").trim();
+    if(!actionName){
+  throw new Error("A ação informada é inválida.");
+}
+  const request = abortPreviousRequest("action", actionName);
+
+  try{
+    const bodyPayload = {
+      action: actionName,
+      request_id: actionName.toUpperCase() + "-" + Date.now(),
+      ...payload
+    };
+
+    const allowBootstrapWithoutToken = actionName === "admin_set_token_once";
+
+    if(isAdminActionName(actionName) && !allowBootstrapWithoutToken){
+      requireAdminToken();
+      bodyPayload.admin_token = state.adminToken;
+    }
+
+    const res = await fetchWithTimeout(state.apiBase, {
+      method: "POST",
+      cache: "no-store",
+      redirect: "follow",
+      headers: { "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify(bodyPayload),
+      signal: request.controller.signal
+    }, 30000);
+
+    const responseData = await readResponsePayload(res);
+    const json = responseData.payload;
+
+    if(!responseData.ok_http){
+      throw new Error(
+        json?.message ||
+        json?.error?.message ||
+        json?.error?.code ||
+        "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
+      );
+    }
+
+    if(!isLatestRequest("action", actionName, request.seq)){
+      const staleError = new Error("Resposta descartada por estar desatualizada.");
+      staleError.name = "StaleResponseError";
+      throw staleError;
+    }
+
+    return ensureLogicalOk(json);
+  }finally{
+    clearTrackedRequest("action", actionName, request.seq);
+  }
+}
+};
+
+    async function runPublicMode(mode, button, opts={}){
+    const options = {
+      log: true,
+      banner: true,
+      silentRender: false,
+      ...opts
+    };
 
     try{
-      const bodyPayload = {
-        action,
-        request_id: action.toUpperCase() + "-" + Date.now(),
-        ...payload
-      };
+      requireApiBase();
 
-      if(isAdminActionName(action)){
-        requireAdminToken();
-        bodyPayload.admin_token = state.adminToken;
+      if(options.log){
+        setLastAction(friendlyActionName("mode=" + mode));
+      }
+      setLastError("");
+
+      await withBusy(button, "Carregando...", async () => {
+        const json = await api.getMode(mode);
+
+        if(mode === "status") state.status = json;
+        if(mode === "health") state.health = json;
+        if(mode === "contract") state.contract = json;
+
+        state.systemPayload = json;
+        setLastRefresh();
+
+        if(!options.silentRender){
+          renderSummary();
+        }
+
+        if(options.banner){
+          if(mode === "status"){
+            setBanner("success", "Status carregado", "O status do backend foi atualizado.");
+          } else if(mode === "health"){
+            setBanner("success", "Saúde carregada", "A saúde do backend foi atualizada.");
+          } else if(mode === "contract"){
+            setBanner("success", "Contrato carregado", "O contrato técnico foi carregado.");
+          } else {
+            setBanner("success", "Leitura carregada", "A leitura pública foi concluída.");
+          }
+        }
+
+        if(options.log){
+          pushHistory("GET", "mode=" + mode, "ok", "Leitura pública concluída.");
+        }
+      });
+
+      return { status:"ok", message:"Leitura pública concluída." };
+    }catch(err){
+      if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
+        return { status:"abortado", message:"Resposta descartada." };
       }
 
-      const res = await fetchWithTimeout(state.apiBase, {
-        method: "POST",
-        cache: "no-store",
-        redirect: "follow",
-        headers: { "Content-Type":"text/plain;charset=utf-8" },
-        body: JSON.stringify(bodyPayload),
-        signal: request.controller.signal
-      }, 30000);
+      if(err?.name === "LogicalPartialError"){
+        state.systemPayload = err.payload || null;
+        setLastError(err.message || "Sucesso parcial");
 
-      const responseData = await readResponsePayload(res);
-      const json = responseData.payload;
+        if(!options.silentRender){
+          renderSummary();
+        }
 
-      if(!responseData.ok_http){
-        throw new Error(
-          json?.message ||
-          json?.error?.message ||
-          json?.error?.code ||
-          "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
-        );
+        if(options.banner){
+          setBanner("warn", "Leitura pública parcial", err.message || "O backend respondeu parcialmente.");
+        }
+
+        if(options.log){
+          pushHistory("GET", "mode=" + mode, "parcial", err.message || "resposta parcial");
+        }
+
+        return { status:"parcial", message:err.message || "Resposta parcial." };
       }
 
-      if(!isLatestRequest("action", action, request.seq)){
-        const staleError = new Error("Resposta descartada por estar desatualizada.");
-        staleError.name = "StaleResponseError";
-        throw staleError;
+      setLastError(err.message || "Erro desconhecido");
+
+      if(!options.silentRender){
+        renderSummary();
       }
 
-      return ensureLogicalOk(json);
-    }finally{
-      clearTrackedRequest("action", action, request.seq);
+      if(options.banner){
+        setBanner("error", "Falha na leitura pública", err.message || "Erro desconhecido");
+      }
+
+      if(options.log){
+        pushHistory("GET", "mode=" + mode, "erro", err.message || "erro");
+      }
+
+      return { status:"erro", message:err.message || "Erro desconhecido." };
     }
   }
-};
+
 
     function applyModuleUiState(){
       const modules = getBackendModules();
@@ -2948,36 +3080,43 @@ const api = {
       });
     }
 
-    function exportRows(filename, rows){
-      if(!rows.length){
-        setBanner("warn", "Nada para exportar", "Carregue dados antes de exportar.");
-        return;
-      }
-
-      const keys = Object.keys(rows[0] || {});
-      const csvEscape = (v) => {
-        const s = String(v ?? "");
-        if(/[",;\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
-        return s;
-      };
-
-      const header = keys.map(csvEscape).join(";");
-      const body = rows.map(row => keys.map(k => csvEscape(row[k])).join(";")).join("\r\n");
-      const csv = header + "\r\n" + body;
-
-      const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-
-      pushHistory("UI", "export_csv", "ok", filename, { rerenderSummary:true });
-      setBanner("success", "Arquivo exportado", "O CSV foi gerado com sucesso.");
+ function exportRows(filename, rows){
+    if(!rows.length){
+      setBanner("warn", "Nada para exportar", "Carregue dados antes de exportar.");
+      return;
     }
+
+    const keySet = new Set();
+
+    rows.forEach(row => {
+      Object.keys(row || {}).forEach(key => keySet.add(key));
+    });
+
+    const keys = Array.from(keySet);
+
+    const csvEscape = (v) => {
+      const s = String(v ?? "");
+      if(/[",;\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    };
+
+    const header = keys.map(csvEscape).join(";");
+    const body = rows.map(row => keys.map(k => csvEscape(row?.[k])).join(";")).join("\r\n");
+    const csv = header + "\r\n" + body;
+
+    const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    pushHistory("UI", "export_csv", "ok", filename, { rerenderSummary:true });
+    setBanner("success", "Arquivo exportado", "O CSV foi gerado com sucesso.");
+  }
 
     function buildAdminReadingSummary(action, payload, rows){
       if(action === "admin_mail_checklist"){
@@ -3556,164 +3695,7 @@ function renderSummary(){
   }
 }
 
-    async function runMailAction(action, payload, button, successText, opts={}){
-  const options = { log:true, banner:true, silentRender:false, ...opts };
-
-  try{
-    requireAdminToken();
-
-    if(!canUseMail()){
-      if(!options.silentRender){
-        renderTopSummary();
-        renderSidebarMeta();
-        renderMailSummaryCards();
-        renderTechnicalBoxes();
-        applyModuleUiState();
-      }
-
-      if(options.banner) warnUnavailableModule("mail");
-      if(options.log) pushHistory("POST", action, "indisp.", "PUBMAIL indisponível neste backend.");
-      return;
-    }
-
-    if(options.log) setLastAction(friendlyActionName(action));
-    setLastError("");
-
-    await withBusy(button, "Executando...", async () => {
-      requireApiBase();
-
-      const json = await api.postAction(action, payload || {});
-      const rows = normalizeRowsFromResponse(json);
-
-      state.mailLast = { action, payload: json };
-
-      if(action === "admin_mail_overview") state.mailOverview = json;
-      if(action === "admin_mail_health") state.mailHealth = json;
-      if(action === "admin_mail_list_templates") state.mailTemplates = rows;
-      if(action === "admin_mail_list_suppressions") state.mailSuppressions = rows;
-      if(action === "admin_mail_list_contact_state") state.mailContactState = rows;
-      if(action === "admin_mail_list_queue") state.mailQueue = rows;
-      if(action === "admin_mail_list_log") state.mailLog = rows;
-      if(action === "admin_mail_list_internal_log") state.mailInternalLog = rows;
-      if(action === "admin_mail_list_manual_lists") state.manualLists = rows;
-
-      if([
-        "admin_mail_health",
-        "admin_mail_bootstrap",
-        "admin_mail_create_template_docs",
-        "admin_mail_checklist",
-        "admin_mail_governance_model",
-        "admin_mail_usage_notes",
-        "admin_mail_list_internal_log"
-      ].includes(action)){
-        upsertMailAdminReading(friendlyActionName(action), buildAdminReadingSummary(action, json, rows));
-      }
-
-      setLastRefresh();
-
-      if(!options.silentRender){
-        renderTopSummary();
-        renderSidebarMeta();
-        renderMailSummaryCards();
-        renderTechnicalBoxes();
-        renderMailQueue();
-        renderMailLog();
-        renderManualLists();
-        renderMailSuppressions();
-        renderMailTemplates();
-        renderMailRelationshipTable();
-        renderMailQueueStatusTable();
-        renderMailLogStatusTable();
-        renderMailAdminReadings();
-        applyModuleUiState();
-      }
-
-      if(options.banner) setBanner("success", "Comunicação", successText);
-      if(options.log) pushHistory("POST", action, "ok", successText);
-    });
-  }catch(err){
-    if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
-      return;
-    }
-
-    if(err?.name === "LogicalPartialError"){
-      state.mailLast = { action, payload: err.payload || null };
-      setLastError(err.message || "Sucesso parcial");
-
-      if(!options.silentRender){
-        renderTopSummary();
-        renderSidebarMeta();
-        renderMailSummaryCards();
-        renderTechnicalBoxes();
-        renderMailQueue();
-        renderMailLog();
-        renderManualLists();
-        renderMailSuppressions();
-        renderMailTemplates();
-        renderMailRelationshipTable();
-        renderMailQueueStatusTable();
-        renderMailLogStatusTable();
-        renderMailAdminReadings();
-        applyModuleUiState();
-      }
-
-      if(options.banner){
-        setBanner("warn", "Comunicação com resposta parcial", err.message || "O backend respondeu parcialmente.");
-      }
-
-      if(options.log){
-        pushHistory("POST", action, "parcial", err.message || "resposta parcial");
-      }
-      return;
-    }
-
-    setLastError(err.message || "Erro desconhecido");
-
-    if(!options.silentRender){
-      renderTopSummary();
-      renderSidebarMeta();
-      renderMailSummaryCards();
-      renderTechnicalBoxes();
-      renderMailQueue();
-      renderMailLog();
-      renderManualLists();
-      renderMailSuppressions();
-      renderMailTemplates();
-      renderMailRelationshipTable();
-      renderMailQueueStatusTable();
-      renderMailLogStatusTable();
-      renderMailAdminReadings();
-      applyModuleUiState();
-    }
-
-    if(options.banner){
-      const technical = state.mailLast?.payload || {};
-      const technicalError = technical?.error && typeof technical.error === "object" ? technical.error : null;
-
-      let extraParts = [
-        technicalError?.message || "",
-        technicalError?.code || "",
-        err.message || "Erro desconhecido",
-        technical?.template_folder_id ? "template_folder_id: " + technical.template_folder_id : "",
-        technical?.pubcrm_root_folder_id ? "pubcrm_root_folder_id: " + technical.pubcrm_root_folder_id : "",
-        technical?.pubcrm_mail_folder_id ? "pubcrm_mail_folder_id: " + technical.pubcrm_mail_folder_id : ""
-      ].filter(Boolean);
-
-      const seen = new Set();
-      extraParts = extraParts.filter(part => {
-        if(seen.has(part)) return false;
-        seen.add(part);
-        return true;
-      });
-
-      setBanner("error", "Falha na comunicação", extraParts.join(" · "));
-    }
-
-    if(options.log){
-      pushHistory("POST", action, "erro", err.message || "erro");
-    }
-  }
-}
+   
   async function runIoAction(action, payload, button, successText, opts={}){
   const options = { log:true, banner:true, silentRender:false, ...opts };
 
@@ -3865,153 +3847,106 @@ function renderSummary(){
 }
 
   function clearApiBase(){
-  Object.values(state.requests.publicMode || {}).forEach(entry => {
-    if(entry?.controller) entry.controller.abort();
-  });
-
-  Object.values(state.requests.action || {}).forEach(entry => {
-    if(entry?.controller) entry.controller.abort();
-  });
-
-  state.requests.publicMode = Object.create(null);
-  state.requests.action = Object.create(null);
-
-  state.apiBase = "";
-  if($("#api-base")) $("#api-base").value = "";
-
-  state.status = null;
-  state.health = null;
-  state.contract = null;
-  state.systemPayload = null;
-
-  state.contacts = [];
-  state.leads = [];
-  state.tickets = [];
-
-  state.mailOverview = null;
-  state.mailHealth = null;
-  state.mailTemplates = [];
-  state.mailSuppressions = [];
-  state.mailContactState = [];
-  state.mailQueue = [];
-  state.mailLog = [];
-  state.mailInternalLog = [];
-  state.manualLists = [];
-  state.mailAdminReadings = [];
-  state.mailLast = null;
-
-  state.ioHealth = null;
-  state.ioContract = null;
-  state.ioLogs = [];
-  state.ioLast = null;
-
-  setLastAction("");
-  setLastError("");
-  setLastRefresh();
-
-  persist();
-  setBanner("warn", "URL removida", "A configuração local foi limpa.");
-  pushHistory("UI", "clear_api_base", "ok", "configuração removida", { rerenderSummary:true });
-}
-
-     function saveAdminToken(){
-      state.adminToken = stringValue($("#admin-token")?.value || "");
-      persist();
-
-      if(state.adminToken){
-        setBanner("success", "Token aplicado", "O token administrativo foi carregado apenas em memória enquanto esta página permanecer aberta.");
-        pushHistory("UI", "save_admin_token", "ok", "token carregado em memória", { rerenderSummary:true });
-      }else{
-        setBanner("warn", "Token vazio", "Nenhum token foi informado.");
-        pushHistory("UI", "save_admin_token", "warn", "token vazio", { rerenderSummary:true });
-      }
-    }
-
-     function clearAdminToken(){
-      Object.values(state.requests.publicMode || {}).forEach(entry => {
-        if(entry?.controller) entry.controller.abort();
-      });
-
-      Object.values(state.requests.action || {}).forEach(entry => {
-        if(entry?.controller) entry.controller.abort();
-      });
-
-      state.requests.publicMode = Object.create(null);
-      state.requests.action = Object.create(null);
-
-      state.adminToken = "";
-      if($("#admin-token")) $("#admin-token").value = "";
-
-      state.contacts = [];
-      state.leads = [];
-      state.tickets = [];
-
-      state.mailOverview = null;
-      state.mailHealth = null;
-      state.mailTemplates = [];
-      state.mailSuppressions = [];
-      state.mailContactState = [];
-      state.mailQueue = [];
-      state.mailLog = [];
-      state.mailInternalLog = [];
-      state.manualLists = [];
-      state.mailAdminReadings = [];
-      state.mailLast = null;
-
-      state.ioHealth = null;
-      state.ioContract = null;
-      state.ioLogs = [];
-      state.ioLast = null;
-
-      setLastAction("");
-      setLastError("");
-      setLastRefresh();
-
-      persist();
-      setBanner("warn", "Token removido", "O token administrativo foi removido da memória desta página.");
-      pushHistory("UI", "clear_admin_token", "ok", "token removido da memória", { rerenderSummary:true });
-    }
-
-    async function setBackendTokenOnce(button){
-  try{
-    requireApiBase();
-
-    var token = stringValue($("#admin-token")?.value || state.adminToken || "");
-    validateRequired("token administrativo", token);
-
-    setLastAction("Gravação do token administrativo no backend");
-    setLastError("");
-
-    await withBusy(button, "Gravando...", async () => {
-      var json = await api.postAction("admin_set_token_once", {
-        token: token
-      });
-
-      setLastRefresh();
-      renderSummary();
-
-      setBanner("success", "Token gravado no backend", json?.data?.message || "O token administrativo foi definido com sucesso.");
-      pushHistory("POST", "admin_set_token_once", "ok", json?.data?.message || "Token administrativo definido no backend.");
+    Object.values(state.requests.publicMode || {}).forEach(entry => {
+      if(entry?.controller) entry.controller.abort();
     });
-  }catch(err){
-    if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
-      return;
-    }
 
-    if(err?.name === "LogicalPartialError"){
-      setLastError(err.message || "Sucesso parcial");
-      renderSummary();
-      setBanner("warn", "Gravação parcial", err.message || "O backend respondeu parcialmente.");
-      pushHistory("POST", "admin_set_token_once", "parcial", err.message || "resposta parcial");
-      return;
-    }
+    Object.values(state.requests.action || {}).forEach(entry => {
+      if(entry?.controller) entry.controller.abort();
+    });
 
-    setLastError(err.message || "Erro desconhecido");
-    renderSummary();
-    setBanner("error", "Falha ao gravar token no backend", err.message || "Erro desconhecido");
-    pushHistory("POST", "admin_set_token_once", "erro", err.message || "erro");
+    state.requests.publicMode = Object.create(null);
+    state.requests.action = Object.create(null);
+
+    state.apiBase = "";
+    if($("#api-base")) $("#api-base").value = "";
+
+    resetAllStateForDisconnectedPanel();
+
+    persist();
+    setBanner("warn", "URL removida", "A configuração local foi limpa.");
+    pushHistory("UI", "clear_api_base", "ok", "configuração removida", { rerenderSummary:true });
   }
-}
+
+  function saveAdminToken(){
+    state.adminToken = stringValue($("#admin-token")?.value || "");
+    persist();
+    renderSummary();
+
+    if(state.adminToken){
+      setBanner("success", "Token aplicado", "O token administrativo foi carregado apenas em memória enquanto esta página permanecer aberta.");
+      pushHistory("UI", "save_admin_token", "ok", "token carregado em memória", { rerenderSummary:true });
+    }else{
+      setBanner("warn", "Token vazio", "Nenhum token foi informado.");
+      pushHistory("UI", "save_admin_token", "warn", "token vazio", { rerenderSummary:true });
+    }
+  }
+
+      function clearAdminToken(){
+    Object.values(state.requests.publicMode || {}).forEach(entry => {
+      if(entry?.controller) entry.controller.abort();
+    });
+
+    Object.values(state.requests.action || {}).forEach(entry => {
+      if(entry?.controller) entry.controller.abort();
+    });
+
+    state.requests.publicMode = Object.create(null);
+    state.requests.action = Object.create(null);
+
+    state.adminToken = "";
+    if($("#admin-token")) $("#admin-token").value = "";
+
+    resetAdminOperationalState();
+    setLastAction("");
+    setLastError("");
+    setLastRefresh();
+
+    persist();
+    setBanner("warn", "Token removido", "O token administrativo foi removido da memória desta página.");
+    pushHistory("UI", "clear_admin_token", "ok", "token removido da memória", { rerenderSummary:true });
+  }
+
+   async function setBackendTokenOnce(button){
+    try{
+      requireApiBase();
+
+      var token = stringValue($("#admin-token")?.value || state.adminToken || "");
+      validateRequired("token administrativo", token);
+
+      setLastAction("Gravação do token administrativo no backend");
+      setLastError("");
+
+      await withBusy(button, "Gravando...", async () => {
+        var json = await api.postAction("admin_set_token_once", {
+          token: token
+        });
+
+        setLastRefresh();
+        renderSummary();
+
+        setBanner("success", "Token gravado no backend", json?.data?.message || "O token administrativo foi definido com sucesso.");
+        pushHistory("POST", "admin_set_token_once", "ok", json?.data?.message || "Token administrativo definido no backend.");
+      });
+    }catch(err){
+      if(err?.name === "AbortError" || err?.name === "StaleResponseError"){
+        return;
+      }
+
+      if(err?.name === "LogicalPartialError"){
+        setLastError(err.message || "Sucesso parcial");
+        renderSummary();
+        setBanner("warn", "Gravação parcial", err.message || "O backend respondeu parcialmente.");
+        pushHistory("POST", "admin_set_token_once", "parcial", err.message || "resposta parcial");
+        return;
+      }
+
+      setLastError(err.message || "Erro desconhecido");
+      renderSummary();
+      setBanner("error", "Falha ao gravar token no backend", err.message || "Erro desconhecido");
+      pushHistory("POST", "admin_set_token_once", "erro", err.message || "erro");
+    }
+  }
 
 function setRole(role){
   state.role = role === "admin" ? "admin" : "business";
