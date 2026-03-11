@@ -444,6 +444,73 @@
     body[data-role="admin"] .admin-inline{display:inline-flex !important}
     body[data-role="business"] .admin-inline{display:none !important}
 
+    .module-disabled{
+      opacity:.55;
+      pointer-events:none;
+      filter:grayscale(.12);
+    }
+
+    .module-disabled .btn,
+    .module-disabled .input,
+    .module-disabled .select,
+    .module-disabled .textarea{
+      pointer-events:none;
+    }
+
+    .module-state{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      width:max-content;
+    }
+
+    .module-state::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:99px;
+      background:currentColor;
+    }
+
+    .module-state--ok{
+      color:#047857;
+      background:rgba(5,150,105,.08);
+      border-color:rgba(5,150,105,.16);
+    }
+
+    .module-state--warn{
+      color:#b45309;
+      background:rgba(217,119,6,.08);
+      border-color:rgba(217,119,6,.16);
+    }
+
+    .module-state--muted{
+      color:#475569;
+      background:rgba(148,163,184,.12);
+      border-color:rgba(148,163,184,.18);
+    }
+
+    .section-subtitle{
+      margin:0 0 10px;
+      font-size:13px;
+      font-weight:900;
+      color:#0f172a;
+      letter-spacing:-.01em;
+    }
+
+    .admin-panel{
+      display:grid;
+      gap:14px;
+    }
+
     .mobile-show{display:none}
     .sidebar-backdrop{
       position:fixed;
@@ -538,8 +605,7 @@
                   <span class="tag">Painel central do negócio</span>
                   <h1>Operar, acompanhar e manter o ecossistema PUB</h1>
                   <p>
-                    Esta versão 1.0 abre mostrando o essencial: visão geral, base comercial, fila, listas de envio, comunicação,
-                    exportação, backup e histórico. Instalação e detalhes técnicos ficam no perfil administrador.
+                    Esta versão 1.0 abre com leituras públicas do backend. Leituras operacionais e ações administrativas exigem token administrativo.
                   </p>
                 </div>
 
@@ -549,8 +615,8 @@
                     <li>Configurar a URL do Web App</li>
                     <li>Entrar e ver o painel já preenchido</li>
                     <li>Encontrar contatos, interesses e chamados</li>
-                    <li>Enviar mensagem e operar a fila</li>
-                    <li>Exportar, validar, simular, salvar e restaurar dados</li>
+                    <li>Usar comunicação e dados apenas se os módulos existirem</li>
+                    <li>Instalar pelo contrato central do backend</li>
                   </ul>
                   <div class="tiny" style="color:rgba(226,232,240,.86)">
                     O usuário vê a operação. O administrador vê instalação, contrato e retornos técnicos.
@@ -566,7 +632,7 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Visão geral</span>
               <h2 class="h2">Leitura rápida do sistema e do negócio</h2>
-              <div class="muted">Entre no painel e veja o estado principal do ambiente, da base e da comunicação sem precisar pedir leituras básicas.</div>
+              <div class="muted">Entre no painel e veja o estado principal do ambiente, da base e dos módulos conforme o próprio backend informa.</div>
             </div>
 
             <div class="metrics">
@@ -598,17 +664,17 @@
               <div class="metric">
                 <div class="eyebrow">Mensagens na fila</div>
                 <div class="value" id="sum-mail-queue">—</div>
-                <div class="note">Itens aguardando envio.</div>
+                <div class="note">Só existe se PUBMAIL estiver disponível.</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Comunicação</div>
                 <div class="value" id="sum-mail">—</div>
-                <div class="note">Saúde do PUBMAIL.</div>
+                <div class="note">Estado do PUBMAIL.</div>
               </div>
               <div class="metric">
                 <div class="eyebrow">Dados</div>
                 <div class="value" id="sum-io">—</div>
-                <div class="note">Saúde do PUBIO.</div>
+                <div class="note">Estado do PUBIO.</div>
               </div>
             </div>
 
@@ -636,11 +702,11 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Conexão</span>
               <h2 class="h2">Configuração do Web App</h2>
-              <div class="muted">A URL fica salva apenas neste navegador.</div>
+              <div class="muted">A URL fica salva apenas neste navegador. O token administrativo fica salvo apenas na sessão atual da aba.</div>
             </div>
 
             <div class="grid-3">
-              <div class="card" style="grid-column:span 2">
+              <div class="card">
                 <strong>URL do Web App</strong>
                 <div class="tiny">Exemplo: <span class="mono">https://script.google.com/macros/s/.../exec</span></div>
                 <div style="height:10px"></div>
@@ -653,16 +719,24 @@
               </div>
 
               <div class="card">
+                <strong>Token administrativo</strong>
+                <div class="tiny">Necessário para qualquer ação administrativa do backend. Fica salvo apenas na sessão atual da aba.</div>
+                <div style="height:10px"></div>
+                <input class="input" id="admin-token" type="password" placeholder="Token administrativo" />
+                <div style="height:10px"></div>
+                <div class="toolbar-right">
+                  <button class="btn btn--soft" id="btn-save-admin-token">Salvar token</button>
+                  <button class="btn btn--soft" id="btn-clear-admin-token">Limpar token</button>
+                </div>
+              </div>
+
+              <div class="card">
                 <strong>Leitura automática</strong>
                 <div class="tiny">
-                  Ao abrir o painel, ele tenta buscar:
-                  <br><span class="mono">status</span>
-                  <br><span class="mono">saúde</span>
-                  <br><span class="mono">contatos</span>
-                  <br><span class="mono">interesses</span>
-                  <br><span class="mono">chamados</span>
-                  <br><span class="mono">fila</span>
-                  <br><span class="mono">listas de envio</span>
+                  Ao abrir o painel:
+                  <br><span class="mono">sempre:</span> status, health, contract
+                  <br><span class="mono">com token admin:</span> contatos, interesses, chamados e módulos
+                  <br><span class="mono">se os módulos existirem:</span> comunicação e dados
                 </div>
               </div>
             </div>
@@ -779,157 +853,275 @@
           <section class="panel" id="comunicacao">
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Comunicação</span>
-              <h2 class="h2">PUBMAIL para acompanhar e agir</h2>
-              <div class="muted">Fila, histórico, contatos bloqueados, situação do relacionamento, envio manual e listas de envio.</div>
+              <h2 class="h2">PUBMAIL para acompanhar, agir e estreitar relação</h2>
+              <div class="muted">O foco aqui é relacionamento com leads e tickets. O técnico fica recuado para administrador.</div>
+              <div id="mail-module-state" class="module-state module-state--muted">Aguardando status</div>
             </div>
 
-            <div class="grid-5">
-              <div class="metric">
-                <div class="eyebrow">Saúde</div>
-                <div class="value" id="mail-health-box">—</div>
-                <div class="note">Saúde da comunicação.</div>
-              </div>
-              <div class="metric">
-                <div class="eyebrow">Modelos</div>
-                <div class="value" id="mail-templates-box">—</div>
-                <div class="note">Modelos disponíveis.</div>
-              </div>
-              <div class="metric">
-                <div class="eyebrow">Contatos bloqueados</div>
-                <div class="value" id="mail-suppressions-box">—</div>
-                <div class="note">Bloqueios ativos.</div>
-              </div>
-              <div class="metric">
-                <div class="eyebrow">Mensagens na fila</div>
-                <div class="value" id="mail-queue-box">—</div>
-                <div class="note">Itens aguardando envio.</div>
-              </div>
-              <div class="metric">
-                <div class="eyebrow">Histórico de envio</div>
-                <div class="value" id="mail-log-box">—</div>
-                <div class="note">Registros de envio e processamento.</div>
-              </div>
-            </div>
+            <div id="mail-module-body">
 
-            <div class="grid-4" style="margin-top:16px">
-              <div class="card">
-                <strong>Atualizar comunicação</strong>
-                <div class="tiny">Atualiza resumo, fila, listas de envio e histórico.</div>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-refresh-mail">Atualizar comunicação</button>
-                <button class="btn btn--soft admin-inline" id="btn-mail-more-data">Carregar mais detalhes</button>
-              </div>
-
-              <div class="card">
-                <strong>Operação da fila</strong>
-                <div class="tiny">Buscar novas entradas e enviar os itens pendentes.</div>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-scan">Buscar novas entradas</button>
-                <button class="btn btn--violet" id="btn-mail-process">Enviar itens pendentes</button>
-              </div>
-
-              <div class="card">
-                <strong>Envio manual</strong>
-                <div class="tiny">Envie ou enfileire uma mensagem simples.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="mail-send-to" placeholder="E-mail do destinatário" />
-                <div style="height:10px"></div>
-                <input class="input" id="mail-send-subject" placeholder="Assunto" />
-                <div style="height:10px"></div>
-                <textarea class="textarea" id="mail-send-body" placeholder="Mensagem"></textarea>
-                <div style="height:10px"></div>
-                <button class="btn btn--primary" id="btn-mail-send-manual">Enviar mensagem</button>
-              </div>
-
-              <div class="card">
-                <strong>Bloquear contato</strong>
-                <div class="tiny">Impede novo envio para um contato.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="mail-suppression-email" placeholder="E-mail para bloquear" />
-                <div style="height:10px"></div>
-                <input class="input" id="mail-suppression-reason" placeholder="Motivo do bloqueio" />
-                <div style="height:10px"></div>
-                <button class="btn btn--danger" id="btn-mail-add-suppression">Bloquear contato</button>
-              </div>
-            </div>
-
-            <div class="sep"></div>
-
-            <div class="grid-3">
-              <div class="card">
-                <strong>Lista de envio</strong>
-                <div class="tiny">Cria uma lista simples para uso operacional.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="manual-list-name" placeholder="Nome da lista de envio" />
-                <div style="height:10px"></div>
-                <textarea class="textarea" id="manual-list-note" placeholder="Observação opcional"></textarea>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-create-manual-list">Criar lista</button>
-                <button class="btn btn--soft" id="btn-mail-list-manual-lists">Atualizar listas</button>
-              </div>
-
-              <div class="card">
-                <strong>Contato da lista</strong>
-                <div class="tiny">Cria ou atualiza um contato dentro da lista de envio.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="manual-entry-list-id" placeholder="ID da lista de envio" />
-                <div style="height:10px"></div>
-                <input class="input" id="manual-entry-email" placeholder="E-mail" />
-                <div style="height:10px"></div>
-                <input class="input" id="manual-entry-name" placeholder="Nome" />
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-update-manual-entry">Salvar contato da lista</button>
-              </div>
-
-              <div class="card">
-                <strong>Ativar ou desativar contato</strong>
-                <div class="tiny">Altera o estado de um contato já criado na lista.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="manual-active-entry-id" placeholder="ID do contato da lista" />
-                <div style="height:10px"></div>
-                <select class="select" id="manual-active-value">
-                  <option value="true">ativo</option>
-                  <option value="false">inativo</option>
-                </select>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-mail-set-manual-entry-active">Aplicar</button>
-              </div>
-            </div>
-
-            <div style="height:14px"></div>
-
-            <div class="table-card">
-              <div class="table-head">
-                <div class="table-title">Mensagens na fila</div>
-                <div class="toolbar-right">
-                  <button class="btn btn--soft" data-export="mailQueue">Exportar CSV</button>
+              <div class="grid-4">
+                <div class="metric">
+                  <div class="eyebrow">Saúde da comunicação</div>
+                  <div class="value" id="mail-health-box">—</div>
+                  <div class="note">Situação geral do PUBMAIL.</div>
+                </div>
+                <div class="metric">
+                  <div class="eyebrow">Mensagens pendentes</div>
+                  <div class="value" id="mail-queue-pending-box">—</div>
+                  <div class="note">Mensagens aguardando processamento.</div>
+                </div>
+                <div class="metric">
+                  <div class="eyebrow">Mensagens com erro</div>
+                  <div class="value" id="mail-queue-error-box">—</div>
+                  <div class="note">Itens que exigem atenção.</div>
+                </div>
+                <div class="metric">
+                  <div class="eyebrow">Enviadas recentemente</div>
+                  <div class="value" id="mail-log-sent-box">—</div>
+                  <div class="note">Registros enviados com sucesso.</div>
+                </div>
+                <div class="metric">
+                  <div class="eyebrow">Contatos bloqueados</div>
+                  <div class="value" id="mail-suppressions-box">—</div>
+                  <div class="note">Bloqueios ativos de comunicação.</div>
+                </div>
+                <div class="metric">
+                  <div class="eyebrow">Listas manuais</div>
+                  <div class="value" id="mail-manual-lists-box">—</div>
+                  <div class="note">Entradas salvas para envio manual.</div>
+                </div>
+                <div class="metric">
+                  <div class="eyebrow">Templates ativos</div>
+                  <div class="value" id="mail-templates-box">—</div>
+                  <div class="note">Mensagens automáticas em uso.</div>
+                </div>
+                <div class="metric">
+                  <div class="eyebrow">Relacionamento vivo</div>
+                  <div class="value" id="mail-stage-total-box">—</div>
+                  <div class="note">Contatos com estágio conhecido.</div>
                 </div>
               </div>
-              <div class="table-wrap" id="table-mail-queue"></div>
-            </div>
 
-            <div style="height:14px"></div>
+              <div class="grid-2" style="margin-top:16px">
+                <div class="card">
+                  <strong>Leitura executiva</strong>
+                  <div class="tiny" id="mail-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
+                </div>
+                <div class="card">
+                  <strong>Fluxo da comunicação</strong>
+                  <div class="tiny" id="mail-flow-note">Ainda não há leitura suficiente para avaliar o fluxo da fila e do histórico.</div>
+                </div>
+              </div>
 
-            <div class="grid-2">
+              <div class="sep"></div>
+
+              <div class="grid-4">
+                <div class="card">
+                  <strong>Atualizar comunicação</strong>
+                  <div class="tiny">Atualiza visão executiva, fila, estágios, histórico, bloqueios, listas e templates.</div>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-refresh-mail">Atualizar comunicação</button>
+                  <button class="btn btn--soft admin-inline" id="btn-mail-more-data">Atualizar detalhes administrativos</button>
+                </div>
+
+                <div class="card">
+                  <strong>Operação da fila</strong>
+                  <div class="tiny">Buscar novas entradas e enviar os itens pendentes.</div>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-mail-scan">Buscar novas entradas</button>
+                  <button class="btn btn--violet" id="btn-mail-process">Enviar itens pendentes</button>
+                </div>
+
+                <div class="card">
+                  <strong>Envio manual</strong>
+                  <div class="tiny">Envia para um ou mais e-mails usando o template manual do PUBMAIL.</div>
+                  <div style="height:10px"></div>
+                  <input class="input" id="mail-send-to" placeholder="E-mails separados por vírgula, ponto e vírgula ou quebra de linha" />
+                  <div style="height:10px"></div>
+                  <input class="input" id="mail-send-subject" placeholder="Assunto de referência do lote manual" />
+                  <div style="height:10px"></div>
+                  <textarea class="textarea" id="mail-send-body" placeholder="Mensagem manual"></textarea>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--primary" id="btn-mail-send-manual">Enviar mensagem</button>
+                </div>
+
+                <div class="card">
+                  <strong>Bloquear contato</strong>
+                  <div class="tiny">Impede novo envio para um contato.</div>
+                  <div style="height:10px"></div>
+                  <input class="input" id="mail-suppression-email" placeholder="E-mail para bloquear" />
+                  <div style="height:10px"></div>
+                  <input class="input" id="mail-suppression-reason" placeholder="Motivo do bloqueio" />
+                  <div style="height:10px"></div>
+                  <button class="btn btn--danger" id="btn-mail-add-suppression">Bloquear contato</button>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="grid-3">
+                <div class="card">
+                  <strong>Estágio da base</strong>
+                  <div class="tiny">Leitura rápida do relacionamento construído com a base.</div>
+                  <div style="height:10px"></div>
+                  <div class="table-wrap" id="table-mail-relationship"></div>
+                </div>
+
+                <div class="card">
+                  <strong>Leitura da fila</strong>
+                  <div class="tiny">Ajuda a perceber acúmulo, falha, bloqueio e andamento.</div>
+                  <div style="height:10px"></div>
+                  <div class="table-wrap" id="table-mail-queue-status"></div>
+                </div>
+
+                <div class="card">
+                  <strong>Histórico resumido</strong>
+                  <div class="tiny">Retrato rápido do que já foi enviado, suprimido ou falhou.</div>
+                  <div style="height:10px"></div>
+                  <div class="table-wrap" id="table-mail-log-status"></div>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="grid-3">
+                <div class="card">
+                  <strong>Lista manual</strong>
+                  <div class="tiny">Cria entradas em <span class="mono">mail_manual_lists</span> com uma chave de lista e vários e-mails.</div>
+                  <div style="height:10px"></div>
+                  <input class="input" id="manual-list-name" placeholder="Chave da lista. Exemplo: clientes_master" />
+                  <div style="height:10px"></div>
+                  <textarea class="textarea" id="manual-list-note" placeholder="E-mails separados por vírgula, ponto e vírgula ou quebra de linha"></textarea>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-mail-create-manual-list">Criar entradas da lista</button>
+                  <button class="btn btn--soft" id="btn-mail-list-manual-lists">Atualizar listas</button>
+                </div>
+
+                <div class="card">
+                  <strong>Entrada da lista</strong>
+                  <div class="tiny">Atualiza uma entrada já criada em <span class="mono">mail_manual_lists</span>.</div>
+                  <div style="height:10px"></div>
+                  <input class="input" id="manual-entry-list-id" placeholder="ID da entrada da lista" />
+                  <div style="height:10px"></div>
+                  <input class="input" id="manual-entry-email" placeholder="E-mail" />
+                  <div style="height:10px"></div>
+                  <input class="input" id="manual-entry-name" placeholder="Nome" />
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-mail-update-manual-entry">Salvar entrada da lista</button>
+                </div>
+
+                <div class="card">
+                  <strong>Ativar ou desativar entrada</strong>
+                  <div class="tiny">Altera o campo <span class="mono">active</span> de uma entrada da lista.</div>
+                  <div style="height:10px"></div>
+                  <input class="input" id="manual-active-entry-id" placeholder="ID da entrada da lista" />
+                  <div style="height:10px"></div>
+                  <select class="select" id="manual-active-value">
+                    <option value="true">ativo</option>
+                    <option value="false">inativo</option>
+                  </select>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-mail-set-manual-entry-active">Aplicar</button>
+                </div>
+              </div>
+
+              <div style="height:14px"></div>
+
               <div class="table-card">
                 <div class="table-head">
-                  <div class="table-title">Listas de envio</div>
+                  <div class="table-title">Mensagens na fila</div>
+                  <div class="toolbar-right">
+                    <button class="btn btn--soft" data-export="mailQueue">Exportar CSV</button>
+                  </div>
                 </div>
-                <div class="table-wrap" id="table-manual-lists"></div>
+                <div class="table-wrap" id="table-mail-queue"></div>
               </div>
-              <div class="card">
-                <strong>Leitura da comunicação</strong>
-                <div class="tiny" id="mail-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
+
+              <div style="height:14px"></div>
+
+              <div class="grid-2">
+                <div class="table-card">
+                  <div class="table-head">
+                    <div class="table-title">Histórico de envio</div>
+                  </div>
+                  <div class="table-wrap" id="table-mail-log"></div>
+                </div>
+
+                <div class="table-card">
+                  <div class="table-head">
+                    <div class="table-title">Entradas de listas manuais</div>
+                  </div>
+                  <div class="table-wrap" id="table-manual-lists"></div>
+                </div>
               </div>
-            </div>
 
-            <div class="sep admin-only"></div>
+              <div style="height:14px"></div>
 
-            <div class="card admin-only">
-              <strong>Retorno técnico do PUBMAIL</strong>
-              <div class="tiny">Visível apenas no perfil administrador.</div>
-              <div style="height:10px"></div>
-              <div class="codebox" id="box-mail-json">Nenhuma leitura técnica ainda.</div>
+              <div class="grid-2">
+                <div class="table-card">
+                  <div class="table-head">
+                    <div class="table-title">Contatos bloqueados</div>
+                  </div>
+                  <div class="table-wrap" id="table-mail-suppressions"></div>
+                </div>
+
+                <div class="table-card">
+                  <div class="table-head">
+                    <div class="table-title">Templates ativos em uso</div>
+                  </div>
+                  <div class="table-wrap" id="table-mail-templates"></div>
+                </div>
+              </div>
+
+              <div class="sep admin-only"></div>
+
+              <div class="admin-panel admin-only">
+                <div class="grid-3">
+                  <div class="card">
+                    <strong>Administração da comunicação</strong>
+                    <div class="tiny">Ações de implantação, saúde técnica e estrutura do módulo.</div>
+                    <div style="height:10px"></div>
+                    <button class="btn btn--soft" id="btn-admin-mail-bootstrap">Preparar comunicação</button>
+                    <button class="btn btn--soft" id="btn-admin-mail-health">Saúde técnica</button>
+                    <button class="btn btn--soft" id="btn-admin-mail-create-docs">Criar docs padrão</button>
+                  </div>
+
+                  <div class="card">
+                    <strong>Leituras administrativas</strong>
+                    <div class="tiny">Conteúdos conceituais e de implantação. Não lideram a rotina do negócio.</div>
+                    <div style="height:10px"></div>
+                    <button class="btn btn--soft" id="btn-admin-mail-checklist">Checklist</button>
+                    <button class="btn btn--soft" id="btn-admin-mail-governance">Governança</button>
+                    <button class="btn btn--soft" id="btn-admin-mail-usage-notes">Notas de uso</button>
+                  </div>
+
+                  <div class="card">
+                    <strong>Log interno</strong>
+                    <div class="tiny">Leitura técnica para diagnóstico administrativo.</div>
+                    <div style="height:10px"></div>
+                    <button class="btn btn--soft" id="btn-admin-mail-internal-log">Atualizar log interno</button>
+                    <div style="height:10px"></div>
+                    <div class="tiny" id="mail-admin-note">Use esta área apenas quando houver necessidade de diagnóstico.</div>
+                  </div>
+                </div>
+
+                <div class="grid-2">
+                  <div class="table-card">
+                    <div class="table-head">
+                      <div class="table-title">Leituras administrativas do PUBMAIL</div>
+                    </div>
+                    <div class="table-wrap" id="table-mail-admin-readings"></div>
+                  </div>
+
+                  <div class="card">
+                    <strong>Retorno técnico do PUBMAIL</strong>
+                    <div class="tiny">Visível apenas no perfil administrador.</div>
+                    <div style="height:10px"></div>
+                    <div class="codebox" id="box-mail-json">Nenhuma leitura técnica ainda.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -937,109 +1129,146 @@
             <div class="head">
               <span class="tag" style="color:#1d4ed8">Dados</span>
               <h2 class="h2">PUBIO para exportar, conferir, salvar e restaurar</h2>
-              <div class="muted">Exporte dados, confira arquivos, simule importações, crie cópias de segurança e restaure com o menor risco possível.</div>
+              <div class="muted">Este módulo só é usado quando o backend informar que PUBIO está disponível.</div>
+              <div id="io-module-state" class="module-state module-state--muted">Aguardando status</div>
             </div>
 
-            <div class="grid-4">
-              <div class="card">
-                <strong>Exportar dados</strong>
-                <div style="height:10px"></div>
-                <select class="select" id="io-export-entity">
-                  <option value="contacts">contacts</option>
-                  <option value="leads">leads</option>
-                  <option value="tickets">tickets</option>
-                </select>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-export-entity">Exportar entidade</button>
-                <button class="btn btn--soft" id="btn-io-export-bundle">Exportar base completa</button>
-                <button class="btn btn--soft admin-inline" id="btn-io-export-entity-csv">Exportar CSV do backend</button>
+            <div id="io-module-body">
+              <div class="grid-4">
+                <div class="card">
+                  <strong>Exportar dados</strong>
+                  <div style="height:10px"></div>
+                  <select class="select" id="io-export-entity">
+                    <option value="contacts">contacts</option>
+                    <option value="leads">leads</option>
+                    <option value="tickets">tickets</option>
+                    <option value="mail_templates">mail_templates</option>
+                    <option value="mail_suppressions">mail_suppressions</option>
+                    <option value="mail_manual_lists">mail_manual_lists</option>
+                    <option value="mail_contact_state">mail_contact_state</option>
+                    <option value="mail_queue">mail_queue</option>
+                    <option value="mail_log">mail_log</option>
+                    <option value="mail_internal_log">mail_internal_log</option>
+                  </select>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-io-export-entity">Exportar entidade</button>
+                  <button class="btn btn--soft" id="btn-io-export-bundle">Exportar pacote técnico completo</button>
+                  <button class="btn btn--soft admin-inline" id="btn-io-export-entity-csv">Exportar CSV do backend</button>
+                </div>
+
+                <div class="card">
+                  <strong>Conferir arquivo</strong>
+                  <div class="tiny">Use a referência do arquivo salvo.</div>
+                  <div style="height:10px"></div>
+                  <input class="input" id="io-storage-ref" placeholder="Referência do arquivo" />
+                  <div style="height:10px"></div>
+                  <select class="select" id="io-validate-entity">
+                    <option value="contacts">contacts</option>
+                    <option value="leads">leads</option>
+                    <option value="tickets">tickets</option>
+                    <option value="mail_templates">mail_templates</option>
+                    <option value="mail_suppressions">mail_suppressions</option>
+                    <option value="mail_manual_lists">mail_manual_lists</option>
+                    <option value="mail_contact_state">mail_contact_state</option>
+                    <option value="mail_queue">mail_queue</option>
+                    <option value="mail_log">mail_log</option>
+                    <option value="mail_internal_log">mail_internal_log</option>
+                  </select>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-io-validate">Validar arquivo</button>
+                  <button class="btn btn--soft" id="btn-io-inspect-storage-ref">Inspecionar arquivo</button>
+                </div>
+
+                <div class="card">
+                  <strong>Cópia de segurança</strong>
+                  <div style="height:10px"></div>
+                  <select class="select" id="io-snapshot-entity">
+                    <option value="contacts">contacts</option>
+                    <option value="leads">leads</option>
+                    <option value="tickets">tickets</option>
+                    <option value="mail_templates">mail_templates</option>
+                    <option value="mail_suppressions">mail_suppressions</option>
+                    <option value="mail_manual_lists">mail_manual_lists</option>
+                    <option value="mail_contact_state">mail_contact_state</option>
+                  </select>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-io-snapshot">Criar cópia</button>
+                  <button class="btn btn--soft" id="btn-io-list-logs">Ver registros</button>
+                </div>
+
+                <div class="card">
+                  <strong>Restaurar cópia</strong>
+                  <div class="tiny">Use o ID de uma cópia já existente.</div>
+                  <div style="height:10px"></div>
+                  <input class="input" id="io-snapshot-id" placeholder="ID da cópia de segurança" />
+                  <div style="height:10px"></div>
+                  <button class="btn btn--danger" id="btn-io-restore">Restaurar cópia</button>
+                </div>
               </div>
 
-              <div class="card">
-                <strong>Conferir arquivo</strong>
-                <div class="tiny">Use a referência do arquivo salvo.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="io-storage-ref" placeholder="Referência do arquivo" />
-                <div style="height:10px"></div>
-                <select class="select" id="io-validate-entity">
-                  <option value="contacts">contacts</option>
-                  <option value="leads">leads</option>
-                  <option value="tickets">tickets</option>
-                </select>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-validate">Validar arquivo</button>
-                <button class="btn btn--soft" id="btn-io-inspect-storage-ref">Inspecionar arquivo</button>
+              <div class="sep"></div>
+
+              <div class="grid-3">
+                <div class="card">
+                  <strong>Ver conteúdo do arquivo</strong>
+                  <div class="tiny">Somente leitura. Não aplica mudança.</div>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-io-preview-json">Ver conteúdo JSON</button>
+                  <button class="btn btn--soft" id="btn-io-preview-csv">Ver conteúdo CSV</button>
+                  <button class="btn btn--soft" id="btn-io-read-storage-ref">Ler arquivo salvo</button>
+                </div>
+
+                <div class="card">
+                  <strong>Simular importação</strong>
+                  <div class="tiny">Testa a importação sem aplicar mudança.</div>
+                  <div style="height:10px"></div>
+                  <input class="input" id="io-dry-run-storage-ref" placeholder="Referência do arquivo" />
+                  <div style="height:10px"></div>
+                  <select class="select" id="io-dry-run-entity">
+                    <option value="contacts">contacts</option>
+                    <option value="leads">leads</option>
+                    <option value="tickets">tickets</option>
+                    <option value="mail_templates">mail_templates</option>
+                    <option value="mail_suppressions">mail_suppressions</option>
+                    <option value="mail_manual_lists">mail_manual_lists</option>
+                    <option value="mail_contact_state">mail_contact_state</option>
+                    <option value="mail_queue">mail_queue</option>
+                    <option value="mail_log">mail_log</option>
+                    <option value="mail_internal_log">mail_internal_log</option>
+                  </select>
+                  <div style="height:10px"></div>
+                  <button class="btn btn--soft" id="btn-io-dry-run-import">Simular sem aplicar</button>
+                </div>
+
+                <div class="card">
+                  <strong>Leitura dos dados</strong>
+                  <div class="tiny" id="io-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
+                </div>
               </div>
 
-              <div class="card">
-                <strong>Cópia de segurança</strong>
-                <div style="height:10px"></div>
-                <select class="select" id="io-snapshot-entity">
-                  <option value="contacts">contacts</option>
-                  <option value="leads">leads</option>
-                  <option value="tickets">tickets</option>
-                </select>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-snapshot">Criar cópia</button>
-                <button class="btn btn--soft" id="btn-io-list-logs">Ver registros</button>
+              <div style="height:14px"></div>
+
+              <div class="table-card">
+                <div class="table-head">
+                  <div class="table-title">Registros do PUBIO</div>
+                </div>
+                <div class="table-wrap" id="table-io-logs"></div>
               </div>
 
-              <div class="card">
-                <strong>Restaurar cópia</strong>
-                <div class="tiny">Use o ID de uma cópia já existente.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="io-snapshot-id" placeholder="ID da cópia de segurança" />
-                <div style="height:10px"></div>
-                <button class="btn btn--danger" id="btn-io-restore">Restaurar cópia</button>
-              </div>
-            </div>
+              <div style="height:14px"></div>
 
-            <div class="sep"></div>
+              <div class="grid-2">
+                <div class="card">
+                  <strong>Resultado da última ação</strong>
+                  <div style="height:10px"></div>
+                  <div class="codebox" id="box-io-result">Nenhuma leitura ainda.</div>
+                </div>
 
-            <div class="grid-3">
-              <div class="card">
-                <strong>Ver conteúdo do arquivo</strong>
-                <div class="tiny">Somente leitura. Não aplica mudança.</div>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-preview-json">Ver conteúdo JSON</button>
-                <button class="btn btn--soft" id="btn-io-preview-csv">Ver conteúdo CSV</button>
-                <button class="btn btn--soft" id="btn-io-read-storage-ref">Ler arquivo salvo</button>
-              </div>
-
-              <div class="card">
-                <strong>Simular importação</strong>
-                <div class="tiny">Testa a importação sem aplicar mudança.</div>
-                <div style="height:10px"></div>
-                <input class="input" id="io-dry-run-storage-ref" placeholder="Referência do arquivo" />
-                <div style="height:10px"></div>
-                <select class="select" id="io-dry-run-entity">
-                  <option value="contacts">contacts</option>
-                  <option value="leads">leads</option>
-                  <option value="tickets">tickets</option>
-                </select>
-                <div style="height:10px"></div>
-                <button class="btn btn--soft" id="btn-io-dry-run-import">Simular sem aplicar</button>
-              </div>
-
-              <div class="card">
-                <strong>Leitura dos dados</strong>
-                <div class="tiny" id="io-business-note">Ainda não há leitura suficiente para resumir o módulo.</div>
-              </div>
-            </div>
-
-            <div style="height:14px"></div>
-
-            <div class="grid-2">
-              <div class="card">
-                <strong>Resultado da última ação</strong>
-                <div style="height:10px"></div>
-                <div class="codebox" id="box-io-result">Nenhuma leitura ainda.</div>
-              </div>
-
-              <div class="card admin-only">
-                <strong>Retorno técnico do PUBIO</strong>
-                <div style="height:10px"></div>
-                <div class="codebox" id="box-io-json">Nenhuma leitura técnica ainda.</div>
+                <div class="card admin-only">
+                  <strong>Retorno técnico do PUBIO</strong>
+                  <div style="height:10px"></div>
+                  <div class="codebox" id="box-io-json">Nenhuma leitura técnica ainda.</div>
+                </div>
               </div>
             </div>
           </section>
@@ -1072,24 +1301,26 @@
             <div class="grid-3">
               <div class="card">
                 <strong>Instalação central</strong>
-                <div class="tiny">Executa CRM, PUBMAIL e PUBIO em sequência.</div>
+                <div class="tiny">Executa somente a instalação central prevista no backend: <span class="mono">admin_install_crm</span>.</div>
                 <div style="height:10px"></div>
                 <button class="btn btn--primary" id="btn-install-all-inline">Instalar tudo agora</button>
               </div>
 
               <div class="card">
                 <strong>Ações administrativas</strong>
+                <div class="tiny">
+                  O contrato técnico geral sempre pode ser lido. As ações modulares só ficam operáveis quando o backend informar que o módulo existe.
+                </div>
                 <div style="height:10px"></div>
                 <button class="btn btn--soft" id="btn-admin-contract">Ver contrato técnico</button>
                 <button class="btn btn--soft" id="btn-admin-io-contract">Ver contrato dos dados</button>
-                <button class="btn btn--soft" id="btn-admin-mail-bootstrap">Preparar comunicação</button>
                 <button class="btn btn--soft" id="btn-admin-io-install">Preparar módulo de dados</button>
               </div>
 
               <div class="card">
                 <strong>Observação importante</strong>
                 <div class="tiny">
-                  A separação de perfis na interface organiza o painel, mas a permissão real precisa existir também no backend.
+                  A permissão real está no backend. Neste painel, toda ação administrativa depende do token configurado nesta aba.
                 </div>
               </div>
             </div>
@@ -1124,6 +1355,7 @@
       VERSION: "1.0",
       STORAGE: {
         API_BASE: "PUBPANEL_V1_API_BASE",
+        ADMIN_TOKEN: "PUBPANEL_V1_SESSION_ADMIN_TOKEN",
         ROLE: "PUBPANEL_V1_ROLE",
         HISTORY: "PUBPANEL_V1_HISTORY"
       }
@@ -1131,6 +1363,7 @@
 
     const state = {
       apiBase: "",
+      adminToken: "",
       role: "business",
 
       status: null,
@@ -1143,6 +1376,7 @@
       tickets: [],
       mailQueue: [],
       manualLists: [],
+      ioLogs: [],
 
       mailOverview: null,
       mailHealth: null,
@@ -1150,6 +1384,8 @@
       mailSuppressions: [],
       mailContactState: [],
       mailLog: [],
+      mailInternalLog: [],
+      mailAdminReadings: [],
       mailLast: null,
 
       ioHealth: null,
@@ -1197,15 +1433,52 @@
         json?.data?.list,
         json?.list
       ];
+
       for(const item of bag){
         if(Array.isArray(item)) return item;
       }
+
       return [];
     }
 
     function extractEnvelope(json){
       if(json && typeof json === "object" && json.data && typeof json.data === "object") return json.data;
       return json || {};
+    }
+
+    function summarizeIoLastResult(ioLast){
+      const action = ioLast?.action || "";
+      const payload = ioLast?.payload || {};
+      const envelope = extractEnvelope(payload);
+
+      return {
+        action: action,
+        ok: payload?.ok === true,
+        version: payload?.version || "",
+        generated_at: payload?.generated_at || "",
+        status: envelope?.status || payload?.status || "",
+        message: envelope?.message || payload?.message || "",
+        entity_type: envelope?.entity_type || "",
+        entity_types: Array.isArray(envelope?.entity_types) ? envelope.entity_types : [],
+        storage_ref: envelope?.storage_ref || "",
+        snapshot_id: envelope?.snapshot_id || "",
+        restore_id: envelope?.restore_id || "",
+        rollback_snapshot_id: envelope?.rollback_snapshot_id || "",
+        record_count: envelope?.record_count != null ? envelope.record_count : "",
+        checksum: envelope?.checksum || envelope?.checksum_global || "",
+        delimiter: envelope?.delimiter || "",
+        format: envelope?.format || "",
+        mode: envelope?.mode || "",
+        summary: envelope?.summary && typeof envelope.summary === "object" ? envelope.summary : {},
+        entity_results: envelope?.entity_results || [],
+        items: Array.isArray(envelope?.items) ? envelope.items : [],
+        rows: Array.isArray(envelope?.rows) ? envelope.rows : [],
+        logs: Array.isArray(envelope?.logs) ? envelope.logs : [],
+        header: Array.isArray(envelope?.header) ? envelope.header : [],
+        preview_type: envelope?.preview_type || "",
+        file_type: envelope?.file_type || "",
+        raw: payload
+      };
     }
 
     function formatDate(v){
@@ -1218,8 +1491,8 @@
     function pillClass(v){
       const s = String(v || "").toUpperCase();
       if(["OK","SUCCESS","SENT","ACTIVE","TRUE","READY","OPEN","DELIVERED","ENGAGED","RESTORED","VALID"].includes(s)) return "pill pill--ok";
-      if(["WARN","WARNING","PENDING","PROCESSING","PARTIAL","UPSERT","REPLACE","QUEUED","PAUSED"].includes(s)) return "pill pill--warn";
-      if(["ERROR","FAILED","SUPPRESSED","CANCELLED","FALSE","INVALID","SKIPPED","BLOCKED"].includes(s)) return "pill pill--error";
+      if(["WARN","WARNING","PENDING","PROCESSING","PARTIAL","UPSERT","REPLACE","QUEUED","PAUSED","DRY_RUN","ACTIVATING"].includes(s)) return "pill pill--warn";
+      if(["ERROR","FAILED","SUPPRESSED","CANCELLED","FALSE","INVALID","SKIPPED","BLOCKED","SUPPORT_OPEN"].includes(s)) return "pill pill--error";
       if(!s) return "pill pill--muted";
       return "pill pill--info";
     }
@@ -1241,7 +1514,9 @@
 
     function loadPersisted(){
       state.apiBase = localStorage.getItem(PUBPANEL.STORAGE.API_BASE) || "";
+      state.adminToken = sessionStorage.getItem(PUBPANEL.STORAGE.ADMIN_TOKEN) || "";
       state.role = localStorage.getItem(PUBPANEL.STORAGE.ROLE) || "business";
+
       try{
         const raw = localStorage.getItem(PUBPANEL.STORAGE.HISTORY) || "[]";
         state.ui.history = JSON.parse(raw);
@@ -1255,6 +1530,12 @@
       localStorage.setItem(PUBPANEL.STORAGE.API_BASE, state.apiBase);
       localStorage.setItem(PUBPANEL.STORAGE.ROLE, state.role);
       localStorage.setItem(PUBPANEL.STORAGE.HISTORY, JSON.stringify(state.ui.history.slice(0,40)));
+
+      if(state.adminToken){
+        sessionStorage.setItem(PUBPANEL.STORAGE.ADMIN_TOKEN, state.adminToken);
+      }else{
+        sessionStorage.removeItem(PUBPANEL.STORAGE.ADMIN_TOKEN);
+      }
     }
 
     function friendlyActionName(action){
@@ -1262,6 +1543,7 @@
         "mode=status":"Leitura de status",
         "mode=health":"Leitura de saúde",
         "mode=contract":"Leitura de contrato técnico",
+        "admin_install_crm":"Instalação central",
         "admin_list_contacts":"Atualização de contatos",
         "admin_list_leads":"Atualização de interesses",
         "admin_list_tickets":"Atualização de chamados",
@@ -1272,19 +1554,24 @@
         "admin_mail_list_contact_state":"Leitura da situação do relacionamento",
         "admin_mail_list_queue":"Atualização da fila de mensagens",
         "admin_mail_list_log":"Leitura do histórico de envio",
+        "admin_mail_list_internal_log":"Leitura do log interno",
         "admin_mail_scan":"Busca de novas entradas",
         "admin_mail_process_queue":"Envio de itens pendentes",
-        "admin_mail_create_manual_list":"Criação de lista de envio",
-        "admin_mail_list_manual_lists":"Atualização de listas de envio",
-        "admin_mail_update_manual_list_entry":"Atualização de contato da lista",
-        "admin_mail_set_manual_list_entry_active":"Alteração do estado do contato da lista",
+        "admin_mail_create_manual_list":"Criação de entradas de lista manual",
+        "admin_mail_list_manual_lists":"Atualização de entradas de listas manuais",
+        "admin_mail_update_manual_list_entry":"Atualização de entrada da lista manual",
+        "admin_mail_set_manual_list_entry_active":"Alteração do estado da entrada da lista",
         "admin_mail_add_suppression":"Bloqueio de contato",
         "admin_mail_send_manual":"Envio manual de mensagem",
         "admin_mail_bootstrap":"Preparação da comunicação",
+        "admin_mail_create_template_docs":"Criação de docs padrão",
+        "admin_mail_checklist":"Leitura de checklist",
+        "admin_mail_governance_model":"Leitura de governança",
+        "admin_mail_usage_notes":"Leitura de notas de uso",
         "admin_io_health":"Atualização da saúde dos dados",
         "admin_io_contract":"Leitura do contrato dos dados",
         "admin_io_export_entity":"Exportação por entidade",
-        "admin_io_export_bundle":"Exportação da base completa",
+        "admin_io_export_bundle":"Exportação do pacote técnico completo",
         "admin_io_export_entity_csv":"Exportação CSV do backend",
         "admin_io_validate_file":"Validação de arquivo",
         "admin_io_inspect_storage_ref":"Inspeção de arquivo",
@@ -1292,12 +1579,15 @@
         "admin_io_preview_json":"Visualização JSON",
         "admin_io_preview_csv":"Visualização CSV",
         "admin_io_dry_run_import_entity":"Simulação de importação",
+        "admin_io_import_entity":"Importação por entidade",
+        "admin_io_import_bundle":"Importação de pacote técnico completo",
+        "admin_io_import_entity_csv":"Importação CSV por entidade",
         "admin_io_create_snapshot":"Criação de cópia de segurança",
         "admin_io_restore_snapshot":"Restauração de cópia de segurança",
         "admin_io_list_logs":"Leitura de registros",
-        "admin_io_install":"Preparação do módulo de dados",
-        "install_all":"Instalação central"
+        "admin_io_install":"Preparação do módulo de dados"
       };
+
       return map[action] || action;
     }
 
@@ -1326,45 +1616,166 @@
 
     function validateEmail(label, value){
       validateRequired(label, value);
-      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
-      if(!ok) throw new Error("Informe um e-mail válido em: " + label + ".");
+      const parts = String(value).split(/[\n,;]+/).map(v => v.trim()).filter(Boolean);
+      if(!parts.length) throw new Error("Informe um e-mail válido em: " + label + ".");
+      const allOk = parts.every(v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+      if(!allOk) throw new Error("Informe um e-mail válido em: " + label + ".");
+    }
+
+    function hasAdminToken(){
+      return !!stringValue(state.adminToken);
+    }
+
+    function requireAdminToken(){
+      if(!hasAdminToken()){
+        throw new Error("Defina o token administrativo para executar ações administrativas.");
+      }
+    }
+
+    function isAdminActionName(action){
+      return String(action || "").toLowerCase().indexOf("admin_") === 0;
     }
 
     function isLogicalOk(json){
-      if(json == null) return false;
+      if(json == null || typeof json !== "object") return false;
+
       if(json.ok === true) return true;
       if(json.success === true) return true;
-      if(String(json.status || "").toLowerCase() === "ok") return true;
-      if(String(json.result || "").toLowerCase() === "ok") return true;
-      if(json.ok === false || json.success === false) return false;
-      if(String(json.status || "").toLowerCase() === "error") return false;
-      return true;
+
+      const status = String(json.status || "").trim().toLowerCase();
+      const result = String(json.result || "").trim().toLowerCase();
+
+      if(status === "ok" || status === "success") return true;
+      if(result === "ok" || result === "success") return true;
+
+      if(json.ok === false) return false;
+      if(json.success === false) return false;
+      if(status === "error" || status === "failed") return false;
+      if(result === "error" || result === "failed") return false;
+
+      return false;
     }
 
     function ensureLogicalOk(json){
       if(!isLogicalOk(json)){
-        throw new Error(json?.message || json?.error || "O backend respondeu sem confirmar sucesso lógico.");
+        const errObj = json?.error && typeof json.error === "object" ? json.error : null;
+        throw new Error(
+          json?.message ||
+          json?.error?.message ||
+          errObj?.code ||
+          json?.error ||
+          "O backend respondeu sem confirmar sucesso lógico."
+        );
       }
       return json;
     }
 
+    function getBackendModules(){
+      const statusData = extractEnvelope(state.status);
+      const modules = statusData && statusData.modules ? statusData.modules : {};
+
+      return {
+        core: true,
+        pubmailAvailable: modules.pubmail_available === true,
+        pubioAvailable: modules.pubio_available === true,
+        pubmailReady: modules.pubmail_ready === true,
+        pubioReady: modules.pubio_ready === true
+      };
+    }
+
+    function getCoreHealthData(){
+      return state.health?.data?.core || null;
+    }
+
+    function getModulesHealthData(){
+      return state.health?.data?.modules || null;
+    }
+
+    function getPublicMailHealthData(){
+      return getModulesHealthData()?.pubmail_health || null;
+    }
+
+    function getPublicIoHealthData(){
+      return getModulesHealthData()?.pubio_health || null;
+    }
+
+    function isCoreHealthy(){
+      return getCoreHealthData()?.ok === true;
+    }
+
+    function isPubmailHealthyFromHealth(){
+      return getPublicMailHealthData()?.ok === true;
+    }
+
+    function isPubioHealthyFromHealth(){
+      return getPublicIoHealthData()?.ok === true;
+    }
+
+    function getMailHealthState(){
+      if(state.mailHealth?.ok === true) return "OK";
+      if(state.mailHealth) return "ATENÇÃO";
+      if(isPubmailHealthyFromHealth()) return "OK";
+      if(getPublicMailHealthData()) return "ATENÇÃO";
+      return "—";
+    }
+
+    function getIoHealthState(){
+      if(state.ioHealth?.ok === true) return "OK";
+      if(state.ioHealth) return "ATENÇÃO";
+      if(isPubioHealthyFromHealth()) return "OK";
+      if(getPublicIoHealthData()) return "ATENÇÃO";
+      return "—";
+    }
+
+    function canUseMail(){
+      const m = getBackendModules();
+      return hasAdminToken() && m.pubmailAvailable;
+    }
+
+    function canUseIo(){
+      const m = getBackendModules();
+      return hasAdminToken() && m.pubioAvailable;
+    }
+
     async function readResponsePayload(res){
-      const contentType = String(res.headers.get("content-type") || "").toLowerCase();
       const text = await res.text();
+      const contentType = String(res.headers.get("content-type") || "").toLowerCase();
 
-      if(!res.ok) throw new Error("Falha HTTP " + res.status + " ao consultar o sistema.");
-
-      if(contentType.includes("application/json")){
-        return JSON.parse(text || "{}");
+      if(!text.trim()){
+        return {
+          ok_http: res.ok,
+          status_http: res.status,
+          payload: {}
+        };
       }
 
-      try { return JSON.parse(text || "{}"); }
-      catch(_) { return { ok:true, raw_text:text }; }
+      let payload;
+
+      if(contentType.includes("application/json")){
+        try{
+          payload = JSON.parse(text);
+        }catch(_){
+          throw new Error("O backend respondeu JSON inválido.");
+        }
+      }else{
+        try{
+          payload = JSON.parse(text);
+        }catch(_){
+          throw new Error("O backend respondeu em formato não JSON.");
+        }
+      }
+
+      return {
+        ok_http: res.ok,
+        status_http: res.status,
+        payload
+      };
     }
 
     const api = {
       async getMode(mode){
         requireApiBase();
+
         const url = new URL(state.apiBase);
         url.searchParams.set("mode", mode);
 
@@ -1374,24 +1785,56 @@
           redirect: "follow"
         });
 
-        return ensureLogicalOk(await readResponsePayload(res));
+        const responseData = await readResponsePayload(res);
+        const json = responseData.payload;
+
+        if(!responseData.ok_http){
+          throw new Error(
+            json?.message ||
+            json?.error?.message ||
+            json?.error?.code ||
+            "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
+          );
+        }
+
+        return ensureLogicalOk(json);
       },
 
       async postAction(action, payload={}){
         requireApiBase();
+
+        const bodyPayload = {
+          action,
+          request_id: action.toUpperCase() + "-" + Date.now(),
+          ...payload
+        };
+
+        if(isAdminActionName(action)){
+          requireAdminToken();
+          bodyPayload.admin_token = state.adminToken;
+        }
+
         const res = await fetch(state.apiBase, {
           method: "POST",
           cache: "no-store",
           redirect: "follow",
           headers: { "Content-Type":"text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            action,
-            request_id: action.toUpperCase() + "-" + Date.now(),
-            ...payload
-          })
+          body: JSON.stringify(bodyPayload)
         });
 
-        return ensureLogicalOk(await readResponsePayload(res));
+        const responseData = await readResponsePayload(res);
+        const json = responseData.payload;
+
+        if(!responseData.ok_http){
+          throw new Error(
+            json?.message ||
+            json?.error?.message ||
+            json?.error?.code ||
+            "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
+          );
+        }
+
+        return ensureLogicalOk(json);
       }
     };
 
@@ -1418,6 +1861,73 @@
 
     function renderEmpty(text){
       return `<div class="empty">${escapeHtml(text)}</div>`;
+    }
+
+    function warnUnavailableModule(kind){
+      if(kind === "mail"){
+        setBanner("warn", "PUBMAIL indisponível", "O backend informou que o módulo de comunicação não está disponível ou não está liberado para uso administrativo.");
+        return;
+      }
+
+      if(kind === "io"){
+        setBanner("warn", "PUBIO indisponível", "O backend informou que o módulo de dados não está disponível ou não está liberado para uso administrativo.");
+        return;
+      }
+
+      setBanner("warn", "Módulo indisponível", "O backend informou que este módulo não está disponível.");
+    }
+
+    function applyModuleUiState(){
+      const modules = getBackendModules();
+      const adminReady = hasAdminToken();
+
+      const mailState = $("#mail-module-state");
+      const ioState = $("#io-module-state");
+      const mailBody = $("#mail-module-body");
+      const ioBody = $("#io-module-body");
+
+      const mailBootstrapBtn = $("#btn-admin-mail-bootstrap");
+      const ioContractBtn = $("#btn-admin-io-contract");
+      const ioInstallBtn = $("#btn-admin-io-install");
+
+      if(mailState){
+        if(!adminReady){
+          mailState.className = "module-state module-state--muted";
+          mailState.textContent = "Exige token admin";
+        } else if(!modules.pubmailAvailable){
+          mailState.className = "module-state module-state--warn";
+          mailState.textContent = "PUBMAIL indisponível";
+        } else if(modules.pubmailReady){
+          mailState.className = "module-state module-state--ok";
+          mailState.textContent = "PUBMAIL disponível e pronto";
+        } else {
+          mailState.className = "module-state module-state--warn";
+          mailState.textContent = "PUBMAIL disponível com alerta";
+        }
+      }
+
+      if(ioState){
+        if(!adminReady){
+          ioState.className = "module-state module-state--muted";
+          ioState.textContent = "Exige token admin";
+        } else if(!modules.pubioAvailable){
+          ioState.className = "module-state module-state--warn";
+          ioState.textContent = "PUBIO indisponível";
+        } else if(modules.pubioReady){
+          ioState.className = "module-state module-state--ok";
+          ioState.textContent = "PUBIO disponível e pronto";
+        } else {
+          ioState.className = "module-state module-state--warn";
+          ioState.textContent = "PUBIO disponível com alerta";
+        }
+      }
+
+      if(mailBody) mailBody.classList.toggle("module-disabled", !canUseMail());
+      if(ioBody) ioBody.classList.toggle("module-disabled", !canUseIo());
+
+      if(mailBootstrapBtn) mailBootstrapBtn.disabled = !canUseMail();
+      if(ioContractBtn) ioContractBtn.disabled = !canUseIo();
+      if(ioInstallBtn) ioInstallBtn.disabled = !canUseIo();
     }
 
     function renderHistory(){
@@ -1450,6 +1960,76 @@
       return state.mailContactState.find(row => stringValue(row.email).toLowerCase() === normalized) || null;
     }
 
+    function countByKey(rows, key){
+      const out = {};
+      rows.forEach(row => {
+        const value = stringValue(row?.[key]).toUpperCase() || "SEM_VALOR";
+        out[value] = (out[value] || 0) + 1;
+      });
+      return out;
+    }
+
+    function countActiveTemplates(){
+      return state.mailTemplates.filter(row => String(row.active).toLowerCase() === "true").length;
+    }
+
+    function countActiveSuppressions(){
+      return state.mailSuppressions.filter(row => String(row.active).toLowerCase() === "true").length;
+    }
+
+    function getMailRelationshipStageCounts(){
+      const base = {
+        NEW_LEAD: 0,
+        DELIVERED: 0,
+        ACTIVATING: 0,
+        ENGAGED: 0,
+        SUPPORT_OPEN: 0,
+        MANUAL_SENT: 0
+      };
+
+      state.mailContactState.forEach(row => {
+        const stage = stringValue(row.relationship_stage).toUpperCase();
+        if(Object.prototype.hasOwnProperty.call(base, stage)) base[stage] += 1;
+      });
+
+      return base;
+    }
+
+    function getQueueStatusCounts(){
+      const counts = {
+        PENDING: 0,
+        PROCESSING: 0,
+        SENT: 0,
+        ERROR: 0,
+        SUPPRESSED: 0,
+        CANCELLED: 0,
+        SKIPPED: 0
+      };
+
+      state.mailQueue.forEach(row => {
+        const status = stringValue(row.status).toUpperCase();
+        if(Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
+      });
+
+      return counts;
+    }
+
+    function getLogStatusCounts(){
+      const counts = {
+        SENT: 0,
+        ERROR: 0,
+        SUPPRESSED: 0,
+        SKIPPED: 0,
+        CANCELLED: 0
+      };
+
+      state.mailLog.forEach(row => {
+        const status = stringValue(row.status).toUpperCase();
+        if(Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
+      });
+
+      return counts;
+    }
     function renderContacts(){
       const rows = filterRows(state.contacts, $("#filter-contacts").value, ["contact_id","name","email","whatsapp"]);
       const wrap = $("#table-contacts");
@@ -1469,13 +2049,13 @@
               <th>Contato</th>
               <th>Email</th>
               <th>WhatsApp</th>
-              <th>Situação</th>
+              <th>Estágio</th>
               <th>Última atualização</th>
             </tr>
           </thead>
           <tbody>
             ${rows.map(r => {
-              const cs = getContactStage(r.email);
+              const cs = canUseMail() ? getContactStage(r.email) : null;
               return `
                 <tr>
                   <td><strong>${escapeHtml(r.contact_id || "")}</strong><div class="tiny">${escapeHtml(r.name || "")}</div></td>
@@ -1501,7 +2081,12 @@
         return;
       }
 
-      $("#leads-note").textContent = `Base com ${state.leads.length} interesse(s).`;
+      const itemCounts = countByKey(state.leads, "item");
+      const topItem = Object.entries(itemCounts).sort((a,b) => b[1] - a[1])[0];
+
+      $("#leads-note").textContent = topItem
+        ? `Base com ${state.leads.length} interesse(s). Item mais recorrente: ${topItem[0]} (${topItem[1]}).`
+        : `Base com ${state.leads.length} interesse(s).`;
 
       wrap.innerHTML = `
         <table>
@@ -1539,7 +2124,12 @@
         return;
       }
 
-      $("#tickets-note").textContent = `Base com ${state.tickets.length} chamado(s).`;
+      const statusCounts = countByKey(state.tickets, "status");
+      const topStatus = Object.entries(statusCounts).sort((a,b) => b[1] - a[1])[0];
+
+      $("#tickets-note").textContent = topStatus
+        ? `Base com ${state.tickets.length} chamado(s). Status predominante: ${topStatus[0]} (${topStatus[1]}).`
+        : `Base com ${state.tickets.length} chamado(s).`;
 
       wrap.innerHTML = `
         <table>
@@ -1570,6 +2160,16 @@
     function renderMailQueue(){
       const wrap = $("#table-mail-queue");
 
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar as leituras operacionais de comunicação.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
       if(!state.mailQueue.length){
         wrap.innerHTML = renderEmpty("Ainda não há mensagens na fila.");
         return;
@@ -1582,7 +2182,7 @@
               <th>Fila</th>
               <th>Destinatário</th>
               <th>Tipo</th>
-              <th>Modelo</th>
+              <th>Template</th>
               <th>Status</th>
               <th>Agendado</th>
             </tr>
@@ -1590,12 +2190,58 @@
           <tbody>
             ${state.mailQueue.map(r => `
               <tr>
-                <td><strong>${escapeHtml(r.queue_id || r.id || "")}</strong></td>
-                <td>${escapeHtml(r.recipient || r.email || "")}</td>
-                <td><span class="${pillClass(r.message_type || r.type)}">${escapeHtml(r.message_type || r.type || "")}</span></td>
-                <td>${escapeHtml(r.template_key || r.template || "")}</td>
+                <td><strong>${escapeHtml(r.queue_id || "")}</strong></td>
+                <td>${escapeHtml(r.recipient || "")}</td>
+                <td><span class="${pillClass(r.message_type)}">${escapeHtml(r.message_type || "")}</span></td>
+                <td>${escapeHtml(r.template_key || "")}</td>
                 <td><span class="${pillClass(r.status)}">${escapeHtml(r.status || "")}</span></td>
                 <td class="tiny">${escapeHtml(formatDate(r.scheduled_at || r.created_at || ""))}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderMailLog(){
+      const wrap = $("#table-mail-log");
+
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar o histórico de envio.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
+      if(!state.mailLog.length){
+        wrap.innerHTML = renderEmpty("Ainda não há histórico de envio.");
+        return;
+      }
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Quando</th>
+              <th>Destinatário</th>
+              <th>Tipo</th>
+              <th>Template</th>
+              <th>Status</th>
+              <th>Assunto</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.mailLog.map(r => `
+              <tr>
+                <td class="tiny">${escapeHtml(formatDate(r.sent_at || r.created_at || ""))}</td>
+                <td>${escapeHtml(r.recipient || "")}</td>
+                <td><span class="${pillClass(r.message_type)}">${escapeHtml(r.message_type || "")}</span></td>
+                <td>${escapeHtml(r.template_key || "")}</td>
+                <td><span class="${pillClass(r.status)}">${escapeHtml(r.status || "")}</span></td>
+                <td class="tiny">${escapeHtml(r.subject || "")}</td>
               </tr>
             `).join("")}
           </tbody>
@@ -1606,8 +2252,18 @@
     function renderManualLists(){
       const wrap = $("#table-manual-lists");
 
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar as leituras operacionais de comunicação.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
       if(!state.manualLists.length){
-        wrap.innerHTML = renderEmpty("Ainda não há listas de envio para mostrar.");
+        wrap.innerHTML = renderEmpty("Ainda não há entradas de listas manuais para mostrar.");
         return;
       }
 
@@ -1615,21 +2271,331 @@
         <table>
           <thead>
             <tr>
+              <th>Entrada</th>
               <th>Lista</th>
+              <th>Email</th>
               <th>Nome</th>
-              <th>Status</th>
-              <th>Total</th>
+              <th>Ativo</th>
               <th>Atualizado</th>
             </tr>
           </thead>
           <tbody>
             ${state.manualLists.map(r => `
               <tr>
-                <td><strong>${escapeHtml(r.list_id || r.id || "")}</strong></td>
-                <td>${escapeHtml(r.name || r.title || "")}</td>
-                <td><span class="${pillClass(r.status || r.active)}">${escapeHtml(String(r.status || r.active || ""))}</span></td>
-                <td>${escapeHtml(r.total_entries || r.count || "—")}</td>
+                <td><strong>${escapeHtml(r.list_entry_id || "")}</strong></td>
+                <td>${escapeHtml(r.list_key || "")}</td>
+                <td>${escapeHtml(r.email || "")}</td>
+                <td>${escapeHtml(r.name || "")}</td>
+                <td><span class="${pillClass(String(r.active || ""))}">${escapeHtml(String(r.active || ""))}</span></td>
                 <td class="tiny">${escapeHtml(formatDate(r.updated_at || r.created_at || ""))}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderMailSuppressions(){
+      const wrap = $("#table-mail-suppressions");
+
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar a leitura de bloqueios.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
+      if(!state.mailSuppressions.length){
+        wrap.innerHTML = renderEmpty("Ainda não há contatos bloqueados.");
+        return;
+      }
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Bloqueio</th>
+              <th>Email</th>
+              <th>Motivo</th>
+              <th>Tipo</th>
+              <th>Ativo</th>
+              <th>Criado em</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.mailSuppressions.map(r => `
+              <tr>
+                <td><strong>${escapeHtml(r.suppression_id || "")}</strong></td>
+                <td>${escapeHtml(r.email || "")}</td>
+                <td>${escapeHtml(r.reason || "")}</td>
+                <td>${escapeHtml(r.suppression_type || "")}</td>
+                <td><span class="${pillClass(String(r.active || ""))}">${escapeHtml(String(r.active || ""))}</span></td>
+                <td class="tiny">${escapeHtml(formatDate(r.created_at || ""))}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderMailTemplates(){
+      const wrap = $("#table-mail-templates");
+
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar a leitura de templates.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
+      if(!state.mailTemplates.length){
+        wrap.innerHTML = renderEmpty("Ainda não há templates carregados.");
+        return;
+      }
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Template</th>
+              <th>Tipo</th>
+              <th>Ativo</th>
+              <th>Assunto base</th>
+              <th>Observação</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.mailTemplates.map(r => `
+              <tr>
+                <td><strong>${escapeHtml(r.template_key || "")}</strong></td>
+                <td>${escapeHtml(r.template_type || "")}</td>
+                <td><span class="${pillClass(String(r.active || ""))}">${escapeHtml(String(r.active || ""))}</span></td>
+                <td class="tiny">${escapeHtml(r.fallback_subject || "")}</td>
+                <td class="tiny">${escapeHtml(r.notes || "")}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderMailRelationshipTable(){
+      const wrap = $("#table-mail-relationship");
+
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar a leitura de relacionamento.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
+      const counts = getMailRelationshipStageCounts();
+      const rows = [
+        ["NEW_LEAD", counts.NEW_LEAD],
+        ["DELIVERED", counts.DELIVERED],
+        ["ACTIVATING", counts.ACTIVATING],
+        ["ENGAGED", counts.ENGAGED],
+        ["SUPPORT_OPEN", counts.SUPPORT_OPEN],
+        ["MANUAL_SENT", counts.MANUAL_SENT]
+      ];
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Estágio</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(([stage, total]) => `
+              <tr>
+                <td><span class="${pillClass(stage)}">${escapeHtml(stage)}</span></td>
+                <td><strong>${escapeHtml(total)}</strong></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderMailQueueStatusTable(){
+      const wrap = $("#table-mail-queue-status");
+
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar a leitura da fila.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
+      const counts = getQueueStatusCounts();
+      const rows = [
+        ["PENDING", counts.PENDING],
+        ["PROCESSING", counts.PROCESSING],
+        ["SENT", counts.SENT],
+        ["ERROR", counts.ERROR],
+        ["SUPPRESSED", counts.SUPPRESSED],
+        ["SKIPPED", counts.SKIPPED],
+        ["CANCELLED", counts.CANCELLED]
+      ];
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(([status, total]) => `
+              <tr>
+                <td><span class="${pillClass(status)}">${escapeHtml(status)}</span></td>
+                <td><strong>${escapeHtml(total)}</strong></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderMailLogStatusTable(){
+      const wrap = $("#table-mail-log-status");
+
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar o histórico resumido.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
+      const counts = getLogStatusCounts();
+      const rows = [
+        ["SENT", counts.SENT],
+        ["ERROR", counts.ERROR],
+        ["SUPPRESSED", counts.SUPPRESSED],
+        ["SKIPPED", counts.SKIPPED],
+        ["CANCELLED", counts.CANCELLED]
+      ];
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(([status, total]) => `
+              <tr>
+                <td><span class="${pillClass(status)}">${escapeHtml(status)}</span></td>
+                <td><strong>${escapeHtml(total)}</strong></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderMailAdminReadings(){
+      const wrap = $("#table-mail-admin-readings");
+
+      if(state.role !== "admin"){
+        wrap.innerHTML = renderEmpty("Área visível apenas no perfil administrador.");
+        return;
+      }
+
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar esta área.");
+        return;
+      }
+
+      if(!getBackendModules().pubmailAvailable){
+        wrap.innerHTML = renderEmpty("PUBMAIL indisponível neste backend.");
+        return;
+      }
+
+      if(!state.mailAdminReadings.length){
+        wrap.innerHTML = renderEmpty("Ainda não há leituras administrativas carregadas.");
+        return;
+      }
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Leitura</th>
+              <th>Resumo</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.mailAdminReadings.map(r => `
+              <tr>
+                <td><strong>${escapeHtml(r.label || "")}</strong></td>
+                <td class="tiny">${escapeHtml(r.summary || "")}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderIoLogs(){
+      const wrap = $("#table-io-logs");
+
+      if(!hasAdminToken()){
+        wrap.innerHTML = renderEmpty("Defina o token administrativo para usar as leituras operacionais de dados.");
+        return;
+      }
+
+      if(!getBackendModules().pubioAvailable){
+        wrap.innerHTML = renderEmpty("PUBIO indisponível neste backend.");
+        return;
+      }
+
+      if(!state.ioLogs.length){
+        wrap.innerHTML = renderEmpty("Ainda não há registros do PUBIO para mostrar.");
+        return;
+      }
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Quando</th>
+              <th>Operação</th>
+              <th>Status</th>
+              <th>Entidades</th>
+              <th>Formato</th>
+              <th>Mensagem</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.ioLogs.map(r => `
+              <tr>
+                <td class="tiny">${escapeHtml(formatDate(r.created_at || ""))}</td>
+                <td>${escapeHtml(r.operation || "")}</td>
+                <td><span class="${pillClass(r.status)}">${escapeHtml(r.status || "")}</span></td>
+                <td>${escapeHtml(r.entity_types || "")}</td>
+                <td>${escapeHtml(r.format || "")}</td>
+                <td class="tiny">${escapeHtml(r.message || "")}</td>
               </tr>
             `).join("")}
           </tbody>
@@ -1669,81 +2635,230 @@
     }
 
     function renderSummary(){
-      const healthData = extractEnvelope(state.health);
-      const statusData = extractEnvelope(state.status);
+      const coreHealth = getCoreHealthData();
+      const publicModulesHealth = getModulesHealthData();
+      const publicMailHealth = getPublicMailHealthData();
+      const publicIoHealth = getPublicIoHealthData();
       const mailOverviewData = extractEnvelope(state.mailOverview);
       const ioHealthData = extractEnvelope(state.ioHealth);
+      const ioLastSummary = summarizeIoLastResult(state.ioLast);
+      const adminReady = hasAdminToken();
+      const modules = getBackendModules();
+
+      const queueCounts = getQueueStatusCounts();
+      const logCounts = getLogStatusCounts();
+      const relationshipCounts = getMailRelationshipStageCounts();
 
       $("#sum-connection").textContent = !state.apiBase ? "PENDENTE" : state.status?.ok ? "CONECTADO" : state.ui.lastError ? "COM ALERTA" : "ATENÇÃO";
-      $("#sum-health").textContent = state.health?.ok ? "OK" : state.health ? "COM ALERTA" : "—";
-      $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : (mailOverviewData.contacts_count ? String(mailOverviewData.contacts_count) : "—");
-      $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : (mailOverviewData.leads_count ? String(mailOverviewData.leads_count) : "—");
-      $("#sum-tickets").textContent = state.tickets.length ? String(state.tickets.length) : (mailOverviewData.tickets_count ? String(mailOverviewData.tickets_count) : "—");
-      $("#sum-mail-queue").textContent = state.mailQueue.length ? String(state.mailQueue.length) : (mailOverviewData.queue_count ? String(mailOverviewData.queue_count) : "—");
-      $("#sum-mail").textContent = state.mailHealth?.ok ? "OK" : state.mailOverview ? "PARCIAL" : "—";
-      $("#sum-io").textContent = state.ioHealth?.ok ? "OK" : state.ioHealth ? "COM ALERTA" : "—";
+      $("#sum-health").textContent = isCoreHealthy() ? "OK" : state.health ? "COM ALERTA" : "—";
+      $("#sum-contacts").textContent = adminReady ? String(state.contacts.length) : "ADMIN";
+      $("#sum-leads").textContent = adminReady ? String(state.leads.length) : "ADMIN";
+      $("#sum-tickets").textContent = adminReady ? String(state.tickets.length) : "ADMIN";
+
+      $("#sum-mail-queue").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : state.mailQueue.length
+        ? String(state.mailQueue.length)
+        : mailOverviewData.queue_count != null
+        ? String(mailOverviewData.queue_count)
+        : "0";
+
+      $("#sum-mail").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : getMailHealthState();
+
+      $("#sum-io").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubioAvailable
+        ? "INDISP."
+        : getIoHealthState();
 
       $("#sum-last-action").textContent = state.ui.lastAction || "—";
       $("#sum-last-error").textContent = state.ui.lastError || "—";
       $("#sum-api-base").textContent = state.apiBase || "não definida";
       $("#sum-last-refresh").textContent = state.ui.lastRefresh || "—";
 
-      $("#mail-health-box").textContent = state.mailHealth?.ok ? "OK" : state.mailHealth ? "ATENÇÃO" : "—";
-      $("#mail-templates-box").textContent = state.mailTemplates.length ? String(state.mailTemplates.length) : (mailOverviewData.templates_count ? String(mailOverviewData.templates_count) : "—");
-      $("#mail-suppressions-box").textContent = state.mailSuppressions.length ? String(state.mailSuppressions.length) : "—";
-      $("#mail-queue-box").textContent = state.mailQueue.length ? String(state.mailQueue.length) : (mailOverviewData.queue_count ? String(mailOverviewData.queue_count) : "—");
-      $("#mail-log-box").textContent = state.mailLog.length ? String(state.mailLog.length) : (mailOverviewData.log_count ? String(mailOverviewData.log_count) : "—");
+      $("#mail-health-box").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : getMailHealthState();
 
-      $("#mail-business-note").textContent = [
-        state.mailOverview ? "resumo carregado" : "",
-        state.mailHealth?.ok ? "saúde OK" : (state.mailHealth ? "saúde com atenção" : ""),
-        state.mailTemplates.length ? `modelos: ${state.mailTemplates.length}` : "",
-        state.mailSuppressions.length ? `contatos bloqueados: ${state.mailSuppressions.length}` : "",
-        state.manualLists.length ? `listas de envio: ${state.manualLists.length}` : "",
-        state.mailQueue.length ? `fila: ${state.mailQueue.length}` : "",
-        state.mailLog.length ? `histórico: ${state.mailLog.length}` : ""
-      ].filter(Boolean).join(" · ") || "Ainda não há leitura suficiente para resumir o módulo.";
+      $("#mail-queue-pending-box").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : String(queueCounts.PENDING || 0);
 
-      $("#io-business-note").textContent = [
-        state.ioHealth?.ok ? "saúde OK" : (state.ioHealth ? "saúde com atenção" : ""),
-        state.ioContract ? "contrato carregado" : "",
-        state.ioLast ? `última ação: ${friendlyActionName(state.ioLast.action)}` : ""
-      ].filter(Boolean).join(" · ") || "Ainda não há leitura suficiente para resumir o módulo.";
+      $("#mail-queue-error-box").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : String(queueCounts.ERROR || 0);
+
+      $("#mail-log-sent-box").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : String(logCounts.SENT || 0);
+
+      $("#mail-suppressions-box").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : String(countActiveSuppressions());
+
+      $("#mail-manual-lists-box").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : String(state.manualLists.length || Number(mailOverviewData.manual_lists_count || 0));
+
+      $("#mail-templates-box").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : String(countActiveTemplates() || Number(mailOverviewData.templates_count || 0));
+
+      $("#mail-stage-total-box").textContent = !adminReady
+        ? "ADMIN"
+        : !modules.pubmailAvailable
+        ? "INDISP."
+        : String(
+            relationshipCounts.NEW_LEAD +
+            relationshipCounts.DELIVERED +
+            relationshipCounts.ACTIVATING +
+            relationshipCounts.ENGAGED +
+            relationshipCounts.SUPPORT_OPEN +
+            relationshipCounts.MANUAL_SENT
+          );
+
+      $("#mail-business-note").textContent = !adminReady
+        ? "Sem token administrativo, o backend não libera leituras operacionais de comunicação."
+        : !modules.pubmailAvailable
+        ? "O backend informou que o módulo PUBMAIL não está disponível."
+        : [
+            modules.pubmailReady ? "módulo pronto" : "módulo disponível",
+            state.mailOverview ? "resumo carregado" : "",
+            state.mailHealth?.ok ? "saúde administrativa OK" : "",
+            !state.mailHealth && publicMailHealth?.ok ? "saúde pública OK" : "",
+            state.mailHealth && !state.mailHealth.ok ? "saúde administrativa com atenção" : "",
+            !state.mailHealth && publicMailHealth && !publicMailHealth.ok ? "saúde pública com atenção" : "",
+            `templates ativos: ${countActiveTemplates() || Number(mailOverviewData.templates_count || 0)}`,
+            `bloqueios: ${countActiveSuppressions()}`,
+            `listas: ${state.manualLists.length || Number(mailOverviewData.manual_lists_count || 0)}`,
+            `fila: ${state.mailQueue.length || Number(mailOverviewData.queue_count || 0)}`,
+            `histórico: ${state.mailLog.length || Number(mailOverviewData.log_count || 0)}`
+          ].filter(Boolean).join(" · ") || "Ainda não há leitura suficiente para resumir o módulo.";
+
+      const queueParts = [];
+      if(queueCounts.PENDING > 0) queueParts.push(`pendentes: ${queueCounts.PENDING}`);
+      if(queueCounts.PROCESSING > 0) queueParts.push(`processando: ${queueCounts.PROCESSING}`);
+      if(queueCounts.ERROR > 0) queueParts.push(`erros: ${queueCounts.ERROR}`);
+      if(queueCounts.SUPPRESSED > 0) queueParts.push(`suprimidas: ${queueCounts.SUPPRESSED}`);
+      if(logCounts.SENT > 0) queueParts.push(`enviadas no histórico: ${logCounts.SENT}`);
+
+      $("#mail-flow-note").textContent = !adminReady
+        ? "Sem token administrativo, a leitura operacional da comunicação não fica disponível."
+        : !modules.pubmailAvailable
+        ? "PUBMAIL indisponível neste backend."
+        : queueParts.length
+        ? queueParts.join(" · ")
+        : "Sem sinais de atividade relevante na fila e no histórico.";
+
+      $("#io-business-note").textContent = !adminReady
+        ? "Sem token administrativo, o backend não libera leituras operacionais de dados."
+        : !modules.pubioAvailable
+        ? "O backend informou que o módulo PUBIO não está disponível."
+        : [
+            modules.pubioReady ? "módulo pronto" : "módulo disponível",
+            state.ioHealth?.ok ? "saúde administrativa OK" : "",
+            !state.ioHealth && publicIoHealth?.ok ? "saúde pública OK" : "",
+            state.ioHealth && !state.ioHealth.ok ? "saúde administrativa com atenção" : "",
+            !state.ioHealth && publicIoHealth && !publicIoHealth.ok ? "saúde pública com atenção" : "",
+            state.ioContract ? "contrato carregado" : "",
+            state.ioLogs.length ? `registros: ${state.ioLogs.length}` : "",
+            state.ioLast ? `última ação: ${friendlyActionName(state.ioLast.action)}` : ""
+          ].filter(Boolean).join(" · ") || "Ainda não há leitura suficiente para resumir o módulo.";
 
       $("#meta-role").textContent = state.role === "admin" ? "administrador" : "negócio";
       $("#meta-connection").textContent = !state.apiBase ? "não configurada" : state.status?.ok ? "conectada" : "com atenção";
-      $("#meta-crm-version").textContent = healthData.version || statusData.version || "—";
-      $("#meta-mail-version").textContent = state.mailHealth?.version || extractEnvelope(state.mailHealth).version || (state.mailOverview ? "carregado" : "—");
-      $("#meta-io-version").textContent = state.ioHealth?.version || ioHealthData.version || (state.ioContract ? "carregado" : "—");
+      $("#meta-crm-version").textContent = coreHealth?.version || state.status?.version || "—";
+      $("#meta-mail-version").textContent = !adminReady
+        ? "restrito"
+        : !modules.pubmailAvailable
+        ? "indisponível"
+        : state.mailHealth?.version || publicMailHealth?.version || (state.mailOverview ? "carregado" : "—");
+      $("#meta-io-version").textContent = !adminReady
+        ? "restrito"
+        : !modules.pubioAvailable
+        ? "indisponível"
+        : state.ioHealth?.version || ioHealthData.version || publicIoHealth?.version || (state.ioContract ? "carregado" : "—");
 
       const mailBox = $("#box-mail-json");
       if(mailBox){
         mailBox.textContent = safeJson({
+          available: modules.pubmailAvailable,
+          ready: modules.pubmailReady,
+          health_public: publicMailHealth,
           overview: state.mailOverview,
-          health: state.mailHealth,
+          health_admin: state.mailHealth,
           templates_count: state.mailTemplates.length,
           suppressions_count: state.mailSuppressions.length,
           contact_state_count: state.mailContactState.length,
           queue_count: state.mailQueue.length,
           log_count: state.mailLog.length,
+          internal_log_count: state.mailInternalLog.length,
           manual_lists_count: state.manualLists.length,
+          admin_readings: state.mailAdminReadings,
           last: state.mailLast
         });
       }
 
       const ioBox = $("#box-io-json");
-      if(ioBox) ioBox.textContent = safeJson(state.ioLast || {});
-      $("#box-io-result").textContent = safeJson((state.ioLast && state.ioLast.payload) || {});
+      if(ioBox){
+        ioBox.textContent = safeJson({
+          available: modules.pubioAvailable,
+          ready: modules.pubioReady,
+          health_public: publicIoHealth,
+          contract: state.ioContract,
+          health_admin: state.ioHealth,
+          logs_count: state.ioLogs.length,
+          last: state.ioLast
+        });
+      }
+
+      $("#box-io-result").textContent = safeJson(ioLastSummary);
+
       const sysBox = $("#box-system-json");
       if(sysBox){
         sysBox.textContent = safeJson({
           status: state.status,
           health: state.health,
+          health_core: coreHealth,
+          health_modules: publicModulesHealth,
           contract: state.contract
         });
       }
+
       const contractBox = $("#box-contract-json");
       if(contractBox) contractBox.textContent = safeJson(state.contract || {});
+
+      applyModuleUiState();
+      renderMailQueue();
+      renderMailLog();
+      renderManualLists();
+      renderMailSuppressions();
+      renderMailTemplates();
+      renderMailRelationshipTable();
+      renderMailQueueStatusTable();
+      renderMailLogStatusTable();
+      renderMailAdminReadings();
+      renderIoLogs();
     }
 
     async function runPublicMode(mode, button, opts={}){
@@ -1755,7 +2870,9 @@
 
         await withBusy(button, "Lendo...", async () => {
           const json = await api.getMode(mode);
+
           state.systemPayload = json;
+
           if(mode === "status") state.status = json;
           if(mode === "health") state.health = json;
           if(mode === "contract") state.contract = json;
@@ -1769,11 +2886,13 @@
               health: "Saúde carregada",
               contract: "Contrato carregado"
             };
+
             const detailMap = {
               status: "A conexão respondeu com sucesso.",
               health: "A leitura de saúde foi concluída.",
               contract: "O contrato do backend foi carregado."
             };
+
             setBanner("success", titleMap[mode], detailMap[mode]);
           }
 
@@ -1784,8 +2903,14 @@
       }catch(err){
         setLastError(err.message || "Erro desconhecido");
         renderSummary();
-        if(options.banner) setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
-        if(options.log) pushHistory("GET", "mode=" + mode, "erro", err.message || "erro");
+
+        if(options.banner){
+          setBanner("error", "Falha na leitura", err.message || "Erro desconhecido");
+        }
+
+        if(options.log){
+          pushHistory("GET", "mode=" + mode, "erro", err.message || "erro");
+        }
       }
     }
 
@@ -1793,6 +2918,8 @@
       const options = { log:true, banner:true, ...opts };
 
       try{
+        requireAdminToken();
+
         if(options.log) setLastAction(friendlyActionName(action));
         setLastError("");
 
@@ -1804,7 +2931,6 @@
           if(targetKey === "contacts") renderContacts();
           if(targetKey === "leads") renderLeads();
           if(targetKey === "tickets") renderTickets();
-          if(targetKey === "mailQueue") renderMailQueue();
 
           setLastRefresh();
           renderSummary();
@@ -1820,17 +2946,90 @@
       }
     }
 
+    function buildAdminReadingSummary(action, payload, rows){
+      if(action === "admin_mail_checklist"){
+        return `Checklist carregado com ${rows.length} item(ns).`;
+      }
+      if(action === "admin_mail_governance_model"){
+        return `Modelo de governança carregado com ${rows.length} linha(s).`;
+      }
+      if(action === "admin_mail_usage_notes"){
+        return `Notas de uso carregadas com ${rows.length} item(ns).`;
+      }
+      if(action === "admin_mail_list_internal_log"){
+        return `Log interno carregado com ${rows.length} linha(s).`;
+      }
+      if(action === "admin_mail_create_template_docs"){
+        return `Docs padrão processados.`;
+      }
+      if(action === "admin_mail_bootstrap"){
+        return `Bootstrap executado.`;
+      }
+      if(action === "admin_mail_health"){
+        return payload?.ok === true ? "Saúde técnica OK." : "Saúde técnica com atenção.";
+      }
+      return "Leitura administrativa carregada.";
+    }
+
+    function upsertMailAdminReading(label, summary){
+      const existingIndex = state.mailAdminReadings.findIndex(r => r.label === label);
+      const row = { label, summary };
+      if(existingIndex >= 0) state.mailAdminReadings[existingIndex] = row;
+      else state.mailAdminReadings.push(row);
+    }
+
     async function runMailAction(action, payload, button, successText, opts={}){
       const options = { log:true, banner:true, ...opts };
 
       try{
+        requireAdminToken();
+
+        if(!canUseMail()){
+          renderSummary();
+
+          if(options.banner) warnUnavailableModule("mail");
+          if(options.log) pushHistory("POST", action, "indisp.", "PUBMAIL indisponível neste backend.");
+
+          return;
+        }
+
         if(options.log) setLastAction(friendlyActionName(action));
         setLastError("");
 
         await withBusy(button, "Executando...", async () => {
-          const json = await api.postAction(action, payload || {});
+          requireApiBase();
+
+          const bodyPayload = {
+            action,
+            request_id: action.toUpperCase() + "-" + Date.now(),
+            ...(payload || {}),
+            admin_token: state.adminToken
+          };
+
+          const res = await fetch(state.apiBase, {
+            method: "POST",
+            cache: "no-store",
+            redirect: "follow",
+            headers: { "Content-Type":"text/plain;charset=utf-8" },
+            body: JSON.stringify(bodyPayload)
+          });
+
+          const responseData = await readResponsePayload(res);
+          const rawJson = responseData.payload;
+
+          state.mailLast = { action, payload: rawJson };
+
+          if(!responseData.ok_http){
+            throw new Error(
+              rawJson?.message ||
+              rawJson?.error?.message ||
+              rawJson?.error?.code ||
+              "Falha HTTP " + responseData.status_http + " ao consultar o sistema."
+            );
+          }
+
+          const json = ensureLogicalOk(rawJson);
           const rows = normalizeRowsFromResponse(json);
-          state.mailLast = { action, payload: json };
 
           if(action === "admin_mail_overview") state.mailOverview = json;
           if(action === "admin_mail_health") state.mailHealth = json;
@@ -1839,11 +3038,20 @@
           if(action === "admin_mail_list_contact_state") state.mailContactState = rows;
           if(action === "admin_mail_list_queue") state.mailQueue = rows;
           if(action === "admin_mail_list_log") state.mailLog = rows;
+          if(action === "admin_mail_list_internal_log") state.mailInternalLog = rows;
           if(action === "admin_mail_list_manual_lists") state.manualLists = rows;
 
-          if(action === "admin_mail_list_queue") renderMailQueue();
-          if(action === "admin_mail_list_contact_state") renderContacts();
-          if(action === "admin_mail_list_manual_lists") renderManualLists();
+          if([
+            "admin_mail_health",
+            "admin_mail_bootstrap",
+            "admin_mail_create_template_docs",
+            "admin_mail_checklist",
+            "admin_mail_governance_model",
+            "admin_mail_usage_notes",
+            "admin_mail_list_internal_log"
+          ].includes(action)){
+            upsertMailAdminReading(friendlyActionName(action), buildAdminReadingSummary(action, json, rows));
+          }
 
           setLastRefresh();
           renderSummary();
@@ -1854,8 +3062,33 @@
       }catch(err){
         setLastError(err.message || "Erro desconhecido");
         renderSummary();
-        if(options.banner) setBanner("error", "Falha na comunicação", err.message || "Erro desconhecido");
-        if(options.log) pushHistory("POST", action, "erro", err.message || "erro");
+
+        if(options.banner){
+          const technical = state.mailLast?.payload || {};
+          const technicalError = technical?.error && typeof technical.error === "object" ? technical.error : null;
+
+          let extraParts = [
+            technicalError?.message || "",
+            technicalError?.code || "",
+            err.message || "Erro desconhecido",
+            technical?.template_folder_id ? "template_folder_id: " + technical.template_folder_id : "",
+            technical?.pubcrm_root_folder_id ? "pubcrm_root_folder_id: " + technical.pubcrm_root_folder_id : "",
+            technical?.pubcrm_mail_folder_id ? "pubcrm_mail_folder_id: " + technical.pubcrm_mail_folder_id : ""
+          ].filter(Boolean);
+
+          const seen = new Set();
+          extraParts = extraParts.filter(part => {
+            if(seen.has(part)) return false;
+            seen.add(part);
+            return true;
+          });
+
+          setBanner("error", "Falha na comunicação", extraParts.join(" · "));
+        }
+
+        if(options.log){
+          pushHistory("POST", action, "erro", err.message || "erro");
+        }
       }
     }
 
@@ -1863,15 +3096,36 @@
       const options = { log:true, banner:true, ...opts };
 
       try{
+        requireAdminToken();
+
+        if(!canUseIo()){
+          renderSummary();
+          if(options.banner) warnUnavailableModule("io");
+          if(options.log) pushHistory("POST", action, "indisp.", "PUBIO indisponível neste backend.");
+          return;
+        }
+
         if(options.log) setLastAction(friendlyActionName(action));
         setLastError("");
 
         await withBusy(button, "Executando...", async () => {
           const json = await api.postAction(action, payload || {});
+          const envelope = extractEnvelope(json);
+
           state.ioLast = { action, payload: json };
 
-          if(action === "admin_io_health") state.ioHealth = json;
-          if(action === "admin_io_contract") state.ioContract = json;
+          if(action === "admin_io_health"){
+            state.ioHealth = json;
+          }
+
+          if(action === "admin_io_contract"){
+            state.ioContract = json;
+          }
+
+          if(action === "admin_io_list_logs"){
+            state.ioLogs = Array.isArray(envelope.logs) ? envelope.logs : [];
+            renderIoLogs();
+          }
 
           setLastRefresh();
           renderSummary();
@@ -1889,28 +3143,40 @@
 
     async function runInstallAll(button){
       try{
-        setLastAction(friendlyActionName("install_all"));
+        requireAdminToken();
+
+        setLastAction(friendlyActionName("admin_install_crm"));
         setLastError("");
 
         await withBusy(button, "Instalando...", async () => {
-          const crm = await api.postAction("admin_install_crm", {});
-          const mail = await api.postAction("admin_mail_bootstrap", {});
-          const io = await api.postAction("admin_io_install", {});
+          const json = await api.postAction("admin_install_crm", {});
 
-          state.systemPayload = { crm, mail, io };
-          state.mailLast = { action:"admin_mail_bootstrap", payload:mail };
-          state.ioLast = { action:"admin_io_install", payload:io };
+          state.systemPayload = json;
+
+          if(json?.data?.pubmail){
+            state.mailLast = {
+              action: "admin_install_crm",
+              payload: json.data.pubmail
+            };
+          }
+
+          if(json?.data?.pubio){
+            state.ioLast = {
+              action: "admin_install_crm",
+              payload: json.data.pubio
+            };
+          }
 
           await refreshAllData({ log:false, banner:false });
 
-          setBanner("success", "Instalação concluída", "CRM, PUBMAIL e PUBIO foram instalados ou atualizados em sequência.");
-          pushHistory("POST", "install_all", "ok", "CRM, PUBMAIL e PUBIO instalados ou atualizados.");
+          setBanner("success", "Instalação concluída", "A instalação central do backend foi executada.");
+          pushHistory("POST", "admin_install_crm", "ok", "Instalação central executada.");
         });
       }catch(err){
         setLastError(err.message || "Erro desconhecido");
         renderSummary();
         setBanner("error", "Falha na instalação central", err.message || "Erro desconhecido");
-        pushHistory("POST", "install_all", "erro", err.message || "erro");
+        pushHistory("POST", "admin_install_crm", "erro", err.message || "erro");
       }
     }
 
@@ -1926,9 +3192,61 @@
       state.apiBase = "";
       $("#api-base").value = "";
       persist();
+      state.status = null;
+      state.health = null;
+      state.contract = null;
+      state.systemPayload = null;
+      state.contacts = [];
+      state.leads = [];
+      state.tickets = [];
+      state.mailQueue = [];
+      state.manualLists = [];
+      state.ioLogs = [];
+      state.mailOverview = null;
+      state.mailHealth = null;
+      state.mailTemplates = [];
+      state.mailSuppressions = [];
+      state.mailContactState = [];
+      state.mailLog = [];
+      state.mailInternalLog = [];
+      state.mailAdminReadings = [];
+      state.mailLast = null;
+      state.ioHealth = null;
+      state.ioContract = null;
+      state.ioLast = null;
+      renderContacts();
+      renderLeads();
+      renderTickets();
+      renderMailQueue();
+      renderMailLog();
+      renderManualLists();
+      renderMailSuppressions();
+      renderMailTemplates();
+      renderMailRelationshipTable();
+      renderMailQueueStatusTable();
+      renderMailLogStatusTable();
+      renderMailAdminReadings();
+      renderIoLogs();
       renderSummary();
       setBanner("warn", "URL removida", "A configuração local foi limpa.");
       pushHistory("UI", "clear_api_base", "ok", "configuração removida");
+    }
+
+    function saveAdminToken(){
+      state.adminToken = stringValue($("#admin-token").value);
+      persist();
+      renderSummary();
+      setBanner("success", "Token salvo", "O token administrativo foi armazenado apenas nesta sessão da aba.");
+      pushHistory("UI", "save_admin_token", "ok", state.adminToken ? "token configurado na sessão" : "token vazio");
+    }
+
+    function clearAdminToken(){
+      state.adminToken = "";
+      $("#admin-token").value = "";
+      persist();
+      renderSummary();
+      setBanner("warn", "Token removido", "O token administrativo foi removido da sessão atual.");
+      pushHistory("UI", "clear_admin_token", "ok", "token removido da sessão");
     }
 
     function setRole(role){
@@ -1941,22 +3259,45 @@
     }
 
     async function refreshMailSection(opts={}){
+      if(!canUseMail()) return;
+
       await runMailAction("admin_mail_overview", {}, null, "Resumo da comunicação carregado.", opts);
+      await runMailAction("admin_mail_health", {}, null, "Saúde da comunicação carregada.", opts);
       await runMailAction("admin_mail_list_queue", {}, null, "Fila atualizada.", opts);
-      await runMailAction("admin_mail_list_manual_lists", {}, null, "Listas de envio atualizadas.", opts);
+      await runMailAction("admin_mail_list_contact_state", {}, null, "Situação do relacionamento carregada.", opts);
       await runMailAction("admin_mail_list_log", {}, null, "Histórico de envio atualizado.", opts);
+      await runMailAction("admin_mail_list_suppressions", {}, null, "Contatos bloqueados carregados.", opts);
+      await runMailAction("admin_mail_list_manual_lists", {}, null, "Entradas de listas atualizadas.", opts);
+      await runMailAction("admin_mail_list_templates", {}, null, "Templates carregados.", opts);
+    }
+
+    async function refreshAdminData(opts={}){
+      requireAdminToken();
+
+      const modules = getBackendModules();
+
+      await runAdminList("admin_list_contacts", "contacts", null, "Contatos atualizados", opts);
+      await runAdminList("admin_list_leads", "leads", null, "Interesses atualizados", opts);
+      await runAdminList("admin_list_tickets", "tickets", null, "Chamados atualizados", opts);
+
+      if(modules.pubmailAvailable){
+        await refreshMailSection(opts);
+      }
+
+      if(modules.pubioAvailable){
+        await runIoAction("admin_io_health", {}, null, "Saúde dos dados carregada.", opts);
+        await runIoAction("admin_io_list_logs", {}, null, "Registros carregados.", opts);
+      }
     }
 
     async function refreshAllData(opts={}){
       await runPublicMode("status", null, opts);
       await runPublicMode("health", null, opts);
-      await runMailAction("admin_mail_overview", {}, null, "Resumo da comunicação carregado.", opts);
-      await runIoAction("admin_io_health", {}, null, "Saúde dos dados carregada.", opts);
-      await runAdminList("admin_list_contacts", "contacts", null, "Contatos atualizados", opts);
-      await runAdminList("admin_list_leads", "leads", null, "Interesses atualizados", opts);
-      await runAdminList("admin_list_tickets", "tickets", null, "Chamados atualizados", opts);
-      await runMailAction("admin_mail_list_queue", {}, null, "Fila atualizada.", opts);
-      await runMailAction("admin_mail_list_manual_lists", {}, null, "Listas de envio atualizadas.", opts);
+      await runPublicMode("contract", null, opts);
+
+      if(hasAdminToken()){
+        await refreshAdminData(opts);
+      }
     }
 
     function bindFilters(){
@@ -1972,7 +3313,13 @@
           if(kind === "contacts") exportRows("pubpanel-contacts.csv", state.contacts);
           if(kind === "leads") exportRows("pubpanel-interesses.csv", state.leads);
           if(kind === "tickets") exportRows("pubpanel-chamados.csv", state.tickets);
-          if(kind === "mailQueue") exportRows("pubpanel-fila.csv", state.mailQueue);
+          if(kind === "mailQueue"){
+            if(!canUseMail()){
+              warnUnavailableModule("mail");
+              return;
+            }
+            exportRows("pubpanel-fila.csv", state.mailQueue);
+          }
         });
       });
     }
@@ -2015,6 +3362,8 @@
     function bindButtons(){
       $("#btn-save-api-base").addEventListener("click", saveApiBase);
       $("#btn-clear-api-base").addEventListener("click", clearApiBase);
+      $("#btn-save-admin-token").addEventListener("click", saveAdminToken);
+      $("#btn-clear-admin-token").addEventListener("click", clearAdminToken);
 
       $("#btn-role-business").addEventListener("click", () => setRole("business"));
       $("#btn-role-admin").addEventListener("click", () => setRole("admin"));
@@ -2022,7 +3371,18 @@
       $("#btn-refresh-all").addEventListener("click", async e => {
         await withBusy(e.currentTarget, "Atualizando...", async () => {
           await refreshAllData({ log:true, banner:false });
-          setBanner("success", "Painel atualizado", "As leituras principais foram atualizadas.");
+
+          const modules = getBackendModules();
+
+          if(!hasAdminToken()){
+            setBanner("warn", "Painel atualizado parcialmente", "Somente leituras públicas foram atualizadas. Para ações administrativas, informe o token.");
+            return;
+          }
+
+          const parts = ["leituras públicas e núcleo administrativo"];
+          if(modules.pubmailAvailable) parts.push("PUBMAIL");
+          if(modules.pubioAvailable) parts.push("PUBIO");
+          setBanner("success", "Painel atualizado", "Foram atualizados: " + parts.join(", ") + ".");
         });
       });
 
@@ -2036,72 +3396,119 @@
       });
 
       $("#btn-refresh-mail").addEventListener("click", async e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
         await withBusy(e.currentTarget, "Atualizando...", async () => {
           await refreshMailSection({ log:true, banner:false });
-          setBanner("success", "Comunicação atualizada", "Resumo, fila, listas de envio e histórico foram atualizados.");
+          setBanner("success", "Comunicação atualizada", "Resumo, fila, estágios, histórico, bloqueios, listas e templates foram atualizados.");
         });
       });
 
       $("#btn-mail-more-data").addEventListener("click", async e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
         await withBusy(e.currentTarget, "Carregando...", async () => {
-          await runMailAction("admin_mail_health", {}, null, "Saúde da comunicação carregada.", { log:true, banner:false });
-          await runMailAction("admin_mail_list_templates", {}, null, "Modelos carregados.", { log:true, banner:false });
-          await runMailAction("admin_mail_list_suppressions", {}, null, "Contatos bloqueados carregados.", { log:true, banner:false });
-          await runMailAction("admin_mail_list_contact_state", {}, null, "Situação do relacionamento carregada.", { log:true, banner:false });
-          setBanner("success", "Mais detalhes carregados", "A leitura detalhada da comunicação foi atualizada.");
+          await runMailAction("admin_mail_health", {}, null, "Saúde técnica carregada.", { log:true, banner:false });
+          await runMailAction("admin_mail_checklist", {}, null, "Checklist carregado.", { log:true, banner:false });
+          await runMailAction("admin_mail_governance_model", {}, null, "Governança carregada.", { log:true, banner:false });
+          await runMailAction("admin_mail_usage_notes", {}, null, "Notas de uso carregadas.", { log:true, banner:false });
+          await runMailAction("admin_mail_list_internal_log", {}, null, "Log interno carregado.", { log:true, banner:false });
+          setBanner("success", "Detalhes administrativos carregados", "As leituras administrativas da comunicação foram atualizadas.");
         });
       });
 
-      $("#btn-mail-scan").addEventListener("click", e => runMailAction("admin_mail_scan", {}, e.currentTarget, "Novas entradas foram buscadas."));
-      $("#btn-mail-process").addEventListener("click", e => runMailAction("admin_mail_process_queue", {}, e.currentTarget, "Os itens pendentes foram processados."));
+      $("#btn-mail-scan").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_scan", {}, e.currentTarget, "Novas entradas foram buscadas.");
+      });
+
+      $("#btn-mail-process").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_process_queue", {}, e.currentTarget, "Os itens pendentes foram processados.");
+      });
 
       $("#btn-mail-create-manual-list").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
         try{
-          validateRequired("nome da lista de envio", $("#manual-list-name").value);
+          validateRequired("chave da lista", $("#manual-list-name").value);
+          validateRequired("e-mails da lista", $("#manual-list-note").value);
           runMailAction("admin_mail_create_manual_list", {
-            name: stringValue($("#manual-list-name").value),
-            note: stringValue($("#manual-list-note").value)
-          }, e.currentTarget, "Lista de envio criada.");
+            list_key: stringValue($("#manual-list-name").value),
+            emails: stringValue($("#manual-list-note").value),
+            notes: ""
+          }, e.currentTarget, "Entradas da lista manual criadas.");
         }catch(err){
           setBanner("warn", "Campo obrigatório", err.message);
         }
       });
 
-      $("#btn-mail-list-manual-lists").addEventListener("click", e => runMailAction("admin_mail_list_manual_lists", {}, e.currentTarget, "Listas de envio atualizadas."));
+      $("#btn-mail-list-manual-lists").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_list_manual_lists", {}, e.currentTarget, "Entradas das listas manuais atualizadas.");
+      });
 
       $("#btn-mail-update-manual-entry").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
         try{
-          validateRequired("ID da lista de envio", $("#manual-entry-list-id").value);
+          validateRequired("ID da entrada da lista", $("#manual-entry-list-id").value);
           validateEmail("e-mail", $("#manual-entry-email").value);
           validateRequired("nome", $("#manual-entry-name").value);
           runMailAction("admin_mail_update_manual_list_entry", {
-            list_id: stringValue($("#manual-entry-list-id").value),
+            list_entry_id: stringValue($("#manual-entry-list-id").value),
             email: stringValue($("#manual-entry-email").value),
             name: stringValue($("#manual-entry-name").value)
-          }, e.currentTarget, "Contato da lista atualizado.");
+          }, e.currentTarget, "Entrada da lista manual atualizada.");
         }catch(err){
           setBanner("warn", "Campo obrigatório", err.message);
         }
       });
 
       $("#btn-mail-set-manual-entry-active").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
         try{
-          validateRequired("ID do contato da lista", $("#manual-active-entry-id").value);
+          validateRequired("ID da entrada da lista", $("#manual-active-entry-id").value);
           runMailAction("admin_mail_set_manual_list_entry_active", {
-            entry_id: stringValue($("#manual-active-entry-id").value),
+            list_entry_id: stringValue($("#manual-active-entry-id").value),
             active: $("#manual-active-value").value === "true"
-          }, e.currentTarget, "Estado do contato da lista atualizado.");
+          }, e.currentTarget, "Estado da entrada da lista atualizado.");
         }catch(err){
           setBanner("warn", "Campo obrigatório", err.message);
         }
       });
 
       $("#btn-mail-add-suppression").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
         try{
           validateEmail("e-mail para bloquear", $("#mail-suppression-email").value);
           runMailAction("admin_mail_add_suppression", {
             email: stringValue($("#mail-suppression-email").value),
-            reason: stringValue($("#mail-suppression-reason").value)
+            reason: stringValue($("#mail-suppression-reason").value),
+            source: "panel"
           }, e.currentTarget, "Contato bloqueado.");
         }catch(err){
           setBanner("warn", "Campo obrigatório", err.message);
@@ -2109,29 +3516,89 @@
       });
 
       $("#btn-mail-send-manual").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
         try{
-          validateEmail("e-mail do destinatário", $("#mail-send-to").value);
+          validateEmail("e-mails do destinatário", $("#mail-send-to").value);
           validateRequired("assunto", $("#mail-send-subject").value);
           validateRequired("mensagem", $("#mail-send-body").value);
           runMailAction("admin_mail_send_manual", {
-            recipient: stringValue($("#mail-send-to").value),
-            subject: stringValue($("#mail-send-subject").value),
-            body: stringValue($("#mail-send-body").value)
-          }, e.currentTarget, "Mensagem manual enviada ou enfileirada.");
+            template_key: "tmpl_manual_generic",
+            audience_mode: "manual_emails",
+            emails: stringValue($("#mail-send-to").value),
+            manual_subject: stringValue($("#mail-send-subject").value),
+            manual_message: stringValue($("#mail-send-body").value),
+            item: ""
+          }, e.currentTarget, "Envio manual preparado.");
         }catch(err){
           setBanner("warn", "Campo obrigatório", err.message);
         }
       });
 
+      $("#btn-admin-mail-bootstrap").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_bootstrap", {}, e.currentTarget, "Comunicação preparada.");
+      });
+
+      $("#btn-admin-mail-health").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_health", {}, e.currentTarget, "Saúde técnica carregada.");
+      });
+
+      $("#btn-admin-mail-create-docs").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_create_template_docs", {}, e.currentTarget, "Docs padrão processados.");
+      });
+
+      $("#btn-admin-mail-checklist").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_checklist", {}, e.currentTarget, "Checklist carregado.");
+      });
+
+      $("#btn-admin-mail-governance").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_governance_model", {}, e.currentTarget, "Governança carregada.");
+      });
+
+      $("#btn-admin-mail-usage-notes").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_usage_notes", {}, e.currentTarget, "Notas de uso carregadas.");
+      });
+
+      $("#btn-admin-mail-internal-log").addEventListener("click", e => {
+        if(!canUseMail()){
+          warnUnavailableModule("mail");
+          return;
+        }
+        runMailAction("admin_mail_list_internal_log", {}, e.currentTarget, "Log interno carregado.");
+      });
+
       const ioSimpleActions = [
-        ["#btn-io-health", "admin_io_health", () => ({}), "Saúde dos dados carregada."],
         ["#btn-io-list-logs", "admin_io_list_logs", () => ({}), "Registros carregados."],
         ["#btn-io-export-entity", "admin_io_export_entity", () => ({
           entity_type: $("#io-export-entity").value
         }), "Exportação por entidade concluída."],
-        ["#btn-io-export-bundle", "admin_io_export_bundle", () => ({
-          entities: "contacts,leads,tickets"
-        }), "Exportação da base completa concluída."],
+        ["#btn-io-export-bundle", "admin_io_export_bundle", () => ({}), "Exportação do pacote técnico completo concluída."],
         ["#btn-io-export-entity-csv", "admin_io_export_entity_csv", () => ({
           entity_type: $("#io-export-entity").value
         }), "Exportação CSV do backend concluída."],
@@ -2143,12 +3610,23 @@
         ["#btn-admin-io-contract", "admin_io_contract", () => ({}), "Contrato dos dados carregado."],
         ["#btn-admin-io-install", "admin_io_install", () => ({}), "Módulo de dados preparado."]
       ];
+
       ioSimpleActions.forEach(([selector, action, payloadFactory, text]) => {
         const el = $(selector);
-        if(el) el.addEventListener("click", e => runIoAction(action, payloadFactory(), e.currentTarget, text));
+        if(el) el.addEventListener("click", e => {
+          if(!canUseIo()){
+            warnUnavailableModule("io");
+            return;
+          }
+          runIoAction(action, payloadFactory(), e.currentTarget, text);
+        });
       });
 
       $("#btn-io-validate").addEventListener("click", e => {
+        if(!canUseIo()){
+          warnUnavailableModule("io");
+          return;
+        }
         try{
           validateRequired("referência do arquivo", $("#io-storage-ref").value);
           runIoAction("admin_io_validate_file", {
@@ -2161,6 +3639,10 @@
       });
 
       $("#btn-io-inspect-storage-ref").addEventListener("click", e => {
+        if(!canUseIo()){
+          warnUnavailableModule("io");
+          return;
+        }
         try{
           validateRequired("referência do arquivo", $("#io-storage-ref").value);
           runIoAction("admin_io_inspect_storage_ref", {
@@ -2172,6 +3654,10 @@
       });
 
       $("#btn-io-restore").addEventListener("click", e => {
+        if(!canUseIo()){
+          warnUnavailableModule("io");
+          return;
+        }
         try{
           validateRequired("ID da cópia de segurança", $("#io-snapshot-id").value);
           runIoAction("admin_io_restore_snapshot", {
@@ -2184,6 +3670,10 @@
       });
 
       $("#btn-io-preview-json").addEventListener("click", e => {
+        if(!canUseIo()){
+          warnUnavailableModule("io");
+          return;
+        }
         try{
           validateRequired("referência do arquivo", $("#io-storage-ref").value);
           runIoAction("admin_io_preview_json", {
@@ -2195,10 +3685,15 @@
       });
 
       $("#btn-io-preview-csv").addEventListener("click", e => {
+        if(!canUseIo()){
+          warnUnavailableModule("io");
+          return;
+        }
         try{
           validateRequired("referência do arquivo", $("#io-storage-ref").value);
           runIoAction("admin_io_preview_csv", {
-            storage_ref: stringValue($("#io-storage-ref").value)
+            storage_ref: stringValue($("#io-storage-ref").value),
+            entity_type: $("#io-validate-entity").value
           }, e.currentTarget, "Conteúdo CSV carregado.");
         }catch(err){
           setBanner("warn", "Campo obrigatório", err.message);
@@ -2206,6 +3701,10 @@
       });
 
       $("#btn-io-read-storage-ref").addEventListener("click", e => {
+        if(!canUseIo()){
+          warnUnavailableModule("io");
+          return;
+        }
         try{
           validateRequired("referência do arquivo", $("#io-storage-ref").value);
           runIoAction("admin_io_read_storage_ref", {
@@ -2217,6 +3716,10 @@
       });
 
       $("#btn-io-dry-run-import").addEventListener("click", e => {
+        if(!canUseIo()){
+          warnUnavailableModule("io");
+          return;
+        }
         try{
           validateRequired("referência do arquivo", $("#io-dry-run-storage-ref").value);
           runIoAction("admin_io_dry_run_import_entity", {
@@ -2231,7 +3734,6 @@
       $("#btn-install-all").addEventListener("click", e => runInstallAll(e.currentTarget));
       $("#btn-install-all-inline").addEventListener("click", e => runInstallAll(e.currentTarget));
       $("#btn-admin-contract").addEventListener("click", e => runPublicMode("contract", e.currentTarget));
-      $("#btn-admin-mail-bootstrap").addEventListener("click", e => runMailAction("admin_mail_bootstrap", {}, e.currentTarget, "Comunicação preparada."));
 
       $("#btn-refresh-history").addEventListener("click", renderHistory);
       $("#btn-clear-history").addEventListener("click", () => {
@@ -2245,14 +3747,24 @@
 
     function bootPlaceholders(){
       $("#api-base").value = state.apiBase;
+      $("#admin-token").value = state.adminToken;
       document.body.setAttribute("data-role", state.role);
       renderContacts();
       renderLeads();
       renderTickets();
       renderMailQueue();
+      renderMailLog();
       renderManualLists();
+      renderMailSuppressions();
+      renderMailTemplates();
+      renderMailRelationshipTable();
+      renderMailQueueStatusTable();
+      renderMailLogStatusTable();
+      renderMailAdminReadings();
+      renderIoLogs();
       renderHistory();
       renderSummary();
+      applyModuleUiState();
     }
 
     async function autoWarm(){
@@ -2262,8 +3774,18 @@
       }
 
       try{
-        await refreshAllData({ log:false, banner:false });
-        clearBanner();
+        await runPublicMode("status", null, { log:false, banner:false });
+        await runPublicMode("health", null, { log:false, banner:false });
+        await runPublicMode("contract", null, { log:false, banner:false });
+
+        if(hasAdminToken()){
+          await refreshAdminData({ log:false, banner:false });
+          clearBanner();
+          return;
+        }
+
+        renderSummary();
+        setBanner("warn", "Leitura parcial carregada", "Sem token administrativo, o painel carrega apenas as leituras públicas do backend.");
       }catch(_){
         renderSummary();
         setBanner("warn", "Painel parcialmente carregado", "Algumas leituras automáticas não puderam ser concluídas.");
@@ -2282,3 +3804,7 @@
   </script>
 </body>
 </html>
+
+
+
+    
