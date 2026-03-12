@@ -346,25 +346,26 @@
 </head>
 <body>
   <div class="wrap">
-    <section class="panel">
-      <div class="top">
-        <div>
-          <div class="title">PUBPANEL 1.0</div>
-          <div class="sub">Leads, contatos, tickets e email.</div>
-        </div>
+   <section class="panel">
+  <div class="top">
+    <div>
+      <div class="title">PUBPANEL 1.0</div>
+      <div class="sub">Leads, contatos, tickets e email.</div>
+    </div>
 
-        <div class="row">
-  <button class="btn" id="btn-refresh">Atualizar</button>
-  <button class="btn btn-primary" id="btn-install-all">Preparar sistema</button>
-</div>
+    <div class="row">
+      <button class="btn" id="btn-refresh">Atualizar</button>
+      <button class="btn btn-primary" id="btn-install-all">Preparar sistema</button>
+    </div>
+  </div>
 
-      <div class="statusline">
-        <span id="pill-overall" class="pill muted-pill">Sistema —</span>
-        <span id="pill-core" class="pill muted-pill">Core —</span>
-        <span id="pill-mail" class="pill muted-pill">Email —</span>
-        <span id="pill-care" class="pill muted-pill">Atendimento —</span>
-      </div>
-    </section>
+  <div class="statusline">
+    <span id="pill-overall" class="pill muted-pill">Sistema —</span>
+    <span id="pill-core" class="pill muted-pill">Core —</span>
+    <span id="pill-mail" class="pill muted-pill">Email —</span>
+    <span id="pill-care" class="pill muted-pill">Atendimento —</span>
+  </div>
+</section>
 
     <div id="banner" class="banner"></div>
 
@@ -739,9 +740,8 @@ async function applyToken(){
   }
 
   try{
-    await loadRelationship();
     await loadCare();
-    await loadMail();
+    await loadMailSummaryOnly();
     setBanner("ok", "Token aplicado.");
   }catch(err){
     if(isAdminAuthError(err)){
@@ -753,25 +753,18 @@ async function applyToken(){
       return;
     }
 
-function isBusyError(err){
-  const code = String(err && err.code || "").toUpperCase();
-  const message = String(err && err.message || "").toLowerCase();
+    if(isBusyError(err)){
+      renderAll();
+      setBanner("warn", "O sistema está ocupado no momento. Atualize novamente em alguns segundos.");
+      return;
+    }
 
-  return (
-    code === "SYSTEM_UNAVAILABLE" ||
-    message.indexOf("sistema ocupado") >= 0
-  );
+    clearAdminState();
+    renderAll();
+    setBanner("error", err.message || "Falha ao aplicar token.");
+  }
 }
 
-function isActionUnavailableError(err){
-  const code = String(err && err.code || "").toUpperCase();
-  const message = String(err && err.message || "").toLowerCase();
-
-  return (
-    code === "INVALID_ACTION" ||
-    message.indexOf("ação inválida") >= 0
-  );
-}
 function clearToken(){
   state.adminToken = "";
   $("#admin-token").value = "";
@@ -809,13 +802,45 @@ async function readJsonResponse(response){
   return json;
 }
 
-
 function isAdminAuthError(err){
   const code = String(err && err.code || "").toUpperCase();
   return (
     code === "ADMIN_AUTH_REQUIRED" ||
     code === "ADMIN_AUTH_INVALID" ||
     code === "ADMIN_AUTH_UNAVAILABLE"
+  );
+}
+
+function isBusyError(err){
+  const code = String(err && err.code || "").toUpperCase();
+  const message = String(err && err.message || "").toLowerCase();
+
+  return (
+    code === "SYSTEM_UNAVAILABLE" ||
+    message.indexOf("sistema ocupado") >= 0
+  );
+}
+
+function isActionUnavailableError(err){
+  const code = String(err && err.code || "").toUpperCase();
+  const message = String(err && err.message || "").toLowerCase();
+
+  return (
+    code === "INVALID_ACTION" ||
+    message.indexOf("ação inválida") >= 0
+  );
+}
+
+function isPubcareNotInstalledError(err){
+  const code = String(err && err.code || "").toUpperCase();
+  const message = String(err && err.message || "").toLowerCase();
+
+  return (
+    code === "SCHEMA_INVALID" ||
+    message.indexOf("care_ticket_state") >= 0 ||
+    message.indexOf("care_macros") >= 0 ||
+    message.indexOf("care_log") >= 0 ||
+    message.indexOf("sheet") >= 0 && message.indexOf("ausente") >= 0
   );
 }
     
@@ -859,16 +884,6 @@ async function apiGet(mode){
   return readJsonResponse(response);
 }
 
-function isBusyError(err){
-  const code = String(err && err.code || "").toUpperCase();
-  const message = String(err && err.message || "").toLowerCase();
-
-  return (
-    code === "SYSTEM_UNAVAILABLE" ||
-    message.indexOf("sistema ocupado") >= 0
-  );
-}
-
     
 
 function coreHealth(){
@@ -891,7 +906,11 @@ function careModule(){
 }
 
 function mailOverview(){
-  return state.mail.overview && state.mail.overview.data ? state.mail.overview.data : null;
+  if(state.mail.overview && state.mail.overview.data){
+    return state.mail.overview.data;
+  }
+
+  return null;
 }
 
 function ticketCount(status){
@@ -1237,13 +1256,27 @@ async function loadMail(){
 
   renderAll();
 }
+async function loadMailSummaryOnly(){
+  const healthJson = await apiPost("admin_mail_health", {});
+  const summaryJson = await apiPost("admin_mail_summary", {});
 
+  state.mail.health = healthJson || null;
+  state.mail.overview = summaryJson || null;
+  state.mail.raw = {
+    health: healthJson || null,
+    summary: summaryJson || null
+  };
+
+  renderAll();
+}
+
+
+    
 async function refreshEverything(){
   clearBanner();
 
   await runPublicMode("status");
   await runPublicMode("health");
-  await runPublicMode("contract");
 
   if(!state.adminToken){
     renderAll();
@@ -1252,9 +1285,9 @@ async function refreshEverything(){
   }
 
   try{
-    await loadRelationship();
     await loadCare();
-    await loadMail();
+    await loadMailSummaryOnly();
+    renderAll();
     setBanner("ok", "Painel atualizado.");
   }catch(err){
     if(isAdminAuthError(err)){
@@ -1348,7 +1381,7 @@ async function replySelectedTicket(){
       return;
     }
 
-    if(isPubcareNotInstalledError(err)){
+    if(isPubcareNotInstalledError(err) || isActionUnavailableError(err)){
       setBanner("error", "O módulo de atendimento ainda não está preparado nesta base. Use o botão Preparar sistema.");
       return;
     }
@@ -1356,6 +1389,7 @@ async function replySelectedTicket(){
     throw err;
   }
 }
+    
 async function processMail(){
   clearBanner();
 
@@ -1456,12 +1490,12 @@ function bind(){
     });
   });
 
-  $("#btn-mail-refresh").addEventListener("click", function(){
-    handleAction(async function(){
-      await loadMail();
-      setBanner("ok", "Email atualizado.");
-    });
+ $("#btn-mail-refresh").addEventListener("click", function(){
+  handleAction(async function(){
+    await loadMailSummaryOnly();
+    setBanner("ok", "Email atualizado.");
   });
+});
 
   $("#btn-mail-process").addEventListener("click", function(){ handleAction(processMail); });
   $("#btn-mail-send-manual").addEventListener("click", function(){ handleAction(sendManualMail); });
@@ -1504,7 +1538,9 @@ async function boot(){
 
   if(state.apiBase){
     try{
-      await refreshEverything();
+      await runPublicMode("status");
+      await runPublicMode("health");
+      setBanner("warn", "Painel iniciado com leituras públicas. Aplique o token para carregar dados administrativos.");
     }catch(err){
       renderAll();
       setBanner("error", err.message || "Falha ao iniciar o painel.");
