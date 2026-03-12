@@ -416,10 +416,10 @@
         </div>
 
         <div class="metric">
-          <div class="k">Tickets com atenção</div>
-          <div class="v" id="sum-care-attention">—</div>
-          <div class="n">Abertos ou aguardando ação.</div>
-        </div>
+  <div class="k">Tickets com atenção</div>
+  <div class="v" id="sum-care-attention">—</div>
+  <div class="n">Abertos, respondidos ou aguardando ação.</div>
+</div>
 
         <div class="metric">
           <div class="k">Emails em fila</div>
@@ -683,11 +683,26 @@
       setBanner("warn", "URL removida.");
     }
 
-    function applyToken(){
-      state.adminToken = stringValue($("#admin-token").value);
-      renderAll();
-      setBanner("ok", state.adminToken ? "Token aplicado." : "Token vazio.");
-    }
+    async function applyToken(){
+  state.adminToken = stringValue($("#admin-token").value);
+  renderAll();
+
+  if(!state.adminToken){
+    setBanner("warn", "Token vazio.");
+    return;
+  }
+
+  try{
+    await Promise.all([
+      loadRelationship(),
+      loadCare(),
+      loadMail()
+    ]);
+    setBanner("ok", "Token aplicado.");
+  }catch(err){
+    setBanner("error", err.message || "Falha ao carregar dados administrativos.");
+  }
+}
 
     function clearToken(){
       state.adminToken = "";
@@ -788,8 +803,8 @@
     }
 
     function attentionCount(){
-      return ticketCount("OPEN") + ticketCount("WAITING_USER");
-    }
+  return ticketCount("OPEN") + ticketCount("WAITING_USER") + ticketCount("ANSWERED");
+}
 
     function pillClass(label){
       const s = String(label || "").toLowerCase();
@@ -1140,23 +1155,19 @@
     }
 
     async function installAll(){
-      clearBanner();
+  clearBanner();
 
-      try{
-        await apiPost("instalar_tudo", {});
-      }catch(_){
-        try{
-          await apiPost("instalarTudo", {});
-        }catch(__){
-          await apiPost("admin_install_crm", {});
-          await apiPost("admin_mail_bootstrap", {});
-        }
-      }
+  try{
+    await apiPost("admin_install_all", {});
+  }catch(_){
+    await apiPost("admin_install_crm", {});
+    await apiPost("admin_mail_bootstrap", {});
+    await apiPost("admin_care_install", {});
+  }
 
-      await refreshEverything();
-      setBanner("ok", "Sistema preparado.");
-    }
-
+  await refreshEverything();
+  setBanner("ok", "Sistema preparado.");
+}
     async function replySelectedTicket(){
       if(!state.selectedTicketId){
         throw new Error("Nenhum ticket selecionado.");
@@ -1223,7 +1234,7 @@
     function bind(){
       $("#btn-save-api-base").addEventListener("click", function(){ handleAction(async function(){ saveApiBase(); }); });
       $("#btn-clear-api-base").addEventListener("click", function(){ handleAction(async function(){ clearApiBase(); }); });
-      $("#btn-apply-token").addEventListener("click", function(){ handleAction(async function(){ applyToken(); }); });
+      $("#btn-apply-token").addEventListener("click", function(){ handleAction(applyToken); });
       $("#btn-clear-token").addEventListener("click", function(){ handleAction(async function(){ clearToken(); }); });
 
       $("#btn-refresh").addEventListener("click", function(){ handleAction(refreshEverything); });
@@ -1279,19 +1290,37 @@
       });
     }
 
-    async function boot(){
-      state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || "";
-      $("#api-base").value = state.apiBase;
+   async function boot(){
+  state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || "";
+  $("#api-base").value = state.apiBase;
 
-      renderAll();
-      bind();
+  renderAll();
+  bind();
 
-      if(state.apiBase){
-        try{
-          await refreshEverything();
-        }catch(_){}
-      }
+  if(state.apiBase){
+    try{
+      await runPublicMode("status");
+    }catch(_){}
+
+    try{
+      await runPublicMode("health");
+    }catch(_){}
+
+    try{
+      await runPublicMode("contract");
+    }catch(_){}
+
+    if(state.adminToken){
+      try{
+        await Promise.all([
+          loadRelationship(),
+          loadCare(),
+          loadMail()
+        ]);
+      }catch(_){}
     }
+  }
+}
 
     document.addEventListener("DOMContentLoaded", boot);
   </script>
