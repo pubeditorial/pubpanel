@@ -668,12 +668,18 @@
       box.textContent = "";
     }
 
-    function saveApiBase(){
-      state.apiBase = stringValue($("#api-base").value);
-      localStorage.setItem(PUBPANEL.STORAGE_API_BASE, state.apiBase);
-      renderAll();
-      setBanner("ok", "URL salva.");
-    }
+    async function saveApiBase(){
+  state.apiBase = stringValue($("#api-base").value);
+  localStorage.setItem(PUBPANEL.STORAGE_API_BASE, state.apiBase);
+  renderAll();
+
+  if(!state.apiBase){
+    setBanner("warn", "URL vazia.");
+    return;
+  }
+
+  await refreshEverything();
+}
 
     function clearApiBase(){
       state.apiBase = "";
@@ -1140,31 +1146,31 @@
       renderAll();
     }
 
-    async function refreshEverything(){
-      clearBanner();
-
-      await runPublicMode("status");
-      await runPublicMode("health");
-      await Promise.all([
-        loadRelationship(),
-        loadCare(),
-        loadMail()
-      ]);
-
-      setBanner("ok", "Painel atualizado.");
-    }
-
-    async function installAll(){
+   async function refreshEverything(){
   clearBanner();
 
-  try{
-    await apiPost("admin_install_all", {});
-  }catch(_){
-    await apiPost("admin_install_crm", {});
-    await apiPost("admin_mail_bootstrap", {});
-    await apiPost("admin_care_install", {});
+  await runPublicMode("status");
+  await runPublicMode("health");
+  await runPublicMode("contract");
+
+  if(state.adminToken){
+    await Promise.all([
+      loadRelationship(),
+      loadCare(),
+      loadMail()
+    ]);
+    setBanner("ok", "Painel atualizado.");
+    return;
   }
 
+  renderAll();
+  setBanner("warn", "Leituras públicas atualizadas. Para dados administrativos, aplique o token.");
+}
+
+ async function installAll(){
+  clearBanner();
+
+  await apiPost("admin_install_all", {});
   await refreshEverything();
   setBanner("ok", "Sistema preparado.");
 }
@@ -1231,66 +1237,65 @@
       }
     }
 
-    function bind(){
-      $("#btn-save-api-base").addEventListener("click", function(){ handleAction(async function(){ saveApiBase(); }); });
-      $("#btn-clear-api-base").addEventListener("click", function(){ handleAction(async function(){ clearApiBase(); }); });
-      $("#btn-apply-token").addEventListener("click", function(){ handleAction(applyToken); });
-      $("#btn-clear-token").addEventListener("click", function(){ handleAction(async function(){ clearToken(); }); });
+   function bind(){
+  $("#btn-save-api-base").addEventListener("click", function(){ handleAction(saveApiBase); });
+  $("#btn-clear-api-base").addEventListener("click", function(){ handleAction(async function(){ clearApiBase(); }); });
+  $("#btn-apply-token").addEventListener("click", function(){ handleAction(applyToken); });
+  $("#btn-clear-token").addEventListener("click", function(){ handleAction(async function(){ clearToken(); }); });
 
-      $("#btn-refresh").addEventListener("click", function(){ handleAction(refreshEverything); });
-      $("#btn-install-all").addEventListener("click", function(){ handleAction(installAll); });
+  $("#btn-refresh").addEventListener("click", function(){ handleAction(refreshEverything); });
+  $("#btn-install-all").addEventListener("click", function(){ handleAction(installAll); });
 
-      $("#btn-refresh-care").addEventListener("click", function(){ handleAction(loadCare); });
-      $("#btn-reply-ticket").addEventListener("click", function(){ handleAction(replySelectedTicket); });
+  $("#btn-refresh-care").addEventListener("click", function(){ handleAction(loadCare); });
+  $("#btn-reply-ticket").addEventListener("click", function(){ handleAction(replySelectedTicket); });
 
-      $("#btn-load-relationship").addEventListener("click", function(){
-        handleAction(async function(){
-          await loadRelationship();
-          setBanner("ok", "Relacionamento atualizado.");
-        });
-      });
+  $("#btn-load-relationship").addEventListener("click", function(){
+    handleAction(async function(){
+      await loadRelationship();
+      setBanner("ok", "Relacionamento atualizado.");
+    });
+  });
 
-      $("#btn-mail-refresh").addEventListener("click", function(){
-        handleAction(async function(){
-          await loadMail();
-          setBanner("ok", "Email atualizado.");
-        });
-      });
+  $("#btn-mail-refresh").addEventListener("click", function(){
+    handleAction(async function(){
+      await loadMail();
+      setBanner("ok", "Email atualizado.");
+    });
+  });
 
-      $("#btn-mail-process").addEventListener("click", function(){ handleAction(processMail); });
-      $("#btn-mail-send-manual").addEventListener("click", function(){ handleAction(sendManualMail); });
-      $("#btn-mail-add-suppression").addEventListener("click", function(){ handleAction(addSuppression); });
+  $("#btn-mail-process").addEventListener("click", function(){ handleAction(processMail); });
+  $("#btn-mail-send-manual").addEventListener("click", function(){ handleAction(sendManualMail); });
+  $("#btn-mail-add-suppression").addEventListener("click", function(){ handleAction(addSuppression); });
 
-      $("#btn-load-status").addEventListener("click", function(){
-        handleAction(async function(){
-          await runPublicMode("status");
-          setBanner("ok", "Status carregado.");
-        });
-      });
+  $("#btn-load-status").addEventListener("click", function(){
+    handleAction(async function(){
+      await runPublicMode("status");
+      setBanner("ok", "Status carregado.");
+    });
+  });
 
-      $("#btn-load-health").addEventListener("click", function(){
-        handleAction(async function(){
-          await runPublicMode("health");
-          setBanner("ok", "Health carregado.");
-        });
-      });
+  $("#btn-load-health").addEventListener("click", function(){
+    handleAction(async function(){
+      await runPublicMode("health");
+      setBanner("ok", "Health carregado.");
+    });
+  });
 
-      $("#btn-load-contract").addEventListener("click", function(){
-        handleAction(async function(){
-          await runPublicMode("contract");
-          setBanner("ok", "Contract carregado.");
-        });
-      });
+  $("#btn-load-contract").addEventListener("click", function(){
+    handleAction(async function(){
+      await runPublicMode("contract");
+      setBanner("ok", "Contract carregado.");
+    });
+  });
 
-      $("#btn-load-mail-health").addEventListener("click", function(){
-        handleAction(async function(){
-          await runMailAction("admin_mail_health", {});
-          setBanner("ok", "Mail health carregado.");
-        });
-      });
-    }
-
-   async function boot(){
+  $("#btn-load-mail-health").addEventListener("click", function(){
+    handleAction(async function(){
+      await runMailAction("admin_mail_health", {});
+      setBanner("ok", "Mail health carregado.");
+    });
+  });
+}
+ async function boot(){
   state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || "";
   $("#api-base").value = state.apiBase;
 
@@ -1299,26 +1304,8 @@
 
   if(state.apiBase){
     try{
-      await runPublicMode("status");
+      await refreshEverything();
     }catch(_){}
-
-    try{
-      await runPublicMode("health");
-    }catch(_){}
-
-    try{
-      await runPublicMode("contract");
-    }catch(_){}
-
-    if(state.adminToken){
-      try{
-        await Promise.all([
-          loadRelationship(),
-          loadCare(),
-          loadMail()
-        ]);
-      }catch(_){}
-    }
   }
 }
 
