@@ -668,32 +668,60 @@
       box.textContent = "";
     }
 
-    async function saveApiBase(){
+function clearAdminState(){
+  state.contacts = [];
+  state.leads = [];
+  state.tickets = [];
+
+  state.selectedTicketId = "";
+  state.selectedTicket = null;
+  state.selectedTicketMessages = [];
+
+  state.mail = {
+    health: null,
+    overview: null,
+    queue: [],
+    log: [],
+    suppressions: [],
+    raw: null
+  };
+}
+
+async function saveApiBase(){
   state.apiBase = stringValue($("#api-base").value);
-  localStorage.setItem(PUBPANEL.STORAGE_API_BASE, state.apiBase);
-  renderAll();
 
   if(!state.apiBase){
+    clearApiBase();
     setBanner("warn", "URL vazia.");
     return;
   }
 
+  localStorage.setItem(PUBPANEL.STORAGE_API_BASE, state.apiBase);
+  renderAll();
   await refreshEverything();
 }
 
-    function clearApiBase(){
-      state.apiBase = "";
-      localStorage.removeItem(PUBPANEL.STORAGE_API_BASE);
-      $("#api-base").value = "";
-      renderAll();
-      setBanner("warn", "URL removida.");
-    }
+function clearApiBase(){
+  state.apiBase = "";
+  state.status = null;
+  state.health = null;
+  state.contract = null;
 
-    async function applyToken(){
+  clearAdminState();
+
+  localStorage.removeItem(PUBPANEL.STORAGE_API_BASE);
+  $("#api-base").value = "";
+  renderAll();
+  setBanner("warn", "URL removida. Leituras limpas.");
+}
+
+async function applyToken(){
   state.adminToken = stringValue($("#admin-token").value);
   renderAll();
 
   if(!state.adminToken){
+    clearAdminState();
+    renderAll();
     setBanner("warn", "Token vazio.");
     return;
   }
@@ -706,447 +734,456 @@
     ]);
     setBanner("ok", "Token aplicado.");
   }catch(err){
+    clearAdminState();
+    renderAll();
     setBanner("error", err.message || "Falha ao carregar dados administrativos.");
   }
 }
 
-    function clearToken(){
-      state.adminToken = "";
-      $("#admin-token").value = "";
-      renderAll();
-      setBanner("warn", "Token removido.");
-    }
+function clearToken(){
+  state.adminToken = "";
+  $("#admin-token").value = "";
+  clearAdminState();
+  renderAll();
+  setBanner("warn", "Token removido. Dados administrativos limpos.");
+}
 
-    function requireApiBase(){
-      if(!state.apiBase) throw new Error("Defina a URL do Web App.");
-    }
+function requireApiBase(){
+  if(!state.apiBase) throw new Error("Defina a URL do Web App.");
+}
 
-    function requireAdminToken(){
-      if(!state.adminToken) throw new Error("Defina o token administrativo.");
-    }
+function requireAdminToken(){
+  if(!state.adminToken) throw new Error("Defina o token administrativo.");
+}
 
-    async function readJsonResponse(response){
-      const text = await response.text();
-      let json = {};
+async function readJsonResponse(response){
+  const text = await response.text();
+  let json = {};
 
-      if(text.trim()) json = JSON.parse(text);
+  if(text.trim()) json = JSON.parse(text);
 
-      if(!response.ok){
-        throw new Error(json.error || ("Falha HTTP " + response.status));
-      }
+  if(!response.ok){
+    throw new Error(json.error || ("Falha HTTP " + response.status));
+  }
 
-      if(json && json.ok === false){
-        throw new Error(json.error || "Resposta inválida.");
-      }
+  if(json && json.ok === false){
+    throw new Error(json.error || "Resposta inválida.");
+  }
 
-      return json;
-    }
+  return json;
+}
 
-    async function apiGet(mode){
-      requireApiBase();
+async function apiGet(mode){
+  requireApiBase();
 
-      const url = new URL(state.apiBase);
-      url.searchParams.set("mode", mode);
+  const url = new URL(state.apiBase);
+  url.searchParams.set("mode", mode);
 
-      const response = await fetch(url.toString(), {
-        method: "GET",
-        cache: "no-store"
-      });
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    cache: "no-store"
+  });
 
-      return readJsonResponse(response);
-    }
+  return readJsonResponse(response);
+}
 
-    async function apiPost(action, payload){
-      requireApiBase();
-      requireAdminToken();
+async function apiPost(action, payload){
+  requireApiBase();
+  requireAdminToken();
 
-      const body = {
-        action: action,
-        admin_token: state.adminToken
-      };
+  const body = {
+    action: action,
+    admin_token: state.adminToken
+  };
 
-      Object.keys(payload || {}).forEach(function(key){
-        body[key] = payload[key];
-      });
+  Object.keys(payload || {}).forEach(function(key){
+    body[key] = payload[key];
+  });
 
-      const response = await fetch(state.apiBase, {
-        method: "POST",
-        cache: "no-store",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(body)
-      });
+  const response = await fetch(state.apiBase, {
+    method: "POST",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(body)
+  });
 
-      return readJsonResponse(response);
-    }
+  return readJsonResponse(response);
+}
 
-    function coreHealth(){
-      return state.health && state.health.data && state.health.data.core ? state.health.data.core : null;
-    }
+function coreHealth(){
+  return state.health && state.health.data && state.health.data.core ? state.health.data.core : null;
+}
 
-    function mailHealth(){
-      return state.mail.health ||
-        (state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail
-          ? state.health.data.modules.pubmail
-          : null);
-    }
+function mailHealth(){
+  return state.mail.health ||
+    (state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail
+      ? state.health.data.modules.pubmail
+      : null);
+}
 
-    function careModule(){
-      return state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubcare
-        ? state.health.data.modules.pubcare
-        : null;
-    }
+function careModule(){
+  return state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubcare
+    ? state.health.data.modules.pubcare
+    : null;
+}
 
-    function mailOverview(){
-      return state.mail.overview && state.mail.overview.data ? state.mail.overview.data : null;
-    }
+function mailOverview(){
+  return state.mail.overview && state.mail.overview.data ? state.mail.overview.data : null;
+}
 
-    function ticketCount(status){
-      return state.tickets.filter(function(t){
-        return String(t.status || "").toUpperCase() === status;
-      }).length;
-    }
+function ticketCount(status){
+  return state.tickets.filter(function(t){
+    return String(t.status || "").toUpperCase() === status;
+  }).length;
+}
 
-    function attentionCount(){
+function attentionCount(){
   return ticketCount("OPEN") + ticketCount("WAITING_USER") + ticketCount("ANSWERED");
 }
 
-    function pillClass(label){
-      const s = String(label || "").toLowerCase();
-      if(s.indexOf("pronto") >= 0) return "ok-pill";
-      if(s.indexOf("aten") >= 0) return "warn-pill";
-      if(s.indexOf("indisp") >= 0) return "error-pill";
-      if(s.indexOf("instal") >= 0) return "warn-pill";
-      return "muted-pill";
+function pillClass(label){
+  const s = String(label || "").toLowerCase();
+  if(s.indexOf("pronto") >= 0) return "ok-pill";
+  if(s.indexOf("aten") >= 0) return "warn-pill";
+  if(s.indexOf("indisp") >= 0) return "error-pill";
+  if(s.indexOf("instal") >= 0) return "warn-pill";
+  return "muted-pill";
+}
+
+function renderHeaderState(){
+  const core = coreHealth();
+  const mail = mailHealth();
+  const care = careModule();
+
+  const coreLabel = !core ? "—" : core.ok === true ? "Pronto" : core.installed ? "Atenção" : "Instalar";
+  let mailLabel = "—";
+
+  if(mail){
+    if(mail.ready === true && mail.ok === true) mailLabel = "Pronto";
+    else if(mail.available === false) mailLabel = "Indisponível";
+    else if(mail.installed === true) mailLabel = "Atenção";
+    else mailLabel = "Instalar";
+  }
+
+  let careLabel = "—";
+
+  if(care){
+    if(care.ready === true || care.ok === true) careLabel = "Pronto";
+    else if(care.available === false) careLabel = "Indisponível";
+    else careLabel = "Atenção";
+  } else {
+    careLabel = state.tickets.length ? (attentionCount() ? "Atenção" : "Pronto") : "—";
+  }
+
+  let overall = "—";
+  if(coreLabel === "Pronto" && mailLabel === "Pronto") overall = "Pronto";
+  else if(core || mail || state.tickets.length) overall = "Atenção";
+
+  $("#pill-overall").className = "pill " + pillClass(overall);
+  $("#pill-core").className = "pill " + pillClass(coreLabel);
+  $("#pill-mail").className = "pill " + pillClass(mailLabel);
+  $("#pill-care").className = "pill " + pillClass(careLabel);
+
+  $("#pill-overall").textContent = "Sistema " + overall;
+  $("#pill-core").textContent = "Core " + coreLabel;
+  $("#pill-mail").textContent = "Email " + mailLabel;
+  $("#pill-care").textContent = "Atendimento " + careLabel;
+}
+
+function renderSummary(){
+  const overview = mailOverview();
+
+  $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : "—";
+  $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : "—";
+  $("#sum-care-attention").textContent = state.tickets.length ? String(attentionCount()) : "—";
+  $("#sum-mail-queue").textContent = overview ? String(overview.queue_count || 0) : "—";
+}
+
+function renderRecentSimpleBox(containerId, rows, type){
+  const box = $(containerId);
+
+  if(!rows || !rows.length){
+    box.innerHTML = '<div class="empty">Nenhum dado carregado.</div>';
+    return;
+  }
+
+  const sliced = rows.slice(0, 6);
+  let html = '<div class="list">';
+
+  sliced.forEach(function(r){
+    if(type === "lead"){
+      html +=
+        '<div class="item">' +
+          '<div class="item-title">' + escapeHtml(r.name || "Sem nome") + '</div>' +
+          '<div class="item-sub">' + escapeHtml(r.email || "") + '</div>' +
+          '<div class="item-meta">' + escapeHtml(r.item || "") + ' · ' + escapeHtml(r.created_at || "") + '</div>' +
+        '</div>';
+    } else {
+      html +=
+        '<div class="item">' +
+          '<div class="item-title">' + escapeHtml(r.name || "Sem nome") + '</div>' +
+          '<div class="item-sub">' + escapeHtml(r.email || "") + '</div>' +
+          '<div class="item-meta">' + escapeHtml(r.whatsapp || "") + ' · ' + escapeHtml(r.updated_at || r.created_at || "") + '</div>' +
+        '</div>';
     }
+  });
 
-    function renderHeaderState(){
-      const core = coreHealth();
-      const mail = mailHealth();
-      const care = careModule();
+  html += '</div>';
+  box.innerHTML = html;
+}
 
-      const coreLabel = !core ? "—" : core.ok === true ? "Pronto" : core.installed ? "Atenção" : "Instalar";
-      let mailLabel = "—";
-      if(mail){
-        if(mail.ready === true && mail.ok === true) mailLabel = "Pronto";
-        else if(mail.available === false) mailLabel = "Indisponível";
-        else if(mail.installed === true) mailLabel = "Atenção";
-        else mailLabel = "Instalar";
-      }
+function renderCareList(){
+  const box = $("#care-list");
 
-      let careLabel = "—";
-      if(care){
-        if(care.ready === true || care.ok === true) careLabel = "Pronto";
-        else if(care.available === false) careLabel = "Indisponível";
-        else careLabel = "Atenção";
-      } else {
-        careLabel = state.tickets.length ? (attentionCount() ? "Atenção" : "Pronto") : "—";
-      }
+  if(!state.tickets.length){
+    box.innerHTML = '<div class="empty">Nenhum ticket carregado.</div>';
+    return;
+  }
 
-      let overall = "—";
-      if(coreLabel === "Pronto" && mailLabel === "Pronto") overall = "Pronto";
-      else if(core || mail || state.tickets.length) overall = "Atenção";
+  const ordered = state.tickets.slice().sort(function(a, b){
+    const pa = priorityValue(a.status);
+    const pb = priorityValue(b.status);
+    if(pa !== pb) return pa - pb;
+    return (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0);
+  });
 
-      $("#pill-overall").className = "pill " + pillClass(overall);
-      $("#pill-core").className = "pill " + pillClass(coreLabel);
-      $("#pill-mail").className = "pill " + pillClass(mailLabel);
-      $("#pill-care").className = "pill " + pillClass(careLabel);
+  let html = '<div class="list">';
 
-      $("#pill-overall").textContent = "Sistema " + overall;
-      $("#pill-core").textContent = "Core " + coreLabel;
-      $("#pill-mail").textContent = "Email " + mailLabel;
-      $("#pill-care").textContent = "Atendimento " + careLabel;
-    }
+  ordered.forEach(function(t){
+    const active = t.ticket_id === state.selectedTicketId ? ' active' : '';
+    html +=
+      '<button class="item' + active + '" data-ticket-id="' + escapeHtml(t.ticket_id || "") + '" style="text-align:left">' +
+        '<div class="item-title">' + escapeHtml(t.name || t.ticket_id || "Ticket") + '</div>' +
+        '<div class="item-sub">' + escapeHtml(t.email || "") + '</div>' +
+        '<div class="item-meta">' + escapeHtml(t.item || "") + ' · ' + escapeHtml(t.status || "") + ' · ' + escapeHtml(t.created_at || "") + '</div>' +
+      '</button>';
+  });
 
-    function renderSummary(){
-      const overview = mailOverview();
+  html += '</div>';
+  box.innerHTML = html;
 
-      $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : "—";
-      $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : "—";
-      $("#sum-care-attention").textContent = state.tickets.length ? String(attentionCount()) : "—";
-      $("#sum-mail-queue").textContent = overview ? String(overview.queue_count || 0) : "—";
-    }
-
-    function renderRecentSimpleBox(containerId, rows, type){
-      const box = $(containerId);
-
-      if(!rows || !rows.length){
-        box.innerHTML = '<div class="empty">Nenhum dado carregado.</div>';
-        return;
-      }
-
-      const sliced = rows.slice(0, 6);
-      let html = '<div class="list">';
-
-      sliced.forEach(function(r){
-        if(type === "lead"){
-          html +=
-            '<div class="item">' +
-              '<div class="item-title">' + escapeHtml(r.name || "Sem nome") + '</div>' +
-              '<div class="item-sub">' + escapeHtml(r.email || "") + '</div>' +
-              '<div class="item-meta">' + escapeHtml(r.item || "") + ' · ' + escapeHtml(r.created_at || "") + '</div>' +
-            '</div>';
-        } else {
-          html +=
-            '<div class="item">' +
-              '<div class="item-title">' + escapeHtml(r.name || "Sem nome") + '</div>' +
-              '<div class="item-sub">' + escapeHtml(r.email || "") + '</div>' +
-              '<div class="item-meta">' + escapeHtml(r.whatsapp || "") + ' · ' + escapeHtml(r.updated_at || r.created_at || "") + '</div>' +
-            '</div>';
-        }
+  Array.prototype.slice.call(box.querySelectorAll("[data-ticket-id]")).forEach(function(el){
+    el.addEventListener("click", function(){
+      const id = el.getAttribute("data-ticket-id");
+      handleAction(async function(){
+        await selectTicket(id);
       });
+    });
+  });
 
-      html += '</div>';
-      box.innerHTML = html;
-    }
+  function priorityValue(status){
+    const s = String(status || "").toUpperCase();
+    if(s === "OPEN") return 1;
+    if(s === "WAITING_USER") return 2;
+    if(s === "ANSWERED") return 3;
+    if(s === "CLOSED") return 4;
+    return 9;
+  }
+}
 
-    function renderCareList(){
-      const box = $("#care-list");
+function renderSelectedTicket(){
+  $("#selected-ticket-summary").textContent = state.selectedTicket
+    ? [
+        state.selectedTicket.ticket_id || "",
+        state.selectedTicket.name || "",
+        state.selectedTicket.email || "",
+        state.selectedTicket.item || "",
+        state.selectedTicket.status || ""
+      ].filter(Boolean).join(" · ")
+    : "Nenhum ticket selecionado.";
 
-      if(!state.tickets.length){
-        box.innerHTML = '<div class="empty">Nenhum ticket carregado.</div>';
-        return;
-      }
+  const box = $("#selected-ticket-messages");
 
-      const ordered = state.tickets.slice().sort(function(a, b){
-        const pa = priorityValue(a.status);
-        const pb = priorityValue(b.status);
-        if(pa !== pb) return pa - pb;
-        return (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0);
-      });
+  if(!state.selectedTicketMessages.length){
+    box.innerHTML = '<div class="empty">Nenhuma mensagem carregada.</div>';
+    return;
+  }
 
-      let html = '<div class="list">';
-      ordered.forEach(function(t){
-        const active = t.ticket_id === state.selectedTicketId ? ' active' : '';
-        html +=
-          '<button class="item' + active + '" data-ticket-id="' + escapeHtml(t.ticket_id || "") + '" style="text-align:left">' +
-            '<div class="item-title">' + escapeHtml(t.name || t.ticket_id || "Ticket") + '</div>' +
-            '<div class="item-sub">' + escapeHtml(t.email || "") + '</div>' +
-            '<div class="item-meta">' + escapeHtml(t.item || "") + ' · ' + escapeHtml(t.status || "") + ' · ' + escapeHtml(t.created_at || "") + '</div>' +
-          '</button>';
-      });
-      html += '</div>';
+  let html = '<div class="list">';
 
-      box.innerHTML = html;
+  state.selectedTicketMessages.forEach(function(m){
+    html +=
+      '<div class="item">' +
+        '<div class="item-title">' + escapeHtml(m.direction || "") + ' · ' + escapeHtml(m.channel || "") + '</div>' +
+        '<div class="item-sub">' + escapeHtml(m.message || "") + '</div>' +
+        '<div class="item-meta">' + escapeHtml(m.created_at || "") + '</div>' +
+      '</div>';
+  });
 
-      Array.prototype.slice.call(box.querySelectorAll("[data-ticket-id]")).forEach(function(el){
-        el.addEventListener("click", function(){
-          const id = el.getAttribute("data-ticket-id");
-          handleAction(async function(){
-            await selectTicket(id);
-          });
-        });
-      });
+  html += '</div>';
+  box.innerHTML = html;
+}
 
-      function priorityValue(status){
-        const s = String(status || "").toUpperCase();
-        if(s === "OPEN") return 1;
-        if(s === "WAITING_USER") return 2;
-        if(s === "ANSWERED") return 3;
-        if(s === "CLOSED") return 4;
-        return 9;
-      }
-    }
+function renderMail(){
+  const overview = mailOverview();
+  $("#mail-queue-count").textContent = overview ? String(overview.queue_count || 0) : "—";
+  $("#mail-log-count").textContent = overview ? String(overview.log_count || 0) : "—";
+  $("#mail-suppressions-count").textContent = overview ? String(overview.suppressions_count || 0) : "—";
+}
 
-    function renderSelectedTicket(){
-      $("#selected-ticket-summary").textContent = state.selectedTicket
-        ? [
-            state.selectedTicket.ticket_id || "",
-            state.selectedTicket.name || "",
-            state.selectedTicket.email || "",
-            state.selectedTicket.item || "",
-            state.selectedTicket.status || ""
-          ].filter(Boolean).join(" · ")
-        : "Nenhum ticket selecionado.";
+function renderDiagnostics(){
+  $("#diag-core").textContent = safeJson({
+    status: state.status,
+    health: state.health,
+    contract: state.contract
+  });
 
-      const box = $("#selected-ticket-messages");
+  $("#diag-mail").textContent = safeJson({
+    mail_health: state.mail.health,
+    mail_overview: state.mail.overview,
+    mail_raw: state.mail.raw
+  });
+}
 
-      if(!state.selectedTicketMessages.length){
-        box.innerHTML = '<div class="empty">Nenhuma mensagem carregada.</div>';
-        return;
-      }
+function renderAll(){
+  renderHeaderState();
+  renderSummary();
+  renderRecentSimpleBox("#leads-box", state.leads, "lead");
+  renderRecentSimpleBox("#contacts-box", state.contacts, "contact");
+  renderCareList();
+  renderSelectedTicket();
+  renderMail();
+  renderDiagnostics();
+}
 
-      let html = '<div class="list">';
-      state.selectedTicketMessages.forEach(function(m){
-        html +=
-          '<div class="item">' +
-            '<div class="item-title">' + escapeHtml(m.direction || "") + ' · ' + escapeHtml(m.channel || "") + '</div>' +
-            '<div class="item-sub">' + escapeHtml(m.message || "") + '</div>' +
-            '<div class="item-meta">' + escapeHtml(m.created_at || "") + '</div>' +
-          '</div>';
-      });
-      html += '</div>';
-      box.innerHTML = html;
-    }
+async function runPublicMode(mode){
+  const json = await apiGet(mode);
 
-    function renderMail(){
-      const overview = mailOverview();
-      $("#mail-queue-count").textContent = overview ? String(overview.queue_count || 0) : "—";
-      $("#mail-log-count").textContent = overview ? String(overview.log_count || 0) : "—";
-      $("#mail-suppressions-count").textContent = overview ? String(overview.suppressions_count || 0) : "—";
-    }
+  if(mode === "status") state.status = json;
+  if(mode === "health") state.health = json;
+  if(mode === "contract") state.contract = json;
 
-    function renderDiagnostics(){
-      $("#diag-core").textContent = safeJson({
-        status: state.status,
-        health: state.health,
-        contract: state.contract
-      });
+  renderAll();
+  return json;
+}
 
-      $("#diag-mail").textContent = safeJson({
-        mail_health: state.mail.health,
-        mail_overview: state.mail.overview,
-        mail_raw: state.mail.raw
-      });
-    }
+async function runCoreAction(action, payload){
+  const json = await apiPost(action, payload || {});
 
-    function renderAll(){
-      renderHeaderState();
-      renderSummary();
-      renderRecentSimpleBox("#leads-box", state.leads, "lead");
-      renderRecentSimpleBox("#contacts-box", state.contacts, "contact");
-      renderCareList();
-      renderSelectedTicket();
-      renderMail();
-      renderDiagnostics();
-    }
+  if(action === "admin_list_contacts"){
+    state.contacts = Array.isArray(json.rows) ? json.rows : [];
+  }
 
-    async function runPublicMode(mode){
-      const json = await apiGet(mode);
+  if(action === "admin_list_leads"){
+    state.leads = Array.isArray(json.rows) ? json.rows : [];
+  }
 
-      if(mode === "status") state.status = json;
-      if(mode === "health") state.health = json;
-      if(mode === "contract") state.contract = json;
+  if(action === "admin_list_tickets"){
+    state.tickets = Array.isArray(json.rows) ? json.rows : [];
+  }
 
-      renderAll();
-      return json;
-    }
+  if(action === "admin_get_ticket"){
+    state.selectedTicket = json.data || null;
+  }
 
-    async function runCoreAction(action, payload){
-      const json = await apiPost(action, payload || {});
+  if(action === "admin_list_ticket_messages"){
+    state.selectedTicketMessages = Array.isArray(json.rows) ? json.rows : [];
+  }
 
-      if(action === "admin_list_contacts"){
-        state.contacts = Array.isArray(json.rows) ? json.rows : [];
-      }
+  renderAll();
+  return json;
+}
 
-      if(action === "admin_list_leads"){
-        state.leads = Array.isArray(json.rows) ? json.rows : [];
-      }
+async function runMailAction(action, payload){
+  const json = await apiPost(action, payload || {});
+  state.mail.raw = json;
 
-      if(action === "admin_list_tickets"){
-        state.tickets = Array.isArray(json.rows) ? json.rows : [];
-      }
+  if(action === "admin_mail_health"){
+    state.mail.health = json;
+  }
 
-      if(action === "admin_get_ticket"){
-        state.selectedTicket = json.data || null;
-      }
+  if(action === "admin_mail_overview"){
+    state.mail.overview = json;
+  }
 
-      if(action === "admin_list_ticket_messages"){
-        state.selectedTicketMessages = Array.isArray(json.rows) ? json.rows : [];
-      }
+  renderAll();
+  return json;
+}
 
-      renderAll();
-      return json;
-    }
+async function loadRelationship(){
+  const results = await Promise.all([
+    apiPost("admin_list_leads", {}),
+    apiPost("admin_list_contacts", {})
+  ]);
 
-    async function runMailAction(action, payload){
-      const json = await apiPost(action, payload || {});
-      state.mail.raw = json;
+  state.leads = Array.isArray(results[0].rows) ? results[0].rows : [];
+  state.contacts = Array.isArray(results[1].rows) ? results[1].rows : [];
+  renderAll();
+}
 
-      if(action === "admin_mail_health"){
-        state.mail.health = json;
-      }
+async function loadCare(){
+  const ticketsJson = await apiPost("admin_list_tickets", {});
+  state.tickets = Array.isArray(ticketsJson.rows) ? ticketsJson.rows : [];
 
-      if(action === "admin_mail_overview"){
-        state.mail.overview = json;
-      }
+  const preferred = choosePreferredTicket(state.tickets);
 
-      renderAll();
-      return json;
-    }
+  if(preferred){
+    await selectTicket(preferred.ticket_id);
+  } else {
+    state.selectedTicketId = "";
+    state.selectedTicket = null;
+    state.selectedTicketMessages = [];
+  }
 
-    async function loadRelationship(){
-      const results = await Promise.all([
-        apiPost("admin_list_leads", {}),
-        apiPost("admin_list_contacts", {})
-      ]);
+  renderAll();
+}
 
-      state.leads = Array.isArray(results[0].rows) ? results[0].rows : [];
-      state.contacts = Array.isArray(results[1].rows) ? results[1].rows : [];
-      renderAll();
-    }
+function choosePreferredTicket(rows){
+  if(!rows || !rows.length) return null;
 
-    async function loadCare(){
-      const ticketsJson = await apiPost("admin_list_tickets", {});
-      state.tickets = Array.isArray(ticketsJson.rows) ? ticketsJson.rows : [];
+  const ordered = rows.slice().sort(function(a, b){
+    const pa = priority(a.status);
+    const pb = priority(b.status);
+    if(pa !== pb) return pa - pb;
+    return (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0);
+  });
 
-      const preferred = choosePreferredTicket(state.tickets);
-      if(preferred){
-        await selectTicket(preferred.ticket_id);
-      } else {
-        state.selectedTicketId = "";
-        state.selectedTicket = null;
-        state.selectedTicketMessages = [];
-      }
+  return ordered[0] || null;
 
-      renderAll();
-    }
+  function priority(status){
+    const s = String(status || "").toUpperCase();
+    if(s === "OPEN") return 1;
+    if(s === "WAITING_USER") return 2;
+    if(s === "ANSWERED") return 3;
+    if(s === "CLOSED") return 4;
+    return 9;
+  }
+}
 
-    function choosePreferredTicket(rows){
-      if(!rows || !rows.length) return null;
+async function selectTicket(ticketId){
+  if(!ticketId) return;
 
-      const ordered = rows.slice().sort(function(a, b){
-        const pa = priority(a.status);
-        const pb = priority(b.status);
-        if(pa !== pb) return pa - pb;
-        return (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0);
-      });
+  state.selectedTicketId = ticketId;
 
-      return ordered[0] || null;
+  const results = await Promise.all([
+    apiPost("admin_get_ticket", { ticket_id: ticketId }),
+    apiPost("admin_list_ticket_messages", { ticket_id: ticketId })
+  ]);
 
-      function priority(status){
-        const s = String(status || "").toUpperCase();
-        if(s === "OPEN") return 1;
-        if(s === "WAITING_USER") return 2;
-        if(s === "ANSWERED") return 3;
-        if(s === "CLOSED") return 4;
-        return 9;
-      }
-    }
+  state.selectedTicket = results[0] && results[0].data ? results[0].data : null;
+  state.selectedTicketMessages = Array.isArray(results[1].rows) ? results[1].rows : [];
+  renderAll();
+}
 
-    async function selectTicket(ticketId){
-      if(!ticketId) return;
+async function loadMail(){
+  const results = await Promise.all([
+    apiPost("admin_mail_health", {}),
+    apiPost("admin_mail_overview", {})
+  ]);
 
-      state.selectedTicketId = ticketId;
+  state.mail.health = results[0] || null;
+  state.mail.overview = results[1] || null;
+  state.mail.raw = {
+    health: results[0] || null,
+    overview: results[1] || null
+  };
 
-      const results = await Promise.all([
-        apiPost("admin_get_ticket", { ticket_id: ticketId }),
-        apiPost("admin_list_ticket_messages", { ticket_id: ticketId })
-      ]);
+  renderAll();
+}
 
-      state.selectedTicket = results[0] && results[0].data ? results[0].data : null;
-      state.selectedTicketMessages = Array.isArray(results[1].rows) ? results[1].rows : [];
-      renderAll();
-    }
-
-    async function loadMail(){
-      const results = await Promise.all([
-        apiPost("admin_mail_health", {}),
-        apiPost("admin_mail_overview", {})
-      ]);
-
-      state.mail.health = results[0] || null;
-      state.mail.overview = results[1] || null;
-      state.mail.raw = {
-        health: results[0] || null,
-        overview: results[1] || null
-      };
-
-      renderAll();
-    }
-
-   async function refreshEverything(){
+async function refreshEverything(){
   clearBanner();
 
   await runPublicMode("status");
@@ -1167,77 +1204,78 @@
   setBanner("warn", "Leituras públicas atualizadas. Para dados administrativos, aplique o token.");
 }
 
- async function installAll(){
+async function installAll(){
   clearBanner();
 
   await apiPost("admin_install_all", {});
   await refreshEverything();
   setBanner("ok", "Sistema preparado.");
 }
-    async function replySelectedTicket(){
-      if(!state.selectedTicketId){
-        throw new Error("Nenhum ticket selecionado.");
-      }
 
-      await apiPost("admin_reply_ticket", {
-        ticket_id: state.selectedTicketId,
-        message: stringValue($("#reply-message").value),
-        status: String($("#reply-status").value || "ANSWERED").toUpperCase(),
-        channel: String($("#reply-channel").value || "MANUAL").toUpperCase(),
-        sent_by: "admin"
-      });
+async function replySelectedTicket(){
+  if(!state.selectedTicketId){
+    throw new Error("Nenhum ticket selecionado.");
+  }
 
-      $("#reply-message").value = "";
-      await loadCare();
-      setBanner("ok", "Resposta enviada.");
-    }
+  await apiPost("admin_reply_ticket", {
+    ticket_id: state.selectedTicketId,
+    message: stringValue($("#reply-message").value),
+    status: String($("#reply-status").value || "ANSWERED").toUpperCase(),
+    channel: String($("#reply-channel").value || "MANUAL").toUpperCase(),
+    sent_by: "admin"
+  });
 
-    async function processMail(){
-      clearBanner();
-      await apiPost("admin_mail_process_queue", {});
-      await loadMail();
-      setBanner("ok", "Emails processados.");
-    }
+  $("#reply-message").value = "";
+  await loadCare();
+  setBanner("ok", "Resposta enviada.");
+}
 
-    async function sendManualMail(){
-      clearBanner();
+async function processMail(){
+  clearBanner();
+  await apiPost("admin_mail_process_queue", {});
+  await loadMail();
+  setBanner("ok", "Emails processados.");
+}
 
-      await apiPost("admin_mail_send_manual", {
-        template_key: "tmpl_manual_generic",
-        audience_mode: "manual_emails",
-        emails: stringValue($("#send-manual-emails").value),
-        manual_subject: stringValue($("#send-manual-subject").value),
-        manual_message: stringValue($("#send-manual-message").value),
-        item: ""
-      });
+async function sendManualMail(){
+  clearBanner();
 
-      await loadMail();
-      setBanner("ok", "Mensagem enviada.");
-    }
+  await apiPost("admin_mail_send_manual", {
+    template_key: "tmpl_manual_generic",
+    audience_mode: "manual_emails",
+    emails: stringValue($("#send-manual-emails").value),
+    manual_subject: stringValue($("#send-manual-subject").value),
+    manual_message: stringValue($("#send-manual-message").value),
+    item: ""
+  });
 
-    async function addSuppression(){
-      clearBanner();
+  await loadMail();
+  setBanner("ok", "Mensagem enviada.");
+}
 
-      await apiPost("admin_mail_add_suppression", {
-        email: stringValue($("#suppression-email").value),
-        reason: stringValue($("#suppression-reason").value),
-        source: "panel"
-      });
+async function addSuppression(){
+  clearBanner();
 
-      await loadMail();
-      setBanner("ok", "Email bloqueado.");
-    }
+  await apiPost("admin_mail_add_suppression", {
+    email: stringValue($("#suppression-email").value),
+    reason: stringValue($("#suppression-reason").value),
+    source: "panel"
+  });
 
-    async function handleAction(fn){
-      try{
-        await fn();
-      }catch(err){
-        renderAll();
-        setBanner("error", err.message || "Erro.");
-      }
-    }
+  await loadMail();
+  setBanner("ok", "Email bloqueado.");
+}
 
-   function bind(){
+async function handleAction(fn){
+  try{
+    await fn();
+  }catch(err){
+    renderAll();
+    setBanner("error", err.message || "Erro.");
+  }
+}
+
+function bind(){
   $("#btn-save-api-base").addEventListener("click", function(){ handleAction(saveApiBase); });
   $("#btn-clear-api-base").addEventListener("click", function(){ handleAction(async function(){ clearApiBase(); }); });
   $("#btn-apply-token").addEventListener("click", function(){ handleAction(applyToken); });
@@ -1295,7 +1333,8 @@
     });
   });
 }
- async function boot(){
+
+async function boot(){
   state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || "";
   $("#api-base").value = state.apiBase;
 
@@ -1309,6 +1348,7 @@
   }
 }
 
+ 
     document.addEventListener("DOMContentLoaded", boot);
   </script>
 </body>
