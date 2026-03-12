@@ -10,36 +10,33 @@
 
   <style>
     :root{
-      --bg:#f6f8fb;
+      --bg:#f7f8fb;
       --panel:#ffffff;
-      --panel-alt:#f8fafc;
+      --panel-soft:#f8fafc;
       --fg:#0f172a;
-      --muted:#475569;
-      --line:#e2e8f0;
+      --muted:#526174;
+      --line:#dbe4ee;
       --blue:#1473e6;
       --green:#12805c;
       --amber:#b76a00;
       --red:#d31510;
-      --radius:14px;
+      --radius:16px;
       --shadow:0 10px 28px rgba(15,23,42,.06);
-      --wrap:1180px;
+      --wrap:1080px;
     }
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
-    html{overflow-x:hidden}
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:var(--bg);
       color:var(--fg);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      overflow-x:hidden;
     }
 
     button,input,select,textarea{font:inherit}
-    a{text-decoration:none;color:inherit}
-    :focus-visible{outline:3px solid rgba(20,115,230,.22);outline-offset:2px}
+    :focus-visible{outline:3px solid rgba(20,115,230,.24);outline-offset:2px}
 
     .wrap{
       width:100%;
@@ -50,128 +47,65 @@
       gap:16px;
     }
 
-    .top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .title{
-      font-size:26px;
-      font-weight:900;
-      letter-spacing:-.03em;
-    }
-
-    .sub{
-      font-size:13px;
-      color:var(--muted);
-      margin-top:4px;
-      line-height:1.55;
-    }
-
     .panel{
       background:var(--panel);
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:16px;
-      min-width:0;
+      padding:18px;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .title{
+      font-size:28px;
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+
+    .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
     }
 
     .section-title{
-      font-size:18px;
+      margin:0 0 6px;
+      font-size:20px;
       font-weight:900;
       letter-spacing:-.02em;
-      margin:0 0 6px;
     }
 
     .section-text{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.6;
       margin:0;
-    }
-
-    .grid-2{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:12px;
-      min-width:0;
-    }
-
-    .grid-3{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      min-width:0;
-    }
-
-    .grid-4{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      min-width:0;
-    }
-
-    .grid-6{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:12px;
-      min-width:0;
-    }
-
-    .field{
-      display:grid;
-      gap:6px;
-      min-width:0;
-    }
-
-    .label{
-      font-size:12px;
-      font-weight:800;
       color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.06em;
-    }
-
-    .input,.textarea,.select{
-      width:100%;
-      max-width:100%;
-      min-height:42px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:10px 12px;
-      background:#fff;
-      color:var(--fg);
-      min-width:0;
-    }
-
-    .textarea{
-      min-height:110px;
-      resize:vertical;
+      font-size:14px;
+      line-height:1.6;
     }
 
     .row{
       display:flex;
-      flex-wrap:wrap;
       gap:10px;
+      flex-wrap:wrap;
       align-items:center;
-      min-width:0;
-      max-width:100%;
     }
 
     .btn{
-      min-height:42px;
-      padding:10px 14px;
+      min-height:48px;
+      padding:12px 16px;
       border-radius:12px;
       border:1px solid var(--line);
       background:#fff;
       color:var(--fg);
       font-weight:800;
       cursor:pointer;
-      max-width:100%;
     }
 
     .btn[disabled]{
@@ -186,24 +120,19 @@
     }
 
     .btn-danger{
-      background:#fff;
       border-color:#fecaca;
       color:var(--red);
-    }
-
-    .btn-soft{
-      background:var(--panel-alt);
+      background:#fff;
     }
 
     .banner{
       display:none;
-      padding:12px 14px;
+      padding:14px 16px;
       border-radius:12px;
+      font-size:14px;
+      line-height:1.5;
       border:1px solid var(--line);
       background:#fff;
-      font-size:13px;
-      line-height:1.5;
-      word-break:break-word;
     }
 
     .banner.show{display:block}
@@ -220,102 +149,58 @@
       border-color:rgba(211,21,16,.18);
     }
 
-    .metrics{
+    .grid-2{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:14px;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .grid-4{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      min-width:0;
+      gap:14px;
     }
 
     .metric{
       border:1px solid var(--line);
-      border-radius:12px;
-      padding:14px;
+      border-radius:14px;
+      padding:16px;
       background:#fff;
-      min-width:0;
     }
 
     .metric .k{
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
+      font-size:12px;
       color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.06em;
       font-weight:800;
       margin-bottom:8px;
     }
 
     .metric .v{
-      font-size:24px;
-      line-height:1;
+      font-size:28px;
       font-weight:900;
+      line-height:1;
       letter-spacing:-.03em;
-      word-break:break-word;
     }
 
     .metric .n{
-      font-size:12px;
-      color:var(--muted);
       margin-top:8px;
-      line-height:1.5;
-    }
-
-    .cardline{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:10px;
-    }
-
-    .stack{
-      display:grid;
-      gap:10px;
-      min-width:0;
-    }
-
-    .micro{
-      font-size:12px;
       color:var(--muted);
-      line-height:1.55;
-    }
-
-    .tabs{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .tab{
-      min-height:38px;
-      padding:8px 12px;
-      border-radius:10px;
-      border:1px solid var(--line);
-      background:#fff;
-      color:var(--fg);
-      font-weight:800;
-      cursor:pointer;
-    }
-
-    .tab.active{
-      background:var(--blue);
-      border-color:var(--blue);
-      color:#fff;
-    }
-
-    .view{
-      display:none;
-    }
-
-    .view.active{
-      display:block;
+      font-size:13px;
+      line-height:1.5;
     }
 
     .statusline{
       display:flex;
-      flex-wrap:wrap;
       gap:8px;
+      flex-wrap:wrap;
       margin-top:12px;
     }
 
@@ -323,13 +208,11 @@
       display:inline-flex;
       align-items:center;
       gap:8px;
+      padding:7px 11px;
       border-radius:999px;
-      padding:6px 10px;
-      font-size:11px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.05em;
       border:1px solid var(--line);
+      font-size:12px;
+      font-weight:900;
       background:#fff;
     }
 
@@ -344,64 +227,85 @@
     .ok-pill{color:var(--green); background:rgba(18,128,92,.06); border-color:rgba(18,128,92,.18)}
     .warn-pill{color:var(--amber); background:rgba(183,106,0,.06); border-color:rgba(183,106,0,.18)}
     .error-pill{color:var(--red); background:rgba(211,21,16,.06); border-color:rgba(211,21,16,.18)}
-    .muted-pill{color:#64748b; background:#fff; border-color:var(--line)}
+    .muted-pill{color:#64748b}
 
-    .table-wrap{
-      width:100%;
-      max-width:100%;
-      overflow:auto;
-      border:1px solid var(--line);
-      border-radius:12px;
-      min-width:0;
-      background:#fff;
+    .field{
+      display:grid;
+      gap:8px;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:720px;
-      background:#fff;
-    }
-
-    th,td{
-      padding:12px;
-      text-align:left;
-      border-bottom:1px solid var(--line);
-      vertical-align:top;
-      font-size:14px;
-    }
-
-    th{
-      background:#f8fafc;
+    .label{
+      font-size:12px;
       color:var(--muted);
-      font-size:11px;
       text-transform:uppercase;
       letter-spacing:.06em;
       font-weight:800;
     }
 
-    tr.row-click{
-      cursor:pointer;
+    .input,.textarea,.select{
+      width:100%;
+      min-height:46px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:11px 13px;
+      background:#fff;
+      color:var(--fg);
     }
 
-    tr.row-click:hover{
-      background:#f8fbff;
+    .textarea{
+      min-height:120px;
+      resize:vertical;
     }
 
     .empty{
-      padding:14px;
+      padding:16px;
       border:1px dashed var(--line);
       border-radius:12px;
       color:var(--muted);
-      font-size:13px;
-      line-height:1.6;
       background:#fff;
-      word-break:break-word;
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .item{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:14px;
+      background:#fff;
+    }
+
+    .item-title{
+      font-weight:900;
+      font-size:15px;
+      line-height:1.35;
+    }
+
+    .item-sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .item-meta{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .item.active{
+      border-color:rgba(20,115,230,.35);
+      box-shadow:0 0 0 3px rgba(20,115,230,.08);
     }
 
     .code{
       width:100%;
-      max-width:100%;
       padding:12px;
       border-radius:12px;
       background:#0f172a;
@@ -410,20 +314,31 @@
       white-space:pre-wrap;
       word-break:break-word;
       overflow:auto;
-      min-width:0;
     }
 
     details summary{
       cursor:pointer;
       font-weight:800;
-      color:var(--fg);
       list-style:none;
     }
 
     details summary::-webkit-details-marker{display:none}
 
+    .soft{
+      background:var(--panel-soft);
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:14px;
+    }
+
+    .micro{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
     @media (max-width:980px){
-      .grid-2,.grid-3,.grid-4,.grid-6,.metrics{
+      .grid-2,.grid-3,.grid-4{
         grid-template-columns:1fr;
       }
     }
@@ -431,15 +346,24 @@
 </head>
 <body>
   <div class="wrap">
-    <section class="top">
-      <div style="min-width:0">
-        <div class="title">PUBPANEL</div>
-        <div class="sub">Versão 1.0. Leads, contatos, tickets e email. Interface enxuta para operação diária.</div>
+    <section class="panel">
+      <div class="top">
+        <div>
+          <div class="title">PUBPANEL 1.0</div>
+          <div class="sub">Leads, contatos, tickets e email.</div>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="btn-refresh">Atualizar</button>
+          <button class="btn btn-primary" id="btn-install-all">Preparar sistema</button>
+        </div>
       </div>
 
-      <div class="row">
-        <button class="btn btn-soft" id="btn-sync-public">Atualizar</button>
-        <button class="btn btn-primary" id="btn-install-all">Instalar sistema</button>
+      <div class="statusline">
+        <span id="pill-overall" class="pill muted-pill">Sistema —</span>
+        <span id="pill-core" class="pill muted-pill">Core —</span>
+        <span id="pill-mail" class="pill muted-pill">Email —</span>
+        <span id="pill-care" class="pill muted-pill">Atendimento —</span>
       </div>
     </section>
 
@@ -447,7 +371,7 @@
 
     <section class="panel">
       <h2 class="section-title">Conexão</h2>
-      <p class="section-text">Informe a URL publicada do Web App e o token administrativo. A URL fica salva neste navegador. O token fica apenas nesta aba.</p>
+      <p class="section-text">Informe a URL do Web App e o token administrativo.</p>
 
       <div style="height:12px"></div>
 
@@ -473,354 +397,206 @@
     </section>
 
     <section class="panel">
-      <div class="cardline">
-        <div>
-          <h2 class="section-title">Início</h2>
-          <p class="section-text">Estado geral do sistema e visão rápida da operação.</p>
-        </div>
-        <div class="row">
-          <button class="btn" id="btn-sync-system">Sincronizar sistema</button>
-        </div>
-      </div>
+      <h2 class="section-title">Resumo</h2>
+      <p class="section-text">Veja rapidamente o que precisa de atenção.</p>
 
-      <div class="metrics">
-        <div class="metric">
-          <div class="k">Estado geral</div>
-          <div class="v" id="sum-overall">—</div>
-          <div class="n">Leitura consolidada do sistema.</div>
-        </div>
+      <div style="height:12px"></div>
+
+      <div class="grid-4">
         <div class="metric">
           <div class="k">Leads</div>
           <div class="v" id="sum-leads">—</div>
           <div class="n">Entradas registradas.</div>
         </div>
+
         <div class="metric">
           <div class="k">Contatos</div>
           <div class="v" id="sum-contacts">—</div>
           <div class="n">Base de relacionamento.</div>
         </div>
+
         <div class="metric">
-          <div class="k">Tickets abertos</div>
-          <div class="v" id="sum-open-tickets">—</div>
-          <div class="n">Atendimento em aberto.</div>
+          <div class="k">Tickets com atenção</div>
+          <div class="v" id="sum-care-attention">—</div>
+          <div class="n">Abertos ou aguardando ação.</div>
+        </div>
+
+        <div class="metric">
+          <div class="k">Emails em fila</div>
+          <div class="v" id="sum-mail-queue">—</div>
+          <div class="n">Aguardando envio.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="top">
+        <div>
+          <h2 class="section-title">O que precisa de atenção agora</h2>
+          <p class="section-text">O sistema seleciona automaticamente o primeiro ticket pendente.</p>
+        </div>
+        <div class="row">
+          <button class="btn" id="btn-refresh-care">Atualizar atendimento</button>
         </div>
       </div>
 
       <div style="height:12px"></div>
 
-      <div class="metrics">
-        <div class="metric">
-          <div class="k">Emails em fila</div>
-          <div class="v" id="sum-mail-queue">—</div>
-          <div class="n">Itens aguardando envio.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Emails enviados</div>
-          <div class="v" id="sum-mail-log">—</div>
-          <div class="n">Histórico operacional.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Falhas / alerta</div>
-          <div class="v" id="sum-mail-alert">—</div>
-          <div class="n">Fila e módulos em atenção.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Atendimento em atenção</div>
-          <div class="v" id="sum-care-attention">—</div>
-          <div class="n">Tickets aguardando ação.</div>
-        </div>
-      </div>
-
-      <div class="statusline">
-        <span id="pill-core" class="pill muted-pill">Core —</span>
-        <span id="pill-pubmail" class="pill muted-pill">PUBMAIL —</span>
-        <span id="pill-pubcare" class="pill muted-pill">PUBCARE —</span>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="cardline">
-        <div>
-          <h2 class="section-title">Navegação</h2>
-          <p class="section-text">Áreas principais do sistema.</p>
-        </div>
-      </div>
-
-      <div class="tabs">
-        <button class="tab active" data-view="view-relationship">Relacionamento</button>
-        <button class="tab" data-view="view-care">Atendimento</button>
-        <button class="tab" data-view="view-mail">Email</button>
-        <button class="tab" data-view="view-diagnostics">Diagnóstico</button>
-      </div>
-    </section>
-
-    <section id="view-relationship" class="panel view active">
-      <div class="cardline">
-        <div>
-          <h2 class="section-title">Relacionamento</h2>
-          <p class="section-text">Quem entrou e quem já está na base.</p>
-        </div>
-        <div class="row">
-          <input id="relationship-search" class="input" style="min-width:260px" placeholder="Buscar nome, email ou item" />
-          <button class="btn" id="btn-load-contacts">Contatos</button>
-          <button class="btn" id="btn-load-leads">Leads</button>
-          <button class="btn btn-primary" id="btn-load-all-rel">Atualizar lista</button>
-        </div>
-      </div>
-
-      <div class="tabs">
-        <button class="tab active" data-subview="rel-leads">Leads</button>
-        <button class="tab" data-subview="rel-contacts">Contatos</button>
-      </div>
-
-      <div style="height:14px"></div>
-
-      <div id="rel-leads" class="subview active">
-        <div id="leads-wrap" class="empty">Nenhum lead carregado.</div>
-      </div>
-
-      <div id="rel-contacts" class="subview" style="display:none">
-        <div id="contacts-wrap" class="empty">Nenhum contato carregado.</div>
-      </div>
-    </section>
-
-    <section id="view-care" class="panel view">
-      <div class="cardline">
-        <div>
-          <h2 class="section-title">Atendimento</h2>
-          <p class="section-text">Tickets e histórico de resposta.</p>
-        </div>
-        <div class="row">
-          <button class="btn" id="btn-load-tickets">Atualizar tickets</button>
-        </div>
-      </div>
-
-      <div class="grid-4">
-        <div class="metric">
-          <div class="k">Abertos</div>
-          <div class="v" id="care-open-count">—</div>
-        </div>
-        <div class="metric">
-          <div class="k">Aguardando usuário</div>
-          <div class="v" id="care-waiting-count">—</div>
-        </div>
-        <div class="metric">
-          <div class="k">Respondidos</div>
-          <div class="v" id="care-answered-count">—</div>
-        </div>
-        <div class="metric">
-          <div class="k">Fechados</div>
-          <div class="v" id="care-closed-count">—</div>
-        </div>
-      </div>
-
-      <div style="height:16px"></div>
-
       <div class="grid-2">
         <div class="stack">
-          <div class="cardline">
-            <div>
-              <div class="label">Tickets</div>
-              <div class="micro">Selecione um ticket para ver detalhes e responder.</div>
-            </div>
+          <div class="soft">
+            <div class="label">Tickets</div>
+            <div class="micro">Toque em um ticket apenas quando quiser mudar para outro.</div>
           </div>
-          <div id="tickets-wrap-care" class="empty">Nenhum ticket carregado.</div>
+          <div id="care-list" class="empty">Nenhum ticket carregado.</div>
         </div>
 
         <div class="stack">
-          <div class="label">Ticket selecionado</div>
-          <div id="ticket-selected-box" class="code">Nenhum ticket selecionado.</div>
-
-          <div class="label">Histórico</div>
-          <div id="ticket-messages-box" class="empty">Nenhuma mensagem carregada.</div>
-
-          <div class="field">
-            <label class="label" for="reply-message">Responder</label>
-            <textarea id="reply-message" class="textarea" placeholder="Mensagem de resposta"></textarea>
+          <div class="soft">
+            <div class="label">Ticket atual</div>
+            <div id="selected-ticket-summary" class="micro">Nenhum ticket selecionado.</div>
           </div>
 
-          <div class="grid-3">
+          <div class="soft">
+            <div class="label">Histórico</div>
+            <div id="selected-ticket-messages" class="empty">Nenhuma mensagem carregada.</div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="reply-message">Resposta</label>
+            <textarea id="reply-message" class="textarea" placeholder="Escreva uma resposta simples e direta"></textarea>
+          </div>
+
+          <div class="grid-2">
             <div class="field">
-              <label class="label" for="reply-status">Status</label>
+              <label class="label" for="reply-status">Situação depois da resposta</label>
               <select id="reply-status" class="select">
-                <option value="ANSWERED">ANSWERED</option>
-                <option value="WAITING_USER">WAITING_USER</option>
-                <option value="CLOSED">CLOSED</option>
+                <option value="ANSWERED">Respondido</option>
+                <option value="WAITING_USER">Aguardando usuário</option>
+                <option value="CLOSED">Fechado</option>
               </select>
             </div>
 
             <div class="field">
               <label class="label" for="reply-channel">Canal</label>
               <select id="reply-channel" class="select">
-                <option value="MANUAL">MANUAL</option>
-                <option value="EMAIL">EMAIL</option>
+                <option value="MANUAL">Manual</option>
+                <option value="EMAIL">Email</option>
               </select>
-            </div>
-
-            <div class="field">
-              <label class="label" for="reply-sent-by">Enviado por</label>
-              <input id="reply-sent-by" class="input" value="admin" />
             </div>
           </div>
 
           <div class="row">
             <button class="btn btn-primary" id="btn-reply-ticket">Responder</button>
-            <button class="btn" id="btn-refresh-selected-ticket">Atualizar ticket</button>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="view-mail" class="panel view">
-      <div class="cardline">
+    <section class="panel">
+      <div class="top">
         <div>
-          <h2 class="section-title">Email</h2>
-          <p class="section-text">Fluxo principal de operação do PUBMAIL.</p>
+          <h2 class="section-title">Relacionamento</h2>
+          <p class="section-text">Lista simples dos registros mais recentes.</p>
         </div>
         <div class="row">
-          <button class="btn" id="btn-mail-overview">Atualizar email</button>
-          <button class="btn" id="btn-mail-scan">Atualizar fila</button>
-          <button class="btn btn-primary" id="btn-mail-process-queue">Processar emails</button>
+          <button class="btn" id="btn-load-relationship">Atualizar lista</button>
         </div>
       </div>
 
-      <div class="grid-6">
+      <div style="height:12px"></div>
+
+      <div class="grid-2">
+        <div>
+          <div class="label" style="margin-bottom:10px">Leads recentes</div>
+          <div id="leads-box" class="empty">Nenhum lead carregado.</div>
+        </div>
+
+        <div>
+          <div class="label" style="margin-bottom:10px">Contatos recentes</div>
+          <div id="contacts-box" class="empty">Nenhum contato carregado.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="top">
+        <div>
+          <h2 class="section-title">Email</h2>
+          <p class="section-text">Ações principais de email, com poucas escolhas.</p>
+        </div>
+        <div class="row">
+          <button class="btn" id="btn-mail-refresh">Atualizar email</button>
+          <button class="btn btn-primary" id="btn-mail-process">Processar emails</button>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid-3">
         <div class="metric">
           <div class="k">Fila</div>
           <div class="v" id="mail-queue-count">—</div>
+          <div class="n">Emails aguardando.</div>
         </div>
+
         <div class="metric">
           <div class="k">Enviados</div>
           <div class="v" id="mail-log-count">—</div>
+          <div class="n">Histórico de envio.</div>
         </div>
-        <div class="metric">
-          <div class="k">Falhas</div>
-          <div class="v" id="mail-fail-count">—</div>
-        </div>
+
         <div class="metric">
           <div class="k">Supressões</div>
           <div class="v" id="mail-suppressions-count">—</div>
+          <div class="n">Bloqueios de envio.</div>
         </div>
-        <div class="metric">
-          <div class="k">Listas</div>
-          <div class="v" id="mail-manual-lists-count">—</div>
-        </div>
-        <div class="metric">
-          <div class="k">Templates</div>
-          <div class="v" id="mail-templates-count">—</div>
-        </div>
-      </div>
-
-      <div class="tabs">
-        <button class="tab active" data-mailview="mail-queue-view">Fila</button>
-        <button class="tab" data-mailview="mail-log-view">Log</button>
-        <button class="tab" data-mailview="mail-send-view">Enviar manual</button>
-        <button class="tab" data-mailview="mail-suppressions-view">Supressões</button>
-        <button class="tab" data-mailview="mail-templates-view">Templates</button>
-        <button class="tab" data-mailview="mail-lists-view">Listas</button>
       </div>
 
       <div style="height:14px"></div>
 
-      <div id="mail-queue-view" class="mailview active">
-        <div class="row" style="margin-bottom:10px">
-          <button class="btn" id="btn-mail-list-queue">Carregar fila</button>
-        </div>
-        <div id="mail-queue-wrap" class="empty">Nenhuma fila carregada.</div>
-      </div>
-
-      <div id="mail-log-view" class="mailview" style="display:none">
-        <div class="row" style="margin-bottom:10px">
-          <button class="btn" id="btn-mail-list-log">Carregar log</button>
-        </div>
-        <div id="mail-log-wrap" class="empty">Nenhum log carregado.</div>
-      </div>
-
-      <div id="mail-send-view" class="mailview" style="display:none">
+      <div class="grid-2">
         <div class="field">
-          <label class="label" for="send-manual-emails">Enviar manual</label>
-          <input id="send-manual-emails" class="input" placeholder="emails separados por vírgula, ponto e vírgula ou quebra de linha" />
+          <label class="label" for="send-manual-emails">Enviar mensagem manual</label>
+          <input id="send-manual-emails" class="input" placeholder="emails separados por vírgula ou quebra de linha" />
           <input id="send-manual-subject" class="input" placeholder="Assunto" />
           <textarea id="send-manual-message" class="textarea" placeholder="Mensagem"></textarea>
           <div class="row">
-            <button class="btn btn-primary" id="btn-mail-send-manual">Enviar manual</button>
+            <button class="btn btn-primary" id="btn-mail-send-manual">Enviar mensagem</button>
           </div>
         </div>
-      </div>
 
-      <div id="mail-suppressions-view" class="mailview" style="display:none">
-        <div class="grid-2">
-          <div class="field">
-            <label class="label" for="suppression-email">Adicionar supressão</label>
-            <input id="suppression-email" class="input" placeholder="email@dominio.com" />
-            <input id="suppression-reason" class="input" placeholder="Motivo do bloqueio" />
-            <div class="row">
-              <button class="btn btn-danger" id="btn-mail-add-suppression">Adicionar supressão</button>
-              <button class="btn" id="btn-mail-list-suppressions">Carregar supressões</button>
-            </div>
-          </div>
-
-          <div class="stack">
-            <div class="label">Supressões</div>
-            <div id="mail-suppressions-wrap" class="empty">Nenhuma supressão carregada.</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="mail-templates-view" class="mailview" style="display:none">
-        <div class="row" style="margin-bottom:10px">
-          <button class="btn" id="btn-mail-bootstrap">Preparar email</button>
-          <button class="btn" id="btn-mail-create-docs">Criar docs</button>
-          <button class="btn" id="btn-mail-list-templates">Carregar templates</button>
-        </div>
-        <div id="mail-templates-wrap" class="empty">Nenhum template carregado.</div>
-      </div>
-
-      <div id="mail-lists-view" class="mailview" style="display:none">
-        <div class="grid-2">
-          <div class="field">
-            <label class="label" for="manual-list-key">Lista manual</label>
-            <input id="manual-list-key" class="input" placeholder="clientes_editorial_abril" />
-            <textarea id="manual-list-emails" class="textarea" placeholder="Informe emails separados por vírgula, ponto e vírgula ou quebra de linha"></textarea>
-            <div class="row">
-              <button class="btn" id="btn-mail-create-manual-list">Salvar lista</button>
-              <button class="btn" id="btn-mail-list-manual-lists">Carregar listas</button>
-            </div>
-          </div>
-
-          <div class="stack">
-            <div class="label">Listas manuais</div>
-            <div id="mail-lists-wrap" class="empty">Nenhuma lista carregada.</div>
+        <div class="field">
+          <label class="label" for="suppression-email">Bloquear envio para um email</label>
+          <input id="suppression-email" class="input" placeholder="email@dominio.com" />
+          <input id="suppression-reason" class="input" placeholder="Motivo" />
+          <div class="row">
+            <button class="btn" id="btn-mail-add-suppression">Bloquear email</button>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="view-diagnostics" class="panel view">
-      <div class="cardline">
-        <div>
-          <h2 class="section-title">Diagnóstico</h2>
-          <p class="section-text">Leituras públicas e técnicas. Recolhidas para não competir com a operação.</p>
-        </div>
-        <div class="row">
-          <button class="btn" id="btn-status">Status</button>
-          <button class="btn" id="btn-health">Health</button>
-          <button class="btn" id="btn-contract">Contract</button>
-          <button class="btn" id="btn-mail-health">Mail health</button>
-        </div>
-      </div>
-
+    <section class="panel">
       <details>
-        <summary>Mostrar detalhes técnicos</summary>
+        <summary>Diagnóstico</summary>
         <div style="height:12px"></div>
+
+        <div class="row" style="margin-bottom:12px">
+          <button class="btn" id="btn-load-status">Status</button>
+          <button class="btn" id="btn-load-health">Health</button>
+          <button class="btn" id="btn-load-contract">Contract</button>
+          <button class="btn" id="btn-load-mail-health">Mail health</button>
+        </div>
+
         <div class="grid-2">
-          <div class="stack">
-            <div class="label">Core público</div>
-            <div id="public-box" class="code">Nenhuma leitura ainda.</div>
+          <div>
+            <div class="label" style="margin-bottom:10px">Core</div>
+            <div id="diag-core" class="code">Nenhuma leitura ainda.</div>
           </div>
-          <div class="stack">
-            <div class="label">PUBMAIL / PUBCARE</div>
-            <div id="mail-tech-box" class="code">Nenhuma leitura ainda.</div>
+          <div>
+            <div class="label" style="margin-bottom:10px">Email</div>
+            <div id="diag-mail" class="code">Nenhuma leitura ainda.</div>
           </div>
         </div>
       </details>
@@ -830,7 +606,7 @@
   <script>
     const PUBPANEL = {
       VERSION: "1.0",
-      STORAGE_API_BASE: "PUBPANEL_V1_API_BASE"
+      STORAGE_API_BASE: "PUBPANEL_COG_V1_API_BASE"
     };
 
     const state = {
@@ -850,29 +626,17 @@
       selectedTicketMessages: [],
 
       mail: {
-        lastAction: "",
         health: null,
         overview: null,
-        templates: [],
-        suppressions: [],
         queue: [],
         log: [],
-        manualLists: [],
+        suppressions: [],
         raw: null
-      },
-
-      diagnostics: {
-        publicLastMode: "",
-        mailLast: null
       }
     };
 
     function $(selector){
       return document.querySelector(selector);
-    }
-
-    function $all(selector){
-      return Array.prototype.slice.call(document.querySelectorAll(selector));
     }
 
     function stringValue(v){
@@ -892,10 +656,6 @@
         .replace(/"/g,"&quot;");
     }
 
-    function lowerText(v){
-      return stringValue(v).toLowerCase();
-    }
-
     function setBanner(type, text){
       const box = $("#banner");
       box.className = "banner show " + type;
@@ -911,29 +671,29 @@
     function saveApiBase(){
       state.apiBase = stringValue($("#api-base").value);
       localStorage.setItem(PUBPANEL.STORAGE_API_BASE, state.apiBase);
-      setBanner("ok", "URL salva.");
       renderAll();
+      setBanner("ok", "URL salva.");
     }
 
     function clearApiBase(){
       state.apiBase = "";
       localStorage.removeItem(PUBPANEL.STORAGE_API_BASE);
       $("#api-base").value = "";
-      setBanner("warn", "URL removida.");
       renderAll();
+      setBanner("warn", "URL removida.");
     }
 
     function applyToken(){
       state.adminToken = stringValue($("#admin-token").value);
-      setBanner("ok", state.adminToken ? "Token aplicado nesta aba." : "Token vazio.");
       renderAll();
+      setBanner("ok", state.adminToken ? "Token aplicado." : "Token vazio.");
     }
 
     function clearToken(){
       state.adminToken = "";
       $("#admin-token").value = "";
-      setBanner("warn", "Token removido desta aba.");
       renderAll();
+      setBanner("warn", "Token removido.");
     }
 
     function requireApiBase(){
@@ -1000,151 +760,56 @@
       return readJsonResponse(response);
     }
 
-    function detectPubcareModule(){
-      const health = state.health;
-      const contract = state.contract;
-
-      const byHealth =
-        health &&
-        health.data &&
-        health.data.modules &&
-        health.data.modules.pubcare
-          ? health.data.modules.pubcare
-          : null;
-
-      const byContract =
-        contract &&
-        contract.data &&
-        contract.data.modules &&
-        contract.data.modules.pubcare
-          ? contract.data.modules.pubcare
-          : null;
-
-      return byHealth || byContract || null;
-    }
-
-    function getCoreHealth(){
+    function coreHealth(){
       return state.health && state.health.data && state.health.data.core ? state.health.data.core : null;
     }
 
-    function getPublicMailHealth(){
-      return state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail
-        ? state.health.data.modules.pubmail
+    function mailHealth(){
+      return state.mail.health ||
+        (state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail
+          ? state.health.data.modules.pubmail
+          : null);
+    }
+
+    function careModule(){
+      return state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubcare
+        ? state.health.data.modules.pubcare
         : null;
     }
 
-    function getEffectiveMailHealth(){
-      return state.mail.health || getPublicMailHealth() || null;
-    }
-
-    function getMailOverviewData(){
+    function mailOverview(){
       return state.mail.overview && state.mail.overview.data ? state.mail.overview.data : null;
     }
 
-    function getTicketStatusCount(status){
+    function ticketCount(status){
       return state.tickets.filter(function(t){
-        return stringValue(t.status).toUpperCase() === status;
+        return String(t.status || "").toUpperCase() === status;
       }).length;
     }
 
-    function getAttentionCount(){
-      return getTicketStatusCount("OPEN") + getTicketStatusCount("WAITING_USER");
+    function attentionCount(){
+      return ticketCount("OPEN") + ticketCount("WAITING_USER");
     }
 
-    function overallLabel(){
-      const core = getCoreHealth();
-      const mail = getEffectiveMailHealth();
-      const care = detectPubcareModule();
-
-      const coreOk = !!(core && core.ok === true);
-      const mailOk = !!(mail && mail.ready === true && mail.ok === true);
-      const careAvailable = !!care;
-
-      if(coreOk && mailOk && careAvailable) return "Pronto";
-      if(coreOk && mailOk) return "Pronto";
-      if(core || mail || care) return "Atenção";
-      return "—";
-    }
-
-    function statusPillHtml(label, kind){
-      const cls = kind || "muted-pill";
-      return '<span class="pill ' + cls + '">' + escapeHtml(label) + '</span>';
-    }
-
-    function classifyState(label){
-      const v = lowerText(label);
-      if(v.indexOf("pronto") >= 0) return "ok-pill";
-      if(v.indexOf("indisp") >= 0) return "error-pill";
-      if(v.indexOf("aten") >= 0) return "warn-pill";
-      if(v.indexOf("instal") >= 0) return "warn-pill";
+    function pillClass(label){
+      const s = String(label || "").toLowerCase();
+      if(s.indexOf("pronto") >= 0) return "ok-pill";
+      if(s.indexOf("aten") >= 0) return "warn-pill";
+      if(s.indexOf("indisp") >= 0) return "error-pill";
+      if(s.indexOf("instal") >= 0) return "warn-pill";
       return "muted-pill";
     }
 
-    function renderTable(containerId, rows, columns, emptyText){
-      const wrap = $(containerId);
-
-      if(!rows || !rows.length){
-        wrap.innerHTML = '<div class="empty">' + escapeHtml(emptyText) + '</div>';
-        return;
-      }
-
-      let thead = "";
-      let tbody = "";
-
-      columns.forEach(function(col){
-        thead += "<th>" + escapeHtml(col.label) + "</th>";
-      });
-
-      rows.forEach(function(row, index){
-        const attrs = colAttr(row, index);
-        tbody += "<tr" + attrs + ">";
-        columns.forEach(function(col){
-          tbody += "<td>" + col.render(row, index) + "</td>";
-        });
-        tbody += "</tr>";
-      });
-
-      wrap.innerHTML = '<div class="table-wrap"><table><thead><tr>' + thead + '</tr></thead><tbody>' + tbody + '</tbody></table></div>';
-
-      function colAttr(row){
-        if(row && row.__clickTicketId){
-          return ' class="row-click" data-ticket-id="' + escapeHtml(row.__clickTicketId) + '"';
-        }
-        return "";
-      }
-    }
-
-    function filteredLeads(){
-      const q = lowerText($("#relationship-search") ? $("#relationship-search").value : "");
-      if(!q) return state.leads.slice();
-      return state.leads.filter(function(r){
-        return [
-          r.lead_id, r.name, r.email, r.item, r.page_url, r.referrer
-        ].some(function(v){ return lowerText(v).indexOf(q) >= 0; });
-      });
-    }
-
-    function filteredContacts(){
-      const q = lowerText($("#relationship-search") ? $("#relationship-search").value : "");
-      if(!q) return state.contacts.slice();
-      return state.contacts.filter(function(r){
-        return [
-          r.contact_id, r.name, r.email, r.whatsapp, r.source
-        ].some(function(v){ return lowerText(v).indexOf(q) >= 0; });
-      });
-    }
-
-    function renderSummary(){
-      const core = getCoreHealth();
-      const mail = getEffectiveMailHealth();
-      const care = detectPubcareModule();
-      const overview = getMailOverviewData();
+    function renderHeaderState(){
+      const core = coreHealth();
+      const mail = mailHealth();
+      const care = careModule();
 
       const coreLabel = !core ? "—" : core.ok === true ? "Pronto" : core.installed ? "Atenção" : "Instalar";
       let mailLabel = "—";
       if(mail){
         if(mail.ready === true && mail.ok === true) mailLabel = "Pronto";
-        else if(mail.available === false) mailLabel = "Indisp.";
+        else if(mail.available === false) mailLabel = "Indisponível";
         else if(mail.installed === true) mailLabel = "Atenção";
         else mailLabel = "Instalar";
       }
@@ -1152,156 +817,176 @@
       let careLabel = "—";
       if(care){
         if(care.ready === true || care.ok === true) careLabel = "Pronto";
-        else if(care.available === false) careLabel = "Indisp.";
+        else if(care.available === false) careLabel = "Indisponível";
         else careLabel = "Atenção";
+      } else {
+        careLabel = state.tickets.length ? (attentionCount() ? "Atenção" : "Pronto") : "—";
       }
 
-      $("#sum-overall").textContent = overallLabel();
+      let overall = "—";
+      if(coreLabel === "Pronto" && mailLabel === "Pronto") overall = "Pronto";
+      else if(core || mail || state.tickets.length) overall = "Atenção";
+
+      $("#pill-overall").className = "pill " + pillClass(overall);
+      $("#pill-core").className = "pill " + pillClass(coreLabel);
+      $("#pill-mail").className = "pill " + pillClass(mailLabel);
+      $("#pill-care").className = "pill " + pillClass(careLabel);
+
+      $("#pill-overall").textContent = "Sistema " + overall;
+      $("#pill-core").textContent = "Core " + coreLabel;
+      $("#pill-mail").textContent = "Email " + mailLabel;
+      $("#pill-care").textContent = "Atendimento " + careLabel;
+    }
+
+    function renderSummary(){
+      const overview = mailOverview();
+
       $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : "—";
       $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : "—";
-      $("#sum-open-tickets").textContent = state.tickets.length ? String(getTicketStatusCount("OPEN")) : "—";
-
+      $("#sum-care-attention").textContent = state.tickets.length ? String(attentionCount()) : "—";
       $("#sum-mail-queue").textContent = overview ? String(overview.queue_count || 0) : "—";
-      $("#sum-mail-log").textContent = overview ? String(overview.log_count || 0) : "—";
-      $("#sum-mail-alert").textContent = overview ? String((overview.suppressions_count || 0) + (overview.internal_log_count || 0)) : "—";
-      $("#sum-care-attention").textContent = state.tickets.length ? String(getAttentionCount()) : "—";
-
-      $("#pill-core").className = "pill " + classifyState(coreLabel);
-      $("#pill-core").textContent = "Core " + coreLabel;
-
-      $("#pill-pubmail").className = "pill " + classifyState(mailLabel);
-      $("#pill-pubmail").textContent = "PUBMAIL " + mailLabel;
-
-      $("#pill-pubcare").className = "pill " + classifyState(careLabel);
-      $("#pill-pubcare").textContent = "PUBCARE " + careLabel;
     }
 
-    function renderRelationship(){
-      renderTable("#leads-wrap", filteredLeads(), [
-        { label:"Nome", render:r => "<strong>" + escapeHtml(r.name || "") + "</strong>" },
-        { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"Item", render:r => escapeHtml(r.item || "") },
-        { label:"Data", render:r => escapeHtml(r.created_at || "") },
-        { label:"Origem", render:r => escapeHtml(r.page_url || r.referrer || "webapp") }
-      ], "Nenhum lead carregado.");
+    function renderRecentSimpleBox(containerId, rows, type){
+      const box = $(containerId);
 
-      renderTable("#contacts-wrap", filteredContacts(), [
-        { label:"Nome", render:r => "<strong>" + escapeHtml(r.name || "") + "</strong>" },
-        { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"WhatsApp", render:r => escapeHtml(r.whatsapp || "") },
-        { label:"Origem", render:r => escapeHtml(r.source || "") },
-        { label:"Última atividade", render:r => escapeHtml(r.updated_at || r.created_at || "") }
-      ], "Nenhum contato carregado.");
-    }
+      if(!rows || !rows.length){
+        box.innerHTML = '<div class="empty">Nenhum dado carregado.</div>';
+        return;
+      }
 
-    function renderCare(){
-      $("#care-open-count").textContent = state.tickets.length ? String(getTicketStatusCount("OPEN")) : "—";
-      $("#care-waiting-count").textContent = state.tickets.length ? String(getTicketStatusCount("WAITING_USER")) : "—";
-      $("#care-answered-count").textContent = state.tickets.length ? String(getTicketStatusCount("ANSWERED")) : "—";
-      $("#care-closed-count").textContent = state.tickets.length ? String(getTicketStatusCount("CLOSED")) : "—";
+      const sliced = rows.slice(0, 6);
+      let html = '<div class="list">';
 
-      const rows = state.tickets.map(function(t){
-        const copy = Object.assign({}, t);
-        copy.__clickTicketId = t.ticket_id || "";
-        return copy;
+      sliced.forEach(function(r){
+        if(type === "lead"){
+          html +=
+            '<div class="item">' +
+              '<div class="item-title">' + escapeHtml(r.name || "Sem nome") + '</div>' +
+              '<div class="item-sub">' + escapeHtml(r.email || "") + '</div>' +
+              '<div class="item-meta">' + escapeHtml(r.item || "") + ' · ' + escapeHtml(r.created_at || "") + '</div>' +
+            '</div>';
+        } else {
+          html +=
+            '<div class="item">' +
+              '<div class="item-title">' + escapeHtml(r.name || "Sem nome") + '</div>' +
+              '<div class="item-sub">' + escapeHtml(r.email || "") + '</div>' +
+              '<div class="item-meta">' + escapeHtml(r.whatsapp || "") + ' · ' + escapeHtml(r.updated_at || r.created_at || "") + '</div>' +
+            '</div>';
+        }
       });
 
-      renderTable("#tickets-wrap-care", rows, [
-        { label:"Ticket", render:r => "<strong>" + escapeHtml(r.ticket_id || "") + "</strong>" },
-        { label:"Nome", render:r => escapeHtml(r.name || "") },
-        { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"Item", render:r => escapeHtml(r.item || "") },
-        { label:"Status", render:r => escapeHtml(r.status || "") },
-        { label:"Data", render:r => escapeHtml(r.created_at || "") }
-      ], "Nenhum ticket carregado.");
+      html += '</div>';
+      box.innerHTML = html;
+    }
 
-      $("#ticket-selected-box").textContent = safeJson(state.selectedTicket || "Nenhum ticket selecionado.");
+    function renderCareList(){
+      const box = $("#care-list");
 
-      renderTable("#ticket-messages-box", state.selectedTicketMessages, [
-        { label:"Data", render:r => escapeHtml(r.created_at || "") },
-        { label:"Direção", render:r => escapeHtml(r.direction || "") },
-        { label:"Canal", render:r => escapeHtml(r.channel || "") },
-        { label:"Mensagem", render:r => escapeHtml(r.message || "") }
-      ], "Nenhuma mensagem carregada.");
+      if(!state.tickets.length){
+        box.innerHTML = '<div class="empty">Nenhum ticket carregado.</div>';
+        return;
+      }
 
-      attachTicketRowClicks();
+      const ordered = state.tickets.slice().sort(function(a, b){
+        const pa = priorityValue(a.status);
+        const pb = priorityValue(b.status);
+        if(pa !== pb) return pa - pb;
+        return (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0);
+      });
+
+      let html = '<div class="list">';
+      ordered.forEach(function(t){
+        const active = t.ticket_id === state.selectedTicketId ? ' active' : '';
+        html +=
+          '<button class="item' + active + '" data-ticket-id="' + escapeHtml(t.ticket_id || "") + '" style="text-align:left">' +
+            '<div class="item-title">' + escapeHtml(t.name || t.ticket_id || "Ticket") + '</div>' +
+            '<div class="item-sub">' + escapeHtml(t.email || "") + '</div>' +
+            '<div class="item-meta">' + escapeHtml(t.item || "") + ' · ' + escapeHtml(t.status || "") + ' · ' + escapeHtml(t.created_at || "") + '</div>' +
+          '</button>';
+      });
+      html += '</div>';
+
+      box.innerHTML = html;
+
+      Array.prototype.slice.call(box.querySelectorAll("[data-ticket-id]")).forEach(function(el){
+        el.addEventListener("click", function(){
+          const id = el.getAttribute("data-ticket-id");
+          handleAction(async function(){
+            await selectTicket(id);
+          });
+        });
+      });
+
+      function priorityValue(status){
+        const s = String(status || "").toUpperCase();
+        if(s === "OPEN") return 1;
+        if(s === "WAITING_USER") return 2;
+        if(s === "ANSWERED") return 3;
+        if(s === "CLOSED") return 4;
+        return 9;
+      }
+    }
+
+    function renderSelectedTicket(){
+      $("#selected-ticket-summary").textContent = state.selectedTicket
+        ? [
+            state.selectedTicket.ticket_id || "",
+            state.selectedTicket.name || "",
+            state.selectedTicket.email || "",
+            state.selectedTicket.item || "",
+            state.selectedTicket.status || ""
+          ].filter(Boolean).join(" · ")
+        : "Nenhum ticket selecionado.";
+
+      const box = $("#selected-ticket-messages");
+
+      if(!state.selectedTicketMessages.length){
+        box.innerHTML = '<div class="empty">Nenhuma mensagem carregada.</div>';
+        return;
+      }
+
+      let html = '<div class="list">';
+      state.selectedTicketMessages.forEach(function(m){
+        html +=
+          '<div class="item">' +
+            '<div class="item-title">' + escapeHtml(m.direction || "") + ' · ' + escapeHtml(m.channel || "") + '</div>' +
+            '<div class="item-sub">' + escapeHtml(m.message || "") + '</div>' +
+            '<div class="item-meta">' + escapeHtml(m.created_at || "") + '</div>' +
+          '</div>';
+      });
+      html += '</div>';
+      box.innerHTML = html;
     }
 
     function renderMail(){
-      const overview = getMailOverviewData();
-      const raw = state.mail.raw || null;
-
+      const overview = mailOverview();
       $("#mail-queue-count").textContent = overview ? String(overview.queue_count || 0) : "—";
       $("#mail-log-count").textContent = overview ? String(overview.log_count || 0) : "—";
-      $("#mail-fail-count").textContent = raw && raw.data && typeof raw.data.failed !== "undefined" ? String(raw.data.failed || 0) : "—";
       $("#mail-suppressions-count").textContent = overview ? String(overview.suppressions_count || 0) : "—";
-      $("#mail-manual-lists-count").textContent = overview ? String(overview.manual_lists_count || 0) : "—";
-      $("#mail-templates-count").textContent = overview ? String(overview.templates_count || 0) : "—";
-
-      renderTable("#mail-queue-wrap", state.mail.queue, [
-        { label:"Fila", render:r => "<strong>" + escapeHtml(r.queue_id || "") + "</strong>" },
-        { label:"Destinatário", render:r => escapeHtml(r.recipient || "") },
-        { label:"Tipo", render:r => escapeHtml(r.message_type || "") },
-        { label:"Template", render:r => escapeHtml(r.template_key || "") },
-        { label:"Status", render:r => escapeHtml(r.status || "") },
-        { label:"Agendado", render:r => escapeHtml(r.scheduled_at || "") }
-      ], "Nenhuma fila carregada.");
-
-      renderTable("#mail-log-wrap", state.mail.log, [
-        { label:"Log", render:r => "<strong>" + escapeHtml(r.log_id || "") + "</strong>" },
-        { label:"Destinatário", render:r => escapeHtml(r.recipient || "") },
-        { label:"Tipo", render:r => escapeHtml(r.message_type || "") },
-        { label:"Status", render:r => escapeHtml(r.status || "") },
-        { label:"Assunto", render:r => escapeHtml(r.subject || "") },
-        { label:"Data", render:r => escapeHtml(r.created_at || "") }
-      ], "Nenhum log carregado.");
-
-      renderTable("#mail-suppressions-wrap", state.mail.suppressions, [
-        { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"Tipo", render:r => escapeHtml(r.suppression_type || "") },
-        { label:"Motivo", render:r => escapeHtml(r.reason || "") },
-        { label:"Ativo", render:r => escapeHtml(r.active || "") },
-        { label:"Data", render:r => escapeHtml(r.created_at || "") }
-      ], "Nenhuma supressão carregada.");
-
-      renderTable("#mail-templates-wrap", state.mail.templates, [
-        { label:"Template", render:r => "<strong>" + escapeHtml(r.template_key || "") + "</strong>" },
-        { label:"Ativo", render:r => escapeHtml(r.active || "") },
-        { label:"Tipo", render:r => escapeHtml(r.template_type || "") },
-        { label:"Assunto fallback", render:r => escapeHtml(r.fallback_subject || "") }
-      ], "Nenhum template carregado.");
-
-      renderTable("#mail-lists-wrap", state.mail.manualLists, [
-        { label:"Lista", render:r => "<strong>" + escapeHtml(r.list_key || "") + "</strong>" },
-        { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"Nome", render:r => escapeHtml(r.name || "") },
-        { label:"Ativo", render:r => escapeHtml(r.active || "") },
-        { label:"Data", render:r => escapeHtml(r.created_at || "") }
-      ], "Nenhuma lista carregada.");
     }
 
     function renderDiagnostics(){
-      const publicPack = {
+      $("#diag-core").textContent = safeJson({
         status: state.status,
         health: state.health,
         contract: state.contract
-      };
+      });
 
-      const techPack = {
+      $("#diag-mail").textContent = safeJson({
         mail_health: state.mail.health,
         mail_overview: state.mail.overview,
-        mail_last: state.mail.raw,
-        pubcare_module: detectPubcareModule()
-      };
-
-      $("#public-box").textContent = safeJson(publicPack.status || publicPack.health || publicPack.contract || "Nenhuma leitura ainda.");
-      $("#mail-tech-box").textContent = safeJson(techPack.mail_health || techPack.mail_overview || techPack.pubcare_module || "Nenhuma leitura ainda.");
+        mail_raw: state.mail.raw
+      });
     }
 
     function renderAll(){
+      renderHeaderState();
       renderSummary();
-      renderRelationship();
-      renderCare();
+      renderRecentSimpleBox("#leads-box", state.leads, "lead");
+      renderRecentSimpleBox("#contacts-box", state.contacts, "contact");
+      renderCareList();
+      renderSelectedTicket();
       renderMail();
       renderDiagnostics();
     }
@@ -1313,7 +998,6 @@
       if(mode === "health") state.health = json;
       if(mode === "contract") state.contract = json;
 
-      state.diagnostics.publicLastMode = mode;
       renderAll();
       return json;
     }
@@ -1347,7 +1031,6 @@
 
     async function runMailAction(action, payload){
       const json = await apiPost(action, payload || {});
-      state.mail.lastAction = action;
       state.mail.raw = json;
 
       if(action === "admin_mail_health"){
@@ -1358,61 +1041,102 @@
         state.mail.overview = json;
       }
 
-      if(action === "admin_mail_list_templates"){
-        state.mail.templates = Array.isArray(json.rows) ? json.rows : [];
-      }
-
-      if(action === "admin_mail_list_suppressions"){
-        state.mail.suppressions = Array.isArray(json.rows) ? json.rows : [];
-      }
-
-      if(action === "admin_mail_list_queue"){
-        state.mail.queue = Array.isArray(json.rows) ? json.rows : [];
-      }
-
-      if(action === "admin_mail_list_log"){
-        state.mail.log = Array.isArray(json.rows) ? json.rows : [];
-      }
-
-      if(action === "admin_mail_list_manual_lists"){
-        state.mail.manualLists = Array.isArray(json.rows) ? json.rows : [];
-      }
-
       renderAll();
       return json;
     }
 
-    async function refreshPublic(){
-      clearBanner();
-      await runPublicMode("status");
-      await runPublicMode("health");
-      setBanner("ok", "Leituras públicas atualizadas.");
+    async function loadRelationship(){
+      const results = await Promise.all([
+        apiPost("admin_list_leads", {}),
+        apiPost("admin_list_contacts", {})
+      ]);
+
+      state.leads = Array.isArray(results[0].rows) ? results[0].rows : [];
+      state.contacts = Array.isArray(results[1].rows) ? results[1].rows : [];
+      renderAll();
     }
 
-    async function refreshSystem(){
-      clearBanner();
+    async function loadCare(){
+      const ticketsJson = await apiPost("admin_list_tickets", {});
+      state.tickets = Array.isArray(ticketsJson.rows) ? ticketsJson.rows : [];
+
+      const preferred = choosePreferredTicket(state.tickets);
+      if(preferred){
+        await selectTicket(preferred.ticket_id);
+      } else {
+        state.selectedTicketId = "";
+        state.selectedTicket = null;
+        state.selectedTicketMessages = [];
+      }
+
+      renderAll();
+    }
+
+    function choosePreferredTicket(rows){
+      if(!rows || !rows.length) return null;
+
+      const ordered = rows.slice().sort(function(a, b){
+        const pa = priority(a.status);
+        const pb = priority(b.status);
+        if(pa !== pb) return pa - pb;
+        return (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0);
+      });
+
+      return ordered[0] || null;
+
+      function priority(status){
+        const s = String(status || "").toUpperCase();
+        if(s === "OPEN") return 1;
+        if(s === "WAITING_USER") return 2;
+        if(s === "ANSWERED") return 3;
+        if(s === "CLOSED") return 4;
+        return 9;
+      }
+    }
+
+    async function selectTicket(ticketId){
+      if(!ticketId) return;
+
+      state.selectedTicketId = ticketId;
 
       const results = await Promise.all([
-        apiPost("admin_list_contacts", {}),
-        apiPost("admin_list_leads", {}),
-        apiPost("admin_list_tickets", {}),
+        apiPost("admin_get_ticket", { ticket_id: ticketId }),
+        apiPost("admin_list_ticket_messages", { ticket_id: ticketId })
+      ]);
+
+      state.selectedTicket = results[0] && results[0].data ? results[0].data : null;
+      state.selectedTicketMessages = Array.isArray(results[1].rows) ? results[1].rows : [];
+      renderAll();
+    }
+
+    async function loadMail(){
+      const results = await Promise.all([
         apiPost("admin_mail_health", {}),
         apiPost("admin_mail_overview", {})
       ]);
 
-      state.contacts = Array.isArray(results[0].rows) ? results[0].rows : [];
-      state.leads = Array.isArray(results[1].rows) ? results[1].rows : [];
-      state.tickets = Array.isArray(results[2].rows) ? results[2].rows : [];
-      state.mail.health = results[3] || null;
-      state.mail.overview = results[4] || null;
-      state.mail.lastAction = "sync_system";
+      state.mail.health = results[0] || null;
+      state.mail.overview = results[1] || null;
       state.mail.raw = {
-        health: results[3] || null,
-        overview: results[4] || null
+        health: results[0] || null,
+        overview: results[1] || null
       };
 
       renderAll();
-      setBanner("ok", "Sistema sincronizado.");
+    }
+
+    async function refreshEverything(){
+      clearBanner();
+
+      await runPublicMode("status");
+      await runPublicMode("health");
+      await Promise.all([
+        loadRelationship(),
+        loadCare(),
+        loadMail()
+      ]);
+
+      setBanner("ok", "Painel atualizado.");
     }
 
     async function installAll(){
@@ -1429,119 +1153,62 @@
         }
       }
 
-      await refreshPublic();
-      await refreshSystem();
-      setBanner("ok", "Sistema instalado e sincronizado.");
-    }
-
-    async function loadAllRelationship(){
-      clearBanner();
-
-      const results = await Promise.all([
-        apiPost("admin_list_contacts", {}),
-        apiPost("admin_list_leads", {}),
-        apiPost("admin_list_tickets", {})
-      ]);
-
-      state.contacts = Array.isArray(results[0].rows) ? results[0].rows : [];
-      state.leads = Array.isArray(results[1].rows) ? results[1].rows : [];
-      state.tickets = Array.isArray(results[2].rows) ? results[2].rows : [];
-
-      renderAll();
-      setBanner("ok", "Relacionamento carregado.");
-    }
-
-    async function selectTicket(ticketId){
-      if(!ticketId) return;
-
-      state.selectedTicketId = ticketId;
-      clearBanner();
-
-      const results = await Promise.all([
-        apiPost("admin_get_ticket", { ticket_id: ticketId }),
-        apiPost("admin_list_ticket_messages", { ticket_id: ticketId })
-      ]);
-
-      state.selectedTicket = results[0] && results[0].data ? results[0].data : null;
-      state.selectedTicketMessages = Array.isArray(results[1].rows) ? results[1].rows : [];
-
-      renderAll();
-      setBanner("ok", "Ticket carregado.");
-    }
-
-    async function refreshSelectedTicket(){
-      if(!state.selectedTicketId){
-        throw new Error("Selecione um ticket.");
-      }
-      await selectTicket(state.selectedTicketId);
+      await refreshEverything();
+      setBanner("ok", "Sistema preparado.");
     }
 
     async function replySelectedTicket(){
       if(!state.selectedTicketId){
-        throw new Error("Selecione um ticket.");
+        throw new Error("Nenhum ticket selecionado.");
       }
-
-      clearBanner();
 
       await apiPost("admin_reply_ticket", {
         ticket_id: state.selectedTicketId,
         message: stringValue($("#reply-message").value),
-        status: stringValue($("#reply-status").value),
-        channel: stringValue($("#reply-channel").value),
-        sent_by: stringValue($("#reply-sent-by").value)
+        status: String($("#reply-status").value || "ANSWERED").toUpperCase(),
+        channel: String($("#reply-channel").value || "MANUAL").toUpperCase(),
+        sent_by: "admin"
       });
 
       $("#reply-message").value = "";
-      await selectTicket(state.selectedTicketId);
-      await runCoreAction("admin_list_tickets", {});
-      setBanner("ok", "Resposta registrada.");
+      await loadCare();
+      setBanner("ok", "Resposta enviada.");
     }
 
-    function attachTicketRowClicks(){
-      $all("[data-ticket-id]").forEach(function(el){
-        el.addEventListener("click", function(){
-          const id = stringValue(el.getAttribute("data-ticket-id"));
-          handleAction(async function(){
-            await selectTicket(id);
-          });
-        });
-      });
+    async function processMail(){
+      clearBanner();
+      await apiPost("admin_mail_process_queue", {});
+      await loadMail();
+      setBanner("ok", "Emails processados.");
     }
 
-    function setMainView(viewId){
-      $all(".view").forEach(function(el){
-        el.classList.remove("active");
-      });
-      $all("[data-view]").forEach(function(el){
-        el.classList.remove("active");
+    async function sendManualMail(){
+      clearBanner();
+
+      await apiPost("admin_mail_send_manual", {
+        template_key: "tmpl_manual_generic",
+        audience_mode: "manual_emails",
+        emails: stringValue($("#send-manual-emails").value),
+        manual_subject: stringValue($("#send-manual-subject").value),
+        manual_message: stringValue($("#send-manual-message").value),
+        item: ""
       });
 
-      $("#" + viewId).classList.add("active");
-      $all('[data-view="' + viewId + '"]').forEach(function(el){
-        el.classList.add("active");
-      });
+      await loadMail();
+      setBanner("ok", "Mensagem enviada.");
     }
 
-    function setRelationshipSubView(viewId){
-      ["rel-leads","rel-contacts"].forEach(function(id){
-        const el = $("#" + id);
-        if(el) el.style.display = id === viewId ? "block" : "none";
+    async function addSuppression(){
+      clearBanner();
+
+      await apiPost("admin_mail_add_suppression", {
+        email: stringValue($("#suppression-email").value),
+        reason: stringValue($("#suppression-reason").value),
+        source: "panel"
       });
 
-      $all("[data-subview]").forEach(function(el){
-        el.classList.toggle("active", el.getAttribute("data-subview") === viewId);
-      });
-    }
-
-    function setMailView(viewId){
-      ["mail-queue-view","mail-log-view","mail-send-view","mail-suppressions-view","mail-templates-view","mail-lists-view"].forEach(function(id){
-        const el = $("#" + id);
-        if(el) el.style.display = id === viewId ? "block" : "none";
-      });
-
-      $all("[data-mailview]").forEach(function(el){
-        el.classList.toggle("active", el.getAttribute("data-mailview") === viewId);
-      });
+      await loadMail();
+      setBanner("ok", "Email bloqueado.");
     }
 
     async function handleAction(fn){
@@ -1559,228 +1226,55 @@
       $("#btn-apply-token").addEventListener("click", function(){ handleAction(async function(){ applyToken(); }); });
       $("#btn-clear-token").addEventListener("click", function(){ handleAction(async function(){ clearToken(); }); });
 
-      $("#btn-sync-public").addEventListener("click", function(){ handleAction(refreshPublic); });
-      $("#btn-sync-system").addEventListener("click", function(){ handleAction(refreshSystem); });
+      $("#btn-refresh").addEventListener("click", function(){ handleAction(refreshEverything); });
       $("#btn-install-all").addEventListener("click", function(){ handleAction(installAll); });
 
-      $("#btn-load-contacts").addEventListener("click", function(){
+      $("#btn-refresh-care").addEventListener("click", function(){ handleAction(loadCare); });
+      $("#btn-reply-ticket").addEventListener("click", function(){ handleAction(replySelectedTicket); });
+
+      $("#btn-load-relationship").addEventListener("click", function(){
         handleAction(async function(){
-          clearBanner();
-          await runCoreAction("admin_list_contacts", {});
-          setRelationshipSubView("rel-contacts");
-          setBanner("ok", "Contatos carregados.");
+          await loadRelationship();
+          setBanner("ok", "Relacionamento atualizado.");
         });
       });
 
-      $("#btn-load-leads").addEventListener("click", function(){
+      $("#btn-mail-refresh").addEventListener("click", function(){
         handleAction(async function(){
-          clearBanner();
-          await runCoreAction("admin_list_leads", {});
-          setRelationshipSubView("rel-leads");
-          setBanner("ok", "Leads carregados.");
+          await loadMail();
+          setBanner("ok", "Email atualizado.");
         });
       });
 
-      $("#btn-load-all-rel").addEventListener("click", function(){ handleAction(loadAllRelationship); });
+      $("#btn-mail-process").addEventListener("click", function(){ handleAction(processMail); });
+      $("#btn-mail-send-manual").addEventListener("click", function(){ handleAction(sendManualMail); });
+      $("#btn-mail-add-suppression").addEventListener("click", function(){ handleAction(addSuppression); });
 
-      $("#btn-load-tickets").addEventListener("click", function(){
+      $("#btn-load-status").addEventListener("click", function(){
         handleAction(async function(){
-          clearBanner();
-          await runCoreAction("admin_list_tickets", {});
-          setBanner("ok", "Tickets carregados.");
-        });
-      });
-
-      $("#btn-refresh-selected-ticket").addEventListener("click", function(){
-        handleAction(refreshSelectedTicket);
-      });
-
-      $("#btn-reply-ticket").addEventListener("click", function(){
-        handleAction(replySelectedTicket);
-      });
-
-      $("#relationship-search").addEventListener("input", renderRelationship);
-
-      $("#btn-mail-overview").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_overview", {});
-          setBanner("ok", "Visão do email atualizada.");
-        });
-      });
-
-      $("#btn-mail-bootstrap").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_bootstrap", {});
-          await runMailAction("admin_mail_health", {});
-          await runMailAction("admin_mail_overview", {});
-          setBanner("ok", "Email preparado.");
-        });
-      });
-
-      $("#btn-mail-create-docs").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_create_template_docs", {});
-          setBanner("ok", "Docs de template criados.");
-        });
-      });
-
-      $("#btn-mail-scan").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_scan", {});
-          await runMailAction("admin_mail_overview", {});
-          setBanner("ok", "Fila atualizada a partir da base.");
-        });
-      });
-
-      $("#btn-mail-process-queue").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_process_queue", {});
-          await runMailAction("admin_mail_overview", {});
-          setBanner("ok", "Fila processada.");
-        });
-      });
-
-      $("#btn-mail-list-templates").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_list_templates", {});
-          setMailView("mail-templates-view");
-          setBanner("ok", "Templates carregados.");
-        });
-      });
-
-      $("#btn-mail-list-queue").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_list_queue", {});
-          setMailView("mail-queue-view");
-          setBanner("ok", "Fila carregada.");
-        });
-      });
-
-      $("#btn-mail-list-log").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_list_log", {});
-          setMailView("mail-log-view");
-          setBanner("ok", "Log carregado.");
-        });
-      });
-
-      $("#btn-mail-list-manual-lists").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_list_manual_lists", {});
-          setMailView("mail-lists-view");
-          setBanner("ok", "Listas manuais carregadas.");
-        });
-      });
-
-      $("#btn-mail-list-suppressions").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_list_suppressions", {});
-          setMailView("mail-suppressions-view");
-          setBanner("ok", "Supressões carregadas.");
-        });
-      });
-
-      $("#btn-mail-create-manual-list").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_create_manual_list", {
-            list_key: stringValue($("#manual-list-key").value),
-            emails: stringValue($("#manual-list-emails").value),
-            notes: ""
-          });
-          await runMailAction("admin_mail_list_manual_lists", {});
-          setMailView("mail-lists-view");
-          setBanner("ok", "Lista manual salva.");
-        });
-      });
-
-      $("#btn-mail-add-suppression").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_add_suppression", {
-            email: stringValue($("#suppression-email").value),
-            reason: stringValue($("#suppression-reason").value),
-            source: "panel"
-          });
-          await runMailAction("admin_mail_list_suppressions", {});
-          setMailView("mail-suppressions-view");
-          setBanner("ok", "Supressão adicionada.");
-        });
-      });
-
-      $("#btn-mail-send-manual").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
-          await runMailAction("admin_mail_send_manual", {
-            template_key: "tmpl_manual_generic",
-            audience_mode: "manual_emails",
-            emails: stringValue($("#send-manual-emails").value),
-            manual_subject: stringValue($("#send-manual-subject").value),
-            manual_message: stringValue($("#send-manual-message").value),
-            item: ""
-          });
-          await runMailAction("admin_mail_overview", {});
-          setBanner("ok", "Envio manual registrado.");
-        });
-      });
-
-      $("#btn-status").addEventListener("click", function(){
-        handleAction(async function(){
-          clearBanner();
           await runPublicMode("status");
           setBanner("ok", "Status carregado.");
         });
       });
 
-      $("#btn-health").addEventListener("click", function(){
+      $("#btn-load-health").addEventListener("click", function(){
         handleAction(async function(){
-          clearBanner();
           await runPublicMode("health");
           setBanner("ok", "Health carregado.");
         });
       });
 
-      $("#btn-contract").addEventListener("click", function(){
+      $("#btn-load-contract").addEventListener("click", function(){
         handleAction(async function(){
-          clearBanner();
           await runPublicMode("contract");
           setBanner("ok", "Contract carregado.");
         });
       });
 
-      $("#btn-mail-health").addEventListener("click", function(){
+      $("#btn-load-mail-health").addEventListener("click", function(){
         handleAction(async function(){
-          clearBanner();
           await runMailAction("admin_mail_health", {});
           setBanner("ok", "Mail health carregado.");
-        });
-      });
-
-      $all("[data-view]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          setMainView(btn.getAttribute("data-view"));
-        });
-      });
-
-      $all("[data-subview]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          setRelationshipSubView(btn.getAttribute("data-subview"));
-        });
-      });
-
-      $all("[data-mailview]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          setMailView(btn.getAttribute("data-mailview"));
         });
       });
     }
@@ -1794,7 +1288,7 @@
 
       if(state.apiBase){
         try{
-          await refreshPublic();
+          await refreshEverything();
         }catch(_){}
       }
     }
