@@ -26,12 +26,14 @@
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
+    html{overflow-x:hidden}
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:var(--bg);
       color:var(--fg);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
     }
 
     button,input,select,textarea{font:inherit}
@@ -39,6 +41,7 @@
     :focus-visible{outline:3px solid rgba(37,99,235,.25);outline-offset:2px}
 
     .wrap{
+      width:100%;
       max-width:var(--wrap);
       margin:0 auto;
       padding:20px;
@@ -52,6 +55,7 @@
       justify-content:space-between;
       gap:12px;
       flex-wrap:wrap;
+      min-width:0;
     }
 
     .title{
@@ -72,6 +76,7 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:16px;
+      min-width:0;
     }
 
     .section-title{
@@ -90,19 +95,22 @@
 
     .grid-2{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
       gap:12px;
+      min-width:0;
     }
 
     .grid-3{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;
+      min-width:0;
     }
 
     .field{
       display:grid;
       gap:6px;
+      min-width:0;
     }
 
     .label{
@@ -115,12 +123,14 @@
 
     .input,.textarea,.select{
       width:100%;
+      max-width:100%;
       min-height:42px;
       border:1px solid var(--line);
       border-radius:12px;
       padding:10px 12px;
       background:#fff;
       color:var(--fg);
+      min-width:0;
     }
 
     .textarea{
@@ -133,6 +143,8 @@
       flex-wrap:wrap;
       gap:10px;
       align-items:center;
+      min-width:0;
+      max-width:100%;
     }
 
     .btn{
@@ -144,6 +156,7 @@
       color:var(--fg);
       font-weight:800;
       cursor:pointer;
+      max-width:100%;
     }
 
     .btn[disabled]{
@@ -171,6 +184,8 @@
       background:#fff;
       font-size:13px;
       line-height:1.5;
+      min-width:0;
+      word-break:break-word;
     }
 
     .banner.show{display:block}
@@ -189,8 +204,9 @@
 
     .metrics{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
+      min-width:0;
     }
 
     .metric{
@@ -198,6 +214,7 @@
       border-radius:12px;
       padding:14px;
       background:#fff;
+      min-width:0;
     }
 
     .metric .k{
@@ -214,6 +231,7 @@
       line-height:1;
       font-weight:900;
       letter-spacing:-.03em;
+      word-break:break-word;
     }
 
     .metric .n{
@@ -251,9 +269,12 @@
     .muted-pill{color:#64748b; background:#fff; border-color:var(--line)}
 
     .table-wrap{
+      width:100%;
+      max-width:100%;
       overflow:auto;
       border:1px solid var(--line);
       border-radius:12px;
+      min-width:0;
     }
 
     table{
@@ -288,6 +309,8 @@
       font-size:13px;
       line-height:1.6;
       background:#fff;
+      min-width:0;
+      word-break:break-word;
     }
 
     .tiny{
@@ -301,6 +324,8 @@
     }
 
     .code{
+      width:100%;
+      max-width:100%;
       padding:12px;
       border-radius:12px;
       background:#0f172a;
@@ -309,11 +334,13 @@
       white-space:pre-wrap;
       word-break:break-word;
       overflow:auto;
+      min-width:0;
     }
 
     .stack{
       display:grid;
       gap:10px;
+      min-width:0;
     }
 
     @media (max-width:980px){
@@ -326,13 +353,13 @@
 <body>
   <div class="wrap">
     <section class="top">
-      <div>
+      <div style="min-width:0">
         <div class="title">PUBPANEL</div>
         <div class="sub">Painel mínimo, aderente ao PUB CORE 2.2, com PUBMAIL mantido.</div>
       </div>
       <div class="row">
         <button class="btn" id="btn-refresh-public">Atualizar público</button>
-        <button class="btn btn-primary" id="btn-refresh-admin">Atualizar admin</button>
+        <button class="btn btn-primary" id="btn-refresh-admin">Atualizar core + PUBMAIL</button>
       </div>
     </section>
 
@@ -817,9 +844,25 @@
       $("#sum-connection").textContent = state.apiBase ? "OK" : "PEND.";
       $("#sum-core").textContent = state.health && state.health.data && state.health.data.core && state.health.data.core.ok ? "OK" : (state.health ? "ALERTA" : "—");
 
-      const mailHealth = state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail;
-      if(mailHealth){
-        $("#sum-pubmail").textContent = mailHealth.ready ? "OK" : (mailHealth.available ? "ALERTA" : "OFF");
+      const publicMailHealth =
+        state.health &&
+        state.health.data &&
+        state.health.data.modules &&
+        state.health.data.modules.pubmail
+          ? state.health.data.modules.pubmail
+          : null;
+
+      const adminMailHealth = state.mail && state.mail.health ? state.mail.health : null;
+      const effectiveMailHealth = adminMailHealth || publicMailHealth;
+
+      if(effectiveMailHealth){
+        if(effectiveMailHealth.ready === true && effectiveMailHealth.ok === true){
+          $("#sum-pubmail").textContent = "OK";
+        } else if(effectiveMailHealth.available === false){
+          $("#sum-pubmail").textContent = "OFF";
+        } else {
+          $("#sum-pubmail").textContent = "ALERTA";
+        }
       } else {
         $("#sum-pubmail").textContent = "—";
       }
@@ -861,11 +904,50 @@
     }
 
     function renderMailBoxes(){
+      const publicMailHealth =
+        state.health &&
+        state.health.data &&
+        state.health.data.modules &&
+        state.health.data.modules.pubmail
+          ? state.health.data.modules.pubmail
+          : null;
+
+      const effectiveHealth = state.mail.health || publicMailHealth || null;
+      const overviewData =
+        state.mail.overview &&
+        state.mail.overview.data
+          ? state.mail.overview.data
+          : null;
+
       const summary = {
         last_action: state.mail.lastAction || "",
-        health: state.mail.health,
-        overview: state.mail.overview,
-        counts: {
+        health: effectiveHealth ? {
+          ok: effectiveHealth.ok === true,
+          available: effectiveHealth.available === true,
+          bound: effectiveHealth.bound === true,
+          installed: effectiveHealth.installed === true,
+          ready: effectiveHealth.ready === true,
+          version: effectiveHealth.version || "",
+          status_label: effectiveHealth.status_label || "",
+          status_reason: effectiveHealth.status_reason || "",
+          template_folder_id: effectiveHealth.template_folder_id || "",
+          pubcrm_root_folder_id: effectiveHealth.pubcrm_root_folder_id || "",
+          pubcrm_mail_folder_id: effectiveHealth.pubcrm_mail_folder_id || ""
+        } : null,
+        overview: overviewData ? {
+          health_ok: overviewData.health_ok === true,
+          templates_count: overviewData.templates_count || 0,
+          suppressions_count: overviewData.suppressions_count || 0,
+          contact_state_count: overviewData.contact_state_count || 0,
+          queue_count: overviewData.queue_count || 0,
+          log_count: overviewData.log_count || 0,
+          internal_log_count: overviewData.internal_log_count || 0,
+          manual_lists_count: overviewData.manual_lists_count || 0,
+          leads_count: overviewData.leads_count || 0,
+          tickets_count: overviewData.tickets_count || 0,
+          contacts_count: overviewData.contacts_count || 0
+        } : null,
+        loaded_lists: {
           templates: state.mail.templates.length,
           suppressions: state.mail.suppressions.length,
           contact_state: state.mail.contactState.length,
@@ -1013,19 +1095,30 @@
         state.contacts = [];
         state.leads = [];
         state.tickets = [];
+        state.mail.health = null;
+        state.mail.overview = null;
 
         await Promise.all([
           apiPost("admin_list_contacts", {}),
           apiPost("admin_list_leads", {}),
-          apiPost("admin_list_tickets", {})
+          apiPost("admin_list_tickets", {}),
+          apiPost("admin_mail_health", {}),
+          apiPost("admin_mail_overview", {})
         ]).then(function(results){
           state.contacts = Array.isArray(results[0].rows) ? results[0].rows : [];
           state.leads = Array.isArray(results[1].rows) ? results[1].rows : [];
           state.tickets = Array.isArray(results[2].rows) ? results[2].rows : [];
+          state.mail.health = results[3] || null;
+          state.mail.overview = results[4] || null;
+          state.mail.lastAction = "admin_refresh";
+          state.mail.raw = {
+            health: results[3] || null,
+            overview: results[4] || null
+          };
         });
 
         renderAll();
-        setBanner("ok", "Leituras admin do core atualizadas.");
+        setBanner("ok", "Leituras admin do core e do PUBMAIL essencial atualizadas.");
       }catch(err){
         renderAll();
         setBanner("error", err.message || "Erro.");
