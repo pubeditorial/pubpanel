@@ -935,9 +935,14 @@ function renderHeaderState(){
   const mail = mailHealth();
   const care = careModule();
 
-  const coreLabel = !core ? "—" : core.ok === true ? "Pronto" : core.installed ? "Atenção" : "Instalar";
-  let mailLabel = "—";
+  let coreLabel = "—";
+  if(core){
+    if(core.ready === true || core.ok === true || core.schema_ready === true) coreLabel = "Pronto";
+    else if(core.installed === true) coreLabel = "Atenção";
+    else coreLabel = "Instalar";
+  }
 
+  let mailLabel = "—";
   if(mail){
     if(mail.ready === true && mail.ok === true) mailLabel = "Pronto";
     else if(mail.available === false) mailLabel = "Indisponível";
@@ -946,17 +951,17 @@ function renderHeaderState(){
   }
 
   let careLabel = "—";
-
   if(care){
     if(care.ready === true || care.ok === true) careLabel = "Pronto";
     else if(care.available === false) careLabel = "Indisponível";
+    else if(care.installed === true) careLabel = "Atenção";
     else careLabel = "Atenção";
   } else {
     careLabel = state.tickets.length ? (attentionCount() ? "Atenção" : "Pronto") : "—";
   }
 
   let overall = "—";
-  if(coreLabel === "Pronto" && mailLabel === "Pronto") overall = "Pronto";
+  if(coreLabel === "Pronto" && (mailLabel === "Pronto" || mailLabel === "—" || mailLabel === "Indisponível")) overall = "Pronto";
   else if(core || mail || state.tickets.length) overall = "Atenção";
 
   $("#pill-overall").className = "pill " + pillClass(overall);
