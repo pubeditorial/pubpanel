@@ -354,10 +354,9 @@
         </div>
 
         <div class="row">
-          <button class="btn" id="btn-refresh">Atualizar</button>
-          <button class="btn btn-primary" id="btn-install-all">Preparar sistema</button>
-        </div>
-      </div>
+  <button class="btn" id="btn-refresh">Atualizar</button>
+  <button class="btn btn-primary" id="btn-install-all">Preparar sistema</button>
+</div>
 
       <div class="statusline">
         <span id="pill-overall" class="pill muted-pill">Sistema —</span>
@@ -477,13 +476,14 @@
               </select>
             </div>
 
-            <div class="field">
-              <label class="label" for="reply-channel">Canal</label>
-              <select id="reply-channel" class="select">
-                <option value="MANUAL">Manual</option>
-                <option value="EMAIL">Email</option>
-              </select>
-            </div>
+         <div class="field">
+  <label class="label" for="reply-channel">Canal</label>
+  <select id="reply-channel" class="select">
+    <option value="MANUAL">Manual</option>
+    <option value="EMAIL">Email</option>
+  </select>
+  <div class="micro">Manual registra a resposta no ticket. Email registra a resposta e envia pelo fluxo integrado do sistema, desde que o módulo de atendimento tenha sido preparado junto com o sistema.</div>
+</div>
           </div>
 
           <div class="row">
@@ -753,18 +753,25 @@ async function applyToken(){
       return;
     }
 
-    if(isBusyError(err)){
-      renderAll();
-      setBanner("warn", "O sistema está ocupado no momento. Tente aplicar o token novamente em alguns segundos.");
-      return;
-    }
+function isBusyError(err){
+  const code = String(err && err.code || "").toUpperCase();
+  const message = String(err && err.message || "").toLowerCase();
 
-    clearAdminState();
-    renderAll();
-    setBanner("error", err.message || "Falha ao carregar dados administrativos.");
-  }
+  return (
+    code === "SYSTEM_UNAVAILABLE" ||
+    message.indexOf("sistema ocupado") >= 0
+  );
 }
-    
+
+function isActionUnavailableError(err){
+  const code = String(err && err.code || "").toUpperCase();
+  const message = String(err && err.message || "").toLowerCase();
+
+  return (
+    code === "INVALID_ACTION" ||
+    message.indexOf("ação inválida") >= 0
+  );
+}
 function clearToken(){
   state.adminToken = "";
   $("#admin-token").value = "";
@@ -1277,6 +1284,21 @@ async function installAll(){
   try{
     await apiPost("admin_install_all", {});
     await refreshEverything();
+
+    const care = careModule();
+    const mail = mailHealth();
+    const core = coreHealth();
+
+    if(core && core.ready === true && mail && mail.ready === true && care && care.ready === true){
+      setBanner("ok", "Sistema preparado com core, email e atendimento.");
+      return;
+    }
+
+    if(care && care.ready !== true){
+      setBanner("warn", "A preparação do sistema terminou, mas o atendimento ainda não ficou pronto. Verifique o diagnóstico.");
+      return;
+    }
+
     setBanner("ok", "Sistema preparado.");
   }catch(err){
     if(isBusyError(err)){
@@ -1286,33 +1308,54 @@ async function installAll(){
     throw err;
   }
 }
-
 async function replySelectedTicket(){
   if(!state.selectedTicketId){
     throw new Error("Nenhum ticket selecionado.");
   }
 
+  const message = stringValue($("#reply-message").value);
+  const status = String($("#reply-status").value || "ANSWERED").toUpperCase();
+  const selectedChannel = String($("#reply-channel").value || "MANUAL").toUpperCase();
+  const sendEmail = selectedChannel === "EMAIL";
+
+  if(!message){
+    throw new Error("Escreva uma resposta antes de enviar.");
+  }
+
+  if(sendEmail && (!state.selectedTicket || !stringValue(state.selectedTicket.email))){
+    throw new Error("Este ticket não possui email válido para envio.");
+  }
+
   try{
-    await apiPost("admin_reply_ticket", {
+    await apiPost("admin_care_reply_ticket", {
       ticket_id: state.selectedTicketId,
-      message: stringValue($("#reply-message").value),
-      status: String($("#reply-status").value || "ANSWERED").toUpperCase(),
-      channel: String($("#reply-channel").value || "MANUAL").toUpperCase(),
-      sent_by: "admin"
+      message: message,
+      status: status,
+      channel: selectedChannel,
+      sent_by: "admin",
+      send_email: sendEmail,
+      mail_subject: state.selectedTicket && state.selectedTicket.item
+        ? ("PUB Editorial | " + String(state.selectedTicket.item))
+        : "PUB Editorial | Atendimento"
     });
 
     $("#reply-message").value = "";
     await loadCare();
-    setBanner("ok", "Resposta enviada.");
+    setBanner("ok", sendEmail ? "Resposta registrada e email disparado." : "Resposta registrada.");
   }catch(err){
     if(isBusyError(err)){
       setBanner("warn", "O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.");
       return;
     }
+
+    if(isPubcareNotInstalledError(err)){
+      setBanner("error", "O módulo de atendimento ainda não está preparado nesta base. Use o botão Preparar sistema.");
+      return;
+    }
+
     throw err;
   }
 }
-
 async function processMail(){
   clearBanner();
 
@@ -1452,7 +1495,6 @@ function bind(){
     });
   });
 }
-
 async function boot(){
   state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || "";
   $("#api-base").value = state.apiBase;
