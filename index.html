@@ -744,9 +744,16 @@ async function applyToken(){
     ]);
     setBanner("ok", "Token aplicado.");
   }catch(err){
-    state.adminToken = "";
-    $("#admin-token").value = "";
     clearAdminState();
+
+    if(isAdminAuthError(err)){
+      state.adminToken = "";
+      $("#admin-token").value = "";
+      renderAll();
+      setBanner("error", err.message || "Token administrativo inválido.");
+      return;
+    }
+
     renderAll();
     setBanner("error", err.message || "Falha ao carregar dados administrativos.");
   }
@@ -775,29 +782,30 @@ async function readJsonResponse(response){
   if(text.trim()) json = JSON.parse(text);
 
   if(!response.ok){
-    throw new Error(json.error || ("Falha HTTP " + response.status));
+    const err = new Error(json.error || ("Falha HTTP " + response.status));
+    err.code = json.code || "";
+    throw err;
   }
 
   if(json && json.ok === false){
-    throw new Error(json.error || "Resposta inválida.");
+    const err = new Error(json.error || "Resposta inválida.");
+    err.code = json.code || "";
+    throw err;
   }
 
   return json;
 }
 
-async function apiGet(mode){
-  requireApiBase();
 
-  const url = new URL(state.apiBase);
-  url.searchParams.set("mode", mode);
-
-  const response = await fetch(url.toString(), {
-    method: "GET",
-    cache: "no-store"
-  });
-
-  return readJsonResponse(response);
+function isAdminAuthError(err){
+  const code = String(err && err.code || "").toUpperCase();
+  return (
+    code === "ADMIN_AUTH_REQUIRED" ||
+    code === "ADMIN_AUTH_INVALID" ||
+    code === "ADMIN_AUTH_UNAVAILABLE"
+  );
 }
+    
 
 async function apiPost(action, payload){
   requireApiBase();
@@ -1215,14 +1223,20 @@ async function refreshEverything(){
     ]);
     setBanner("ok", "Painel atualizado.");
   }catch(err){
-    state.adminToken = "";
-    $("#admin-token").value = "";
     clearAdminState();
+
+    if(isAdminAuthError(err)){
+      state.adminToken = "";
+      $("#admin-token").value = "";
+      renderAll();
+      setBanner("warn", (err.message || "Falha de autenticação administrativa.") + " O token administrativo foi removido do estado atual.");
+      return;
+    }
+
     renderAll();
-    setBanner("warn", (err.message || "Falha ao carregar dados administrativos.") + " O token administrativo foi removido do estado atual.");
+    setBanner("warn", err.message || "Falha ao carregar dados administrativos.");
   }
 }
-
 async function installAll(){
   clearBanner();
 
