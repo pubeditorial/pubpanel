@@ -6,22 +6,23 @@
   <meta name="theme-color" content="#0f172a" />
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <title>PUBPANEL | mínimo</title>
+  <title>PUBPANEL 1.0</title>
 
   <style>
     :root{
-      --bg:#f8fafc;
+      --bg:#f6f8fb;
       --panel:#ffffff;
+      --panel-alt:#f8fafc;
       --fg:#0f172a;
       --muted:#475569;
       --line:#e2e8f0;
-      --blue:#2563eb;
-      --green:#059669;
-      --amber:#d97706;
-      --red:#dc2626;
+      --blue:#1473e6;
+      --green:#12805c;
+      --amber:#b76a00;
+      --red:#d31510;
       --radius:14px;
-      --shadow:0 8px 24px rgba(15,23,42,.06);
-      --wrap:1120px;
+      --shadow:0 10px 28px rgba(15,23,42,.06);
+      --wrap:1180px;
     }
 
     *{box-sizing:border-box}
@@ -38,7 +39,7 @@
 
     button,input,select,textarea{font:inherit}
     a{text-decoration:none;color:inherit}
-    :focus-visible{outline:3px solid rgba(37,99,235,.25);outline-offset:2px}
+    :focus-visible{outline:3px solid rgba(20,115,230,.22);outline-offset:2px}
 
     .wrap{
       width:100%;
@@ -51,15 +52,14 @@
 
     .top{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:12px;
       flex-wrap:wrap;
-      min-width:0;
     }
 
     .title{
-      font-size:24px;
+      font-size:26px;
       font-weight:900;
       letter-spacing:-.03em;
     }
@@ -68,6 +68,7 @@
       font-size:13px;
       color:var(--muted);
       margin-top:4px;
+      line-height:1.55;
     }
 
     .panel{
@@ -103,6 +104,13 @@
     .grid-3{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      min-width:0;
+    }
+
+    .grid-4{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
       min-width:0;
     }
@@ -176,6 +184,10 @@
       color:var(--red);
     }
 
+    .btn-soft{
+      background:var(--panel-alt);
+    }
+
     .banner{
       display:none;
       padding:12px 14px;
@@ -184,22 +196,21 @@
       background:#fff;
       font-size:13px;
       line-height:1.5;
-      min-width:0;
       word-break:break-word;
     }
 
     .banner.show{display:block}
     .banner.ok{
-      background:rgba(5,150,105,.05);
-      border-color:rgba(5,150,105,.18);
+      background:rgba(18,128,92,.05);
+      border-color:rgba(18,128,92,.18);
     }
     .banner.warn{
-      background:rgba(217,119,6,.05);
-      border-color:rgba(217,119,6,.18);
+      background:rgba(183,106,0,.05);
+      border-color:rgba(183,106,0,.18);
     }
     .banner.error{
-      background:rgba(220,38,38,.05);
-      border-color:rgba(220,38,38,.18);
+      background:rgba(211,21,16,.05);
+      border-color:rgba(211,21,16,.18);
     }
 
     .metrics{
@@ -241,6 +252,13 @@
       line-height:1.5;
     }
 
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+
     .pill{
       display:inline-flex;
       align-items:center;
@@ -263,9 +281,9 @@
       background:currentColor;
     }
 
-    .ok-pill{color:var(--green); background:rgba(5,150,105,.06); border-color:rgba(5,150,105,.18)}
-    .warn-pill{color:var(--amber); background:rgba(217,119,6,.06); border-color:rgba(217,119,6,.18)}
-    .error-pill{color:var(--red); background:rgba(220,38,38,.06); border-color:rgba(220,38,38,.18)}
+    .ok-pill{color:var(--green); background:rgba(18,128,92,.06); border-color:rgba(18,128,92,.18)}
+    .warn-pill{color:var(--amber); background:rgba(183,106,0,.06); border-color:rgba(183,106,0,.18)}
+    .error-pill{color:var(--red); background:rgba(211,21,16,.06); border-color:rgba(211,21,16,.18)}
     .muted-pill{color:#64748b; background:#fff; border-color:var(--line)}
 
     .table-wrap{
@@ -275,12 +293,13 @@
       border:1px solid var(--line);
       border-radius:12px;
       min-width:0;
+      background:#fff;
     }
 
     table{
       width:100%;
       border-collapse:collapse;
-      min-width:760px;
+      min-width:720px;
       background:#fff;
     }
 
@@ -309,18 +328,7 @@
       font-size:13px;
       line-height:1.6;
       background:#fff;
-      min-width:0;
       word-break:break-word;
-    }
-
-    .tiny{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.55;
-    }
-
-    .mono{
-      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
     }
 
     .code{
@@ -343,8 +351,28 @@
       min-width:0;
     }
 
+    .cardline{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+
+    .micro{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .accent{
+      color:var(--blue);
+      font-weight:800;
+    }
+
     @media (max-width:980px){
-      .grid-2,.grid-3,.metrics{
+      .grid-2,.grid-3,.grid-4,.metrics{
         grid-template-columns:1fr;
       }
     }
@@ -355,11 +383,12 @@
     <section class="top">
       <div style="min-width:0">
         <div class="title">PUBPANEL</div>
-        <div class="sub">Painel mínimo, aderente ao PUB CORE 2.2, com PUBMAIL mantido.</div>
+        <div class="sub">Versão 1.0. Painel de acompanhamento de leads, contatos, tickets e email. Interface enxuta para operação diária.</div>
       </div>
+
       <div class="row">
-        <button class="btn" id="btn-refresh-public">Atualizar público</button>
-        <button class="btn btn-primary" id="btn-refresh-admin">Atualizar core + PUBMAIL</button>
+        <button class="btn btn-soft" id="btn-sync-public">Atualizar</button>
+        <button class="btn btn-primary" id="btn-sync-system">Sincronizar sistema</button>
       </div>
     </section>
 
@@ -367,7 +396,8 @@
 
     <section class="panel">
       <h2 class="section-title">Conexão</h2>
-      <p class="section-text">A URL fica salva neste navegador. O token admin fica somente nesta aba.</p>
+      <p class="section-text">Informe a URL publicada do Web App e o token administrativo. A URL fica salva neste navegador. O token fica apenas nesta aba.</p>
+
       <div style="height:12px"></div>
 
       <div class="grid-2">
@@ -392,223 +422,168 @@
     </section>
 
     <section class="panel">
-      <h2 class="section-title">Resumo</h2>
-      <p class="section-text">Somente o essencial para saber se o core e o PUBMAIL estão acessíveis.</p>
-      <div style="height:12px"></div>
+      <div class="cardline">
+        <div>
+          <h2 class="section-title">Visão geral</h2>
+          <p class="section-text">Estado geral do core, do email e da base operacional.</p>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary" id="btn-prepare-system">Preparar sistema</button>
+        </div>
+      </div>
 
       <div class="metrics">
         <div class="metric">
           <div class="k">Conexão</div>
           <div class="v" id="sum-connection">—</div>
-          <div class="n">Estado da URL configurada.</div>
+          <div class="n">URL ativa do painel.</div>
         </div>
+
         <div class="metric">
           <div class="k">Core</div>
           <div class="v" id="sum-core">—</div>
-          <div class="n">Saúde do backend principal.</div>
+          <div class="n">Instalação e leitura do backend.</div>
         </div>
+
         <div class="metric">
           <div class="k">PUBMAIL</div>
           <div class="v" id="sum-pubmail">—</div>
-          <div class="n">Disponível e pronto ou não.</div>
+          <div class="n">Saúde do módulo de email.</div>
         </div>
+
         <div class="metric">
-          <div class="k">Base</div>
+          <div class="k">Registros</div>
           <div class="v" id="sum-base">—</div>
-          <div class="n">Contatos, leads e tickets.</div>
+          <div class="n">Contatos, leads e tickets carregados.</div>
         </div>
       </div>
     </section>
 
     <section class="panel">
-      <h2 class="section-title">Leituras públicas</h2>
-      <p class="section-text">Modos públicos previstos pelo core.</p>
-      <div style="height:12px"></div>
-
-      <div class="row">
-        <button class="btn" id="btn-status">Status</button>
-        <button class="btn" id="btn-health">Health</button>
-        <button class="btn" id="btn-contract">Contract</button>
-      </div>
-
-      <div style="height:12px"></div>
-      <div class="grid-3">
-        <div class="stack">
-          <div class="label">Status</div>
-          <div id="status-box" class="code">Nenhuma leitura ainda.</div>
+      <div class="cardline">
+        <div>
+          <h2 class="section-title">Relacionamento</h2>
+          <p class="section-text">Consulta rápida da base. No CORE 1.0, tickets são exibidos em lista, sem tela própria de conversação.</p>
         </div>
-        <div class="stack">
-          <div class="label">Health</div>
-          <div id="health-box" class="code">Nenhuma leitura ainda.</div>
-        </div>
-        <div class="stack">
-          <div class="label">Contract</div>
-          <div id="contract-box" class="code">Nenhuma leitura ainda.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2 class="section-title">Core</h2>
-      <p class="section-text">Somente o que o core prevê: instalação, contatos, leads, tickets e resposta a ticket.</p>
-      <div style="height:12px"></div>
-
-      <div class="row">
-        <button class="btn btn-primary" id="btn-install-crm">Instalar core</button>
-        <button class="btn" id="btn-list-contacts">Listar contatos</button>
-        <button class="btn" id="btn-list-leads">Listar leads</button>
-        <button class="btn" id="btn-list-tickets">Listar tickets</button>
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="grid-2">
-        <div class="field">
-          <label class="label" for="ticket-id-view">Ticket para consultar</label>
-          <input id="ticket-id-view" class="input" placeholder="TK-YYYYMMDD-000001" />
-          <div class="row">
-            <button class="btn" id="btn-get-ticket">Ver ticket</button>
-            <button class="btn" id="btn-list-ticket-messages">Ver mensagens</button>
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label" for="reply-ticket-id">Responder ticket</label>
-          <input id="reply-ticket-id" class="input" placeholder="TK-YYYYMMDD-000001" />
-          <textarea id="reply-message" class="textarea" placeholder="Mensagem de resposta"></textarea>
-          <div class="grid-3">
-            <div class="field">
-              <label class="label" for="reply-status">Status</label>
-              <select id="reply-status" class="select">
-                <option value="ANSWERED">ANSWERED</option>
-                <option value="WAITING_USER">WAITING_USER</option>
-                <option value="CLOSED">CLOSED</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="label" for="reply-channel">Canal</label>
-              <select id="reply-channel" class="select">
-                <option value="MANUAL">MANUAL</option>
-                <option value="EMAIL">EMAIL</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="label" for="reply-sent-by">Enviado por</label>
-              <input id="reply-sent-by" class="input" value="admin" />
-            </div>
-          </div>
-          <div class="row">
-            <button class="btn btn-primary" id="btn-reply-ticket">Responder ticket</button>
-          </div>
+        <div class="row">
+          <button class="btn" id="btn-load-contacts">Contatos</button>
+          <button class="btn" id="btn-load-leads">Leads</button>
+          <button class="btn" id="btn-load-tickets">Tickets</button>
+          <button class="btn btn-primary" id="btn-load-all-rel">Carregar tudo</button>
         </div>
       </div>
 
-      <div style="height:16px"></div>
+      <div style="height:14px"></div>
 
       <div class="grid-3">
         <div class="stack">
           <div class="label">Contatos</div>
-          <div id="contacts-wrap" class="empty">Nenhuma listagem ainda.</div>
+          <div id="contacts-wrap" class="empty">Nenhum dado carregado.</div>
         </div>
+
         <div class="stack">
           <div class="label">Leads</div>
-          <div id="leads-wrap" class="empty">Nenhuma listagem ainda.</div>
+          <div id="leads-wrap" class="empty">Nenhum dado carregado.</div>
         </div>
+
         <div class="stack">
           <div class="label">Tickets</div>
-          <div id="tickets-wrap" class="empty">Nenhuma listagem ainda.</div>
-        </div>
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="grid-2">
-        <div class="stack">
-          <div class="label">Ticket consultado</div>
-          <div id="ticket-detail-box" class="code">Nenhuma leitura ainda.</div>
-        </div>
-        <div class="stack">
-          <div class="label">Mensagens do ticket</div>
-          <div id="ticket-messages-box" class="code">Nenhuma leitura ainda.</div>
+          <div id="tickets-wrap" class="empty">Nenhum dado carregado.</div>
         </div>
       </div>
     </section>
 
     <section class="panel">
-      <h2 class="section-title">PUBMAIL</h2>
-      <p class="section-text">Mantido, mas sem excesso. Somente saúde, visão geral, filas, logs, templates, supressões, listas manuais e ações existentes no backend.</p>
-      <div style="height:12px"></div>
-
-      <div class="row">
-        <button class="btn" id="btn-mail-health">Mail health</button>
-        <button class="btn" id="btn-mail-overview">Mail overview</button>
-        <button class="btn" id="btn-mail-bootstrap">Mail bootstrap</button>
-        <button class="btn" id="btn-mail-create-docs">Criar docs</button>
+      <div class="cardline">
+        <div>
+          <h2 class="section-title">Email</h2>
+          <p class="section-text">Fluxo principal de operação: preparar, acompanhar fila e registrar envio manual quando necessário.</p>
+        </div>
+        <div class="row">
+          <button class="btn" id="btn-mail-overview">Visão do email</button>
+          <button class="btn" id="btn-mail-scan">Atualizar fila</button>
+          <button class="btn btn-primary" id="btn-mail-process-queue">Processar fila</button>
+        </div>
       </div>
 
-      <div style="height:10px"></div>
+      <div style="height:14px"></div>
 
-      <div class="row">
-        <button class="btn" id="btn-mail-list-templates">Templates</button>
-        <button class="btn" id="btn-mail-list-suppressions">Supressões</button>
-        <button class="btn" id="btn-mail-list-contact-state">Estado de contato</button>
-        <button class="btn" id="btn-mail-list-queue">Fila</button>
-        <button class="btn" id="btn-mail-list-log">Log</button>
-        <button class="btn" id="btn-mail-list-internal-log">Log interno</button>
-        <button class="btn" id="btn-mail-list-manual-lists">Listas manuais</button>
+      <div class="metrics">
+        <div class="metric">
+          <div class="k">Templates</div>
+          <div class="v" id="mail-templates-count">—</div>
+          <div class="n">Modelos ativos.</div>
+        </div>
+
+        <div class="metric">
+          <div class="k">Fila</div>
+          <div class="v" id="mail-queue-count">—</div>
+          <div class="n">Itens aguardando ou em processamento.</div>
+        </div>
+
+        <div class="metric">
+          <div class="k">Log</div>
+          <div class="v" id="mail-log-count">—</div>
+          <div class="n">Histórico operacional.</div>
+        </div>
+
+        <div class="metric">
+          <div class="k">Supressões</div>
+          <div class="v" id="mail-suppressions-count">—</div>
+          <div class="n">Bloqueios de envio.</div>
+        </div>
       </div>
 
-      <div style="height:10px"></div>
+      <div style="height:16px"></div>
 
-      <div class="row">
-        <button class="btn" id="btn-mail-scan">Scan</button>
-        <button class="btn btn-primary" id="btn-mail-process-queue">Processar fila</button>
+      <div class="grid-2">
+        <div class="stack">
+          <div class="cardline">
+            <div>
+              <div class="label">Operação do email</div>
+              <div class="micro">Ações mais frequentes, agrupadas para reduzir ruído.</div>
+            </div>
+            <div class="row">
+              <button class="btn" id="btn-mail-bootstrap">Preparar email</button>
+              <button class="btn" id="btn-mail-create-docs">Criar docs</button>
+            </div>
+          </div>
+
+          <div class="row">
+            <button class="btn" id="btn-mail-list-templates">Templates</button>
+            <button class="btn" id="btn-mail-list-queue">Fila</button>
+            <button class="btn" id="btn-mail-list-log">Log</button>
+            <button class="btn" id="btn-mail-list-manual-lists">Listas</button>
+            <button class="btn" id="btn-mail-list-suppressions">Supressões</button>
+          </div>
+
+          <div id="mail-summary-box" class="code">Nenhuma leitura ainda.</div>
+        </div>
+
+        <div class="stack">
+          <div class="label">Leitura atual</div>
+          <div id="mail-data-box" class="code">Nenhuma leitura ainda.</div>
+        </div>
       </div>
 
       <div style="height:16px"></div>
 
       <div class="grid-2">
         <div class="field">
-          <label class="label" for="suppression-email">Adicionar supressão</label>
+          <label class="label" for="manual-list-key">Lista manual</label>
+          <input id="manual-list-key" class="input" placeholder="clientes_editorial_abril" />
+          <textarea id="manual-list-emails" class="textarea" placeholder="Informe emails separados por vírgula, ponto e vírgula ou quebra de linha"></textarea>
+          <div class="row">
+            <button class="btn" id="btn-mail-create-manual-list">Salvar lista</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="suppression-email">Supressão</label>
           <input id="suppression-email" class="input" placeholder="email@dominio.com" />
-          <input id="suppression-reason" class="input" placeholder="Motivo" />
+          <input id="suppression-reason" class="input" placeholder="Motivo do bloqueio" />
           <div class="row">
             <button class="btn btn-danger" id="btn-mail-add-suppression">Adicionar supressão</button>
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label" for="manual-list-key">Criar lista manual</label>
-          <input id="manual-list-key" class="input" placeholder="chave_da_lista" />
-          <textarea id="manual-list-emails" class="textarea" placeholder="emails separados por vírgula, ponto e vírgula ou quebra de linha"></textarea>
-          <div class="row">
-            <button class="btn" id="btn-mail-create-manual-list">Criar lista</button>
-          </div>
-        </div>
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="grid-2">
-        <div class="field">
-          <label class="label" for="manual-entry-id">Atualizar entrada de lista manual</label>
-          <input id="manual-entry-id" class="input" placeholder="ID da entrada" />
-          <input id="manual-entry-email" class="input" placeholder="email@dominio.com" />
-          <input id="manual-entry-name" class="input" placeholder="Nome" />
-          <div class="row">
-            <button class="btn" id="btn-mail-update-manual-entry">Atualizar entrada</button>
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label" for="manual-active-entry-id">Ativar ou desativar entrada</label>
-          <input id="manual-active-entry-id" class="input" placeholder="ID da entrada" />
-          <select id="manual-active-value" class="select">
-            <option value="true">true</option>
-            <option value="false">false</option>
-          </select>
-          <div class="row">
-            <button class="btn" id="btn-mail-set-manual-entry-active">Aplicar ativo</button>
           </div>
         </div>
       </div>
@@ -624,17 +599,32 @@
           <button class="btn btn-primary" id="btn-mail-send-manual">Enviar manual</button>
         </div>
       </div>
+    </section>
 
-      <div style="height:16px"></div>
+    <section class="panel">
+      <div class="cardline">
+        <div>
+          <h2 class="section-title">Diagnóstico</h2>
+          <p class="section-text">Leituras públicas e técnicas. Mantidas para conferência, sem ocupar a operação principal.</p>
+        </div>
+        <div class="row">
+          <button class="btn" id="btn-status">Status</button>
+          <button class="btn" id="btn-health">Health</button>
+          <button class="btn" id="btn-contract">Contract</button>
+          <button class="btn" id="btn-mail-health">Mail health</button>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
 
       <div class="grid-2">
         <div class="stack">
-          <div class="label">Resumo técnico do PUBMAIL</div>
-          <div id="mail-summary-box" class="code">Nenhuma leitura ainda.</div>
+          <div class="label">Core público</div>
+          <div id="public-box" class="code">Nenhuma leitura ainda.</div>
         </div>
         <div class="stack">
-          <div class="label">Leitura atual do PUBMAIL</div>
-          <div id="mail-data-box" class="code">Nenhuma leitura ainda.</div>
+          <div class="label">PUBMAIL técnico</div>
+          <div id="mail-tech-box" class="code">Nenhuma leitura ainda.</div>
         </div>
       </div>
     </section>
@@ -642,7 +632,8 @@
 
   <script>
     const PUBPANEL = {
-      STORAGE_API_BASE: "PUBPANEL_MIN_API_BASE"
+      VERSION: "1.0",
+      STORAGE_API_BASE: "PUBPANEL_V1_API_BASE"
     };
 
     const state = {
@@ -656,8 +647,6 @@
       contacts: [],
       leads: [],
       tickets: [],
-      ticketDetail: null,
-      ticketMessages: [],
 
       mail: {
         lastAction: "",
@@ -665,10 +654,8 @@
         overview: null,
         templates: [],
         suppressions: [],
-        contactState: [],
         queue: [],
         log: [],
-        internalLog: [],
         manualLists: [],
         raw: null
       }
@@ -711,7 +698,7 @@
       state.apiBase = stringValue($("#api-base").value);
       localStorage.setItem(PUBPANEL.STORAGE_API_BASE, state.apiBase);
       setBanner("ok", "URL salva.");
-      renderSummary();
+      renderAll();
     }
 
     function clearApiBase(){
@@ -719,41 +706,35 @@
       localStorage.removeItem(PUBPANEL.STORAGE_API_BASE);
       $("#api-base").value = "";
       setBanner("warn", "URL removida.");
-      renderSummary();
+      renderAll();
     }
 
     function applyToken(){
       state.adminToken = stringValue($("#admin-token").value);
       setBanner("ok", state.adminToken ? "Token aplicado nesta aba." : "Token vazio.");
-      renderSummary();
+      renderAll();
     }
 
     function clearToken(){
       state.adminToken = "";
       $("#admin-token").value = "";
       setBanner("warn", "Token removido desta aba.");
-      renderSummary();
+      renderAll();
     }
 
     function requireApiBase(){
-      if(!state.apiBase){
-        throw new Error("Defina a URL do Web App.");
-      }
+      if(!state.apiBase) throw new Error("Defina a URL do Web App.");
     }
 
     function requireAdminToken(){
-      if(!state.adminToken){
-        throw new Error("Defina o token administrativo.");
-      }
+      if(!state.adminToken) throw new Error("Defina o token administrativo.");
     }
 
     async function readJsonResponse(response){
       const text = await response.text();
       let json = {};
 
-      if(text.trim()){
-        json = JSON.parse(text);
-      }
+      if(text.trim()) json = JSON.parse(text);
 
       if(!response.ok){
         throw new Error(json.error || ("Falha HTTP " + response.status));
@@ -805,15 +786,6 @@
       return readJsonResponse(response);
     }
 
-    function pill(text, kind){
-      const cls = kind || "muted-pill";
-      return '<span class="pill ' + cls + '">' + escapeHtml(text) + '</span>';
-    }
-
-    function boolPill(value){
-      return value ? pill("ok","ok-pill") : pill("atenção","warn-pill");
-    }
-
     function renderTable(containerId, rows, columns, emptyText){
       const wrap = $(containerId);
 
@@ -841,8 +813,12 @@
     }
 
     function renderSummary(){
-      $("#sum-connection").textContent = state.apiBase ? "OK" : "PEND.";
-      $("#sum-core").textContent = state.health && state.health.data && state.health.data.core && state.health.data.core.ok ? "OK" : (state.health ? "ALERTA" : "—");
+      const coreHealth =
+        state.health &&
+        state.health.data &&
+        state.health.data.core
+          ? state.health.data.core
+          : null;
 
       const publicMailHealth =
         state.health &&
@@ -852,16 +828,26 @@
           ? state.health.data.modules.pubmail
           : null;
 
-      const adminMailHealth = state.mail && state.mail.health ? state.mail.health : null;
+      const adminMailHealth = state.mail.health || null;
       const effectiveMailHealth = adminMailHealth || publicMailHealth;
+
+      $("#sum-connection").textContent = state.apiBase ? "Pronta" : "Pendente";
+
+      if(coreHealth){
+        $("#sum-core").textContent = coreHealth.ok === true ? "Pronto" : (coreHealth.installed ? "Alerta" : "Instalar");
+      } else {
+        $("#sum-core").textContent = "—";
+      }
 
       if(effectiveMailHealth){
         if(effectiveMailHealth.ready === true && effectiveMailHealth.ok === true){
-          $("#sum-pubmail").textContent = "OK";
+          $("#sum-pubmail").textContent = "Pronto";
         } else if(effectiveMailHealth.available === false){
-          $("#sum-pubmail").textContent = "OFF";
+          $("#sum-pubmail").textContent = "Indisp.";
+        } else if(effectiveMailHealth.installed === true){
+          $("#sum-pubmail").textContent = "Alerta";
         } else {
-          $("#sum-pubmail").textContent = "ALERTA";
+          $("#sum-pubmail").textContent = "Instalar";
         }
       } else {
         $("#sum-pubmail").textContent = "—";
@@ -871,18 +857,12 @@
       $("#sum-base").textContent = totalBase ? String(totalBase) : "—";
     }
 
-    function renderPublicBoxes(){
-      $("#status-box").textContent = safeJson(state.status || "Nenhuma leitura ainda.");
-      $("#health-box").textContent = safeJson(state.health || "Nenhuma leitura ainda.");
-      $("#contract-box").textContent = safeJson(state.contract || "Nenhuma leitura ainda.");
-    }
-
     function renderCoreTables(){
       renderTable("#contacts-wrap", state.contacts, [
         { label:"ID", render:r => "<strong>" + escapeHtml(r.contact_id || "") + "</strong>" },
         { label:"Nome", render:r => escapeHtml(r.name || "") },
         { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"WhatsApp", render:r => escapeHtml(r.whatsapp || "") }
+        { label:"Origem", render:r => escapeHtml(r.source || "") }
       ], "Nenhum contato carregado.");
 
       renderTable("#leads-wrap", state.leads, [
@@ -898,30 +878,25 @@
         { label:"Email", render:r => escapeHtml(r.email || "") },
         { label:"Status", render:r => escapeHtml(r.status || "") }
       ], "Nenhum ticket carregado.");
-
-      $("#ticket-detail-box").textContent = safeJson(state.ticketDetail || "Nenhuma leitura ainda.");
-      $("#ticket-messages-box").textContent = safeJson(state.ticketMessages || "Nenhuma leitura ainda.");
     }
 
     function renderMailBoxes(){
-      const publicMailHealth =
-        state.health &&
-        state.health.data &&
-        state.health.data.modules &&
-        state.health.data.modules.pubmail
-          ? state.health.data.modules.pubmail
-          : null;
-
-      const effectiveHealth = state.mail.health || publicMailHealth || null;
+      const effectiveHealth = state.mail.health || null;
       const overviewData =
         state.mail.overview &&
         state.mail.overview.data
           ? state.mail.overview.data
           : null;
 
+      $("#mail-templates-count").textContent = overviewData ? String(overviewData.templates_count || 0) : "—";
+      $("#mail-queue-count").textContent = overviewData ? String(overviewData.queue_count || 0) : "—";
+      $("#mail-log-count").textContent = overviewData ? String(overviewData.log_count || 0) : "—";
+      $("#mail-suppressions-count").textContent = overviewData ? String(overviewData.suppressions_count || 0) : "—";
+
       const summary = {
-        last_action: state.mail.lastAction || "",
-        health: effectiveHealth ? {
+        painel_version: PUBPANEL.VERSION,
+        ultima_acao: state.mail.lastAction || "",
+        saude: effectiveHealth ? {
           ok: effectiveHealth.ok === true,
           available: effectiveHealth.available === true,
           bound: effectiveHealth.bound === true,
@@ -929,32 +904,24 @@
           ready: effectiveHealth.ready === true,
           version: effectiveHealth.version || "",
           status_label: effectiveHealth.status_label || "",
-          status_reason: effectiveHealth.status_reason || "",
-          template_folder_id: effectiveHealth.template_folder_id || "",
-          pubcrm_root_folder_id: effectiveHealth.pubcrm_root_folder_id || "",
-          pubcrm_mail_folder_id: effectiveHealth.pubcrm_mail_folder_id || ""
+          status_reason: effectiveHealth.status_reason || ""
         } : null,
-        overview: overviewData ? {
-          health_ok: overviewData.health_ok === true,
+        visao: overviewData ? {
           templates_count: overviewData.templates_count || 0,
           suppressions_count: overviewData.suppressions_count || 0,
-          contact_state_count: overviewData.contact_state_count || 0,
           queue_count: overviewData.queue_count || 0,
           log_count: overviewData.log_count || 0,
-          internal_log_count: overviewData.internal_log_count || 0,
           manual_lists_count: overviewData.manual_lists_count || 0,
           leads_count: overviewData.leads_count || 0,
           tickets_count: overviewData.tickets_count || 0,
           contacts_count: overviewData.contacts_count || 0
         } : null,
-        loaded_lists: {
+        listas_carregadas: {
           templates: state.mail.templates.length,
           suppressions: state.mail.suppressions.length,
-          contact_state: state.mail.contactState.length,
           queue: state.mail.queue.length,
           log: state.mail.log.length,
-          internal_log: state.mail.internalLog.length,
-          manual_lists: state.mail.manualLists.length
+          manualLists: state.mail.manualLists.length
         }
       };
 
@@ -962,163 +929,155 @@
       $("#mail-data-box").textContent = safeJson(state.mail.raw || "Nenhuma leitura ainda.");
     }
 
+    function renderDiagnostics(){
+      const publicPack = {
+        status: state.status,
+        health: state.health,
+        contract: state.contract
+      };
+
+      $("#public-box").textContent = safeJson(publicPack.status || publicPack.health || publicPack.contract || "Nenhuma leitura ainda.");
+      $("#mail-tech-box").textContent = safeJson(state.mail.health || "Nenhuma leitura ainda.");
+    }
+
     function renderAll(){
       renderSummary();
-      renderPublicBoxes();
       renderCoreTables();
       renderMailBoxes();
+      renderDiagnostics();
     }
 
     async function runPublicMode(mode){
-      try{
-        clearBanner();
-        const json = await apiGet(mode);
+      const json = await apiGet(mode);
 
-        if(mode === "status") state.status = json;
-        if(mode === "health") state.health = json;
-        if(mode === "contract") state.contract = json;
+      if(mode === "status") state.status = json;
+      if(mode === "health") state.health = json;
+      if(mode === "contract") state.contract = json;
 
-        renderAll();
-        setBanner("ok", "Leitura pública concluída: " + mode + ".");
-      }catch(err){
-        renderAll();
-        setBanner("error", err.message || "Erro.");
-      }
+      renderAll();
+      return json;
     }
 
     async function runCoreAction(action, payload){
-      try{
-        clearBanner();
-        const json = await apiPost(action, payload || {});
+      const json = await apiPost(action, payload || {});
 
-        if(action === "admin_install_crm"){
-          await refreshPublic();
-          setBanner("ok", "Core instalado.");
-          return;
-        }
-
-        if(action === "admin_list_contacts"){
-          state.contacts = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_list_leads"){
-          state.leads = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_list_tickets"){
-          state.tickets = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_get_ticket"){
-          state.ticketDetail = json.data || null;
-        }
-
-        if(action === "admin_list_ticket_messages"){
-          state.ticketMessages = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_reply_ticket"){
-          setBanner("ok", "Resposta registrada.");
-        } else {
-          setBanner("ok", "Ação concluída: " + action + ".");
-        }
-
-        renderAll();
-      }catch(err){
-        renderAll();
-        setBanner("error", err.message || "Erro.");
+      if(action === "admin_list_contacts"){
+        state.contacts = Array.isArray(json.rows) ? json.rows : [];
       }
+
+      if(action === "admin_list_leads"){
+        state.leads = Array.isArray(json.rows) ? json.rows : [];
+      }
+
+      if(action === "admin_list_tickets"){
+        state.tickets = Array.isArray(json.rows) ? json.rows : [];
+      }
+
+      renderAll();
+      return json;
     }
 
     async function runMailAction(action, payload){
-      try{
-        clearBanner();
-        const json = await apiPost(action, payload || {});
-        state.mail.lastAction = action;
-        state.mail.raw = json;
+      const json = await apiPost(action, payload || {});
+      state.mail.lastAction = action;
+      state.mail.raw = json;
 
-        if(action === "admin_mail_health"){
-          state.mail.health = json;
-        }
-
-        if(action === "admin_mail_overview"){
-          state.mail.overview = json;
-        }
-
-        if(action === "admin_mail_list_templates"){
-          state.mail.templates = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_mail_list_suppressions"){
-          state.mail.suppressions = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_mail_list_contact_state"){
-          state.mail.contactState = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_mail_list_queue"){
-          state.mail.queue = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_mail_list_log"){
-          state.mail.log = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_mail_list_internal_log"){
-          state.mail.internalLog = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        if(action === "admin_mail_list_manual_lists"){
-          state.mail.manualLists = Array.isArray(json.rows) ? json.rows : [];
-        }
-
-        renderAll();
-        setBanner("ok", "Ação PUBMAIL concluída: " + action + ".");
-      }catch(err){
-        renderAll();
-        setBanner("error", err.message || "Erro.");
+      if(action === "admin_mail_health"){
+        state.mail.health = json;
       }
+
+      if(action === "admin_mail_overview"){
+        state.mail.overview = json;
+      }
+
+      if(action === "admin_mail_list_templates"){
+        state.mail.templates = Array.isArray(json.rows) ? json.rows : [];
+      }
+
+      if(action === "admin_mail_list_suppressions"){
+        state.mail.suppressions = Array.isArray(json.rows) ? json.rows : [];
+      }
+
+      if(action === "admin_mail_list_queue"){
+        state.mail.queue = Array.isArray(json.rows) ? json.rows : [];
+      }
+
+      if(action === "admin_mail_list_log"){
+        state.mail.log = Array.isArray(json.rows) ? json.rows : [];
+      }
+
+      if(action === "admin_mail_list_manual_lists"){
+        state.mail.manualLists = Array.isArray(json.rows) ? json.rows : [];
+      }
+
+      renderAll();
+      return json;
     }
 
     async function refreshPublic(){
+      clearBanner();
       await runPublicMode("status");
       await runPublicMode("health");
+      setBanner("ok", "Leituras públicas atualizadas.");
     }
 
-    async function refreshAdmin(){
+    async function refreshSystem(){
+      clearBanner();
+
+      const results = await Promise.all([
+        apiPost("admin_list_contacts", {}),
+        apiPost("admin_list_leads", {}),
+        apiPost("admin_list_tickets", {}),
+        apiPost("admin_mail_health", {}),
+        apiPost("admin_mail_overview", {})
+      ]);
+
+      state.contacts = Array.isArray(results[0].rows) ? results[0].rows : [];
+      state.leads = Array.isArray(results[1].rows) ? results[1].rows : [];
+      state.tickets = Array.isArray(results[2].rows) ? results[2].rows : [];
+      state.mail.health = results[3] || null;
+      state.mail.overview = results[4] || null;
+      state.mail.lastAction = "sync_system";
+      state.mail.raw = {
+        health: results[3] || null,
+        overview: results[4] || null
+      };
+
+      renderAll();
+      setBanner("ok", "Sistema sincronizado.");
+    }
+
+    async function prepareSystem(){
+      clearBanner();
+
+      await apiPost("admin_install_crm", {});
+      await apiPost("admin_mail_bootstrap", {});
+      await refreshPublic();
+      await refreshSystem();
+
+      setBanner("ok", "Core e PUBMAIL preparados.");
+    }
+
+    async function loadAllRelationship(){
+      clearBanner();
+
+      const results = await Promise.all([
+        apiPost("admin_list_contacts", {}),
+        apiPost("admin_list_leads", {}),
+        apiPost("admin_list_tickets", {})
+      ]);
+
+      state.contacts = Array.isArray(results[0].rows) ? results[0].rows : [];
+      state.leads = Array.isArray(results[1].rows) ? results[1].rows : [];
+      state.tickets = Array.isArray(results[2].rows) ? results[2].rows : [];
+
+      renderAll();
+      setBanner("ok", "Relacionamento carregado.");
+    }
+
+    async function handleAction(fn){
       try{
-        requireApiBase();
-        requireAdminToken();
-        clearBanner();
-
-        state.contacts = [];
-        state.leads = [];
-        state.tickets = [];
-        state.mail.health = null;
-        state.mail.overview = null;
-
-        await Promise.all([
-          apiPost("admin_list_contacts", {}),
-          apiPost("admin_list_leads", {}),
-          apiPost("admin_list_tickets", {}),
-          apiPost("admin_mail_health", {}),
-          apiPost("admin_mail_overview", {})
-        ]).then(function(results){
-          state.contacts = Array.isArray(results[0].rows) ? results[0].rows : [];
-          state.leads = Array.isArray(results[1].rows) ? results[1].rows : [];
-          state.tickets = Array.isArray(results[2].rows) ? results[2].rows : [];
-          state.mail.health = results[3] || null;
-          state.mail.overview = results[4] || null;
-          state.mail.lastAction = "admin_refresh";
-          state.mail.raw = {
-            health: results[3] || null,
-            overview: results[4] || null
-          };
-        });
-
-        renderAll();
-        setBanner("ok", "Leituras admin do core e do PUBMAIL essencial atualizadas.");
+        await fn();
       }catch(err){
         renderAll();
         setBanner("error", err.message || "Erro.");
@@ -1126,147 +1085,196 @@
     }
 
     function bind(){
-      $("#btn-save-api-base").addEventListener("click", saveApiBase);
-      $("#btn-clear-api-base").addEventListener("click", clearApiBase);
-      $("#btn-apply-token").addEventListener("click", applyToken);
-      $("#btn-clear-token").addEventListener("click", clearToken);
+      $("#btn-save-api-base").addEventListener("click", function(){ handleAction(async function(){ saveApiBase(); }); });
+      $("#btn-clear-api-base").addEventListener("click", function(){ handleAction(async function(){ clearApiBase(); }); });
+      $("#btn-apply-token").addEventListener("click", function(){ handleAction(async function(){ applyToken(); }); });
+      $("#btn-clear-token").addEventListener("click", function(){ handleAction(async function(){ clearToken(); }); });
 
-      $("#btn-refresh-public").addEventListener("click", refreshPublic);
-      $("#btn-refresh-admin").addEventListener("click", refreshAdmin);
+      $("#btn-sync-public").addEventListener("click", function(){ handleAction(refreshPublic); });
+      $("#btn-sync-system").addEventListener("click", function(){ handleAction(refreshSystem); });
+      $("#btn-prepare-system").addEventListener("click", function(){ handleAction(prepareSystem); });
 
-      $("#btn-status").addEventListener("click", function(){ runPublicMode("status"); });
-      $("#btn-health").addEventListener("click", function(){ runPublicMode("health"); });
-      $("#btn-contract").addEventListener("click", function(){ runPublicMode("contract"); });
-
-      $("#btn-install-crm").addEventListener("click", function(){
-        runCoreAction("admin_install_crm", {});
-      });
-
-      $("#btn-list-contacts").addEventListener("click", function(){
-        runCoreAction("admin_list_contacts", {});
-      });
-
-      $("#btn-list-leads").addEventListener("click", function(){
-        runCoreAction("admin_list_leads", {});
-      });
-
-      $("#btn-list-tickets").addEventListener("click", function(){
-        runCoreAction("admin_list_tickets", {});
-      });
-
-      $("#btn-get-ticket").addEventListener("click", function(){
-        runCoreAction("admin_get_ticket", {
-          ticket_id: stringValue($("#ticket-id-view").value)
+      $("#btn-load-contacts").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runCoreAction("admin_list_contacts", {});
+          setBanner("ok", "Contatos carregados.");
         });
       });
 
-      $("#btn-list-ticket-messages").addEventListener("click", function(){
-        runCoreAction("admin_list_ticket_messages", {
-          ticket_id: stringValue($("#ticket-id-view").value)
+      $("#btn-load-leads").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runCoreAction("admin_list_leads", {});
+          setBanner("ok", "Leads carregados.");
         });
       });
 
-      $("#btn-reply-ticket").addEventListener("click", function(){
-        runCoreAction("admin_reply_ticket", {
-          ticket_id: stringValue($("#reply-ticket-id").value),
-          message: stringValue($("#reply-message").value),
-          status: stringValue($("#reply-status").value),
-          channel: stringValue($("#reply-channel").value),
-          sent_by: stringValue($("#reply-sent-by").value)
+      $("#btn-load-tickets").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runCoreAction("admin_list_tickets", {});
+          setBanner("ok", "Tickets carregados.");
         });
       });
 
-      $("#btn-mail-health").addEventListener("click", function(){
-        runMailAction("admin_mail_health", {});
-      });
+      $("#btn-load-all-rel").addEventListener("click", function(){ handleAction(loadAllRelationship); });
 
       $("#btn-mail-overview").addEventListener("click", function(){
-        runMailAction("admin_mail_overview", {});
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_overview", {});
+          setBanner("ok", "Visão do email atualizada.");
+        });
       });
 
       $("#btn-mail-bootstrap").addEventListener("click", function(){
-        runMailAction("admin_mail_bootstrap", {});
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_bootstrap", {});
+          await runMailAction("admin_mail_health", {});
+          await runMailAction("admin_mail_overview", {});
+          setBanner("ok", "Email preparado.");
+        });
       });
 
       $("#btn-mail-create-docs").addEventListener("click", function(){
-        runMailAction("admin_mail_create_template_docs", {});
-      });
-
-      $("#btn-mail-list-templates").addEventListener("click", function(){
-        runMailAction("admin_mail_list_templates", {});
-      });
-
-      $("#btn-mail-list-suppressions").addEventListener("click", function(){
-        runMailAction("admin_mail_list_suppressions", {});
-      });
-
-      $("#btn-mail-list-contact-state").addEventListener("click", function(){
-        runMailAction("admin_mail_list_contact_state", {});
-      });
-
-      $("#btn-mail-list-queue").addEventListener("click", function(){
-        runMailAction("admin_mail_list_queue", {});
-      });
-
-      $("#btn-mail-list-log").addEventListener("click", function(){
-        runMailAction("admin_mail_list_log", {});
-      });
-
-      $("#btn-mail-list-internal-log").addEventListener("click", function(){
-        runMailAction("admin_mail_list_internal_log", {});
-      });
-
-      $("#btn-mail-list-manual-lists").addEventListener("click", function(){
-        runMailAction("admin_mail_list_manual_lists", {});
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_create_template_docs", {});
+          setBanner("ok", "Docs de template criados.");
+        });
       });
 
       $("#btn-mail-scan").addEventListener("click", function(){
-        runMailAction("admin_mail_scan", {});
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_scan", {});
+          await runMailAction("admin_mail_overview", {});
+          setBanner("ok", "Fila atualizada a partir da base.");
+        });
       });
 
       $("#btn-mail-process-queue").addEventListener("click", function(){
-        runMailAction("admin_mail_process_queue", {});
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_process_queue", {});
+          await runMailAction("admin_mail_overview", {});
+          setBanner("ok", "Fila processada.");
+        });
       });
 
-      $("#btn-mail-add-suppression").addEventListener("click", function(){
-        runMailAction("admin_mail_add_suppression", {
-          email: stringValue($("#suppression-email").value),
-          reason: stringValue($("#suppression-reason").value),
-          source: "panel"
+      $("#btn-mail-list-templates").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_list_templates", {});
+          setBanner("ok", "Templates carregados.");
+        });
+      });
+
+      $("#btn-mail-list-queue").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_list_queue", {});
+          setBanner("ok", "Fila carregada.");
+        });
+      });
+
+      $("#btn-mail-list-log").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_list_log", {});
+          setBanner("ok", "Log carregado.");
+        });
+      });
+
+      $("#btn-mail-list-manual-lists").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_list_manual_lists", {});
+          setBanner("ok", "Listas manuais carregadas.");
+        });
+      });
+
+      $("#btn-mail-list-suppressions").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_list_suppressions", {});
+          setBanner("ok", "Supressões carregadas.");
         });
       });
 
       $("#btn-mail-create-manual-list").addEventListener("click", function(){
-        runMailAction("admin_mail_create_manual_list", {
-          list_key: stringValue($("#manual-list-key").value),
-          emails: stringValue($("#manual-list-emails").value),
-          notes: ""
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_create_manual_list", {
+            list_key: stringValue($("#manual-list-key").value),
+            emails: stringValue($("#manual-list-emails").value),
+            notes: ""
+          });
+          await runMailAction("admin_mail_list_manual_lists", {});
+          setBanner("ok", "Lista manual salva.");
         });
       });
 
-      $("#btn-mail-update-manual-entry").addEventListener("click", function(){
-        runMailAction("admin_mail_update_manual_list_entry", {
-          list_entry_id: stringValue($("#manual-entry-id").value),
-          email: stringValue($("#manual-entry-email").value),
-          name: stringValue($("#manual-entry-name").value)
-        });
-      });
-
-      $("#btn-mail-set-manual-entry-active").addEventListener("click", function(){
-        runMailAction("admin_mail_set_manual_list_entry_active", {
-          list_entry_id: stringValue($("#manual-active-entry-id").value),
-          active: $("#manual-active-value").value === "true"
+      $("#btn-mail-add-suppression").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_add_suppression", {
+            email: stringValue($("#suppression-email").value),
+            reason: stringValue($("#suppression-reason").value),
+            source: "panel"
+          });
+          await runMailAction("admin_mail_list_suppressions", {});
+          setBanner("ok", "Supressão adicionada.");
         });
       });
 
       $("#btn-mail-send-manual").addEventListener("click", function(){
-        runMailAction("admin_mail_send_manual", {
-          template_key: "tmpl_manual_generic",
-          audience_mode: "manual_emails",
-          emails: stringValue($("#send-manual-emails").value),
-          manual_subject: stringValue($("#send-manual-subject").value),
-          manual_message: stringValue($("#send-manual-message").value),
-          item: ""
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_send_manual", {
+            template_key: "tmpl_manual_generic",
+            audience_mode: "manual_emails",
+            emails: stringValue($("#send-manual-emails").value),
+            manual_subject: stringValue($("#send-manual-subject").value),
+            manual_message: stringValue($("#send-manual-message").value),
+            item: ""
+          });
+          await runMailAction("admin_mail_overview", {});
+          setBanner("ok", "Envio manual registrado.");
+        });
+      });
+
+      $("#btn-status").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runPublicMode("status");
+          setBanner("ok", "Status carregado.");
+        });
+      });
+
+      $("#btn-health").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runPublicMode("health");
+          setBanner("ok", "Health carregado.");
+        });
+      });
+
+      $("#btn-contract").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runPublicMode("contract");
+          setBanner("ok", "Contract carregado.");
+        });
+      });
+
+      $("#btn-mail-health").addEventListener("click", function(){
+        handleAction(async function(){
+          clearBanner();
+          await runMailAction("admin_mail_health", {});
+          setBanner("ok", "Mail health carregado.");
         });
       });
     }
@@ -1274,6 +1282,7 @@
     async function boot(){
       state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || "";
       $("#api-base").value = state.apiBase;
+
       renderAll();
       bind();
 
