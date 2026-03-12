@@ -688,14 +688,21 @@ function clearAdminState(){
 }
 
 async function saveApiBase(){
-  state.apiBase = stringValue($("#api-base").value);
+  const nextApiBase = stringValue($("#api-base").value);
 
-  if(!state.apiBase){
+  if(!nextApiBase){
     clearApiBase();
     setBanner("warn", "URL vazia.");
     return;
   }
 
+  try{
+    new URL(nextApiBase);
+  }catch(_){
+    throw new Error("URL do Web App inválida.");
+  }
+
+  state.apiBase = nextApiBase;
   localStorage.setItem(PUBPANEL.STORAGE_API_BASE, state.apiBase);
   renderAll();
   await refreshEverything();
@@ -706,6 +713,9 @@ function clearApiBase(){
   state.status = null;
   state.health = null;
   state.contract = null;
+
+  state.adminToken = "";
+  $("#admin-token").value = "";
 
   clearAdminState();
 
@@ -734,6 +744,8 @@ async function applyToken(){
     ]);
     setBanner("ok", "Token aplicado.");
   }catch(err){
+    state.adminToken = "";
+    $("#admin-token").value = "";
     clearAdminState();
     renderAll();
     setBanner("error", err.message || "Falha ao carregar dados administrativos.");
@@ -811,7 +823,6 @@ async function apiPost(action, payload){
 
   return readJsonResponse(response);
 }
-
 function coreHealth(){
   return state.health && state.health.data && state.health.data.core ? state.health.data.core : null;
 }
@@ -1190,18 +1201,26 @@ async function refreshEverything(){
   await runPublicMode("health");
   await runPublicMode("contract");
 
-  if(state.adminToken){
+  if(!state.adminToken){
+    renderAll();
+    setBanner("warn", "Leituras públicas atualizadas. Para dados administrativos, aplique o token.");
+    return;
+  }
+
+  try{
     await Promise.all([
       loadRelationship(),
       loadCare(),
       loadMail()
     ]);
     setBanner("ok", "Painel atualizado.");
-    return;
+  }catch(err){
+    state.adminToken = "";
+    $("#admin-token").value = "";
+    clearAdminState();
+    renderAll();
+    setBanner("warn", (err.message || "Falha ao carregar dados administrativos.") + " O token administrativo foi removido do estado atual.");
   }
-
-  renderAll();
-  setBanner("warn", "Leituras públicas atualizadas. Para dados administrativos, aplique o token.");
 }
 
 async function installAll(){
@@ -1344,7 +1363,10 @@ async function boot(){
   if(state.apiBase){
     try{
       await refreshEverything();
-    }catch(_){}
+    }catch(err){
+      renderAll();
+      setBanner("error", err.message || "Falha ao iniciar o painel.");
+    }
   }
 }
 
