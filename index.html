@@ -115,6 +115,13 @@
       min-width:0;
     }
 
+    .grid-6{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:12px;
+      min-width:0;
+    }
+
     .field{
       display:grid;
       gap:6px;
@@ -252,10 +259,63 @@
       line-height:1.5;
     }
 
-    .toolbar{
+    .cardline{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+
+    .stack{
+      display:grid;
+      gap:10px;
+      min-width:0;
+    }
+
+    .micro{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .tab{
+      min-height:38px;
+      padding:8px 12px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--fg);
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .tab.active{
+      background:var(--blue);
+      border-color:var(--blue);
+      color:#fff;
+    }
+
+    .view{
+      display:none;
+    }
+
+    .view.active{
+      display:block;
+    }
+
+    .statusline{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
       margin-top:12px;
     }
 
@@ -320,6 +380,14 @@
       font-weight:800;
     }
 
+    tr.row-click{
+      cursor:pointer;
+    }
+
+    tr.row-click:hover{
+      background:#f8fbff;
+    }
+
     .empty{
       padding:14px;
       border:1px dashed var(--line);
@@ -345,34 +413,17 @@
       min-width:0;
     }
 
-    .stack{
-      display:grid;
-      gap:10px;
-      min-width:0;
-    }
-
-    .cardline{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:10px;
-    }
-
-    .micro{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.55;
-    }
-
-    .accent{
-      color:var(--blue);
+    details summary{
+      cursor:pointer;
       font-weight:800;
+      color:var(--fg);
+      list-style:none;
     }
+
+    details summary::-webkit-details-marker{display:none}
 
     @media (max-width:980px){
-      .grid-2,.grid-3,.grid-4,.metrics{
+      .grid-2,.grid-3,.grid-4,.grid-6,.metrics{
         grid-template-columns:1fr;
       }
     }
@@ -383,12 +434,12 @@
     <section class="top">
       <div style="min-width:0">
         <div class="title">PUBPANEL</div>
-        <div class="sub">Versão 1.0. Painel de acompanhamento de leads, contatos, tickets e email. Interface enxuta para operação diária.</div>
+        <div class="sub">Versão 1.0. Leads, contatos, tickets e email. Interface enxuta para operação diária.</div>
       </div>
 
       <div class="row">
         <button class="btn btn-soft" id="btn-sync-public">Atualizar</button>
-        <button class="btn btn-primary" id="btn-sync-system">Sincronizar sistema</button>
+        <button class="btn btn-primary" id="btn-install-all">Instalar sistema</button>
       </div>
     </section>
 
@@ -424,113 +475,142 @@
     <section class="panel">
       <div class="cardline">
         <div>
-          <h2 class="section-title">Visão geral</h2>
-          <p class="section-text">Estado geral do core, do email e da base operacional.</p>
+          <h2 class="section-title">Início</h2>
+          <p class="section-text">Estado geral do sistema e visão rápida da operação.</p>
         </div>
         <div class="row">
-          <button class="btn btn-primary" id="btn-prepare-system">Preparar sistema</button>
+          <button class="btn" id="btn-sync-system">Sincronizar sistema</button>
         </div>
       </div>
 
       <div class="metrics">
         <div class="metric">
-          <div class="k">Conexão</div>
-          <div class="v" id="sum-connection">—</div>
-          <div class="n">URL ativa do painel.</div>
+          <div class="k">Estado geral</div>
+          <div class="v" id="sum-overall">—</div>
+          <div class="n">Leitura consolidada do sistema.</div>
         </div>
-
         <div class="metric">
-          <div class="k">Core</div>
-          <div class="v" id="sum-core">—</div>
-          <div class="n">Instalação e leitura do backend.</div>
+          <div class="k">Leads</div>
+          <div class="v" id="sum-leads">—</div>
+          <div class="n">Entradas registradas.</div>
         </div>
-
         <div class="metric">
-          <div class="k">PUBMAIL</div>
-          <div class="v" id="sum-pubmail">—</div>
-          <div class="n">Saúde do módulo de email.</div>
+          <div class="k">Contatos</div>
+          <div class="v" id="sum-contacts">—</div>
+          <div class="n">Base de relacionamento.</div>
         </div>
-
         <div class="metric">
-          <div class="k">Registros</div>
-          <div class="v" id="sum-base">—</div>
-          <div class="n">Contatos, leads e tickets carregados.</div>
+          <div class="k">Tickets abertos</div>
+          <div class="v" id="sum-open-tickets">—</div>
+          <div class="n">Atendimento em aberto.</div>
         </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="k">Emails em fila</div>
+          <div class="v" id="sum-mail-queue">—</div>
+          <div class="n">Itens aguardando envio.</div>
+        </div>
+        <div class="metric">
+          <div class="k">Emails enviados</div>
+          <div class="v" id="sum-mail-log">—</div>
+          <div class="n">Histórico operacional.</div>
+        </div>
+        <div class="metric">
+          <div class="k">Falhas / alerta</div>
+          <div class="v" id="sum-mail-alert">—</div>
+          <div class="n">Fila e módulos em atenção.</div>
+        </div>
+        <div class="metric">
+          <div class="k">Atendimento em atenção</div>
+          <div class="v" id="sum-care-attention">—</div>
+          <div class="n">Tickets aguardando ação.</div>
+        </div>
+      </div>
+
+      <div class="statusline">
+        <span id="pill-core" class="pill muted-pill">Core —</span>
+        <span id="pill-pubmail" class="pill muted-pill">PUBMAIL —</span>
+        <span id="pill-pubcare" class="pill muted-pill">PUBCARE —</span>
       </div>
     </section>
 
     <section class="panel">
+      <div class="cardline">
+        <div>
+          <h2 class="section-title">Navegação</h2>
+          <p class="section-text">Áreas principais do sistema.</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-view="view-relationship">Relacionamento</button>
+        <button class="tab" data-view="view-care">Atendimento</button>
+        <button class="tab" data-view="view-mail">Email</button>
+        <button class="tab" data-view="view-diagnostics">Diagnóstico</button>
+      </div>
+    </section>
+
+    <section id="view-relationship" class="panel view active">
       <div class="cardline">
         <div>
           <h2 class="section-title">Relacionamento</h2>
-          <p class="section-text">Consulta rápida da base. No CORE 1.0, tickets são exibidos em lista, sem tela própria de conversação.</p>
+          <p class="section-text">Quem entrou e quem já está na base.</p>
         </div>
         <div class="row">
+          <input id="relationship-search" class="input" style="min-width:260px" placeholder="Buscar nome, email ou item" />
           <button class="btn" id="btn-load-contacts">Contatos</button>
           <button class="btn" id="btn-load-leads">Leads</button>
-          <button class="btn" id="btn-load-tickets">Tickets</button>
-          <button class="btn btn-primary" id="btn-load-all-rel">Carregar tudo</button>
+          <button class="btn btn-primary" id="btn-load-all-rel">Atualizar lista</button>
         </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-subview="rel-leads">Leads</button>
+        <button class="tab" data-subview="rel-contacts">Contatos</button>
       </div>
 
       <div style="height:14px"></div>
 
-      <div class="grid-3">
-        <div class="stack">
-          <div class="label">Contatos</div>
-          <div id="contacts-wrap" class="empty">Nenhum dado carregado.</div>
-        </div>
+      <div id="rel-leads" class="subview active">
+        <div id="leads-wrap" class="empty">Nenhum lead carregado.</div>
+      </div>
 
-        <div class="stack">
-          <div class="label">Leads</div>
-          <div id="leads-wrap" class="empty">Nenhum dado carregado.</div>
-        </div>
-
-        <div class="stack">
-          <div class="label">Tickets</div>
-          <div id="tickets-wrap" class="empty">Nenhum dado carregado.</div>
-        </div>
+      <div id="rel-contacts" class="subview" style="display:none">
+        <div id="contacts-wrap" class="empty">Nenhum contato carregado.</div>
       </div>
     </section>
 
-    <section class="panel">
+    <section id="view-care" class="panel view">
       <div class="cardline">
         <div>
-          <h2 class="section-title">Email</h2>
-          <p class="section-text">Fluxo principal de operação: preparar, acompanhar fila e registrar envio manual quando necessário.</p>
+          <h2 class="section-title">Atendimento</h2>
+          <p class="section-text">Tickets e histórico de resposta.</p>
         </div>
         <div class="row">
-          <button class="btn" id="btn-mail-overview">Visão do email</button>
-          <button class="btn" id="btn-mail-scan">Atualizar fila</button>
-          <button class="btn btn-primary" id="btn-mail-process-queue">Processar fila</button>
+          <button class="btn" id="btn-load-tickets">Atualizar tickets</button>
         </div>
       </div>
 
-      <div style="height:14px"></div>
-
-      <div class="metrics">
+      <div class="grid-4">
         <div class="metric">
-          <div class="k">Templates</div>
-          <div class="v" id="mail-templates-count">—</div>
-          <div class="n">Modelos ativos.</div>
+          <div class="k">Abertos</div>
+          <div class="v" id="care-open-count">—</div>
         </div>
-
         <div class="metric">
-          <div class="k">Fila</div>
-          <div class="v" id="mail-queue-count">—</div>
-          <div class="n">Itens aguardando ou em processamento.</div>
+          <div class="k">Aguardando usuário</div>
+          <div class="v" id="care-waiting-count">—</div>
         </div>
-
         <div class="metric">
-          <div class="k">Log</div>
-          <div class="v" id="mail-log-count">—</div>
-          <div class="n">Histórico operacional.</div>
+          <div class="k">Respondidos</div>
+          <div class="v" id="care-answered-count">—</div>
         </div>
-
         <div class="metric">
-          <div class="k">Supressões</div>
-          <div class="v" id="mail-suppressions-count">—</div>
-          <div class="n">Bloqueios de envio.</div>
+          <div class="k">Fechados</div>
+          <div class="v" id="care-closed-count">—</div>
         </div>
       </div>
 
@@ -540,72 +620,187 @@
         <div class="stack">
           <div class="cardline">
             <div>
-              <div class="label">Operação do email</div>
-              <div class="micro">Ações mais frequentes, agrupadas para reduzir ruído.</div>
-            </div>
-            <div class="row">
-              <button class="btn" id="btn-mail-bootstrap">Preparar email</button>
-              <button class="btn" id="btn-mail-create-docs">Criar docs</button>
+              <div class="label">Tickets</div>
+              <div class="micro">Selecione um ticket para ver detalhes e responder.</div>
             </div>
           </div>
-
-          <div class="row">
-            <button class="btn" id="btn-mail-list-templates">Templates</button>
-            <button class="btn" id="btn-mail-list-queue">Fila</button>
-            <button class="btn" id="btn-mail-list-log">Log</button>
-            <button class="btn" id="btn-mail-list-manual-lists">Listas</button>
-            <button class="btn" id="btn-mail-list-suppressions">Supressões</button>
-          </div>
-
-          <div id="mail-summary-box" class="code">Nenhuma leitura ainda.</div>
+          <div id="tickets-wrap-care" class="empty">Nenhum ticket carregado.</div>
         </div>
 
         <div class="stack">
-          <div class="label">Leitura atual</div>
-          <div id="mail-data-box" class="code">Nenhuma leitura ainda.</div>
-        </div>
-      </div>
+          <div class="label">Ticket selecionado</div>
+          <div id="ticket-selected-box" class="code">Nenhum ticket selecionado.</div>
 
-      <div style="height:16px"></div>
+          <div class="label">Histórico</div>
+          <div id="ticket-messages-box" class="empty">Nenhuma mensagem carregada.</div>
 
-      <div class="grid-2">
-        <div class="field">
-          <label class="label" for="manual-list-key">Lista manual</label>
-          <input id="manual-list-key" class="input" placeholder="clientes_editorial_abril" />
-          <textarea id="manual-list-emails" class="textarea" placeholder="Informe emails separados por vírgula, ponto e vírgula ou quebra de linha"></textarea>
-          <div class="row">
-            <button class="btn" id="btn-mail-create-manual-list">Salvar lista</button>
+          <div class="field">
+            <label class="label" for="reply-message">Responder</label>
+            <textarea id="reply-message" class="textarea" placeholder="Mensagem de resposta"></textarea>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="label" for="suppression-email">Supressão</label>
-          <input id="suppression-email" class="input" placeholder="email@dominio.com" />
-          <input id="suppression-reason" class="input" placeholder="Motivo do bloqueio" />
-          <div class="row">
-            <button class="btn btn-danger" id="btn-mail-add-suppression">Adicionar supressão</button>
+          <div class="grid-3">
+            <div class="field">
+              <label class="label" for="reply-status">Status</label>
+              <select id="reply-status" class="select">
+                <option value="ANSWERED">ANSWERED</option>
+                <option value="WAITING_USER">WAITING_USER</option>
+                <option value="CLOSED">CLOSED</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="label" for="reply-channel">Canal</label>
+              <select id="reply-channel" class="select">
+                <option value="MANUAL">MANUAL</option>
+                <option value="EMAIL">EMAIL</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="label" for="reply-sent-by">Enviado por</label>
+              <input id="reply-sent-by" class="input" value="admin" />
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div style="height:16px"></div>
-
-      <div class="field">
-        <label class="label" for="send-manual-emails">Envio manual</label>
-        <input id="send-manual-emails" class="input" placeholder="emails separados por vírgula, ponto e vírgula ou quebra de linha" />
-        <input id="send-manual-subject" class="input" placeholder="Assunto" />
-        <textarea id="send-manual-message" class="textarea" placeholder="Mensagem"></textarea>
-        <div class="row">
-          <button class="btn btn-primary" id="btn-mail-send-manual">Enviar manual</button>
+          <div class="row">
+            <button class="btn btn-primary" id="btn-reply-ticket">Responder</button>
+            <button class="btn" id="btn-refresh-selected-ticket">Atualizar ticket</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="panel">
+    <section id="view-mail" class="panel view">
+      <div class="cardline">
+        <div>
+          <h2 class="section-title">Email</h2>
+          <p class="section-text">Fluxo principal de operação do PUBMAIL.</p>
+        </div>
+        <div class="row">
+          <button class="btn" id="btn-mail-overview">Atualizar email</button>
+          <button class="btn" id="btn-mail-scan">Atualizar fila</button>
+          <button class="btn btn-primary" id="btn-mail-process-queue">Processar emails</button>
+        </div>
+      </div>
+
+      <div class="grid-6">
+        <div class="metric">
+          <div class="k">Fila</div>
+          <div class="v" id="mail-queue-count">—</div>
+        </div>
+        <div class="metric">
+          <div class="k">Enviados</div>
+          <div class="v" id="mail-log-count">—</div>
+        </div>
+        <div class="metric">
+          <div class="k">Falhas</div>
+          <div class="v" id="mail-fail-count">—</div>
+        </div>
+        <div class="metric">
+          <div class="k">Supressões</div>
+          <div class="v" id="mail-suppressions-count">—</div>
+        </div>
+        <div class="metric">
+          <div class="k">Listas</div>
+          <div class="v" id="mail-manual-lists-count">—</div>
+        </div>
+        <div class="metric">
+          <div class="k">Templates</div>
+          <div class="v" id="mail-templates-count">—</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-mailview="mail-queue-view">Fila</button>
+        <button class="tab" data-mailview="mail-log-view">Log</button>
+        <button class="tab" data-mailview="mail-send-view">Enviar manual</button>
+        <button class="tab" data-mailview="mail-suppressions-view">Supressões</button>
+        <button class="tab" data-mailview="mail-templates-view">Templates</button>
+        <button class="tab" data-mailview="mail-lists-view">Listas</button>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div id="mail-queue-view" class="mailview active">
+        <div class="row" style="margin-bottom:10px">
+          <button class="btn" id="btn-mail-list-queue">Carregar fila</button>
+        </div>
+        <div id="mail-queue-wrap" class="empty">Nenhuma fila carregada.</div>
+      </div>
+
+      <div id="mail-log-view" class="mailview" style="display:none">
+        <div class="row" style="margin-bottom:10px">
+          <button class="btn" id="btn-mail-list-log">Carregar log</button>
+        </div>
+        <div id="mail-log-wrap" class="empty">Nenhum log carregado.</div>
+      </div>
+
+      <div id="mail-send-view" class="mailview" style="display:none">
+        <div class="field">
+          <label class="label" for="send-manual-emails">Enviar manual</label>
+          <input id="send-manual-emails" class="input" placeholder="emails separados por vírgula, ponto e vírgula ou quebra de linha" />
+          <input id="send-manual-subject" class="input" placeholder="Assunto" />
+          <textarea id="send-manual-message" class="textarea" placeholder="Mensagem"></textarea>
+          <div class="row">
+            <button class="btn btn-primary" id="btn-mail-send-manual">Enviar manual</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="mail-suppressions-view" class="mailview" style="display:none">
+        <div class="grid-2">
+          <div class="field">
+            <label class="label" for="suppression-email">Adicionar supressão</label>
+            <input id="suppression-email" class="input" placeholder="email@dominio.com" />
+            <input id="suppression-reason" class="input" placeholder="Motivo do bloqueio" />
+            <div class="row">
+              <button class="btn btn-danger" id="btn-mail-add-suppression">Adicionar supressão</button>
+              <button class="btn" id="btn-mail-list-suppressions">Carregar supressões</button>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="label">Supressões</div>
+            <div id="mail-suppressions-wrap" class="empty">Nenhuma supressão carregada.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="mail-templates-view" class="mailview" style="display:none">
+        <div class="row" style="margin-bottom:10px">
+          <button class="btn" id="btn-mail-bootstrap">Preparar email</button>
+          <button class="btn" id="btn-mail-create-docs">Criar docs</button>
+          <button class="btn" id="btn-mail-list-templates">Carregar templates</button>
+        </div>
+        <div id="mail-templates-wrap" class="empty">Nenhum template carregado.</div>
+      </div>
+
+      <div id="mail-lists-view" class="mailview" style="display:none">
+        <div class="grid-2">
+          <div class="field">
+            <label class="label" for="manual-list-key">Lista manual</label>
+            <input id="manual-list-key" class="input" placeholder="clientes_editorial_abril" />
+            <textarea id="manual-list-emails" class="textarea" placeholder="Informe emails separados por vírgula, ponto e vírgula ou quebra de linha"></textarea>
+            <div class="row">
+              <button class="btn" id="btn-mail-create-manual-list">Salvar lista</button>
+              <button class="btn" id="btn-mail-list-manual-lists">Carregar listas</button>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="label">Listas manuais</div>
+            <div id="mail-lists-wrap" class="empty">Nenhuma lista carregada.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-diagnostics" class="panel view">
       <div class="cardline">
         <div>
           <h2 class="section-title">Diagnóstico</h2>
-          <p class="section-text">Leituras públicas e técnicas. Mantidas para conferência, sem ocupar a operação principal.</p>
+          <p class="section-text">Leituras públicas e técnicas. Recolhidas para não competir com a operação.</p>
         </div>
         <div class="row">
           <button class="btn" id="btn-status">Status</button>
@@ -615,18 +810,20 @@
         </div>
       </div>
 
-      <div style="height:12px"></div>
-
-      <div class="grid-2">
-        <div class="stack">
-          <div class="label">Core público</div>
-          <div id="public-box" class="code">Nenhuma leitura ainda.</div>
+      <details>
+        <summary>Mostrar detalhes técnicos</summary>
+        <div style="height:12px"></div>
+        <div class="grid-2">
+          <div class="stack">
+            <div class="label">Core público</div>
+            <div id="public-box" class="code">Nenhuma leitura ainda.</div>
+          </div>
+          <div class="stack">
+            <div class="label">PUBMAIL / PUBCARE</div>
+            <div id="mail-tech-box" class="code">Nenhuma leitura ainda.</div>
+          </div>
         </div>
-        <div class="stack">
-          <div class="label">PUBMAIL técnico</div>
-          <div id="mail-tech-box" class="code">Nenhuma leitura ainda.</div>
-        </div>
-      </div>
+      </details>
     </section>
   </div>
 
@@ -648,6 +845,10 @@
       leads: [],
       tickets: [],
 
+      selectedTicketId: "",
+      selectedTicket: null,
+      selectedTicketMessages: [],
+
       mail: {
         lastAction: "",
         health: null,
@@ -658,11 +859,20 @@
         log: [],
         manualLists: [],
         raw: null
+      },
+
+      diagnostics: {
+        publicLastMode: "",
+        mailLast: null
       }
     };
 
     function $(selector){
       return document.querySelector(selector);
+    }
+
+    function $all(selector){
+      return Array.prototype.slice.call(document.querySelectorAll(selector));
     }
 
     function stringValue(v){
@@ -680,6 +890,10 @@
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;");
+    }
+
+    function lowerText(v){
+      return stringValue(v).toLowerCase();
     }
 
     function setBanner(type, text){
@@ -786,6 +1000,86 @@
       return readJsonResponse(response);
     }
 
+    function detectPubcareModule(){
+      const health = state.health;
+      const contract = state.contract;
+
+      const byHealth =
+        health &&
+        health.data &&
+        health.data.modules &&
+        health.data.modules.pubcare
+          ? health.data.modules.pubcare
+          : null;
+
+      const byContract =
+        contract &&
+        contract.data &&
+        contract.data.modules &&
+        contract.data.modules.pubcare
+          ? contract.data.modules.pubcare
+          : null;
+
+      return byHealth || byContract || null;
+    }
+
+    function getCoreHealth(){
+      return state.health && state.health.data && state.health.data.core ? state.health.data.core : null;
+    }
+
+    function getPublicMailHealth(){
+      return state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail
+        ? state.health.data.modules.pubmail
+        : null;
+    }
+
+    function getEffectiveMailHealth(){
+      return state.mail.health || getPublicMailHealth() || null;
+    }
+
+    function getMailOverviewData(){
+      return state.mail.overview && state.mail.overview.data ? state.mail.overview.data : null;
+    }
+
+    function getTicketStatusCount(status){
+      return state.tickets.filter(function(t){
+        return stringValue(t.status).toUpperCase() === status;
+      }).length;
+    }
+
+    function getAttentionCount(){
+      return getTicketStatusCount("OPEN") + getTicketStatusCount("WAITING_USER");
+    }
+
+    function overallLabel(){
+      const core = getCoreHealth();
+      const mail = getEffectiveMailHealth();
+      const care = detectPubcareModule();
+
+      const coreOk = !!(core && core.ok === true);
+      const mailOk = !!(mail && mail.ready === true && mail.ok === true);
+      const careAvailable = !!care;
+
+      if(coreOk && mailOk && careAvailable) return "Pronto";
+      if(coreOk && mailOk) return "Pronto";
+      if(core || mail || care) return "Atenção";
+      return "—";
+    }
+
+    function statusPillHtml(label, kind){
+      const cls = kind || "muted-pill";
+      return '<span class="pill ' + cls + '">' + escapeHtml(label) + '</span>';
+    }
+
+    function classifyState(label){
+      const v = lowerText(label);
+      if(v.indexOf("pronto") >= 0) return "ok-pill";
+      if(v.indexOf("indisp") >= 0) return "error-pill";
+      if(v.indexOf("aten") >= 0) return "warn-pill";
+      if(v.indexOf("instal") >= 0) return "warn-pill";
+      return "muted-pill";
+    }
+
     function renderTable(containerId, rows, columns, emptyText){
       const wrap = $(containerId);
 
@@ -801,132 +1095,189 @@
         thead += "<th>" + escapeHtml(col.label) + "</th>";
       });
 
-      rows.forEach(function(row){
-        tbody += "<tr>";
+      rows.forEach(function(row, index){
+        const attrs = colAttr(row, index);
+        tbody += "<tr" + attrs + ">";
         columns.forEach(function(col){
-          tbody += "<td>" + col.render(row) + "</td>";
+          tbody += "<td>" + col.render(row, index) + "</td>";
         });
         tbody += "</tr>";
       });
 
       wrap.innerHTML = '<div class="table-wrap"><table><thead><tr>' + thead + '</tr></thead><tbody>' + tbody + '</tbody></table></div>';
+
+      function colAttr(row){
+        if(row && row.__clickTicketId){
+          return ' class="row-click" data-ticket-id="' + escapeHtml(row.__clickTicketId) + '"';
+        }
+        return "";
+      }
+    }
+
+    function filteredLeads(){
+      const q = lowerText($("#relationship-search") ? $("#relationship-search").value : "");
+      if(!q) return state.leads.slice();
+      return state.leads.filter(function(r){
+        return [
+          r.lead_id, r.name, r.email, r.item, r.page_url, r.referrer
+        ].some(function(v){ return lowerText(v).indexOf(q) >= 0; });
+      });
+    }
+
+    function filteredContacts(){
+      const q = lowerText($("#relationship-search") ? $("#relationship-search").value : "");
+      if(!q) return state.contacts.slice();
+      return state.contacts.filter(function(r){
+        return [
+          r.contact_id, r.name, r.email, r.whatsapp, r.source
+        ].some(function(v){ return lowerText(v).indexOf(q) >= 0; });
+      });
     }
 
     function renderSummary(){
-      const coreHealth =
-        state.health &&
-        state.health.data &&
-        state.health.data.core
-          ? state.health.data.core
-          : null;
+      const core = getCoreHealth();
+      const mail = getEffectiveMailHealth();
+      const care = detectPubcareModule();
+      const overview = getMailOverviewData();
 
-      const publicMailHealth =
-        state.health &&
-        state.health.data &&
-        state.health.data.modules &&
-        state.health.data.modules.pubmail
-          ? state.health.data.modules.pubmail
-          : null;
-
-      const adminMailHealth = state.mail.health || null;
-      const effectiveMailHealth = adminMailHealth || publicMailHealth;
-
-      $("#sum-connection").textContent = state.apiBase ? "Pronta" : "Pendente";
-
-      if(coreHealth){
-        $("#sum-core").textContent = coreHealth.ok === true ? "Pronto" : (coreHealth.installed ? "Alerta" : "Instalar");
-      } else {
-        $("#sum-core").textContent = "—";
+      const coreLabel = !core ? "—" : core.ok === true ? "Pronto" : core.installed ? "Atenção" : "Instalar";
+      let mailLabel = "—";
+      if(mail){
+        if(mail.ready === true && mail.ok === true) mailLabel = "Pronto";
+        else if(mail.available === false) mailLabel = "Indisp.";
+        else if(mail.installed === true) mailLabel = "Atenção";
+        else mailLabel = "Instalar";
       }
 
-      if(effectiveMailHealth){
-        if(effectiveMailHealth.ready === true && effectiveMailHealth.ok === true){
-          $("#sum-pubmail").textContent = "Pronto";
-        } else if(effectiveMailHealth.available === false){
-          $("#sum-pubmail").textContent = "Indisp.";
-        } else if(effectiveMailHealth.installed === true){
-          $("#sum-pubmail").textContent = "Alerta";
-        } else {
-          $("#sum-pubmail").textContent = "Instalar";
-        }
-      } else {
-        $("#sum-pubmail").textContent = "—";
+      let careLabel = "—";
+      if(care){
+        if(care.ready === true || care.ok === true) careLabel = "Pronto";
+        else if(care.available === false) careLabel = "Indisp.";
+        else careLabel = "Atenção";
       }
 
-      const totalBase = state.contacts.length + state.leads.length + state.tickets.length;
-      $("#sum-base").textContent = totalBase ? String(totalBase) : "—";
+      $("#sum-overall").textContent = overallLabel();
+      $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : "—";
+      $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : "—";
+      $("#sum-open-tickets").textContent = state.tickets.length ? String(getTicketStatusCount("OPEN")) : "—";
+
+      $("#sum-mail-queue").textContent = overview ? String(overview.queue_count || 0) : "—";
+      $("#sum-mail-log").textContent = overview ? String(overview.log_count || 0) : "—";
+      $("#sum-mail-alert").textContent = overview ? String((overview.suppressions_count || 0) + (overview.internal_log_count || 0)) : "—";
+      $("#sum-care-attention").textContent = state.tickets.length ? String(getAttentionCount()) : "—";
+
+      $("#pill-core").className = "pill " + classifyState(coreLabel);
+      $("#pill-core").textContent = "Core " + coreLabel;
+
+      $("#pill-pubmail").className = "pill " + classifyState(mailLabel);
+      $("#pill-pubmail").textContent = "PUBMAIL " + mailLabel;
+
+      $("#pill-pubcare").className = "pill " + classifyState(careLabel);
+      $("#pill-pubcare").textContent = "PUBCARE " + careLabel;
     }
 
-    function renderCoreTables(){
-      renderTable("#contacts-wrap", state.contacts, [
-        { label:"ID", render:r => "<strong>" + escapeHtml(r.contact_id || "") + "</strong>" },
-        { label:"Nome", render:r => escapeHtml(r.name || "") },
+    function renderRelationship(){
+      renderTable("#leads-wrap", filteredLeads(), [
+        { label:"Nome", render:r => "<strong>" + escapeHtml(r.name || "") + "</strong>" },
         { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"Origem", render:r => escapeHtml(r.source || "") }
-      ], "Nenhum contato carregado.");
-
-      renderTable("#leads-wrap", state.leads, [
-        { label:"ID", render:r => "<strong>" + escapeHtml(r.lead_id || "") + "</strong>" },
-        { label:"Nome", render:r => escapeHtml(r.name || "") },
-        { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"Item", render:r => escapeHtml(r.item || "") }
+        { label:"Item", render:r => escapeHtml(r.item || "") },
+        { label:"Data", render:r => escapeHtml(r.created_at || "") },
+        { label:"Origem", render:r => escapeHtml(r.page_url || r.referrer || "webapp") }
       ], "Nenhum lead carregado.");
 
-      renderTable("#tickets-wrap", state.tickets, [
-        { label:"ID", render:r => "<strong>" + escapeHtml(r.ticket_id || "") + "</strong>" },
-        { label:"Nome", render:r => escapeHtml(r.name || "") },
+      renderTable("#contacts-wrap", filteredContacts(), [
+        { label:"Nome", render:r => "<strong>" + escapeHtml(r.name || "") + "</strong>" },
         { label:"Email", render:r => escapeHtml(r.email || "") },
-        { label:"Status", render:r => escapeHtml(r.status || "") }
-      ], "Nenhum ticket carregado.");
+        { label:"WhatsApp", render:r => escapeHtml(r.whatsapp || "") },
+        { label:"Origem", render:r => escapeHtml(r.source || "") },
+        { label:"Última atividade", render:r => escapeHtml(r.updated_at || r.created_at || "") }
+      ], "Nenhum contato carregado.");
     }
 
-    function renderMailBoxes(){
-      const effectiveHealth = state.mail.health || null;
-      const overviewData =
-        state.mail.overview &&
-        state.mail.overview.data
-          ? state.mail.overview.data
-          : null;
+    function renderCare(){
+      $("#care-open-count").textContent = state.tickets.length ? String(getTicketStatusCount("OPEN")) : "—";
+      $("#care-waiting-count").textContent = state.tickets.length ? String(getTicketStatusCount("WAITING_USER")) : "—";
+      $("#care-answered-count").textContent = state.tickets.length ? String(getTicketStatusCount("ANSWERED")) : "—";
+      $("#care-closed-count").textContent = state.tickets.length ? String(getTicketStatusCount("CLOSED")) : "—";
 
-      $("#mail-templates-count").textContent = overviewData ? String(overviewData.templates_count || 0) : "—";
-      $("#mail-queue-count").textContent = overviewData ? String(overviewData.queue_count || 0) : "—";
-      $("#mail-log-count").textContent = overviewData ? String(overviewData.log_count || 0) : "—";
-      $("#mail-suppressions-count").textContent = overviewData ? String(overviewData.suppressions_count || 0) : "—";
+      const rows = state.tickets.map(function(t){
+        const copy = Object.assign({}, t);
+        copy.__clickTicketId = t.ticket_id || "";
+        return copy;
+      });
 
-      const summary = {
-        painel_version: PUBPANEL.VERSION,
-        ultima_acao: state.mail.lastAction || "",
-        saude: effectiveHealth ? {
-          ok: effectiveHealth.ok === true,
-          available: effectiveHealth.available === true,
-          bound: effectiveHealth.bound === true,
-          installed: effectiveHealth.installed === true,
-          ready: effectiveHealth.ready === true,
-          version: effectiveHealth.version || "",
-          status_label: effectiveHealth.status_label || "",
-          status_reason: effectiveHealth.status_reason || ""
-        } : null,
-        visao: overviewData ? {
-          templates_count: overviewData.templates_count || 0,
-          suppressions_count: overviewData.suppressions_count || 0,
-          queue_count: overviewData.queue_count || 0,
-          log_count: overviewData.log_count || 0,
-          manual_lists_count: overviewData.manual_lists_count || 0,
-          leads_count: overviewData.leads_count || 0,
-          tickets_count: overviewData.tickets_count || 0,
-          contacts_count: overviewData.contacts_count || 0
-        } : null,
-        listas_carregadas: {
-          templates: state.mail.templates.length,
-          suppressions: state.mail.suppressions.length,
-          queue: state.mail.queue.length,
-          log: state.mail.log.length,
-          manualLists: state.mail.manualLists.length
-        }
-      };
+      renderTable("#tickets-wrap-care", rows, [
+        { label:"Ticket", render:r => "<strong>" + escapeHtml(r.ticket_id || "") + "</strong>" },
+        { label:"Nome", render:r => escapeHtml(r.name || "") },
+        { label:"Email", render:r => escapeHtml(r.email || "") },
+        { label:"Item", render:r => escapeHtml(r.item || "") },
+        { label:"Status", render:r => escapeHtml(r.status || "") },
+        { label:"Data", render:r => escapeHtml(r.created_at || "") }
+      ], "Nenhum ticket carregado.");
 
-      $("#mail-summary-box").textContent = safeJson(summary);
-      $("#mail-data-box").textContent = safeJson(state.mail.raw || "Nenhuma leitura ainda.");
+      $("#ticket-selected-box").textContent = safeJson(state.selectedTicket || "Nenhum ticket selecionado.");
+
+      renderTable("#ticket-messages-box", state.selectedTicketMessages, [
+        { label:"Data", render:r => escapeHtml(r.created_at || "") },
+        { label:"Direção", render:r => escapeHtml(r.direction || "") },
+        { label:"Canal", render:r => escapeHtml(r.channel || "") },
+        { label:"Mensagem", render:r => escapeHtml(r.message || "") }
+      ], "Nenhuma mensagem carregada.");
+
+      attachTicketRowClicks();
+    }
+
+    function renderMail(){
+      const overview = getMailOverviewData();
+      const raw = state.mail.raw || null;
+
+      $("#mail-queue-count").textContent = overview ? String(overview.queue_count || 0) : "—";
+      $("#mail-log-count").textContent = overview ? String(overview.log_count || 0) : "—";
+      $("#mail-fail-count").textContent = raw && raw.data && typeof raw.data.failed !== "undefined" ? String(raw.data.failed || 0) : "—";
+      $("#mail-suppressions-count").textContent = overview ? String(overview.suppressions_count || 0) : "—";
+      $("#mail-manual-lists-count").textContent = overview ? String(overview.manual_lists_count || 0) : "—";
+      $("#mail-templates-count").textContent = overview ? String(overview.templates_count || 0) : "—";
+
+      renderTable("#mail-queue-wrap", state.mail.queue, [
+        { label:"Fila", render:r => "<strong>" + escapeHtml(r.queue_id || "") + "</strong>" },
+        { label:"Destinatário", render:r => escapeHtml(r.recipient || "") },
+        { label:"Tipo", render:r => escapeHtml(r.message_type || "") },
+        { label:"Template", render:r => escapeHtml(r.template_key || "") },
+        { label:"Status", render:r => escapeHtml(r.status || "") },
+        { label:"Agendado", render:r => escapeHtml(r.scheduled_at || "") }
+      ], "Nenhuma fila carregada.");
+
+      renderTable("#mail-log-wrap", state.mail.log, [
+        { label:"Log", render:r => "<strong>" + escapeHtml(r.log_id || "") + "</strong>" },
+        { label:"Destinatário", render:r => escapeHtml(r.recipient || "") },
+        { label:"Tipo", render:r => escapeHtml(r.message_type || "") },
+        { label:"Status", render:r => escapeHtml(r.status || "") },
+        { label:"Assunto", render:r => escapeHtml(r.subject || "") },
+        { label:"Data", render:r => escapeHtml(r.created_at || "") }
+      ], "Nenhum log carregado.");
+
+      renderTable("#mail-suppressions-wrap", state.mail.suppressions, [
+        { label:"Email", render:r => escapeHtml(r.email || "") },
+        { label:"Tipo", render:r => escapeHtml(r.suppression_type || "") },
+        { label:"Motivo", render:r => escapeHtml(r.reason || "") },
+        { label:"Ativo", render:r => escapeHtml(r.active || "") },
+        { label:"Data", render:r => escapeHtml(r.created_at || "") }
+      ], "Nenhuma supressão carregada.");
+
+      renderTable("#mail-templates-wrap", state.mail.templates, [
+        { label:"Template", render:r => "<strong>" + escapeHtml(r.template_key || "") + "</strong>" },
+        { label:"Ativo", render:r => escapeHtml(r.active || "") },
+        { label:"Tipo", render:r => escapeHtml(r.template_type || "") },
+        { label:"Assunto fallback", render:r => escapeHtml(r.fallback_subject || "") }
+      ], "Nenhum template carregado.");
+
+      renderTable("#mail-lists-wrap", state.mail.manualLists, [
+        { label:"Lista", render:r => "<strong>" + escapeHtml(r.list_key || "") + "</strong>" },
+        { label:"Email", render:r => escapeHtml(r.email || "") },
+        { label:"Nome", render:r => escapeHtml(r.name || "") },
+        { label:"Ativo", render:r => escapeHtml(r.active || "") },
+        { label:"Data", render:r => escapeHtml(r.created_at || "") }
+      ], "Nenhuma lista carregada.");
     }
 
     function renderDiagnostics(){
@@ -936,14 +1287,22 @@
         contract: state.contract
       };
 
+      const techPack = {
+        mail_health: state.mail.health,
+        mail_overview: state.mail.overview,
+        mail_last: state.mail.raw,
+        pubcare_module: detectPubcareModule()
+      };
+
       $("#public-box").textContent = safeJson(publicPack.status || publicPack.health || publicPack.contract || "Nenhuma leitura ainda.");
-      $("#mail-tech-box").textContent = safeJson(state.mail.health || "Nenhuma leitura ainda.");
+      $("#mail-tech-box").textContent = safeJson(techPack.mail_health || techPack.mail_overview || techPack.pubcare_module || "Nenhuma leitura ainda.");
     }
 
     function renderAll(){
       renderSummary();
-      renderCoreTables();
-      renderMailBoxes();
+      renderRelationship();
+      renderCare();
+      renderMail();
       renderDiagnostics();
     }
 
@@ -954,6 +1313,7 @@
       if(mode === "health") state.health = json;
       if(mode === "contract") state.contract = json;
 
+      state.diagnostics.publicLastMode = mode;
       renderAll();
       return json;
     }
@@ -971,6 +1331,14 @@
 
       if(action === "admin_list_tickets"){
         state.tickets = Array.isArray(json.rows) ? json.rows : [];
+      }
+
+      if(action === "admin_get_ticket"){
+        state.selectedTicket = json.data || null;
+      }
+
+      if(action === "admin_list_ticket_messages"){
+        state.selectedTicketMessages = Array.isArray(json.rows) ? json.rows : [];
       }
 
       renderAll();
@@ -1047,15 +1415,23 @@
       setBanner("ok", "Sistema sincronizado.");
     }
 
-    async function prepareSystem(){
+    async function installAll(){
       clearBanner();
 
-      await apiPost("admin_install_crm", {});
-      await apiPost("admin_mail_bootstrap", {});
+      try{
+        await apiPost("instalar_tudo", {});
+      }catch(_){
+        try{
+          await apiPost("instalarTudo", {});
+        }catch(__){
+          await apiPost("admin_install_crm", {});
+          await apiPost("admin_mail_bootstrap", {});
+        }
+      }
+
       await refreshPublic();
       await refreshSystem();
-
-      setBanner("ok", "Core e PUBMAIL preparados.");
+      setBanner("ok", "Sistema instalado e sincronizado.");
     }
 
     async function loadAllRelationship(){
@@ -1075,6 +1451,99 @@
       setBanner("ok", "Relacionamento carregado.");
     }
 
+    async function selectTicket(ticketId){
+      if(!ticketId) return;
+
+      state.selectedTicketId = ticketId;
+      clearBanner();
+
+      const results = await Promise.all([
+        apiPost("admin_get_ticket", { ticket_id: ticketId }),
+        apiPost("admin_list_ticket_messages", { ticket_id: ticketId })
+      ]);
+
+      state.selectedTicket = results[0] && results[0].data ? results[0].data : null;
+      state.selectedTicketMessages = Array.isArray(results[1].rows) ? results[1].rows : [];
+
+      renderAll();
+      setBanner("ok", "Ticket carregado.");
+    }
+
+    async function refreshSelectedTicket(){
+      if(!state.selectedTicketId){
+        throw new Error("Selecione um ticket.");
+      }
+      await selectTicket(state.selectedTicketId);
+    }
+
+    async function replySelectedTicket(){
+      if(!state.selectedTicketId){
+        throw new Error("Selecione um ticket.");
+      }
+
+      clearBanner();
+
+      await apiPost("admin_reply_ticket", {
+        ticket_id: state.selectedTicketId,
+        message: stringValue($("#reply-message").value),
+        status: stringValue($("#reply-status").value),
+        channel: stringValue($("#reply-channel").value),
+        sent_by: stringValue($("#reply-sent-by").value)
+      });
+
+      $("#reply-message").value = "";
+      await selectTicket(state.selectedTicketId);
+      await runCoreAction("admin_list_tickets", {});
+      setBanner("ok", "Resposta registrada.");
+    }
+
+    function attachTicketRowClicks(){
+      $all("[data-ticket-id]").forEach(function(el){
+        el.addEventListener("click", function(){
+          const id = stringValue(el.getAttribute("data-ticket-id"));
+          handleAction(async function(){
+            await selectTicket(id);
+          });
+        });
+      });
+    }
+
+    function setMainView(viewId){
+      $all(".view").forEach(function(el){
+        el.classList.remove("active");
+      });
+      $all("[data-view]").forEach(function(el){
+        el.classList.remove("active");
+      });
+
+      $("#" + viewId).classList.add("active");
+      $all('[data-view="' + viewId + '"]').forEach(function(el){
+        el.classList.add("active");
+      });
+    }
+
+    function setRelationshipSubView(viewId){
+      ["rel-leads","rel-contacts"].forEach(function(id){
+        const el = $("#" + id);
+        if(el) el.style.display = id === viewId ? "block" : "none";
+      });
+
+      $all("[data-subview]").forEach(function(el){
+        el.classList.toggle("active", el.getAttribute("data-subview") === viewId);
+      });
+    }
+
+    function setMailView(viewId){
+      ["mail-queue-view","mail-log-view","mail-send-view","mail-suppressions-view","mail-templates-view","mail-lists-view"].forEach(function(id){
+        const el = $("#" + id);
+        if(el) el.style.display = id === viewId ? "block" : "none";
+      });
+
+      $all("[data-mailview]").forEach(function(el){
+        el.classList.toggle("active", el.getAttribute("data-mailview") === viewId);
+      });
+    }
+
     async function handleAction(fn){
       try{
         await fn();
@@ -1092,12 +1561,13 @@
 
       $("#btn-sync-public").addEventListener("click", function(){ handleAction(refreshPublic); });
       $("#btn-sync-system").addEventListener("click", function(){ handleAction(refreshSystem); });
-      $("#btn-prepare-system").addEventListener("click", function(){ handleAction(prepareSystem); });
+      $("#btn-install-all").addEventListener("click", function(){ handleAction(installAll); });
 
       $("#btn-load-contacts").addEventListener("click", function(){
         handleAction(async function(){
           clearBanner();
           await runCoreAction("admin_list_contacts", {});
+          setRelationshipSubView("rel-contacts");
           setBanner("ok", "Contatos carregados.");
         });
       });
@@ -1106,9 +1576,12 @@
         handleAction(async function(){
           clearBanner();
           await runCoreAction("admin_list_leads", {});
+          setRelationshipSubView("rel-leads");
           setBanner("ok", "Leads carregados.");
         });
       });
+
+      $("#btn-load-all-rel").addEventListener("click", function(){ handleAction(loadAllRelationship); });
 
       $("#btn-load-tickets").addEventListener("click", function(){
         handleAction(async function(){
@@ -1118,7 +1591,15 @@
         });
       });
 
-      $("#btn-load-all-rel").addEventListener("click", function(){ handleAction(loadAllRelationship); });
+      $("#btn-refresh-selected-ticket").addEventListener("click", function(){
+        handleAction(refreshSelectedTicket);
+      });
+
+      $("#btn-reply-ticket").addEventListener("click", function(){
+        handleAction(replySelectedTicket);
+      });
+
+      $("#relationship-search").addEventListener("input", renderRelationship);
 
       $("#btn-mail-overview").addEventListener("click", function(){
         handleAction(async function(){
@@ -1168,6 +1649,7 @@
         handleAction(async function(){
           clearBanner();
           await runMailAction("admin_mail_list_templates", {});
+          setMailView("mail-templates-view");
           setBanner("ok", "Templates carregados.");
         });
       });
@@ -1176,6 +1658,7 @@
         handleAction(async function(){
           clearBanner();
           await runMailAction("admin_mail_list_queue", {});
+          setMailView("mail-queue-view");
           setBanner("ok", "Fila carregada.");
         });
       });
@@ -1184,6 +1667,7 @@
         handleAction(async function(){
           clearBanner();
           await runMailAction("admin_mail_list_log", {});
+          setMailView("mail-log-view");
           setBanner("ok", "Log carregado.");
         });
       });
@@ -1192,6 +1676,7 @@
         handleAction(async function(){
           clearBanner();
           await runMailAction("admin_mail_list_manual_lists", {});
+          setMailView("mail-lists-view");
           setBanner("ok", "Listas manuais carregadas.");
         });
       });
@@ -1200,6 +1685,7 @@
         handleAction(async function(){
           clearBanner();
           await runMailAction("admin_mail_list_suppressions", {});
+          setMailView("mail-suppressions-view");
           setBanner("ok", "Supressões carregadas.");
         });
       });
@@ -1213,6 +1699,7 @@
             notes: ""
           });
           await runMailAction("admin_mail_list_manual_lists", {});
+          setMailView("mail-lists-view");
           setBanner("ok", "Lista manual salva.");
         });
       });
@@ -1226,6 +1713,7 @@
             source: "panel"
           });
           await runMailAction("admin_mail_list_suppressions", {});
+          setMailView("mail-suppressions-view");
           setBanner("ok", "Supressão adicionada.");
         });
       });
@@ -1275,6 +1763,24 @@
           clearBanner();
           await runMailAction("admin_mail_health", {});
           setBanner("ok", "Mail health carregado.");
+        });
+      });
+
+      $all("[data-view]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          setMainView(btn.getAttribute("data-view"));
+        });
+      });
+
+      $all("[data-subview]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          setRelationshipSubView(btn.getAttribute("data-subview"));
+        });
+      });
+
+      $all("[data-mailview]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          setMailView(btn.getAttribute("data-mailview"));
         });
       });
     }
