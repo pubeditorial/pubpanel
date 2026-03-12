@@ -353,11 +353,9 @@
       <div class="sub">Leads, contatos, tickets e email.</div>
     </div>
 
-    <div class="row">
-      <button class="btn" id="btn-refresh">Atualizar</button>
-      <button class="btn btn-primary" id="btn-install-all">Preparar sistema</button>
-    </div>
-  </div>
+   <div class="row">
+  <button class="btn" id="btn-refresh">Atualizar</button>
+</div>
 
   <div class="statusline">
     <span id="pill-overall" class="pill muted-pill">Sistema —</span>
@@ -1277,6 +1275,7 @@ async function refreshEverything(){
 
   await runPublicMode("status");
   await runPublicMode("health");
+  await runPublicMode("contract");
 
   if(!state.adminToken){
     renderAll();
@@ -1285,9 +1284,9 @@ async function refreshEverything(){
   }
 
   try{
+    await loadRelationship();
     await loadCare();
-    await loadMailSummaryOnly();
-    renderAll();
+    await loadMail();
     setBanner("ok", "Painel atualizado.");
   }catch(err){
     if(isAdminAuthError(err)){
@@ -1311,36 +1310,7 @@ async function refreshEverything(){
   }
 }
     
-async function installAll(){
-  clearBanner();
 
-  try{
-    await apiPost("admin_install_all", {});
-    await refreshEverything();
-
-    const care = careModule();
-    const mail = mailHealth();
-    const core = coreHealth();
-
-    if(core && core.ready === true && mail && mail.ready === true && care && care.ready === true){
-      setBanner("ok", "Sistema preparado com core, email e atendimento.");
-      return;
-    }
-
-    if(care && care.ready !== true){
-      setBanner("warn", "A preparação do sistema terminou, mas o atendimento ainda não ficou pronto. Verifique o diagnóstico.");
-      return;
-    }
-
-    setBanner("ok", "Sistema preparado.");
-  }catch(err){
-    if(isBusyError(err)){
-      setBanner("warn", "O sistema está ocupado durante a preparação. Tente novamente em alguns segundos.");
-      return;
-    }
-    throw err;
-  }
-}
 async function replySelectedTicket(){
   if(!state.selectedTicketId){
     throw new Error("Nenhum ticket selecionado.");
@@ -1478,7 +1448,6 @@ function bind(){
   $("#btn-clear-token").addEventListener("click", function(){ handleAction(async function(){ clearToken(); }); });
 
   $("#btn-refresh").addEventListener("click", function(){ handleAction(refreshEverything); });
-  $("#btn-install-all").addEventListener("click", function(){ handleAction(installAll); });
 
   $("#btn-refresh-care").addEventListener("click", function(){ handleAction(loadCare); });
   $("#btn-reply-ticket").addEventListener("click", function(){ handleAction(replySelectedTicket); });
@@ -1490,12 +1459,12 @@ function bind(){
     });
   });
 
- $("#btn-mail-refresh").addEventListener("click", function(){
-  handleAction(async function(){
-    await loadMailSummaryOnly();
-    setBanner("ok", "Email atualizado.");
+  $("#btn-mail-refresh").addEventListener("click", function(){
+    handleAction(async function(){
+      await loadMail();
+      setBanner("ok", "Email atualizado.");
+    });
   });
-});
 
   $("#btn-mail-process").addEventListener("click", function(){ handleAction(processMail); });
   $("#btn-mail-send-manual").addEventListener("click", function(){ handleAction(sendManualMail); });
@@ -1529,6 +1498,7 @@ function bind(){
     });
   });
 }
+    
 async function boot(){
   state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || "";
   $("#api-base").value = state.apiBase;
