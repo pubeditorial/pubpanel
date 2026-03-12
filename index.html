@@ -609,7 +609,7 @@
       STORAGE_API_BASE: "PUBPANEL_COG_V1_API_BASE"
     };
 
-    const state = {
+        const state = {
       apiBase: "",
       adminToken: "",
 
@@ -634,6 +634,8 @@
         raw: null
       }
     };
+
+    let uiBusy = false;
 
     function $(selector){
       return document.querySelector(selector);
@@ -737,16 +739,13 @@ async function applyToken(){
   }
 
   try{
-    await Promise.all([
-      loadRelationship(),
-      loadCare(),
-      loadMail()
-    ]);
+    await loadRelationship();
+    await loadCare();
+    await loadMail();
     setBanner("ok", "Token aplicado.");
   }catch(err){
-    clearAdminState();
-
     if(isAdminAuthError(err)){
+      clearAdminState();
       state.adminToken = "";
       $("#admin-token").value = "";
       renderAll();
@@ -754,11 +753,18 @@ async function applyToken(){
       return;
     }
 
+    if(isBusyError(err)){
+      renderAll();
+      setBanner("warn", "O sistema está ocupado no momento. Tente aplicar o token novamente em alguns segundos.");
+      return;
+    }
+
+    clearAdminState();
     renderAll();
     setBanner("error", err.message || "Falha ao carregar dados administrativos.");
   }
 }
-
+    
 function clearToken(){
   state.adminToken = "";
   $("#admin-token").value = "";
@@ -831,8 +837,37 @@ async function apiPost(action, payload){
 
   return readJsonResponse(response);
 }
+
+async function apiGet(mode){
+  requireApiBase();
+
+  const url = new URL(state.apiBase);
+  url.searchParams.set("mode", mode);
+
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    cache: "no-store"
+  });
+
+  return readJsonResponse(response);
+}
+
+function isBusyError(err){
+  const code = String(err && err.code || "").toUpperCase();
+  const message = String(err && err.message || "").toLowerCase();
+
+  return (
+    code === "SYSTEM_UNAVAILABLE" ||
+    message.indexOf("sistema ocupado") >= 0
+  );
+}
+
+    
+
 function coreHealth(){
-  return state.health && state.health.data && state.health.data.core ? state.health.data.core : null;
+  return state.health && state.health.data && state.health.data.core
+    ? state.health.data.core
+    : null;
 }
 
 function mailHealth(){
@@ -1122,13 +1157,11 @@ async function runMailAction(action, payload){
 }
 
 async function loadRelationship(){
-  const results = await Promise.all([
-    apiPost("admin_list_leads", {}),
-    apiPost("admin_list_contacts", {})
-  ]);
+  const leadsJson = await apiPost("admin_list_leads", {});
+  const contactsJson = await apiPost("admin_list_contacts", {});
 
-  state.leads = Array.isArray(results[0].rows) ? results[0].rows : [];
-  state.contacts = Array.isArray(results[1].rows) ? results[1].rows : [];
+  state.leads = Array.isArray(leadsJson.rows) ? leadsJson.rows : [];
+  state.contacts = Array.isArray(contactsJson.rows) ? contactsJson.rows : [];
   renderAll();
 }
 
@@ -1176,27 +1209,23 @@ async function selectTicket(ticketId){
 
   state.selectedTicketId = ticketId;
 
-  const results = await Promise.all([
-    apiPost("admin_get_ticket", { ticket_id: ticketId }),
-    apiPost("admin_list_ticket_messages", { ticket_id: ticketId })
-  ]);
+  const ticketJson = await apiPost("admin_get_ticket", { ticket_id: ticketId });
+  const messagesJson = await apiPost("admin_list_ticket_messages", { ticket_id: ticketId });
 
-  state.selectedTicket = results[0] && results[0].data ? results[0].data : null;
-  state.selectedTicketMessages = Array.isArray(results[1].rows) ? results[1].rows : [];
+  state.selectedTicket = ticketJson && ticketJson.data ? ticketJson.data : null;
+  state.selectedTicketMessages = Array.isArray(messagesJson.rows) ? messagesJson.rows : [];
   renderAll();
 }
 
 async function loadMail(){
-  const results = await Promise.all([
-    apiPost("admin_mail_health", {}),
-    apiPost("admin_mail_overview", {})
-  ]);
+  const healthJson = await apiPost("admin_mail_health", {});
+  const overviewJson = await apiPost("admin_mail_overview", {});
 
-  state.mail.health = results[0] || null;
-  state.mail.overview = results[1] || null;
+  state.mail.health = healthJson || null;
+  state.mail.overview = overviewJson || null;
   state.mail.raw = {
-    health: results[0] || null,
-    overview: results[1] || null
+    health: healthJson || null,
+    overview: overviewJson || null
   };
 
   renderAll();
@@ -1216,16 +1245,13 @@ async function refreshEverything(){
   }
 
   try{
-    await Promise.all([
-      loadRelationship(),
-      loadCare(),
-      loadMail()
-    ]);
+    await loadRelationship();
+    await loadCare();
+    await loadMail();
     setBanner("ok", "Painel atualizado.");
   }catch(err){
-    clearAdminState();
-
     if(isAdminAuthError(err)){
+      clearAdminState();
       state.adminToken = "";
       $("#admin-token").value = "";
       renderAll();
@@ -1233,16 +1259,32 @@ async function refreshEverything(){
       return;
     }
 
+    if(isBusyError(err)){
+      renderAll();
+      setBanner("warn", "O sistema está ocupado no momento. Atualize novamente em alguns segundos.");
+      return;
+    }
+
+    clearAdminState();
     renderAll();
     setBanner("warn", err.message || "Falha ao carregar dados administrativos.");
   }
 }
+    
 async function installAll(){
   clearBanner();
 
-  await apiPost("admin_install_all", {});
-  await refreshEverything();
-  setBanner("ok", "Sistema preparado.");
+  try{
+    await apiPost("admin_install_all", {});
+    await refreshEverything();
+    setBanner("ok", "Sistema preparado.");
+  }catch(err){
+    if(isBusyError(err)){
+      setBanner("warn", "O sistema está ocupado durante a preparação. Tente novamente em alguns segundos.");
+      return;
+    }
+    throw err;
+  }
 }
 
 async function replySelectedTicket(){
@@ -1250,61 +1292,105 @@ async function replySelectedTicket(){
     throw new Error("Nenhum ticket selecionado.");
   }
 
-  await apiPost("admin_reply_ticket", {
-    ticket_id: state.selectedTicketId,
-    message: stringValue($("#reply-message").value),
-    status: String($("#reply-status").value || "ANSWERED").toUpperCase(),
-    channel: String($("#reply-channel").value || "MANUAL").toUpperCase(),
-    sent_by: "admin"
-  });
+  try{
+    await apiPost("admin_reply_ticket", {
+      ticket_id: state.selectedTicketId,
+      message: stringValue($("#reply-message").value),
+      status: String($("#reply-status").value || "ANSWERED").toUpperCase(),
+      channel: String($("#reply-channel").value || "MANUAL").toUpperCase(),
+      sent_by: "admin"
+    });
 
-  $("#reply-message").value = "";
-  await loadCare();
-  setBanner("ok", "Resposta enviada.");
+    $("#reply-message").value = "";
+    await loadCare();
+    setBanner("ok", "Resposta enviada.");
+  }catch(err){
+    if(isBusyError(err)){
+      setBanner("warn", "O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.");
+      return;
+    }
+    throw err;
+  }
 }
 
 async function processMail(){
   clearBanner();
-  await apiPost("admin_mail_process_queue", {});
-  await loadMail();
-  setBanner("ok", "Emails processados.");
+
+  try{
+    await apiPost("admin_mail_process_queue", {});
+    await loadMail();
+    setBanner("ok", "Emails processados.");
+  }catch(err){
+    if(isBusyError(err)){
+      setBanner("warn", "O sistema está ocupado processando outras operações. Tente novamente em alguns segundos.");
+      return;
+    }
+    throw err;
+  }
 }
 
 async function sendManualMail(){
   clearBanner();
 
-  await apiPost("admin_mail_send_manual", {
-    template_key: "tmpl_manual_generic",
-    audience_mode: "manual_emails",
-    emails: stringValue($("#send-manual-emails").value),
-    manual_subject: stringValue($("#send-manual-subject").value),
-    manual_message: stringValue($("#send-manual-message").value),
-    item: ""
-  });
+  try{
+    await apiPost("admin_mail_send_manual", {
+      template_key: "tmpl_manual_generic",
+      audience_mode: "manual_emails",
+      emails: stringValue($("#send-manual-emails").value),
+      manual_subject: stringValue($("#send-manual-subject").value),
+      manual_message: stringValue($("#send-manual-message").value),
+      item: ""
+    });
 
-  await loadMail();
-  setBanner("ok", "Mensagem enviada.");
+    await loadMail();
+    setBanner("ok", "Mensagem enviada.");
+  }catch(err){
+    if(isBusyError(err)){
+      setBanner("warn", "O sistema está ocupado. Tente enviar a mensagem novamente em alguns segundos.");
+      return;
+    }
+    throw err;
+  }
 }
 
 async function addSuppression(){
   clearBanner();
 
-  await apiPost("admin_mail_add_suppression", {
-    email: stringValue($("#suppression-email").value),
-    reason: stringValue($("#suppression-reason").value),
-    source: "panel"
-  });
+  try{
+    await apiPost("admin_mail_add_suppression", {
+      email: stringValue($("#suppression-email").value),
+      reason: stringValue($("#suppression-reason").value),
+      source: "panel"
+    });
 
-  await loadMail();
-  setBanner("ok", "Email bloqueado.");
+    await loadMail();
+    setBanner("ok", "Email bloqueado.");
+  }catch(err){
+    if(isBusyError(err)){
+      setBanner("warn", "O sistema está ocupado. Tente bloquear o email novamente em alguns segundos.");
+      return;
+    }
+    throw err;
+  }
 }
-
 async function handleAction(fn){
+  if(uiBusy) return;
+
+  uiBusy = true;
+
   try{
     await fn();
   }catch(err){
     renderAll();
+
+    if(isBusyError(err)){
+      setBanner("warn", "O sistema está ocupado em outra operação. Tente novamente em alguns segundos.");
+      return;
+    }
+
     setBanner("error", err.message || "Erro.");
+  }finally{
+    uiBusy = false;
   }
 }
 
