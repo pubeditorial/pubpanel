@@ -934,25 +934,40 @@
       return null;
     }
 
-    function mailHealth(){
-      if(state.mail.health) return state.mail.health;
+   function mailHealth(){
+  const publicMail =
+    state.health &&
+    state.health.data &&
+    state.health.data.modules &&
+    state.health.data.modules.pubmail
+      ? state.health.data.modules.pubmail
+      : null;
 
-      if(state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail){
-        return state.health.data.modules.pubmail;
-      }
+  const adminMail = state.mail.health || null;
 
-      if(state.status && state.status.modules){
-        return {
-          available: state.status.modules.pubmail_available,
-          bound: state.status.modules.pubmail_bound,
-          installed: state.status.modules.pubmail_installed,
-          ready: state.status.modules.pubmail_ready,
-          ok: state.status.modules.pubmail_ready === true
-        };
-      }
+  if(!publicMail && !adminMail) return null;
+  if(!publicMail) return adminMail;
+  if(!adminMail) return publicMail;
 
-      return null;
-    }
+  return {
+    available: adminMail.available != null ? adminMail.available : publicMail.available,
+    bound: adminMail.bound != null ? adminMail.bound : publicMail.bound,
+    installed: adminMail.installed != null ? adminMail.installed : publicMail.installed,
+    ready: adminMail.ready != null ? adminMail.ready : publicMail.ready,
+    ok: adminMail.ok != null ? adminMail.ok : publicMail.ok,
+
+    status_label: adminMail.status_label || publicMail.status_label || "",
+    status_reason: adminMail.status_reason || publicMail.status_reason || "",
+    version: adminMail.version || publicMail.version || "",
+    template_folder_id: adminMail.template_folder_id || publicMail.template_folder_id || "",
+    pubcrm_root_folder_id: adminMail.pubcrm_root_folder_id || publicMail.pubcrm_root_folder_id || "",
+    pubcrm_mail_folder_id: adminMail.pubcrm_mail_folder_id || publicMail.pubcrm_mail_folder_id || "",
+    shared_bindings: adminMail.shared_bindings || publicMail.shared_bindings || null,
+    triggers: adminMail.triggers || publicMail.triggers || null,
+    errors: adminMail.errors || publicMail.errors || [],
+    error: adminMail.error || publicMail.error || ""
+  };
+}
 
     function careModule(){
       if(state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubcare){
@@ -971,17 +986,17 @@
       return null;
     }
 
-    function mailOverview(){
-      if(state.mail.overview && state.mail.overview.data){
-        return state.mail.overview.data;
-      }
+   function mailOverview(){
+  if(state.mail.overview && state.mail.overview.data){
+    return state.mail.overview.data;
+  }
 
-      if(state.mail.overview && typeof state.mail.overview === "object"){
-        return state.mail.overview.data || state.mail.overview;
-      }
+  if(state.mail.overview && typeof state.mail.overview === "object"){
+    return state.mail.overview.data || state.mail.overview;
+  }
 
-      return null;
-    }
+  return null;
+}
 
     function ticketCount(status){
       return state.tickets.filter(function(t){
