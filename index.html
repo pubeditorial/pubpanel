@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f172a" />
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <title>PUBPANEL 1.0</title>
+  <title>PUBPANEL 1.1</title>
 
   <style>
     :root{
@@ -350,6 +350,19 @@
       line-height:1.55;
     }
 
+    .status-box{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:14px;
+      background:#fff;
+      display:grid;
+      gap:6px;
+    }
+
+    .status-box strong{
+      font-size:14px;
+    }
+
     @media (max-width:980px){
       .grid-2,.grid-3,.grid-4{
         grid-template-columns:1fr;
@@ -363,8 +376,8 @@
     <section class="panel">
       <div class="top">
         <div>
-          <div class="title">PUBPANEL 1.0</div>
-          <div class="sub">Leads, contatos, tickets e email.</div>
+          <div class="title">PUBPANEL 1.1</div>
+          <div class="sub">Leads, contatos, tickets, estado de email e fila.</div>
         </div>
 
         <div class="row">
@@ -435,9 +448,9 @@
         </div>
 
         <div class="metric">
-          <div class="k">Emails em fila</div>
+          <div class="k">Fila de email</div>
           <div class="v" id="sum-mail-queue">—</div>
-          <div class="n">Aguardando envio.</div>
+          <div class="n">Itens aguardando processamento.</div>
         </div>
       </div>
     </section>
@@ -537,27 +550,35 @@
       <div class="top">
         <div>
           <h2 class="section-title">Email</h2>
-          <p class="section-text">Ações principais de email, com poucas escolhas.</p>
+          <p class="section-text">Fluxo alinhado ao PUBMAIL 2.0: preparar módulo, escanear, manter estado e processar fila.</p>
         </div>
         <div class="row">
           <button class="btn" id="btn-mail-refresh">Atualizar email</button>
-          <button class="btn btn-primary" id="btn-mail-process">Processar emails</button>
+          <button class="btn" id="btn-mail-bootstrap">Preparar email</button>
+          <button class="btn" id="btn-mail-scan">Escanear leads e tickets</button>
+          <button class="btn btn-primary" id="btn-mail-process">Processar fila de email</button>
         </div>
       </div>
 
       <div style="height:12px"></div>
 
-      <div class="grid-3">
+      <div class="grid-4">
         <div class="metric">
           <div class="k">Fila</div>
           <div class="v" id="mail-queue-count">—</div>
-          <div class="n">Emails aguardando.</div>
+          <div class="n">Itens aguardando.</div>
         </div>
 
         <div class="metric">
-          <div class="k">Enviados</div>
+          <div class="k">Estados</div>
+          <div class="v" id="mail-states-count">—</div>
+          <div class="n">Estado persistido por mensagem/template.</div>
+        </div>
+
+        <div class="metric">
+          <div class="k">Eventos de negócio</div>
           <div class="v" id="mail-log-count">—</div>
-          <div class="n">Histórico de envio.</div>
+          <div class="n">Histórico útil do mail_log.</div>
         </div>
 
         <div class="metric">
@@ -570,13 +591,31 @@
       <div style="height:14px"></div>
 
       <div class="grid-2">
+        <div class="status-box">
+          <div class="label">Situação do módulo de email</div>
+          <strong id="mail-module-status">—</strong>
+          <div id="mail-module-reason" class="micro">Nenhuma leitura ainda.</div>
+          <div id="mail-module-triggers" class="micro">Triggers —</div>
+        </div>
+
+        <div class="status-box">
+          <div class="label">Leitura rápida</div>
+          <div id="mail-module-meta" class="micro">Versão —</div>
+          <div id="mail-module-folders" class="micro">Pasta —</div>
+          <div id="mail-module-errors" class="micro">Sem detalhes.</div>
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid-2">
         <div class="field">
-          <label class="label" for="send-manual-emails">Enviar mensagem manual</label>
+          <label class="label" for="send-manual-emails">Preparar mensagem manual</label>
           <input id="send-manual-emails" class="input" placeholder="emails separados por vírgula ou quebra de linha" />
           <input id="send-manual-subject" class="input" placeholder="Assunto" />
           <textarea id="send-manual-message" class="textarea" placeholder="Mensagem"></textarea>
           <div class="row">
-            <button class="btn btn-primary" id="btn-mail-send-manual">Enviar mensagem</button>
+            <button class="btn btn-primary" id="btn-mail-send-manual">Preparar mensagem</button>
           </div>
         </div>
 
@@ -601,6 +640,7 @@
           <button class="btn" id="btn-load-health">Health</button>
           <button class="btn" id="btn-load-contract">Contract</button>
           <button class="btn" id="btn-load-mail-health">Mail health</button>
+          <button class="btn" id="btn-load-mail-overview">Mail overview</button>
         </div>
 
         <div class="grid-2">
@@ -619,7 +659,7 @@
 
   <script>
     const PUBPANEL = {
-      VERSION: "1.0",
+      VERSION: "1.1",
       STORAGE_API_BASE: "PUBPANEL_COG_V1_API_BASE"
     };
 
@@ -934,40 +974,40 @@
       return null;
     }
 
-   function mailHealth(){
-  const publicMail =
-    state.health &&
-    state.health.data &&
-    state.health.data.modules &&
-    state.health.data.modules.pubmail
-      ? state.health.data.modules.pubmail
-      : null;
+    function mailHealth(){
+      const publicMail =
+        state.health &&
+        state.health.data &&
+        state.health.data.modules &&
+        state.health.data.modules.pubmail
+          ? state.health.data.modules.pubmail
+          : null;
 
-  const adminMail = state.mail.health || null;
+      const adminMail = state.mail.health || null;
 
-  if(!publicMail && !adminMail) return null;
-  if(!publicMail) return adminMail;
-  if(!adminMail) return publicMail;
+      if(!publicMail && !adminMail) return null;
+      if(!publicMail) return adminMail;
+      if(!adminMail) return publicMail;
 
-  return {
-    available: adminMail.available != null ? adminMail.available : publicMail.available,
-    bound: adminMail.bound != null ? adminMail.bound : publicMail.bound,
-    installed: adminMail.installed != null ? adminMail.installed : publicMail.installed,
-    ready: adminMail.ready != null ? adminMail.ready : publicMail.ready,
-    ok: adminMail.ok != null ? adminMail.ok : publicMail.ok,
+      return {
+        available: adminMail.available != null ? adminMail.available : publicMail.available,
+        bound: adminMail.bound != null ? adminMail.bound : publicMail.bound,
+        installed: adminMail.installed != null ? adminMail.installed : publicMail.installed,
+        ready: adminMail.ready != null ? adminMail.ready : publicMail.ready,
+        ok: adminMail.ok != null ? adminMail.ok : publicMail.ok,
 
-    status_label: adminMail.status_label || publicMail.status_label || "",
-    status_reason: adminMail.status_reason || publicMail.status_reason || "",
-    version: adminMail.version || publicMail.version || "",
-    template_folder_id: adminMail.template_folder_id || publicMail.template_folder_id || "",
-    pubcrm_root_folder_id: adminMail.pubcrm_root_folder_id || publicMail.pubcrm_root_folder_id || "",
-    pubcrm_mail_folder_id: adminMail.pubcrm_mail_folder_id || publicMail.pubcrm_mail_folder_id || "",
-    shared_bindings: adminMail.shared_bindings || publicMail.shared_bindings || null,
-    triggers: adminMail.triggers || publicMail.triggers || null,
-    errors: adminMail.errors || publicMail.errors || [],
-    error: adminMail.error || publicMail.error || ""
-  };
-}
+        status_label: adminMail.status_label || publicMail.status_label || "",
+        status_reason: adminMail.status_reason || publicMail.status_reason || "",
+        version: adminMail.version || publicMail.version || "",
+        template_folder_id: adminMail.template_folder_id || publicMail.template_folder_id || "",
+        pubcrm_root_folder_id: adminMail.pubcrm_root_folder_id || publicMail.pubcrm_root_folder_id || "",
+        pubcrm_mail_folder_id: adminMail.pubcrm_mail_folder_id || publicMail.pubcrm_mail_folder_id || "",
+        shared_bindings: adminMail.shared_bindings || publicMail.shared_bindings || null,
+        triggers: adminMail.triggers || publicMail.triggers || null,
+        errors: adminMail.errors || publicMail.errors || [],
+        error: adminMail.error || publicMail.error || ""
+      };
+    }
 
     function careModule(){
       if(state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubcare){
@@ -986,17 +1026,17 @@
       return null;
     }
 
-   function mailOverview(){
-  if(state.mail.overview && state.mail.overview.data){
-    return state.mail.overview.data;
-  }
+    function mailOverview(){
+      if(state.mail.overview && state.mail.overview.data){
+        return state.mail.overview.data;
+      }
 
-  if(state.mail.overview && typeof state.mail.overview === "object"){
-    return state.mail.overview.data || state.mail.overview;
-  }
+      if(state.mail.overview && typeof state.mail.overview === "object"){
+        return state.mail.overview.data || state.mail.overview;
+      }
 
-  return null;
-}
+      return null;
+    }
 
     function ticketCount(status){
       return state.tickets.filter(function(t){
@@ -1027,13 +1067,12 @@
     function resolveMailLabel(mail){
       const overview = mailOverview();
 
-      if(mail && (mail.ready === true || mail.ok === true)) return "Pronto";
+      if(mail && mail.ok === true && mail.ready === true) return "Pronto";
       if(mail && mail.available === false) return "Indisponível";
-      if(mail && mail.installed === true) return "Atenção";
+      if(mail && (mail.installed === true || mail.bound === true)) return "Atenção";
 
       if(state.status && state.status.modules && state.status.modules.pubmail_ready === true) return "Pronto";
       if(state.status && state.status.modules && state.status.modules.pubmail_installed === true) return "Atenção";
-
       if(overview && overview.health_ok === true) return "Pronto";
 
       return mail ? "Instalar" : "—";
@@ -1206,10 +1245,52 @@
     }
 
     function renderMail(){
+      const mail = mailHealth();
       const overview = mailOverview();
+      const triggers = mail && mail.triggers ? mail.triggers : null;
+      const triggerNames = triggers && Array.isArray(triggers.items)
+        ? triggers.items.map(function(item){ return item.handler; }).filter(Boolean)
+        : [];
+
       $("#mail-queue-count").textContent = overview ? String(overview.queue_count || 0) : "—";
+      $("#mail-states-count").textContent = overview ? String(overview.contact_state_count || 0) : "—";
       $("#mail-log-count").textContent = overview ? String(overview.log_count || 0) : "—";
       $("#mail-suppressions-count").textContent = overview ? String(overview.suppressions_count || 0) : "—";
+
+      $("#mail-module-status").textContent =
+        mail
+          ? ((mail.status_label || resolveMailLabel(mail)) + (mail.version ? (" · v" + mail.version) : ""))
+          : "Sem leitura administrativa de email.";
+
+      $("#mail-module-reason").textContent =
+        mail
+          ? (mail.status_reason || mail.error || "Sem motivo adicional.")
+          : "Use o token e atualize o módulo de email.";
+
+      $("#mail-module-triggers").textContent =
+        triggers
+          ? ("Triggers " + String(triggers.total || 0) + " · " + (triggerNames.length ? triggerNames.join(", ") : "sem nomes"))
+          : "Triggers —";
+
+      $("#mail-module-meta").textContent =
+        mail
+          ? ("Disponível: " + boolText(mail.available) + " · Vinculado: " + boolText(mail.bound) + " · Instalado: " + boolText(mail.installed) + " · Pronto: " + boolText(mail.ready))
+          : "Versão —";
+
+      $("#mail-module-folders").textContent =
+        mail
+          ? ("Pasta: " + (mail.template_folder_id || "—"))
+          : "Pasta —";
+
+      const errors = mail && Array.isArray(mail.errors) ? mail.errors.filter(Boolean) : [];
+      $("#mail-module-errors").textContent =
+        errors.length
+          ? errors.join(" | ")
+          : (mail && mail.error ? mail.error : "Sem detalhes.");
+
+      function boolText(v){
+        return v === true ? "sim" : v === false ? "não" : "—";
+      }
     }
 
     function renderDiagnostics(){
@@ -1436,13 +1517,50 @@
       }
     }
 
+    async function bootstrapMail(){
+      clearBanner();
+
+      try{
+        await apiPost("admin_mail_bootstrap", {});
+        await loadMail();
+        await runPublicMode("health");
+        setBanner("ok", "Módulo de email preparado.");
+      }catch(err){
+        if(isBusyError(err)){
+          setBanner("warn", "O sistema está ocupado. Tente preparar o módulo novamente em alguns segundos.");
+          return;
+        }
+        throw err;
+      }
+    }
+
+    async function scanMail(){
+      clearBanner();
+
+      try{
+        const result = await apiPost("admin_mail_scan", {});
+        await loadMail();
+        setBanner("ok", "Scanner executado. Itens enfileirados: " + String(result && result.data ? (result.data.queued_total || 0) : 0) + ".");
+      }catch(err){
+        if(isBusyError(err)){
+          setBanner("warn", "O sistema está ocupado. Tente escanear novamente em alguns segundos.");
+          return;
+        }
+        if(isSchemaError(err)){
+          setBanner("error", "O módulo de email ainda não está preparado nesta base.");
+          return;
+        }
+        throw err;
+      }
+    }
+
     async function processMail(){
       clearBanner();
 
       try{
-        await apiPost("admin_mail_process_queue", {});
+        const result = await apiPost("admin_mail_process_queue", {});
         await loadMail();
-        setBanner("ok", "Emails processados.");
+        setBanner("ok", "Fila processada. Enviados: " + String(result && result.data ? (result.data.sent || 0) : 0) + ".");
       }catch(err){
         if(isBusyError(err)){
           setBanner("warn", "O sistema está ocupado processando outras operações. Tente novamente em alguns segundos.");
@@ -1473,7 +1591,7 @@
         setBanner("ok", "Mensagem preparada na fila.");
       }catch(err){
         if(isBusyError(err)){
-          setBanner("warn", "O sistema está ocupado. Tente enviar a mensagem novamente em alguns segundos.");
+          setBanner("warn", "O sistema está ocupado. Tente preparar a mensagem novamente em alguns segundos.");
           return;
         }
         if(isSchemaError(err)){
@@ -1551,10 +1669,12 @@
       $("#btn-mail-refresh").addEventListener("click", function(){
         handleAction(async function(){
           await loadMail();
-          setBanner("ok", "Email atualizado.");
+          setBanner("ok", "Resumo de email atualizado.");
         });
       });
 
+      $("#btn-mail-bootstrap").addEventListener("click", function(){ handleAction(bootstrapMail); });
+      $("#btn-mail-scan").addEventListener("click", function(){ handleAction(scanMail); });
       $("#btn-mail-process").addEventListener("click", function(){ handleAction(processMail); });
       $("#btn-mail-send-manual").addEventListener("click", function(){ handleAction(sendManualMail); });
       $("#btn-mail-add-suppression").addEventListener("click", function(){ handleAction(addSuppression); });
@@ -1584,9 +1704,19 @@
         handleAction(async function(){
           const json = await apiPost("admin_mail_health", {});
           state.mail.health = json;
-          state.mail.raw = json;
+          state.mail.raw = Object.assign({}, state.mail.raw || {}, { health: json });
           renderAll();
           setBanner("ok", "Mail health carregado.");
+        });
+      });
+
+      $("#btn-load-mail-overview").addEventListener("click", function(){
+        handleAction(async function(){
+          const json = await apiPost("admin_mail_overview", {});
+          state.mail.overview = json;
+          state.mail.raw = Object.assign({}, state.mail.raw || {}, { overview: json });
+          renderAll();
+          setBanner("ok", "Mail overview carregado.");
         });
       });
     }
