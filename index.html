@@ -23,6 +23,7 @@
       --radius:16px;
       --shadow:0 10px 28px rgba(15,23,42,.06);
       --wrap:1080px;
+      --control-h:48px;
     }
 
     *{box-sizing:border-box}
@@ -36,6 +37,7 @@
     }
 
     button,input,select,textarea{font:inherit}
+    button{appearance:none}
     :focus-visible{outline:3px solid rgba(20,115,230,.24);outline-offset:2px}
 
     .wrap{
@@ -45,6 +47,7 @@
       padding:20px;
       display:grid;
       gap:16px;
+      align-items:start;
     }
 
     .panel{
@@ -53,6 +56,7 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:18px;
+      min-width:0;
     }
 
     .top{
@@ -63,10 +67,13 @@
       flex-wrap:wrap;
     }
 
+    .top > *{min-width:0}
+
     .title{
       font-size:28px;
       font-weight:900;
       letter-spacing:-.03em;
+      line-height:1.1;
     }
 
     .sub{
@@ -81,6 +88,7 @@
       font-size:20px;
       font-weight:900;
       letter-spacing:-.02em;
+      line-height:1.2;
     }
 
     .section-text{
@@ -88,6 +96,7 @@
       color:var(--muted);
       font-size:14px;
       line-height:1.6;
+      max-width:76ch;
     }
 
     .row{
@@ -105,7 +114,7 @@
     }
 
     .btn{
-      min-height:48px;
+      min-height:var(--control-h);
       padding:12px 16px;
       border-radius:12px;
       border:1px solid var(--line);
@@ -113,17 +122,32 @@
       color:var(--fg);
       font-weight:800;
       cursor:pointer;
+      line-height:1.15;
+      transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease, background-color .18s ease;
     }
+
+    .btn:hover{
+      border-color:#bfd0e2;
+      box-shadow:0 6px 18px rgba(15,23,42,.06);
+    }
+
+    .btn:active{transform:translateY(1px)}
 
     .btn[disabled]{
       opacity:.55;
       cursor:not-allowed;
+      box-shadow:none;
+      transform:none;
     }
 
     .btn-primary{
       background:var(--blue);
       border-color:var(--blue);
       color:#fff;
+    }
+
+    .btn-primary:hover{
+      box-shadow:0 8px 20px rgba(20,115,230,.18);
     }
 
     .btn-danger{
@@ -143,42 +167,29 @@
     }
 
     .banner.show{display:block}
-    .banner.ok{
-      background:rgba(18,128,92,.05);
-      border-color:rgba(18,128,92,.18);
-    }
-    .banner.warn{
-      background:rgba(183,106,0,.05);
-      border-color:rgba(183,106,0,.18);
-    }
-    .banner.error{
-      background:rgba(211,21,16,.05);
-      border-color:rgba(211,21,16,.18);
+    .banner.ok{background:rgba(18,128,92,.05);border-color:rgba(18,128,92,.18)}
+    .banner.warn{background:rgba(183,106,0,.05);border-color:rgba(183,106,0,.18)}
+    .banner.error{background:rgba(211,21,16,.05);border-color:rgba(211,21,16,.18)}
+
+    .grid-2,.grid-3,.grid-4{
+      display:grid;
+      gap:14px;
+      align-items:start;
     }
 
-    .grid-2{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:14px;
-    }
-
-    .grid-3{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-    }
-
-    .grid-4{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
-    }
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
 
     .metric{
       border:1px solid var(--line);
       border-radius:14px;
       padding:16px;
       background:#fff;
+      min-height:132px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
     }
 
     .metric .k{
@@ -195,6 +206,7 @@
       font-weight:900;
       line-height:1;
       letter-spacing:-.03em;
+      min-height:32px;
     }
 
     .metric .n{
@@ -221,6 +233,7 @@
       font-size:12px;
       font-weight:900;
       background:#fff;
+      white-space:nowrap;
     }
 
     .pill::before{
@@ -229,16 +242,18 @@
       height:8px;
       border-radius:99px;
       background:currentColor;
+      flex:0 0 auto;
     }
 
-    .ok-pill{color:var(--green); background:rgba(18,128,92,.06); border-color:rgba(18,128,92,.18)}
-    .warn-pill{color:var(--amber); background:rgba(183,106,0,.06); border-color:rgba(183,106,0,.18)}
-    .error-pill{color:var(--red); background:rgba(211,21,16,.06); border-color:rgba(211,21,16,.18)}
+    .ok-pill{color:var(--green);background:rgba(18,128,92,.06);border-color:rgba(18,128,92,.18)}
+    .warn-pill{color:var(--amber);background:rgba(183,106,0,.06);border-color:rgba(183,106,0,.18)}
+    .error-pill{color:var(--red);background:rgba(211,21,16,.06);border-color:rgba(211,21,16,.18)}
     .muted-pill{color:#64748b}
 
     .field{
       display:grid;
       gap:8px;
+      min-width:0;
     }
 
     .label{
@@ -272,6 +287,7 @@
       background:#fff;
       line-height:1.6;
       font-size:14px;
+      min-height:88px;
     }
 
     .list{
@@ -284,6 +300,7 @@
       border-radius:12px;
       padding:14px;
       background:#fff;
+      min-width:0;
     }
 
     .item-button{
@@ -296,6 +313,7 @@
       font-weight:900;
       font-size:15px;
       line-height:1.35;
+      word-break:break-word;
     }
 
     .item-sub{
@@ -303,6 +321,7 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.5;
+      word-break:break-word;
     }
 
     .item-meta{
@@ -310,6 +329,7 @@
       color:var(--muted);
       font-size:12px;
       line-height:1.5;
+      word-break:break-word;
     }
 
     .item.active{
@@ -327,6 +347,7 @@
       white-space:pre-wrap;
       word-break:break-word;
       overflow:auto;
+      min-height:220px;
     }
 
     details summary{
@@ -348,6 +369,7 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.55;
+      word-break:break-word;
     }
 
     .status-box{
@@ -357,16 +379,20 @@
       background:#fff;
       display:grid;
       gap:6px;
+      min-height:138px;
+      align-content:start;
     }
 
     .status-box strong{
       font-size:14px;
+      line-height:1.4;
     }
 
+    .section-actions{justify-content:flex-end}
+
     @media (max-width:980px){
-      .grid-2,.grid-3,.grid-4{
-        grid-template-columns:1fr;
-      }
+      .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+      .section-actions{justify-content:flex-start}
     }
   </style>
 </head>
@@ -380,7 +406,7 @@
           <div class="sub">Leads, contatos, tickets, estado de email e fila.</div>
         </div>
 
-        <div class="row">
+        <div class="row section-actions">
           <button class="btn" id="btn-refresh">Atualizar</button>
         </div>
       </div>
@@ -461,7 +487,7 @@
           <h2 class="section-title">O que precisa de atenção agora</h2>
           <p class="section-text">O sistema seleciona automaticamente o primeiro ticket pendente.</p>
         </div>
-        <div class="row">
+        <div class="row section-actions">
           <button class="btn" id="btn-refresh-care">Atualizar atendimento</button>
         </div>
       </div>
@@ -509,7 +535,7 @@
                 <option value="MANUAL">Manual</option>
                 <option value="EMAIL">Email</option>
               </select>
-              <div class="micro">Manual registra a resposta no ticket. Email registra a resposta e envia pelo fluxo integrado do sistema, desde que o módulo de atendimento esteja preparado.</div>
+              <div class="micro">Manual registra a resposta no ticket. Email registra a resposta e envia pelo fluxo integrado do sistema, se o módulo estiver preparado.</div>
             </div>
           </div>
 
@@ -526,7 +552,7 @@
           <h2 class="section-title">Relacionamento</h2>
           <p class="section-text">Lista simples dos registros mais recentes.</p>
         </div>
-        <div class="row">
+        <div class="row section-actions">
           <button class="btn" id="btn-load-relationship">Atualizar lista</button>
         </div>
       </div>
@@ -550,9 +576,9 @@
       <div class="top">
         <div>
           <h2 class="section-title">Email</h2>
-          <p class="section-text">Fluxo alinhado ao PUBMAIL 2.0: preparar módulo, escanear, manter estado e processar fila.</p>
+          <p class="section-text">Fluxo alinhado ao PUBMAIL 1.0: preparar módulo, escanear, manter estado e processar fila.</p>
         </div>
-        <div class="row">
+        <div class="row section-actions">
           <button class="btn" id="btn-mail-refresh">Atualizar email</button>
           <button class="btn" id="btn-mail-bootstrap">Preparar email</button>
           <button class="btn" id="btn-mail-scan">Escanear leads e tickets</button>
@@ -572,7 +598,7 @@
         <div class="metric">
           <div class="k">Estados</div>
           <div class="v" id="mail-states-count">—</div>
-          <div class="n">Estado persistido por mensagem/template.</div>
+          <div class="n">Estado persistido por mensagem e template.</div>
         </div>
 
         <div class="metric">
@@ -660,25 +686,22 @@
   <script>
     const PUBPANEL = {
       VERSION: "1.0",
-      STORAGE_API_BASE: "PUBPANEL_COG_V1_API_BASE"
+      STORAGE_API_BASE: "PUBPANEL_COG_V1_API_BASE",
+      PACKAGE_LABEL: "PACOTE PUB EDITORIAL SCRIPTS"
     };
 
     const state = {
       apiBase: "",
       adminToken: "",
-
       status: null,
       health: null,
       contract: null,
-
       contacts: [],
       leads: [],
       tickets: [],
-
       selectedTicketId: "",
       selectedTicket: null,
       selectedTicketMessages: [],
-
       mail: {
         health: null,
         overview: null,
@@ -691,25 +714,26 @@
 
     let uiBusy = false;
 
-    function $(selector){
-      return document.querySelector(selector);
-    }
-
-    function stringValue(v){
-      return String(v == null ? "" : v).trim();
-    }
-
-    function safeJson(v){
-      try { return JSON.stringify(v, null, 2); }
-      catch(_) { return String(v); }
-    }
+    function $(selector){ return document.querySelector(selector); }
+    function stringValue(v){ return String(v == null ? "" : v).trim(); }
+    function safeJson(v){ try { return JSON.stringify(v, null, 2); } catch(_) { return String(v); } }
 
     function escapeHtml(v){
       return String(v == null ? "" : v)
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;");
+        .replace(/\"/g,"&quot;");
+    }
+
+    function normalizeItemLabel(value){
+      const raw = stringValue(value);
+      if(!raw) return "";
+      const upper = raw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+      if(upper === "PACOTE GRATUITO" || upper === "PACOTE PUB EDITORIAL SCRIPTS"){
+        return PUBPANEL.PACKAGE_LABEL;
+      }
+      return raw;
     }
 
     function setBanner(type, text){
@@ -728,11 +752,9 @@
       state.contacts = [];
       state.leads = [];
       state.tickets = [];
-
       state.selectedTicketId = "";
       state.selectedTicket = null;
       state.selectedTicketMessages = [];
-
       state.mail = {
         health: null,
         overview: null,
@@ -745,19 +767,12 @@
 
     async function saveApiBase(){
       const nextApiBase = stringValue($("#api-base").value);
-
       if(!nextApiBase){
         clearApiBase();
         setBanner("warn", "URL vazia.");
         return;
       }
-
-      try{
-        new URL(nextApiBase);
-      }catch(_){
-        throw new Error("URL do Web App inválida.");
-      }
-
+      try{ new URL(nextApiBase); }catch(_){ throw new Error("URL do Web App inválida."); }
       state.apiBase = nextApiBase;
       localStorage.setItem(PUBPANEL.STORAGE_API_BASE, state.apiBase);
       renderAll();
@@ -769,12 +784,9 @@
       state.status = null;
       state.health = null;
       state.contract = null;
-
       state.adminToken = "";
       $("#admin-token").value = "";
-
       clearAdminState();
-
       localStorage.removeItem(PUBPANEL.STORAGE_API_BASE);
       $("#api-base").value = "";
       renderAll();
@@ -793,7 +805,6 @@
       }
 
       clearBanner();
-
       const messages = [];
       let authFailed = false;
 
@@ -801,10 +812,7 @@
         await loadRelationship();
         messages.push("relacionamento ok");
       }catch(err){
-        if(isAdminAuthError(err)){
-          authFailed = true;
-          throw err;
-        }
+        if(isAdminAuthError(err)){ authFailed = true; throw err; }
         messages.push("relacionamento com falha: " + (err.message || "erro"));
       }
 
@@ -812,11 +820,7 @@
         await loadCare();
         messages.push("atendimento ok");
       }catch(err){
-        if(isAdminAuthError(err)){
-          authFailed = true;
-          throw err;
-        }
-
+        if(isAdminAuthError(err)){ authFailed = true; throw err; }
         if(isPubcareNotInstalledError(err) || isActionUnavailableError(err) || isSchemaError(err)){
           messages.push("atendimento indisponível nesta base");
         } else {
@@ -828,16 +832,9 @@
         await loadMailSummaryOnly();
         messages.push("email ok");
       }catch(err){
-        if(isAdminAuthError(err)){
-          authFailed = true;
-          throw err;
-        }
-
-        if(isSchemaError(err)){
-          messages.push("email com estrutura pendente");
-        } else {
-          messages.push("email com falha: " + (err.message || "erro"));
-        }
+        if(isAdminAuthError(err)){ authFailed = true; throw err; }
+        if(isSchemaError(err)) messages.push("email com estrutura pendente");
+        else messages.push("email com falha: " + (err.message || "erro"));
       }
 
       if(authFailed){
@@ -861,55 +858,37 @@
       setBanner("warn", "Token removido. Dados administrativos limpos.");
     }
 
-    function requireApiBase(){
-      if(!state.apiBase) throw new Error("Defina a URL do Web App.");
-    }
-
-    function requireAdminToken(){
-      if(!state.adminToken) throw new Error("Defina o token administrativo.");
-    }
+    function requireApiBase(){ if(!state.apiBase) throw new Error("Defina a URL do Web App."); }
+    function requireAdminToken(){ if(!state.adminToken) throw new Error("Defina o token administrativo."); }
 
     async function readJsonResponse(response){
       const text = await response.text();
       let json = null;
-
       try{
         json = text && text.trim() ? JSON.parse(text) : {};
-      }catch(parseErr){
+      }catch(_){
         const err = new Error("A resposta do Web App não veio em JSON válido.");
         err.code = "INVALID_JSON_RESPONSE";
-        err.details = {
-          http_status: response.status,
-          raw_response: text
-        };
+        err.details = { http_status: response.status, raw_response: text };
         throw err;
       }
 
       if(!response.ok){
-        const err = new Error(
-          json && (json.error || json.message) ||
-          ("Falha HTTP " + response.status)
-        );
+        const err = new Error(json && (json.error || json.message) || ("Falha HTTP " + response.status));
         err.code = json && json.code ? json.code : "";
-        err.details = json && json.details ? json.details : {
-          http_status: response.status,
-          raw_response: text
-        };
+        err.details = json && json.details ? json.details : { http_status: response.status, raw_response: text };
         throw err;
       }
 
       if(json && json.ok === false){
-        const fallbackMessage =
+        const err = new Error(
           json.error ||
           json.message ||
           (json.code ? ("Falha da ação: " + json.code) : "") ||
-          "A ação retornou ok:false.";
-
-        const err = new Error(fallbackMessage);
+          "A ação retornou ok:false."
+        );
         err.code = json.code || "ACTION_FAILED";
-        err.details = json.details || {
-          raw_response: text
-        };
+        err.details = json.details || { raw_response: text };
         throw err;
       }
 
@@ -918,42 +897,31 @@
 
     function isAdminAuthError(err){
       const code = String(err && err.code || "").toUpperCase();
-      return (
-        code === "ADMIN_AUTH_REQUIRED" ||
-        code === "ADMIN_AUTH_INVALID" ||
-        code === "ADMIN_AUTH_UNAVAILABLE"
-      );
+      return code === "ADMIN_AUTH_REQUIRED" || code === "ADMIN_AUTH_INVALID" || code === "ADMIN_AUTH_UNAVAILABLE";
     }
 
     function isBusyError(err){
       const code = String(err && err.code || "").toUpperCase();
       const message = String(err && err.message || "").toLowerCase();
-
-      return (
-        code === "SYSTEM_UNAVAILABLE" ||
-        message.indexOf("sistema ocupado") >= 0
-      );
+      return code === "SYSTEM_UNAVAILABLE" || message.indexOf("sistema ocupado") >= 0;
     }
 
     function isActionUnavailableError(err){
       const code = String(err && err.code || "").toUpperCase();
       const message = String(err && err.message || "").toLowerCase();
-
-      return (
-        code === "INVALID_ACTION" ||
-        message.indexOf("ação inválida") >= 0 ||
-        message.indexOf("acao invalida") >= 0
-      );
+      return code === "INVALID_ACTION" || message.indexOf("ação inválida") >= 0 || message.indexOf("acao invalida") >= 0;
     }
 
     function isSchemaError(err){
       const code = String(err && err.code || "").toUpperCase();
       const message = String(err && err.message || "").toLowerCase();
-
       return (
         code === "SCHEMA_INVALID" ||
         code === "MAIL_DB_INVALID_SCHEMA" ||
         code === "MAIL_HEADER_INVALID" ||
+        code === "MAIL_SHEET_MISSING" ||
+        code === "MAIL_BASE_SHEET_MISSING" ||
+        code === "MAIL_DB_NOT_FOUND" ||
         message.indexOf("schema") >= 0 ||
         message.indexOf("sheet") >= 0 ||
         message.indexOf("cabeçalho") >= 0 ||
@@ -964,7 +932,6 @@
     function isPubcareNotInstalledError(err){
       const code = String(err && err.code || "").toUpperCase();
       const message = String(err && err.message || "").toLowerCase();
-
       return (
         code === "SCHEMA_INVALID" ||
         message.indexOf("care_ticket_state") >= 0 ||
@@ -975,83 +942,49 @@
     }
 
     function isInvalidJsonResponseError(err){
-      const code = String(err && err.code || "").toUpperCase();
-      return code === "INVALID_JSON_RESPONSE";
+      return String(err && err.code || "").toUpperCase() === "INVALID_JSON_RESPONSE";
     }
 
     async function apiPost(action, payload){
       requireApiBase();
       requireAdminToken();
-
-      const body = {
-        action: action,
-        admin_token: state.adminToken
-      };
-
-      Object.keys(payload || {}).forEach(function(key){
-        body[key] = payload[key];
-      });
-
+      const body = { action: action, admin_token: state.adminToken };
+      Object.keys(payload || {}).forEach(function(key){ body[key] = payload[key]; });
       const response = await fetch(state.apiBase, {
         method: "POST",
         cache: "no-store",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(body)
       });
-
       return readJsonResponse(response);
     }
 
     async function apiGet(mode){
       requireApiBase();
-
       const url = new URL(state.apiBase);
       url.searchParams.set("mode", mode);
-
-      const response = await fetch(url.toString(), {
-        method: "GET",
-        cache: "no-store"
-      });
-
+      const response = await fetch(url.toString(), { method: "GET", cache: "no-store" });
       return readJsonResponse(response);
     }
 
     function coreHealth(){
-      if(state.health && state.health.data && state.health.data.core){
-        return state.health.data.core;
-      }
-
-      if(state.status && state.status.core){
-        return state.status.core;
-      }
-
+      if(state.health && state.health.data && state.health.data.core) return state.health.data.core;
+      if(state.status && state.status.core) return state.status.core;
       return null;
     }
 
     function mailHealth(){
-      const publicMail =
-        state.health &&
-        state.health.data &&
-        state.health.data.modules &&
-        state.health.data.modules.pubmail
-          ? state.health.data.modules.pubmail
-          : null;
-
+      const publicMail = state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail ? state.health.data.modules.pubmail : null;
       const adminMail = state.mail.health || null;
-
       if(!publicMail && !adminMail) return null;
       if(!publicMail) return adminMail;
       if(!adminMail) return publicMail;
-
       return {
         available: adminMail.available != null ? adminMail.available : publicMail.available,
         bound: adminMail.bound != null ? adminMail.bound : publicMail.bound,
         installed: adminMail.installed != null ? adminMail.installed : publicMail.installed,
         ready: adminMail.ready != null ? adminMail.ready : publicMail.ready,
         ok: adminMail.ok != null ? adminMail.ok : publicMail.ok,
-
         status_label: adminMail.status_label || publicMail.status_label || "",
         status_reason: adminMail.status_reason || publicMail.status_reason || "",
         version: adminMail.version || publicMail.version || "",
@@ -1069,7 +1002,6 @@
       if(state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubcare){
         return state.health.data.modules.pubcare;
       }
-
       if(state.status && state.status.modules){
         return {
           available: state.status.modules.pubcare_available,
@@ -1078,26 +1010,17 @@
           ok: state.status.modules.pubcare_ok === true
         };
       }
-
       return null;
     }
 
     function mailOverview(){
-      if(state.mail.overview && state.mail.overview.data){
-        return state.mail.overview.data;
-      }
-
-      if(state.mail.overview && typeof state.mail.overview === "object"){
-        return state.mail.overview.data || state.mail.overview;
-      }
-
+      if(state.mail.overview && state.mail.overview.data) return state.mail.overview.data;
+      if(state.mail.overview && typeof state.mail.overview === "object") return state.mail.overview.data || state.mail.overview;
       return null;
     }
 
     function ticketCount(status){
-      return state.tickets.filter(function(t){
-        return String(t.status || "").toUpperCase() === status;
-      }).length;
+      return state.tickets.filter(function(t){ return String(t.status || "").toUpperCase() === status; }).length;
     }
 
     function attentionCount(){
@@ -1122,15 +1045,12 @@
 
     function resolveMailLabel(mail){
       const overview = mailOverview();
-
       if(mail && mail.ok === true && mail.ready === true) return "Pronto";
       if(mail && mail.available === false) return "Indisponível";
       if(mail && (mail.installed === true || mail.bound === true)) return "Atenção";
-
       if(state.status && state.status.modules && state.status.modules.pubmail_ready === true) return "Pronto";
       if(state.status && state.status.modules && state.status.modules.pubmail_installed === true) return "Atenção";
       if(overview && overview.health_ok === true) return "Pronto";
-
       return mail ? "Instalar" : "—";
     }
 
@@ -1141,7 +1061,6 @@
         if(care.installed === true) return "Atenção";
         return "Atenção";
       }
-
       return state.tickets.length ? (attentionCount() ? "Atenção" : "Pronto") : "—";
     }
 
@@ -1149,27 +1068,19 @@
       const core = coreHealth();
       const mail = mailHealth();
       const care = careModule();
-
       const coreLabel = resolveCoreLabel(core);
       const mailLabel = resolveMailLabel(mail);
       const careLabel = resolveCareLabel(care);
-
       let overall = "—";
       const coreOk = coreLabel === "Pronto";
       const mailOk = (mailLabel === "Pronto" || mailLabel === "—" || mailLabel === "Indisponível");
       const careOk = (careLabel === "Pronto" || careLabel === "—" || careLabel === "Indisponível" || careLabel === "Atenção");
-
-      if(coreOk && mailOk && careOk){
-        overall = "Pronto";
-      } else if(core || mail || care || state.tickets.length){
-        overall = "Atenção";
-      }
-
+      if(coreOk && mailOk && careOk) overall = "Pronto";
+      else if(core || mail || care || state.tickets.length) overall = "Atenção";
       $("#pill-overall").className = "pill " + pillClass(overall);
       $("#pill-core").className = "pill " + pillClass(coreLabel);
       $("#pill-mail").className = "pill " + pillClass(mailLabel);
       $("#pill-care").className = "pill " + pillClass(careLabel);
-
       $("#pill-overall").textContent = "Sistema " + overall;
       $("#pill-core").textContent = "Core " + coreLabel;
       $("#pill-mail").textContent = "Email " + mailLabel;
@@ -1178,7 +1089,6 @@
 
     function renderSummary(){
       const overview = mailOverview();
-
       $("#sum-leads").textContent = state.leads.length ? String(state.leads.length) : "—";
       $("#sum-contacts").textContent = state.contacts.length ? String(state.contacts.length) : "—";
       $("#sum-care-attention").textContent = state.tickets.length ? String(attentionCount()) : "—";
@@ -1187,7 +1097,6 @@
 
     function renderRecentSimpleBox(containerId, rows, type){
       const box = $(containerId);
-
       if(!rows || !rows.length){
         box.innerHTML = '<div class="empty">Nenhum dado carregado.</div>';
         return;
@@ -1195,32 +1104,29 @@
 
       const sliced = rows.slice(0, 6);
       let html = '<div class="list">';
-
       sliced.forEach(function(r){
         if(type === "lead"){
           html +=
             '<div class="item">' +
-              '<div class="item-title">' + escapeHtml(r.name || "Sem nome") + '</div>' +
-              '<div class="item-sub">' + escapeHtml(r.email || "") + '</div>' +
-              '<div class="item-meta">' + escapeHtml(r.item || "") + ' · ' + escapeHtml(r.created_at || "") + '</div>' +
+              '<div class="item-title">' + escapeHtml(r.name || 'Sem nome') + '</div>' +
+              '<div class="item-sub">' + escapeHtml(r.email || '') + '</div>' +
+              '<div class="item-meta">' + escapeHtml(normalizeItemLabel(r.item || '')) + ' · ' + escapeHtml(r.created_at || '') + '</div>' +
             '</div>';
         } else {
           html +=
             '<div class="item">' +
-              '<div class="item-title">' + escapeHtml(r.name || "Sem nome") + '</div>' +
-              '<div class="item-sub">' + escapeHtml(r.email || "") + '</div>' +
-              '<div class="item-meta">' + escapeHtml(r.whatsapp || "") + ' · ' + escapeHtml(r.updated_at || r.created_at || "") + '</div>' +
+              '<div class="item-title">' + escapeHtml(r.name || 'Sem nome') + '</div>' +
+              '<div class="item-sub">' + escapeHtml(r.email || '') + '</div>' +
+              '<div class="item-meta">' + escapeHtml(r.whatsapp || '') + ' · ' + escapeHtml(r.updated_at || r.created_at || '') + '</div>' +
             '</div>';
         }
       });
-
       html += '</div>';
       box.innerHTML = html;
     }
 
     function renderCareList(){
       const box = $("#care-list");
-
       if(!state.tickets.length){
         box.innerHTML = '<div class="empty">Nenhum ticket carregado.</div>';
         return;
@@ -1234,35 +1140,31 @@
       });
 
       let html = '<div class="list">';
-
       ordered.forEach(function(t){
         const active = t.ticket_id === state.selectedTicketId ? ' active' : '';
         html +=
-          '<button class="item item-button' + active + '" data-ticket-id="' + escapeHtml(t.ticket_id || "") + '">' +
-            '<div class="item-title">' + escapeHtml(t.name || t.ticket_id || "Ticket") + '</div>' +
-            '<div class="item-sub">' + escapeHtml(t.email || "") + '</div>' +
-            '<div class="item-meta">' + escapeHtml(t.item || "") + ' · ' + escapeHtml(t.status || "") + ' · ' + escapeHtml(t.created_at || "") + '</div>' +
+          '<button class="item item-button' + active + '" data-ticket-id="' + escapeHtml(t.ticket_id || '') + '">' +
+            '<div class="item-title">' + escapeHtml(t.name || t.ticket_id || 'Ticket') + '</div>' +
+            '<div class="item-sub">' + escapeHtml(t.email || '') + '</div>' +
+            '<div class="item-meta">' + escapeHtml(normalizeItemLabel(t.item || '')) + ' · ' + escapeHtml(t.status || '') + ' · ' + escapeHtml(t.created_at || '') + '</div>' +
           '</button>';
       });
-
       html += '</div>';
       box.innerHTML = html;
 
-      Array.prototype.slice.call(box.querySelectorAll("[data-ticket-id]")).forEach(function(el){
-        el.addEventListener("click", function(){
-          const id = el.getAttribute("data-ticket-id");
-          handleAction(async function(){
-            await selectTicket(id);
-          });
+      Array.prototype.slice.call(box.querySelectorAll('[data-ticket-id]')).forEach(function(el){
+        el.addEventListener('click', function(){
+          const id = el.getAttribute('data-ticket-id');
+          handleAction(async function(){ await selectTicket(id); });
         });
       });
 
       function priorityValue(status){
-        const s = String(status || "").toUpperCase();
-        if(s === "OPEN") return 1;
-        if(s === "WAITING_USER") return 2;
-        if(s === "ANSWERED") return 3;
-        if(s === "CLOSED") return 4;
+        const s = String(status || '').toUpperCase();
+        if(s === 'OPEN') return 1;
+        if(s === 'WAITING_USER') return 2;
+        if(s === 'ANSWERED') return 3;
+        if(s === 'CLOSED') return 4;
         return 9;
       }
     }
@@ -1270,32 +1172,29 @@
     function renderSelectedTicket(){
       $("#selected-ticket-summary").textContent = state.selectedTicket
         ? [
-            state.selectedTicket.ticket_id || "",
-            state.selectedTicket.name || "",
-            state.selectedTicket.email || "",
-            state.selectedTicket.item || "",
-            state.selectedTicket.status || ""
-          ].filter(Boolean).join(" · ")
-        : "Nenhum ticket selecionado.";
+            state.selectedTicket.ticket_id || '',
+            state.selectedTicket.name || '',
+            state.selectedTicket.email || '',
+            normalizeItemLabel(state.selectedTicket.item || ''),
+            state.selectedTicket.status || ''
+          ].filter(Boolean).join(' · ')
+        : 'Nenhum ticket selecionado.';
 
       const box = $("#selected-ticket-messages");
-
       if(!state.selectedTicketMessages.length){
         box.innerHTML = '<div class="empty">Nenhuma mensagem carregada.</div>';
         return;
       }
 
       let html = '<div class="list">';
-
       state.selectedTicketMessages.forEach(function(m){
         html +=
           '<div class="item">' +
-            '<div class="item-title">' + escapeHtml(m.direction || "") + ' · ' + escapeHtml(m.channel || "") + '</div>' +
-            '<div class="item-sub">' + escapeHtml(m.message || "") + '</div>' +
-            '<div class="item-meta">' + escapeHtml(m.created_at || "") + '</div>' +
+            '<div class="item-title">' + escapeHtml(m.direction || '') + ' · ' + escapeHtml(m.channel || '') + '</div>' +
+            '<div class="item-sub">' + escapeHtml(m.message || '') + '</div>' +
+            '<div class="item-meta">' + escapeHtml(m.created_at || '') + '</div>' +
           '</div>';
       });
-
       html += '</div>';
       box.innerHTML = html;
     }
@@ -1308,66 +1207,44 @@
         ? triggers.items.map(function(item){ return item.handler; }).filter(Boolean)
         : [];
 
-      $("#mail-queue-count").textContent = overview ? String(overview.queue_count || 0) : "—";
-      $("#mail-states-count").textContent = overview ? String(overview.contact_state_count || 0) : "—";
-      $("#mail-log-count").textContent = overview ? String(overview.log_count || 0) : "—";
-      $("#mail-suppressions-count").textContent = overview ? String(overview.suppressions_count || 0) : "—";
+      $("#mail-queue-count").textContent = overview ? String(overview.queue_count || 0) : '—';
+      $("#mail-states-count").textContent = overview ? String(overview.contact_state_count || 0) : '—';
+      $("#mail-log-count").textContent = overview ? String(overview.log_count || 0) : '—';
+      $("#mail-suppressions-count").textContent = overview ? String(overview.suppressions_count || 0) : '—';
 
       $("#mail-module-status").textContent =
-        mail
-          ? ((mail.status_label || resolveMailLabel(mail)) + (mail.version ? (" · v" + mail.version) : ""))
-          : "Sem leitura administrativa de email.";
+        mail ? ((mail.status_label || resolveMailLabel(mail)) + (mail.version ? (' · v' + mail.version) : '')) : 'Sem leitura administrativa de email.';
 
       $("#mail-module-reason").textContent =
-        mail
-          ? (mail.status_reason || mail.error || "Sem motivo adicional.")
-          : "Use o token e atualize o módulo de email.";
+        mail ? (mail.status_reason || mail.error || 'Sem motivo adicional.') : 'Use o token e atualize o módulo de email.';
 
       $("#mail-module-triggers").textContent =
-        triggers
-          ? ("Triggers " + String(triggers.total || 0) + " · " + (triggerNames.length ? triggerNames.join(", ") : "sem nomes"))
-          : "Triggers —";
+        triggers ? ('Triggers ' + String(triggers.total || 0) + ' · ' + (triggerNames.length ? triggerNames.join(', ') : 'sem nomes')) : 'Triggers —';
 
-      $("#mail-module-meta").textContent =
-        mail
-          ? ("Disponível: " + boolText(mail.available) + " · Vinculado: " + boolText(mail.bound) + " · Instalado: " + boolText(mail.installed) + " · Pronto: " + boolText(mail.ready))
-          : "Versão —";
+      $("#mail-module-meta").textContent = mail
+        ? ('Disponível: ' + boolText(mail.available) + ' · Vinculado: ' + boolText(mail.bound) + ' · Instalado: ' + boolText(mail.installed) + ' · Pronto: ' + boolText(mail.ready))
+        : 'Versão —';
 
-      $("#mail-module-folders").textContent =
-        mail
-          ? ("Pasta: " + (mail.template_folder_id || "—"))
-          : "Pasta —";
+      $("#mail-module-folders").textContent = mail
+        ? ('Pasta templates: ' + (mail.template_folder_id || '—'))
+        : 'Pasta —';
 
       const errors = mail && Array.isArray(mail.errors) ? mail.errors.filter(Boolean) : [];
-      $("#mail-module-errors").textContent =
-        errors.length
-          ? errors.join(" | ")
-          : (mail && mail.error ? mail.error : "Sem detalhes.");
+      $("#mail-module-errors").textContent = errors.length ? errors.join(' | ') : (mail && mail.error ? mail.error : 'Sem detalhes.');
 
-      function boolText(v){
-        return v === true ? "sim" : v === false ? "não" : "—";
-      }
+      function boolText(v){ return v === true ? 'sim' : v === false ? 'não' : '—'; }
     }
 
     function renderDiagnostics(){
-      $("#diag-core").textContent = safeJson({
-        status: state.status,
-        health: state.health,
-        contract: state.contract
-      });
-
-      $("#diag-mail").textContent = safeJson({
-        mail_health: state.mail.health,
-        mail_overview: state.mail.overview,
-        mail_raw: state.mail.raw
-      });
+      $("#diag-core").textContent = safeJson({ status: state.status, health: state.health, contract: state.contract });
+      $("#diag-mail").textContent = safeJson({ mail_health: state.mail.health, mail_overview: state.mail.overview, mail_raw: state.mail.raw });
     }
 
     function renderAll(){
       renderHeaderState();
       renderSummary();
-      renderRecentSimpleBox("#leads-box", state.leads, "lead");
-      renderRecentSimpleBox("#contacts-box", state.contacts, "contact");
+      renderRecentSimpleBox('#leads-box', state.leads, 'lead');
+      renderRecentSimpleBox('#contacts-box', state.contacts, 'contact');
       renderCareList();
       renderSelectedTicket();
       renderMail();
@@ -1376,114 +1253,90 @@
 
     async function runPublicMode(mode){
       const json = await apiGet(mode);
-
-      if(mode === "status") state.status = json;
-      if(mode === "health") state.health = json;
-      if(mode === "contract") state.contract = json;
-
+      if(mode === 'status') state.status = json;
+      if(mode === 'health') state.health = json;
+      if(mode === 'contract') state.contract = json;
       renderAll();
       return json;
     }
 
     async function loadRelationship(){
-      const leadsJson = await apiPost("admin_list_leads", {});
-      const contactsJson = await apiPost("admin_list_contacts", {});
-
+      const leadsJson = await apiPost('admin_list_leads', {});
+      const contactsJson = await apiPost('admin_list_contacts', {});
       state.leads = Array.isArray(leadsJson.rows) ? leadsJson.rows : [];
       state.contacts = Array.isArray(contactsJson.rows) ? contactsJson.rows : [];
       renderAll();
     }
 
     async function loadCare(){
-      const ticketsJson = await apiPost("admin_list_tickets", {});
+      const ticketsJson = await apiPost('admin_list_tickets', {});
       state.tickets = Array.isArray(ticketsJson.rows) ? ticketsJson.rows : [];
-
       const preferred = choosePreferredTicket(state.tickets);
-
-      if(preferred){
-        await selectTicket(preferred.ticket_id);
-      } else {
-        state.selectedTicketId = "";
+      if(preferred) await selectTicket(preferred.ticket_id);
+      else {
+        state.selectedTicketId = '';
         state.selectedTicket = null;
         state.selectedTicketMessages = [];
       }
-
       renderAll();
     }
 
     function choosePreferredTicket(rows){
       if(!rows || !rows.length) return null;
-
       const ordered = rows.slice().sort(function(a, b){
         const pa = priority(a.status);
         const pb = priority(b.status);
         if(pa !== pb) return pa - pb;
-        return (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0);
+        return (Date.parse(b.created_at || '') || 0) - (Date.parse(a.created_at || '') || 0);
       });
-
       return ordered[0] || null;
-
       function priority(status){
-        const s = String(status || "").toUpperCase();
-        if(s === "OPEN") return 1;
-        if(s === "WAITING_USER") return 2;
-        if(s === "ANSWERED") return 3;
-        if(s === "CLOSED") return 4;
+        const s = String(status || '').toUpperCase();
+        if(s === 'OPEN') return 1;
+        if(s === 'WAITING_USER') return 2;
+        if(s === 'ANSWERED') return 3;
+        if(s === 'CLOSED') return 4;
         return 9;
       }
     }
 
     async function selectTicket(ticketId){
       if(!ticketId) return;
-
       state.selectedTicketId = ticketId;
-
-      const ticketJson = await apiPost("admin_get_ticket", { ticket_id: ticketId });
-      const messagesJson = await apiPost("admin_list_ticket_messages", { ticket_id: ticketId });
-
+      const ticketJson = await apiPost('admin_get_ticket', { ticket_id: ticketId });
+      const messagesJson = await apiPost('admin_list_ticket_messages', { ticket_id: ticketId });
       state.selectedTicket = ticketJson && ticketJson.data ? ticketJson.data : null;
       state.selectedTicketMessages = Array.isArray(messagesJson.rows) ? messagesJson.rows : [];
       renderAll();
     }
 
     async function loadMail(){
-      const healthJson = await apiPost("admin_mail_health", {});
-      const overviewJson = await apiPost("admin_mail_overview", {});
-
+      const healthJson = await apiPost('admin_mail_health', {});
+      const overviewJson = await apiPost('admin_mail_overview', {});
       state.mail.health = healthJson || null;
       state.mail.overview = overviewJson || null;
-      state.mail.raw = {
-        health: healthJson || null,
-        overview: overviewJson || null
-      };
-
+      state.mail.raw = { health: healthJson || null, overview: overviewJson || null };
       renderAll();
     }
 
     async function loadMailSummaryOnly(){
-      const healthJson = await apiPost("admin_mail_health", {});
-      const summaryJson = await apiPost("admin_mail_summary", {});
-
+      const healthJson = await apiPost('admin_mail_health', {});
+      const summaryJson = await apiPost('admin_mail_summary', {});
       state.mail.health = healthJson || null;
       state.mail.overview = summaryJson || null;
-      state.mail.raw = {
-        health: healthJson || null,
-        summary: summaryJson || null
-      };
-
+      state.mail.raw = { health: healthJson || null, summary: summaryJson || null };
       renderAll();
     }
 
     async function refreshEverything(){
       clearBanner();
-
-      await runPublicMode("status");
-      await runPublicMode("health");
-      await runPublicMode("contract");
+      await runPublicMode('status');
+      await runPublicMode('health');
+      await runPublicMode('contract');
 
       if(!state.adminToken){
         renderAll();
-        setBanner("warn", "Leituras públicas atualizadas. Para dados administrativos, aplique o token.");
+        setBanner('warn', 'Leituras públicas atualizadas. Para dados administrativos, aplique o token.');
         return;
       }
 
@@ -1491,98 +1344,83 @@
         await loadRelationship();
         await loadCare();
         await loadMail();
-        setBanner("ok", "Painel atualizado.");
+        setBanner('ok', 'Painel atualizado.');
       }catch(err){
         if(isAdminAuthError(err)){
           clearAdminState();
-          state.adminToken = "";
-          $("#admin-token").value = "";
+          state.adminToken = '';
+          $("#admin-token").value = '';
           renderAll();
-          setBanner("warn", (err.message || "Falha de autenticação administrativa.") + " O token administrativo foi removido do estado atual.");
+          setBanner('warn', (err.message || 'Falha de autenticação administrativa.') + ' O token administrativo foi removido do estado atual.');
           return;
         }
-
         if(isBusyError(err)){
           renderAll();
-          setBanner("warn", "O sistema está ocupado no momento. Atualize novamente em alguns segundos.");
+          setBanner('warn', 'O sistema está ocupado no momento. Atualize novamente em alguns segundos.');
           return;
         }
-
         if(isSchemaError(err)){
           renderAll();
-          setBanner("warn", "Parte administrativa ainda não está pronta nesta base.");
+          setBanner('warn', 'Parte administrativa ainda não está pronta nesta base.');
           return;
         }
-
         clearAdminState();
         renderAll();
-        setBanner("warn", err.message || "Falha ao carregar dados administrativos.");
+        setBanner('warn', err.message || 'Falha ao carregar dados administrativos.');
       }
     }
 
     async function replySelectedTicket(){
-      if(!state.selectedTicketId){
-        throw new Error("Nenhum ticket selecionado.");
-      }
-
+      if(!state.selectedTicketId) throw new Error('Nenhum ticket selecionado.');
       const message = stringValue($("#reply-message").value);
-      const status = String($("#reply-status").value || "ANSWERED").toUpperCase();
-      const selectedChannel = String($("#reply-channel").value || "MANUAL").toUpperCase();
-      const sendEmail = selectedChannel === "EMAIL";
-
-      if(!message){
-        throw new Error("Escreva uma resposta antes de enviar.");
-      }
-
+      const status = String($("#reply-status").value || 'ANSWERED').toUpperCase();
+      const selectedChannel = String($("#reply-channel").value || 'MANUAL').toUpperCase();
+      const sendEmail = selectedChannel === 'EMAIL';
+      if(!message) throw new Error('Escreva uma resposta antes de enviar.');
       if(sendEmail && (!state.selectedTicket || !stringValue(state.selectedTicket.email))){
-        throw new Error("Este ticket não possui email válido para envio.");
+        throw new Error('Este ticket não possui email válido para envio.');
       }
 
       try{
-        await apiPost("admin_care_reply_ticket", {
+        await apiPost('admin_care_reply_ticket', {
           ticket_id: state.selectedTicketId,
           message: message,
           status: status,
           channel: selectedChannel,
-          sent_by: "admin",
+          sent_by: 'admin',
           send_email: sendEmail,
           mail_subject: state.selectedTicket && state.selectedTicket.item
-            ? ("PUB Editorial | " + String(state.selectedTicket.item))
-            : "PUB Editorial | Atendimento"
+            ? ('PUB Editorial | ' + String(normalizeItemLabel(state.selectedTicket.item)))
+            : 'PUB Editorial | Atendimento'
         });
 
-        $("#reply-message").value = "";
+        $("#reply-message").value = '';
         await loadCare();
-        if(sendEmail){
-          await loadMailSummaryOnly();
-        }
-        setBanner("ok", sendEmail ? "Resposta registrada e email preparado." : "Resposta registrada.");
+        if(sendEmail) await loadMailSummaryOnly();
+        setBanner('ok', sendEmail ? 'Resposta registrada e email preparado.' : 'Resposta registrada.');
       }catch(err){
         if(isBusyError(err)){
-          setBanner("warn", "O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.");
+          setBanner('warn', 'O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.');
           return;
         }
-
         if(isPubcareNotInstalledError(err) || isActionUnavailableError(err) || isSchemaError(err)){
-          setBanner("error", "O módulo de atendimento ainda não está preparado nesta base.");
+          setBanner('error', 'O módulo de atendimento ainda não está preparado nesta base.');
           return;
         }
-
         throw err;
       }
     }
 
     async function bootstrapMail(){
       clearBanner();
-
       try{
-        await apiPost("admin_mail_bootstrap", {});
+        await apiPost('admin_mail_bootstrap', {});
         await loadMail();
-        await runPublicMode("health");
-        setBanner("ok", "Módulo de email preparado.");
+        await runPublicMode('health');
+        setBanner('ok', 'Módulo de email preparado.');
       }catch(err){
         if(isBusyError(err)){
-          setBanner("warn", "O sistema está ocupado. Tente preparar o módulo novamente em alguns segundos.");
+          setBanner('warn', 'O sistema está ocupado. Tente preparar o módulo novamente em alguns segundos.');
           return;
         }
         throw err;
@@ -1591,18 +1429,17 @@
 
     async function scanMail(){
       clearBanner();
-
       try{
-        const result = await apiPost("admin_mail_scan", {});
+        const result = await apiPost('admin_mail_scan', {});
         await loadMail();
-        setBanner("ok", "Scanner executado. Itens enfileirados: " + String(result && result.data ? (result.data.queued_total || 0) : 0) + ".");
+        setBanner('ok', 'Scanner executado. Itens enfileirados: ' + String(result && result.data ? (result.data.queued_total || 0) : 0) + '.');
       }catch(err){
         if(isBusyError(err)){
-          setBanner("warn", "O sistema está ocupado. Tente escanear novamente em alguns segundos.");
+          setBanner('warn', 'O sistema está ocupado. Tente escanear novamente em alguns segundos.');
           return;
         }
         if(isSchemaError(err)){
-          setBanner("error", "O módulo de email ainda não está preparado nesta base.");
+          setBanner('error', 'O módulo de email ainda não está preparado nesta base.');
           return;
         }
         throw err;
@@ -1611,18 +1448,17 @@
 
     async function processMail(){
       clearBanner();
-
       try{
-        const result = await apiPost("admin_mail_process_queue", {});
+        const result = await apiPost('admin_mail_process_queue', {});
         await loadMail();
-        setBanner("ok", "Fila processada. Enviados: " + String(result && result.data ? (result.data.sent || 0) : 0) + ".");
+        setBanner('ok', 'Fila processada. Enviados: ' + String(result && result.data ? (result.data.sent || 0) : 0) + '.');
       }catch(err){
         if(isBusyError(err)){
-          setBanner("warn", "O sistema está ocupado processando outras operações. Tente novamente em alguns segundos.");
+          setBanner('warn', 'O sistema está ocupado processando outras operações. Tente novamente em alguns segundos.');
           return;
         }
         if(isSchemaError(err)){
-          setBanner("error", "O módulo de email ainda não está preparado nesta base.");
+          setBanner('error', 'O módulo de email ainda não está preparado nesta base.');
           return;
         }
         throw err;
@@ -1631,26 +1467,24 @@
 
     async function sendManualMail(){
       clearBanner();
-
       try{
-        await apiPost("admin_mail_send_manual", {
-          template_key: "tmpl_manual_generic",
-          audience_mode: "manual_emails",
+        await apiPost('admin_mail_send_manual', {
+          template_key: 'tmpl_manual_generic',
+          audience_mode: 'manual_emails',
           emails: stringValue($("#send-manual-emails").value),
           manual_subject: stringValue($("#send-manual-subject").value),
           manual_message: stringValue($("#send-manual-message").value),
-          item: ""
+          item: ''
         });
-
         await loadMail();
-        setBanner("ok", "Mensagem preparada na fila.");
+        setBanner('ok', 'Mensagem preparada na fila.');
       }catch(err){
         if(isBusyError(err)){
-          setBanner("warn", "O sistema está ocupado. Tente preparar a mensagem novamente em alguns segundos.");
+          setBanner('warn', 'O sistema está ocupado. Tente preparar a mensagem novamente em alguns segundos.');
           return;
         }
         if(isSchemaError(err)){
-          setBanner("error", "O módulo de email ainda não está preparado nesta base.");
+          setBanner('error', 'O módulo de email ainda não está preparado nesta base.');
           return;
         }
         throw err;
@@ -1659,23 +1493,21 @@
 
     async function addSuppression(){
       clearBanner();
-
       try{
-        await apiPost("admin_mail_add_suppression", {
+        await apiPost('admin_mail_add_suppression', {
           email: stringValue($("#suppression-email").value),
           reason: stringValue($("#suppression-reason").value),
-          source: "panel"
+          source: 'panel'
         });
-
         await loadMail();
-        setBanner("ok", "Email bloqueado.");
+        setBanner('ok', 'Email bloqueado.');
       }catch(err){
         if(isBusyError(err)){
-          setBanner("warn", "O sistema está ocupado. Tente bloquear o email novamente em alguns segundos.");
+          setBanner('warn', 'O sistema está ocupado. Tente bloquear o email novamente em alguns segundos.');
           return;
         }
         if(isSchemaError(err)){
-          setBanner("error", "O módulo de email ainda não está preparado nesta base.");
+          setBanner('error', 'O módulo de email ainda não está preparado nesta base.');
           return;
         }
         throw err;
@@ -1684,125 +1516,83 @@
 
     async function handleAction(fn){
       if(uiBusy) return;
-
       uiBusy = true;
-
       try{
         await fn();
       }catch(err){
         renderAll();
-
         if(isBusyError(err)){
-          setBanner("warn", "O sistema está ocupado em outra operação. Tente novamente em alguns segundos.");
+          setBanner('warn', 'O sistema está ocupado em outra operação. Tente novamente em alguns segundos.');
           return;
         }
-
         if(isInvalidJsonResponseError(err)){
-          setBanner("error", "O Web App respondeu fora do formato JSON esperado.");
-          console.error("Resposta inválida do Web App:", err.details || err);
+          setBanner('error', 'O Web App respondeu fora do formato JSON esperado.');
+          console.error('Resposta inválida do Web App:', err.details || err);
           return;
         }
-
-        setBanner("error", err.message || "Erro.");
-        console.error("Erro do painel:", err);
+        setBanner('error', err.message || 'Erro.');
+        console.error('Erro do painel:', err);
       }finally{
         uiBusy = false;
       }
     }
 
     function bind(){
-      $("#btn-save-api-base").addEventListener("click", function(){ handleAction(saveApiBase); });
-      $("#btn-clear-api-base").addEventListener("click", function(){ handleAction(async function(){ clearApiBase(); }); });
-      $("#btn-apply-token").addEventListener("click", function(){ handleAction(applyToken); });
-      $("#btn-clear-token").addEventListener("click", function(){ handleAction(async function(){ clearToken(); }); });
-
-      $("#btn-refresh").addEventListener("click", function(){ handleAction(refreshEverything); });
-
-      $("#btn-refresh-care").addEventListener("click", function(){ handleAction(loadCare); });
-      $("#btn-reply-ticket").addEventListener("click", function(){ handleAction(replySelectedTicket); });
-
-      $("#btn-load-relationship").addEventListener("click", function(){
+      $("#btn-save-api-base").addEventListener('click', function(){ handleAction(saveApiBase); });
+      $("#btn-clear-api-base").addEventListener('click', function(){ handleAction(async function(){ clearApiBase(); }); });
+      $("#btn-apply-token").addEventListener('click', function(){ handleAction(applyToken); });
+      $("#btn-clear-token").addEventListener('click', function(){ handleAction(async function(){ clearToken(); }); });
+      $("#btn-refresh").addEventListener('click', function(){ handleAction(refreshEverything); });
+      $("#btn-refresh-care").addEventListener('click', function(){ handleAction(loadCare); });
+      $("#btn-reply-ticket").addEventListener('click', function(){ handleAction(replySelectedTicket); });
+      $("#btn-load-relationship").addEventListener('click', function(){ handleAction(async function(){ await loadRelationship(); setBanner('ok', 'Relacionamento atualizado.'); }); });
+      $("#btn-mail-refresh").addEventListener('click', function(){ handleAction(async function(){ await loadMail(); setBanner('ok', 'Resumo de email atualizado.'); }); });
+      $("#btn-mail-bootstrap").addEventListener('click', function(){ handleAction(bootstrapMail); });
+      $("#btn-mail-scan").addEventListener('click', function(){ handleAction(scanMail); });
+      $("#btn-mail-process").addEventListener('click', function(){ handleAction(processMail); });
+      $("#btn-mail-send-manual").addEventListener('click', function(){ handleAction(sendManualMail); });
+      $("#btn-mail-add-suppression").addEventListener('click', function(){ handleAction(addSuppression); });
+      $("#btn-load-status").addEventListener('click', function(){ handleAction(async function(){ await runPublicMode('status'); setBanner('ok', 'Status carregado.'); }); });
+      $("#btn-load-health").addEventListener('click', function(){ handleAction(async function(){ await runPublicMode('health'); setBanner('ok', 'Health carregado.'); }); });
+      $("#btn-load-contract").addEventListener('click', function(){ handleAction(async function(){ await runPublicMode('contract'); setBanner('ok', 'Contract carregado.'); }); });
+      $("#btn-load-mail-health").addEventListener('click', function(){
         handleAction(async function(){
-          await loadRelationship();
-          setBanner("ok", "Relacionamento atualizado.");
-        });
-      });
-
-      $("#btn-mail-refresh").addEventListener("click", function(){
-        handleAction(async function(){
-          await loadMail();
-          setBanner("ok", "Resumo de email atualizado.");
-        });
-      });
-
-      $("#btn-mail-bootstrap").addEventListener("click", function(){ handleAction(bootstrapMail); });
-      $("#btn-mail-scan").addEventListener("click", function(){ handleAction(scanMail); });
-      $("#btn-mail-process").addEventListener("click", function(){ handleAction(processMail); });
-      $("#btn-mail-send-manual").addEventListener("click", function(){ handleAction(sendManualMail); });
-      $("#btn-mail-add-suppression").addEventListener("click", function(){ handleAction(addSuppression); });
-
-      $("#btn-load-status").addEventListener("click", function(){
-        handleAction(async function(){
-          await runPublicMode("status");
-          setBanner("ok", "Status carregado.");
-        });
-      });
-
-      $("#btn-load-health").addEventListener("click", function(){
-        handleAction(async function(){
-          await runPublicMode("health");
-          setBanner("ok", "Health carregado.");
-        });
-      });
-
-      $("#btn-load-contract").addEventListener("click", function(){
-        handleAction(async function(){
-          await runPublicMode("contract");
-          setBanner("ok", "Contract carregado.");
-        });
-      });
-
-      $("#btn-load-mail-health").addEventListener("click", function(){
-        handleAction(async function(){
-          const json = await apiPost("admin_mail_health", {});
+          const json = await apiPost('admin_mail_health', {});
           state.mail.health = json;
           state.mail.raw = Object.assign({}, state.mail.raw || {}, { health: json });
           renderAll();
-          setBanner("ok", "Mail health carregado.");
+          setBanner('ok', 'Mail health carregado.');
         });
       });
-
-      $("#btn-load-mail-overview").addEventListener("click", function(){
+      $("#btn-load-mail-overview").addEventListener('click', function(){
         handleAction(async function(){
-          const json = await apiPost("admin_mail_overview", {});
+          const json = await apiPost('admin_mail_overview', {});
           state.mail.overview = json;
           state.mail.raw = Object.assign({}, state.mail.raw || {}, { overview: json });
           renderAll();
-          setBanner("ok", "Mail overview carregado.");
+          setBanner('ok', 'Mail overview carregado.');
         });
       });
     }
 
     async function boot(){
-      state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || "";
+      state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || '';
       $("#api-base").value = state.apiBase;
-
       renderAll();
       bind();
-
       if(state.apiBase){
         try{
-          await runPublicMode("status");
-          await runPublicMode("health");
-          setBanner("warn", "Painel iniciado com leituras públicas. Aplique o token para carregar dados administrativos.");
+          await runPublicMode('status');
+          await runPublicMode('health');
+          setBanner('warn', 'Painel iniciado com leituras públicas. Aplique o token para carregar dados administrativos.');
         }catch(err){
           renderAll();
-          setBanner("error", err.message || "Falha ao iniciar o painel.");
+          setBanner('error', err.message || 'Falha ao iniciar o painel.');
         }
       }
     }
 
-    document.addEventListener("DOMContentLoaded", boot);
+    document.addEventListener('DOMContentLoaded', boot);
   </script>
 </body>
 </html>
