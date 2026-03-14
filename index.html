@@ -454,32 +454,48 @@
       setBanner('warn', 'URL removida. Leituras limpas.');
     }
 
-    async function applyToken(){
-      state.adminToken = stringValue($('#admin-token').value);
-      renderAll();
+   async function applyToken(){
+  state.adminToken = stringValue($('#admin-token').value);
+  renderAll();
 
-      if(!state.adminToken){
-        clearAdminState();
-        renderAll();
-        setBanner('warn', 'Token vazio.');
-        return;
-      }
+  if(!state.adminToken){
+    clearAdminState();
+    renderAll();
+    setBanner('warn', 'Token vazio.');
+    return;
+  }
 
-      clearBanner();
-      const messages = [];
+  clearBanner();
+  const messages = [];
 
-      try{ await loadRelationship(); messages.push('relacionamento ok'); }
-      catch(err){ if(isAdminAuthError(err)) throw err; messages.push('relacionamento com falha'); }
+  try{
+    await loadRelationship();
+    messages.push('relacionamento ok');
+  } catch(err){
+    if(isAdminAuthError(err)) throw err;
+    messages.push('relacionamento com falha');
+  }
 
-      try{ await loadCare(); messages.push('atendimento ok'); }
-      catch(err){ if(isAdminAuthError(err)) throw err; messages.push('atendimento indisponível'); }
+  try{
+    await loadCare();
+    messages.push('atendimento ok');
+  } catch(err){
+    if(isAdminAuthError(err)) throw err;
+    messages.push('atendimento indisponível');
+  }
 
-      try{ await loadMail(); messages.push('email ok'); }
-      catch(err){ if(isAdminAuthError(err)) throw err; messages.push('email com falha'); }
+  try{
+    await loadMail();
+    await runPublicMode('health');
+    messages.push('email ok');
+  } catch(err){
+    if(isAdminAuthError(err)) throw err;
+    messages.push('email com falha');
+  }
 
-      renderAll();
-      setBanner('ok', 'Token aplicado. ' + messages.join(' · '));
-    }
+  renderAll();
+  setBanner('ok', 'Token aplicado. ' + messages.join(' · '));
+}
 
     function clearToken(){
       state.adminToken = '';
@@ -614,12 +630,25 @@
     }
 
     function resolveMailLabel(mail){
-      if(!mail) return '—';
-      if(mail.ok === true && mail.ready === true) return 'Pronto';
-      if(mail.available === false) return 'Indisponível';
-      if(mail.installed === true || mail.bound === true) return 'Atenção';
-      return 'Instalar';
-    }
+  if(!mail) return '—';
+
+  const statusLabel = String(mail.status_label || '').toUpperCase();
+
+  if(
+    statusLabel === 'PRONTO' ||
+    mail.ready === true ||
+    mail.ok === true ||
+    (mail.installed === true && mail.bound === true && !String(mail.error || '').trim())
+  ) {
+    return 'Pronto';
+  }
+
+  if(mail.available === false) return 'Indisponível';
+
+  if(mail.installed === true || mail.bound === true) return 'Atenção';
+
+  return 'Instalar';
+}
 
     function resolveCareLabel(care){
       if(!care) return state.tickets.length ? (attentionCount() ? 'Atenção' : 'Pronto') : '—';
@@ -628,29 +657,34 @@
       return 'Atenção';
     }
 
-    function renderHeaderState(){
-      const core = coreHealth();
-      const mail = mailHealth();
-      const care = careModule();
-      const coreLabel = resolveCoreLabel(core);
-      const mailLabel = resolveMailLabel(mail);
-      const careLabel = resolveCareLabel(care);
-      let overall = '—';
+   function renderHeaderState(){
+  const core = coreHealth();
+  const mail = mailHealth();
+  const care = careModule();
 
-      if(coreLabel === 'Pronto' && (mailLabel === 'Pronto' || mailLabel === '—' || mailLabel === 'Indisponível') && (careLabel === 'Pronto' || careLabel === 'Atenção' || careLabel === '—' || careLabel === 'Indisponível')) overall = 'Pronto';
-      else if(core || mail || care || state.tickets.length) overall = 'Atenção';
+  const coreLabel = resolveCoreLabel(core);
+  const mailLabel = resolveMailLabel(mail);
+  const careLabel = resolveCareLabel(care);
 
-      $('#pill-overall').className = 'pill ' + pillClass(overall);
-      $('#pill-core').className = 'pill ' + pillClass(coreLabel);
-      $('#pill-mail').className = 'pill ' + pillClass(mailLabel);
-      $('#pill-care').className = 'pill ' + pillClass(careLabel);
+  let overall = '—';
 
-      $('#pill-overall').textContent = 'Sistema ' + overall;
-      $('#pill-core').textContent = 'Core ' + coreLabel;
-      $('#pill-mail').textContent = 'Email ' + mailLabel;
-      $('#pill-care').textContent = 'Atendimento ' + careLabel;
-    }
+  const coreOk = coreLabel === 'Pronto';
+  const mailOk = mailLabel === 'Pronto' || mailLabel === '—' || mailLabel === 'Indisponível';
+  const careOk = careLabel === 'Pronto' || careLabel === 'Atenção' || careLabel === '—' || careLabel === 'Indisponível';
 
+  if(coreOk && mailOk && careOk) overall = 'Pronto';
+  else if(core || mail || care || state.tickets.length) overall = 'Atenção';
+
+  $('#pill-overall').className = 'pill ' + pillClass(overall);
+  $('#pill-core').className = 'pill ' + pillClass(coreLabel);
+  $('#pill-mail').className = 'pill ' + pillClass(mailLabel);
+  $('#pill-care').className = 'pill ' + pillClass(careLabel);
+
+  $('#pill-overall').textContent = 'Sistema ' + overall;
+  $('#pill-core').textContent = 'Core ' + coreLabel;
+  $('#pill-mail').textContent = 'Email ' + mailLabel;
+  $('#pill-care').textContent = 'Atendimento ' + careLabel;
+}
     function renderSummary(){
       const overview = mailOverview();
       $('#sum-leads').textContent = state.leads.length ? String(state.leads.length) : '—';
@@ -850,39 +884,50 @@
       renderAll();
     }
 
-    async function refreshEverything(){
-      clearBanner();
-      await runPublicMode('status');
-      await runPublicMode('health');
-      await runPublicMode('contract');
+   async function refreshEverything(){
+  clearBanner();
+  await runPublicMode('status');
+  await runPublicMode('health');
+  await runPublicMode('contract');
 
-      if(!state.adminToken){
-        renderAll();
-        setBanner('warn', 'Leituras públicas atualizadas. Para dados administrativos, aplique o token.');
-        return;
-      }
+  if(!state.adminToken){
+    renderAll();
+    setBanner('warn', 'Leituras públicas atualizadas. Para dados administrativos, aplique o token.');
+    return;
+  }
 
-      try{
-        await loadRelationship();
-        await loadCare();
-        await loadMail();
-        setBanner('ok', 'Painel atualizado.');
-      }catch(err){
-        if(isAdminAuthError(err)){
-          clearAdminState();
-          state.adminToken = '';
-          $('#admin-token').value = '';
-          renderAll();
-          setBanner('warn', (err.message || 'Falha de autenticação administrativa.') + ' O token administrativo foi removido do estado atual.');
-          return;
-        }
-        if(isBusyError(err)){ renderAll(); setBanner('warn', 'O sistema está ocupado no momento. Atualize novamente em alguns segundos.'); return; }
-        if(isSchemaError(err)){ renderAll(); setBanner('warn', 'Parte administrativa ainda não está pronta nesta base.'); return; }
-        clearAdminState();
-        renderAll();
-        setBanner('warn', err.message || 'Falha ao carregar dados administrativos.');
-      }
+  try{
+    await loadRelationship();
+    await loadCare();
+    await loadMail();
+    await runPublicMode('health');
+    await runPublicMode('status');
+    renderAll();
+    setBanner('ok', 'Painel atualizado.');
+  }catch(err){
+    if(isAdminAuthError(err)){
+      clearAdminState();
+      state.adminToken = '';
+      $('#admin-token').value = '';
+      renderAll();
+      setBanner('warn', (err.message || 'Falha de autenticação administrativa.') + ' O token administrativo foi removido do estado atual.');
+      return;
     }
+    if(isBusyError(err)){
+      renderAll();
+      setBanner('warn', 'O sistema está ocupado no momento. Atualize novamente em alguns segundos.');
+      return;
+    }
+    if(isSchemaError(err)){
+      renderAll();
+      setBanner('warn', 'Parte administrativa ainda não está pronta nesta base.');
+      return;
+    }
+    clearAdminState();
+    renderAll();
+    setBanner('warn', err.message || 'Falha ao carregar dados administrativos.');
+  }
+}
 
     async function installCore(){
       clearBanner();
