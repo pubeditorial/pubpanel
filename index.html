@@ -606,10 +606,10 @@
       return null;
     }
 
-    function mailOverview(){
-      if(state.mail.overview && state.mail.overview.data) return state.mail.overview.data;
-      return null;
-    }
+   function mailOverview(){
+  if(state.mail.overview && state.mail.overview.data) return state.mail.overview.data;
+  return null;
+}
 
     function ticketCount(status){ return state.tickets.filter(function(t){ return String(t.status || '').toUpperCase() === status; }).length; }
     function attentionCount(){ return ticketCount('OPEN') + ticketCount('WAITING_USER') + ticketCount('ANSWERED'); }
@@ -631,25 +631,31 @@
     }
 
     function resolveMailLabel(mail){
-      if(!mail) return '—';
+  const overview = mailOverview();
 
-      const statusLabel = String(mail.status_label || '').toUpperCase();
+  if(!mail && !overview) return '—';
 
-      if(
-        statusLabel === 'PRONTO' ||
-        mail.ready === true ||
-        mail.ok === true ||
-        (mail.installed === true && mail.bound === true && !String(mail.error || '').trim())
-      ) {
-        return 'Pronto';
-      }
+  if(overview && overview.health_ok === false) return 'Atenção';
 
-      if(mail.available === false) return 'Indisponível';
+  if(mail){
+    const statusLabel = String(mail.status_label || '').toUpperCase();
 
-      if(mail.installed === true || mail.bound === true) return 'Atenção';
-
-      return 'Instalar';
+    if(
+      statusLabel === 'PRONTO' ||
+      mail.ready === true ||
+      mail.ok === true ||
+      (mail.installed === true && mail.bound === true && !String(mail.error || '').trim())
+    ) {
+      return 'Pronto';
     }
+
+    if(mail.available === false) return 'Indisponível';
+
+    if(mail.installed === true || mail.bound === true) return 'Atenção';
+  }
+
+  return 'Instalar';
+}
 
     function resolveCareLabel(care){
       if(!care) return state.tickets.length ? (attentionCount() ? 'Atenção' : 'Pronto') : '—';
@@ -755,21 +761,36 @@
       box.innerHTML = html;
     }
 
-    function renderMail(){
-      const mail = mailHealth();
-      const overview = mailOverview();
-      const triggers = mail && mail.triggers ? mail.triggers : null;
-      const triggerNames = triggers && Array.isArray(triggers.items) ? triggers.items.map(function(item){ return item.handler; }).filter(Boolean) : [];
+   function renderMail(){
+  const mail = mailHealth();
+  const overview = mailOverview();
+  const triggers = mail && mail.triggers ? mail.triggers : null;
+  const triggerNames = triggers && Array.isArray(triggers.items) ? triggers.items.map(function(item){ return item.handler; }).filter(Boolean) : [];
 
-      $('#mail-queue-count').textContent = overview ? String(overview.queue_count || 0) : '—';
-      $('#mail-states-count').textContent = overview ? String(overview.contact_state_count || 0) : '—';
-      $('#mail-log-count').textContent = overview ? String(overview.log_count || 0) : '—';
-      $('#mail-suppressions-count').textContent = overview ? String(overview.suppressions_count || 0) : '—';
+  let statusText = 'Sem leitura administrativa de email.';
+  let reasonText = 'Use o token e atualize o módulo de email.';
 
-      $('#mail-module-status').textContent = mail ? ((mail.status_label || resolveMailLabel(mail)) + (mail.version ? (' · v' + mail.version) : '')) : 'Sem leitura administrativa de email.';
-      $('#mail-module-reason').textContent = mail ? (mail.status_reason || mail.error || 'Sem motivo adicional.') : 'Use o token e atualize o módulo de email.';
-      $('#mail-module-triggers').textContent = triggers ? ('Triggers ' + String(triggers.total || 0) + ' · ' + (triggerNames.length ? triggerNames.join(', ') : 'sem nomes')) : 'Triggers —';
+  if(mail){
+    statusText = (resolveMailLabel(mail) + (mail.version ? (' · v' + mail.version) : ''));
+
+    if(overview && overview.health_ok === false){
+      reasonText = (overview.health_errors && overview.health_errors.length)
+        ? overview.health_errors.join(' | ')
+        : (overview.health_status_reason || 'Há inconsistência entre health e overview do PUBMAIL.');
+    } else {
+      reasonText = mail.status_reason || mail.error || 'Sem motivo adicional.';
     }
+  }
+
+  $('#mail-queue-count').textContent = overview ? String(overview.queue_count || 0) : '—';
+  $('#mail-states-count').textContent = overview ? String(overview.contact_state_count || 0) : '—';
+  $('#mail-log-count').textContent = overview ? String(overview.log_count || 0) : '—';
+  $('#mail-suppressions-count').textContent = overview ? String(overview.suppressions_count || 0) : '—';
+
+  $('#mail-module-status').textContent = statusText;
+  $('#mail-module-reason').textContent = reasonText;
+  $('#mail-module-triggers').textContent = triggers ? ('Triggers ' + String(triggers.total || 0) + ' · ' + (triggerNames.length ? triggerNames.join(', ') : 'sem nomes')) : 'Triggers —';
+}
 
     function renderDiagnostics(){
       $('#diag-core').textContent = safeJson({ status: state.status, health: state.health, contract: state.contract });
@@ -1236,15 +1257,20 @@
         });
       });
 
-      $('#btn-load-mail-overview').addEventListener('click', function(){
-        handleAction(async function(){
-          const json = await apiPost('admin_mail_overview', {});
-          state.mail.overview = json;
-          state.mail.raw = Object.assign({}, state.mail.raw || {}, { overview: json });
-          renderAll();
-          setBanner('ok', 'Mail overview carregado.');
-        });
-      });
+     $('#btn-load-mail-overview').addEventListener('click', function(){
+  handleAction(async function(){
+    const json = await apiPost('admin_mail_overview', {});
+    state.mail.overview = json;
+    state.mail.raw = Object.assign({}, state.mail.raw || {}, { overview: json });
+
+    try {
+      await runPublicMode('contract');
+    } catch (_) {}
+
+    renderAll();
+    setBanner('ok', 'Mail overview carregado.');
+  });
+});
     }
 
     async function boot(){
