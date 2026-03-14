@@ -112,6 +112,9 @@
         </div>
         <div class="row">
           <button class="btn" id="btn-refresh">Atualizar</button>
+          <button class="btn" id="btn-install-core">Instalar core</button>
+          <button class="btn" id="btn-install-all">Instalar tudo</button>
+          <button class="btn" id="btn-install-diagnostic">Diagnóstico de instalação</button>
         </div>
       </div>
 
@@ -127,8 +130,7 @@
 
     <section class="panel">
       <h2 class="section-title">Conexão</h2>
-      <p class="section-text">Informe a URL do Web App e o token administrativo.</p>
-
+      <p class="section-text">Informe a URL do Web App e o token administrativo. Se este painel estiver rodando no próprio Apps Script, a URL atual será usada automaticamente.</p>
       <div style="height:12px"></div>
 
       <div class="grid-2">
@@ -367,7 +369,7 @@
 
   <script>
     const PUBPANEL = {
-      VERSION: '1.0-light',
+      VERSION: '1.0',
       STORAGE_API_BASE: 'PUBPANEL_LIGHT_API_BASE',
       PACKAGE_LABEL: 'PACOTE PUB EDITORIAL SCRIPTS'
     };
@@ -494,7 +496,12 @@
       const text = await response.text();
       let json = null;
       try{ json = text && text.trim() ? JSON.parse(text) : {}; }
-      catch(_){ const err = new Error('A resposta do Web App não veio em JSON válido.'); err.code = 'INVALID_JSON_RESPONSE'; err.details = { http_status: response.status, raw_response: text }; throw err; }
+      catch(_){
+        const err = new Error('A resposta do Web App não veio em JSON válido.');
+        err.code = 'INVALID_JSON_RESPONSE';
+        err.details = { http_status: response.status, raw_response: text };
+        throw err;
+      }
 
       if(!response.ok){
         const err = new Error(json && (json.error || json.message) || ('Falha HTTP ' + response.status));
@@ -517,21 +524,25 @@
       const code = String(err && err.code || '').toUpperCase();
       return code === 'ADMIN_AUTH_REQUIRED' || code === 'ADMIN_AUTH_INVALID' || code === 'ADMIN_AUTH_UNAVAILABLE';
     }
+
     function isBusyError(err){
       const code = String(err && err.code || '').toUpperCase();
       const message = String(err && err.message || '').toLowerCase();
       return code === 'SYSTEM_UNAVAILABLE' || message.indexOf('sistema ocupado') >= 0;
     }
+
     function isSchemaError(err){
       const code = String(err && err.code || '').toUpperCase();
       const message = String(err && err.message || '').toLowerCase();
       return code === 'SCHEMA_INVALID' || code === 'MAIL_DB_INVALID_SCHEMA' || code === 'MAIL_HEADER_INVALID' || code === 'MAIL_SHEET_MISSING' || code === 'MAIL_BASE_SHEET_MISSING' || code === 'MAIL_DB_NOT_FOUND' || message.indexOf('schema') >= 0 || message.indexOf('sheet') >= 0 || message.indexOf('cabeçalho') >= 0 || message.indexOf('cabecalho') >= 0;
     }
+
     function isActionUnavailableError(err){
       const code = String(err && err.code || '').toUpperCase();
       const message = String(err && err.message || '').toLowerCase();
       return code === 'INVALID_ACTION' || message.indexOf('ação inválida') >= 0 || message.indexOf('acao invalida') >= 0;
     }
+
     function isPubcareNotInstalledError(err){
       const code = String(err && err.code || '').toUpperCase();
       const message = String(err && err.message || '').toLowerCase();
@@ -568,7 +579,7 @@
 
     function mailHealth(){
       const publicMail = state.health && state.health.data && state.health.data.modules && state.health.data.modules.pubmail ? state.health.data.modules.pubmail : null;
-      const adminMail = state.mail.health || null;
+      const adminMail = state.mail.health && state.mail.health.data ? state.mail.health.data : state.mail.health || null;
       if(!publicMail && !adminMail) return null;
       return Object.assign({}, publicMail || {}, adminMail || {});
     }
@@ -625,6 +636,7 @@
       const mailLabel = resolveMailLabel(mail);
       const careLabel = resolveCareLabel(care);
       let overall = '—';
+
       if(coreLabel === 'Pronto' && (mailLabel === 'Pronto' || mailLabel === '—' || mailLabel === 'Indisponível') && (careLabel === 'Pronto' || careLabel === 'Atenção' || careLabel === '—' || careLabel === 'Indisponível')) overall = 'Pronto';
       else if(core || mail || care || state.tickets.length) overall = 'Atenção';
 
@@ -675,7 +687,11 @@
     function renderCareList(){
       const box = $('#care-list');
       if(!state.tickets.length){ box.innerHTML = '<div class="empty">Nenhum ticket carregado.</div>'; return; }
-      const ordered = state.tickets.slice().sort(function(a,b){ const pa = priorityValue(a.status), pb = priorityValue(b.status); if(pa !== pb) return pa - pb; return (Date.parse(b.created_at || '') || 0) - (Date.parse(a.created_at || '') || 0); });
+      const ordered = state.tickets.slice().sort(function(a,b){
+        const pa = priorityValue(a.status), pb = priorityValue(b.status);
+        if(pa !== pb) return pa - pb;
+        return (Date.parse(b.created_at || '') || 0) - (Date.parse(a.created_at || '') || 0);
+      });
       let html = '<div class="list">';
       ordered.forEach(function(t){
         const active = t.ticket_id === state.selectedTicketId ? ' active' : '';
@@ -684,7 +700,10 @@
       html += '</div>';
       box.innerHTML = html;
       Array.prototype.slice.call(box.querySelectorAll('[data-ticket-id]')).forEach(function(el){
-        el.addEventListener('click', function(){ const id = el.getAttribute('data-ticket-id'); handleAction(async function(){ await selectTicket(id); }); });
+        el.addEventListener('click', function(){
+          const id = el.getAttribute('data-ticket-id');
+          handleAction(async function(){ await selectTicket(id); });
+        });
       });
     }
 
@@ -751,26 +770,74 @@
 
     function choosePreferredTicket(rows){
       if(!rows || !rows.length) return null;
-      const ordered = rows.slice().sort(function(a,b){ const pa = priorityValue(a.status), pb = priorityValue(b.status); if(pa !== pb) return pa - pb; return (Date.parse(b.created_at || '') || 0) - (Date.parse(a.created_at || '') || 0); });
+      const ordered = rows.slice().sort(function(a,b){
+        const pa = priorityValue(a.status), pb = priorityValue(b.status);
+        if(pa !== pb) return pa - pb;
+        return (Date.parse(b.created_at || '') || 0) - (Date.parse(a.created_at || '') || 0);
+      });
       return ordered[0] || null;
     }
 
     async function loadCare(){
       const ticketsJson = await apiPost('admin_list_tickets', {});
       state.tickets = Array.isArray(ticketsJson.rows) ? ticketsJson.rows : [];
+
       const preferred = choosePreferredTicket(state.tickets);
-      if(preferred) await selectTicket(preferred.ticket_id);
-      else { state.selectedTicketId = ''; state.selectedTicket = null; state.selectedTicketMessages = []; }
+
+      if(preferred){
+        try{
+          await selectTicket(preferred.ticket_id);
+        } catch(err){
+          state.selectedTicketId = '';
+          state.selectedTicket = null;
+          state.selectedTicketMessages = [];
+          throw err;
+        }
+      } else {
+        state.selectedTicketId = '';
+        state.selectedTicket = null;
+        state.selectedTicketMessages = [];
+      }
+
       renderAll();
     }
 
     async function selectTicket(ticketId){
       if(!ticketId) return;
+
       state.selectedTicketId = ticketId;
+
+      try{
+        const workspaceJson = await apiPost('admin_care_get_ticket_workspace', { ticket_id: ticketId });
+
+        state.selectedTicket =
+          workspaceJson &&
+          workspaceJson.data &&
+          workspaceJson.data.ticket
+            ? workspaceJson.data.ticket
+            : null;
+
+        state.selectedTicketMessages =
+          workspaceJson &&
+          workspaceJson.data &&
+          Array.isArray(workspaceJson.data.messages)
+            ? workspaceJson.data.messages
+            : [];
+
+        renderAll();
+        return;
+      } catch(err){
+        if(!(isPubcareNotInstalledError(err) || isActionUnavailableError(err) || isSchemaError(err))) {
+          throw err;
+        }
+      }
+
       const ticketJson = await apiPost('admin_get_ticket', { ticket_id: ticketId });
       const messagesJson = await apiPost('admin_list_ticket_messages', { ticket_id: ticketId });
+
       state.selectedTicket = ticketJson && ticketJson.data ? ticketJson.data : null;
       state.selectedTicketMessages = Array.isArray(messagesJson.rows) ? messagesJson.rows : [];
+
       renderAll();
     }
 
@@ -817,14 +884,71 @@
       }
     }
 
+    async function installCore(){
+      clearBanner();
+      const result = await apiPost('admin_install_crm', {});
+      await refreshEverything();
+      setBanner('ok', 'Core instalado ou normalizado com sucesso.');
+      return result;
+    }
+
+    async function installAll(){
+      clearBanner();
+
+      const result = await apiPost('admin_install_all', {});
+      await refreshEverything();
+
+      const coreOk = !!(result && result.data && result.data.core && result.data.core.ready);
+      const mailOk = !!(
+        !result ||
+        !result.data ||
+        !Object.prototype.hasOwnProperty.call(result.data, 'pubmail') ||
+        !result.data.pubmail ||
+        result.data.pubmail.ok === true
+      );
+      const careOk = !!(
+        !result ||
+        !result.data ||
+        !Object.prototype.hasOwnProperty.call(result.data, 'pubcare') ||
+        !result.data.pubcare ||
+        result.data.pubcare.ok === true
+      );
+
+      if(coreOk && mailOk && careOk){
+        setBanner('ok', 'Instalação completa executada com sucesso.');
+        return result;
+      }
+
+      setBanner('warn', 'Instalação executada com pendências. Revise o diagnóstico e os blocos de status.');
+      return result;
+    }
+
+    async function installAllDiagnostic(){
+      clearBanner();
+
+      const result = await apiPost('admin_install_all_diagnostico', {});
+
+      state.contract = Object.assign({}, state.contract || {}, {
+        install_diagnostic: result
+      });
+
+      renderAll();
+      setBanner('ok', 'Diagnóstico de instalação executado.');
+      return result;
+    }
+
     async function replySelectedTicket(){
       if(!state.selectedTicketId) throw new Error('Nenhum ticket selecionado.');
+
       const message = stringValue($('#reply-message').value);
       const status = String($('#reply-status').value || 'ANSWERED').toUpperCase();
       const selectedChannel = String($('#reply-channel').value || 'MANUAL').toUpperCase();
       const sendEmail = selectedChannel === 'EMAIL';
+
       if(!message) throw new Error('Escreva uma resposta antes de enviar.');
-      if(sendEmail && (!state.selectedTicket || !stringValue(state.selectedTicket.email))) throw new Error('Este ticket não possui email válido para envio.');
+      if(sendEmail && (!state.selectedTicket || !stringValue(state.selectedTicket.email))) {
+        throw new Error('Este ticket não possui email válido para envio.');
+      }
 
       try{
         await apiPost('admin_care_reply_ticket', {
@@ -834,17 +958,51 @@
           channel: selectedChannel,
           sent_by: 'admin',
           send_email: sendEmail,
-          mail_subject: state.selectedTicket && state.selectedTicket.item ? ('PUB Editorial | ' + String(normalizeItemLabel(state.selectedTicket.item))) : 'PUB Editorial | Atendimento'
+          mail_subject: state.selectedTicket && state.selectedTicket.item
+            ? ('PUB Editorial | ' + String(normalizeItemLabel(state.selectedTicket.item)))
+            : 'PUB Editorial | Atendimento'
         });
+
         $('#reply-message').value = '';
         await loadCare();
         if(sendEmail) await loadMail();
         setBanner('ok', sendEmail ? 'Resposta registrada e email preparado.' : 'Resposta registrada.');
-      }catch(err){
-        if(isBusyError(err)){ setBanner('warn', 'O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.'); return; }
-        if(isPubcareNotInstalledError(err) || isActionUnavailableError(err) || isSchemaError(err)){ setBanner('error', 'O módulo de atendimento ainda não está preparado nesta base.'); return; }
-        throw err;
+        return;
+      } catch(err){
+        if(isBusyError(err)){
+          setBanner('warn', 'O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.');
+          return;
+        }
+
+        if(!(isPubcareNotInstalledError(err) || isActionUnavailableError(err) || isSchemaError(err))) {
+          throw err;
+        }
       }
+
+      await apiPost('admin_reply_ticket', {
+        ticket_id: state.selectedTicketId,
+        message: message,
+        status: status,
+        channel: selectedChannel,
+        sent_by: 'admin'
+      });
+
+      if(sendEmail){
+        await apiPost('admin_mail_send_manual', {
+          template_key: 'tmpl_manual_generic',
+          audience_mode: 'manual_emails',
+          emails: state.selectedTicket.email,
+          manual_subject: state.selectedTicket && state.selectedTicket.item
+            ? ('PUB Editorial | ' + String(normalizeItemLabel(state.selectedTicket.item)))
+            : 'PUB Editorial | Atendimento',
+          manual_message: message
+        });
+      }
+
+      $('#reply-message').value = '';
+      await loadCare();
+      if(sendEmail) await loadMail();
+      setBanner('ok', sendEmail ? 'Resposta registrada e email preparado.' : 'Resposta registrada.');
     }
 
     async function bootstrapMail(){
@@ -911,28 +1069,88 @@
       $('#btn-clear-api-base').addEventListener('click', function(){ handleAction(async function(){ clearApiBase(); }); });
       $('#btn-apply-token').addEventListener('click', function(){ handleAction(applyToken); });
       $('#btn-clear-token').addEventListener('click', function(){ handleAction(async function(){ clearToken(); }); });
+
       $('#btn-refresh').addEventListener('click', function(){ handleAction(refreshEverything); });
+      $('#btn-install-core').addEventListener('click', function(){ handleAction(installCore); });
+      $('#btn-install-all').addEventListener('click', function(){ handleAction(installAll); });
+      $('#btn-install-diagnostic').addEventListener('click', function(){ handleAction(installAllDiagnostic); });
+
       $('#btn-refresh-care').addEventListener('click', function(){ handleAction(loadCare); });
       $('#btn-reply-ticket').addEventListener('click', function(){ handleAction(replySelectedTicket); });
-      $('#btn-load-relationship').addEventListener('click', function(){ handleAction(async function(){ await loadRelationship(); setBanner('ok', 'Relacionamento atualizado.'); }); });
-      $('#btn-mail-refresh').addEventListener('click', function(){ handleAction(async function(){ await loadMail(); setBanner('ok', 'Resumo de email atualizado.'); }); });
+
+      $('#btn-load-relationship').addEventListener('click', function(){
+        handleAction(async function(){
+          await loadRelationship();
+          setBanner('ok', 'Relacionamento atualizado.');
+        });
+      });
+
+      $('#btn-mail-refresh').addEventListener('click', function(){
+        handleAction(async function(){
+          await loadMail();
+          setBanner('ok', 'Resumo de email atualizado.');
+        });
+      });
+
       $('#btn-mail-bootstrap').addEventListener('click', function(){ handleAction(bootstrapMail); });
       $('#btn-mail-scan').addEventListener('click', function(){ handleAction(scanMail); });
       $('#btn-mail-process').addEventListener('click', function(){ handleAction(processMail); });
       $('#btn-mail-send-manual').addEventListener('click', function(){ handleAction(sendManualMail); });
       $('#btn-mail-add-suppression').addEventListener('click', function(){ handleAction(addSuppression); });
-      $('#btn-load-status').addEventListener('click', function(){ handleAction(async function(){ await runPublicMode('status'); setBanner('ok', 'Status carregado.'); }); });
-      $('#btn-load-health').addEventListener('click', function(){ handleAction(async function(){ await runPublicMode('health'); setBanner('ok', 'Health carregado.'); }); });
-      $('#btn-load-contract').addEventListener('click', function(){ handleAction(async function(){ await runPublicMode('contract'); setBanner('ok', 'Contract carregado.'); }); });
-      $('#btn-load-mail-health').addEventListener('click', function(){ handleAction(async function(){ const json = await apiPost('admin_mail_health', {}); state.mail.health = json; state.mail.raw = Object.assign({}, state.mail.raw || {}, { health: json }); renderAll(); setBanner('ok', 'Mail health carregado.'); }); });
-      $('#btn-load-mail-overview').addEventListener('click', function(){ handleAction(async function(){ const json = await apiPost('admin_mail_overview', {}); state.mail.overview = json; state.mail.raw = Object.assign({}, state.mail.raw || {}, { overview: json }); renderAll(); setBanner('ok', 'Mail overview carregado.'); }); });
+
+      $('#btn-load-status').addEventListener('click', function(){
+        handleAction(async function(){
+          await runPublicMode('status');
+          setBanner('ok', 'Status carregado.');
+        });
+      });
+
+      $('#btn-load-health').addEventListener('click', function(){
+        handleAction(async function(){
+          await runPublicMode('health');
+          setBanner('ok', 'Health carregado.');
+        });
+      });
+
+      $('#btn-load-contract').addEventListener('click', function(){
+        handleAction(async function(){
+          await runPublicMode('contract');
+          setBanner('ok', 'Contract carregado.');
+        });
+      });
+
+      $('#btn-load-mail-health').addEventListener('click', function(){
+        handleAction(async function(){
+          const json = await apiPost('admin_mail_health', {});
+          state.mail.health = json;
+          state.mail.raw = Object.assign({}, state.mail.raw || {}, { health: json });
+          renderAll();
+          setBanner('ok', 'Mail health carregado.');
+        });
+      });
+
+      $('#btn-load-mail-overview').addEventListener('click', function(){
+        handleAction(async function(){
+          const json = await apiPost('admin_mail_overview', {});
+          state.mail.overview = json;
+          state.mail.raw = Object.assign({}, state.mail.raw || {}, { overview: json });
+          renderAll();
+          setBanner('ok', 'Mail overview carregado.');
+        });
+      });
     }
 
     async function boot(){
-      state.apiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || '';
+      const savedApiBase = localStorage.getItem(PUBPANEL.STORAGE_API_BASE) || '';
+      const currentUrl = window.location.href;
+      const runningInsideAppsScript = currentUrl.indexOf('/exec') >= 0 || currentUrl.indexOf('/dev') >= 0;
+
+      state.apiBase = savedApiBase || (runningInsideAppsScript ? currentUrl : '');
       $('#api-base').value = state.apiBase;
+
       renderAll();
       bind();
+
       if(state.apiBase){
         try{
           await runPublicMode('status');
