@@ -154,33 +154,33 @@
       </div>
     </section>
 
-    <section class="panel">
-      <h2 class="section-title">Resumo</h2>
-      <p class="section-text">Indicadores principais do sistema.</p>
-      <div style="height:12px"></div>
-      <div class="grid-4">
-        <div class="metric">
-          <div class="k">Leads</div>
-          <div class="v" id="sum-leads">—</div>
-          <div class="n">Entradas registradas.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Contatos</div>
-          <div class="v" id="sum-contacts">—</div>
-          <div class="n">Base principal.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Tickets com atenção</div>
-          <div class="v" id="sum-care-attention">—</div>
-          <div class="n">Abertos, respondidos ou aguardando usuário.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Fila de email</div>
-          <div class="v" id="sum-mail-queue">—</div>
-          <div class="n">Itens pendentes no PUBMAIL.</div>
-        </div>
-      </div>
-    </section>
+   <section class="panel">
+  <h2 class="section-title">Resumo</h2>
+  <p class="section-text">Indicadores principais do sistema.</p>
+  <div style="height:12px"></div>
+  <div class="grid-4">
+    <div class="metric">
+      <div class="k">Leads</div>
+      <div class="v" id="sum-leads">—</div>
+      <div class="n">Entradas registradas.</div>
+    </div>
+    <div class="metric">
+      <div class="k">Contatos</div>
+      <div class="v" id="sum-contacts">—</div>
+      <div class="n">Base principal.</div>
+    </div>
+    <div class="metric">
+      <div class="k">Tickets com atenção</div>
+      <div class="v" id="sum-care-attention">—</div>
+      <div class="n">Abertos, respondidos ou aguardando usuário.</div>
+    </div>
+    <div class="metric">
+      <div class="k">Fila atual de email</div>
+      <div class="v" id="sum-mail-queue">—</div>
+      <div class="n">Itens atuais em processamento ou pendentes no PUBMAIL.</div>
+    </div>
+  </div>
+</section>
 
     <section class="panel">
       <div class="top">
@@ -272,75 +272,75 @@
     </section>
 
     <section class="panel">
-      <div class="top">
-        <div>
-          <h2 class="section-title">Email</h2>
-          <p class="section-text">Fluxo do PUBMAIL: preparar, escanear, processar fila e bloquear emails.</p>
-        </div>
+  <div class="top">
+    <div>
+      <h2 class="section-title">Email</h2>
+      <p class="section-text">Fluxo do PUBMAIL: preparar o módulo, escanear origens, processar a fila atual e bloquear envios quando necessário.</p>
+    </div>
+    <div class="row">
+      <button class="btn" id="btn-mail-refresh">Atualizar email</button>
+      <button class="btn" id="btn-mail-bootstrap">Preparar email</button>
+      <button class="btn" id="btn-mail-scan">Escanear</button>
+      <button class="btn btn-primary" id="btn-mail-process">Processar fila</button>
+    </div>
+  </div>
+
+  <div style="height:12px"></div>
+
+  <div class="grid-4">
+    <div class="metric">
+      <div class="k">Fila atual</div>
+      <div class="v" id="mail-queue-count">—</div>
+      <div class="n">Itens atuais pendentes ou em processamento.</div>
+    </div>
+    <div class="metric">
+      <div class="k">Estados</div>
+      <div class="v" id="mail-states-count">—</div>
+      <div class="n">Estado mínimo por origem e template.</div>
+    </div>
+    <div class="metric">
+      <div class="k">Log</div>
+      <div class="v" id="mail-log-count">—</div>
+      <div class="n">Histórico operacional de envios e ocorrências.</div>
+    </div>
+    <div class="metric">
+      <div class="k">Supressões</div>
+      <div class="v" id="mail-suppressions-count">—</div>
+      <div class="n">Emails atualmente bloqueados.</div>
+    </div>
+  </div>
+
+  <div style="height:14px"></div>
+
+  <div class="grid-2">
+    <div class="soft">
+      <div class="label">Situação do módulo de email</div>
+      <div id="mail-module-status" class="micro">—</div>
+      <div id="mail-module-reason" class="micro">Sem leitura ainda.</div>
+      <div id="mail-module-triggers" class="micro">Triggers —</div>
+    </div>
+
+    <div class="soft">
+      <div class="label">Ações rápidas</div>
+      <div class="field">
+        <input id="send-manual-emails" class="input" placeholder="emails separados por vírgula ou quebra de linha" />
+        <input id="send-manual-subject" class="input" placeholder="Assunto" />
+        <textarea id="send-manual-message" class="textarea" placeholder="Mensagem"></textarea>
         <div class="row">
-          <button class="btn" id="btn-mail-refresh">Atualizar email</button>
-          <button class="btn" id="btn-mail-bootstrap">Preparar email</button>
-          <button class="btn" id="btn-mail-scan">Escanear</button>
-          <button class="btn btn-primary" id="btn-mail-process">Processar fila</button>
+          <button class="btn btn-primary" id="btn-mail-send-manual">Preparar mensagem</button>
         </div>
       </div>
-
       <div style="height:12px"></div>
-
-      <div class="grid-4">
-        <div class="metric">
-          <div class="k">Fila</div>
-          <div class="v" id="mail-queue-count">—</div>
-          <div class="n">Itens aguardando.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Estados</div>
-          <div class="v" id="mail-states-count">—</div>
-          <div class="n">Estado mínimo por origem.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Log</div>
-          <div class="v" id="mail-log-count">—</div>
-          <div class="n">Histórico operacional.</div>
-        </div>
-        <div class="metric">
-          <div class="k">Supressões</div>
-          <div class="v" id="mail-suppressions-count">—</div>
-          <div class="n">Emails bloqueados.</div>
+      <div class="field">
+        <input id="suppression-email" class="input" placeholder="email@dominio.com" />
+        <input id="suppression-reason" class="input" placeholder="Motivo" />
+        <div class="row">
+          <button class="btn" id="btn-mail-add-suppression">Bloquear email</button>
         </div>
       </div>
-
-      <div style="height:14px"></div>
-
-      <div class="grid-2">
-        <div class="soft">
-          <div class="label">Situação do módulo de email</div>
-          <div id="mail-module-status" class="micro">—</div>
-          <div id="mail-module-reason" class="micro">Sem leitura ainda.</div>
-          <div id="mail-module-triggers" class="micro">Triggers —</div>
-        </div>
-
-        <div class="soft">
-          <div class="label">Ações rápidas</div>
-          <div class="field">
-            <input id="send-manual-emails" class="input" placeholder="emails separados por vírgula ou quebra de linha" />
-            <input id="send-manual-subject" class="input" placeholder="Assunto" />
-            <textarea id="send-manual-message" class="textarea" placeholder="Mensagem"></textarea>
-            <div class="row">
-              <button class="btn btn-primary" id="btn-mail-send-manual">Preparar mensagem</button>
-            </div>
-          </div>
-          <div style="height:12px"></div>
-          <div class="field">
-            <input id="suppression-email" class="input" placeholder="email@dominio.com" />
-            <input id="suppression-reason" class="input" placeholder="Motivo" />
-            <div class="row">
-              <button class="btn" id="btn-mail-add-suppression">Bloquear email</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <section class="panel">
       <details>
@@ -693,13 +693,22 @@
       $('#pill-care').textContent = 'Atendimento ' + careLabel;
     }
 
-    function renderSummary(){
-      const overview = mailOverview();
-      $('#sum-leads').textContent = state.leads.length ? String(state.leads.length) : '—';
-      $('#sum-contacts').textContent = state.contacts.length ? String(state.contacts.length) : '—';
-      $('#sum-care-attention').textContent = state.tickets.length ? String(attentionCount()) : '—';
-      $('#sum-mail-queue').textContent = overview ? String(overview.queue_count || 0) : '—';
-    }
+   function renderSummary(){
+  const overview = mailOverview();
+
+  const queuePendingCount = overview
+    ? Number(
+        overview.queue_pending_count != null
+          ? overview.queue_pending_count
+          : (overview.queue_count != null ? overview.queue_count : 0)
+      ) || 0
+    : null;
+
+  $('#sum-leads').textContent = state.leads.length ? String(state.leads.length) : '—';
+  $('#sum-contacts').textContent = state.contacts.length ? String(state.contacts.length) : '—';
+  $('#sum-care-attention').textContent = state.tickets.length ? String(attentionCount()) : '—';
+  $('#sum-mail-queue').textContent = overview ? String(queuePendingCount) : '—';
+}
 
     function renderRecentSimpleBox(containerId, rows, type){
       const box = $(containerId);
@@ -770,6 +779,26 @@
   let statusText = 'Sem leitura administrativa de email.';
   let reasonText = 'Use o token e atualize o módulo de email.';
 
+  const queuePendingCount = overview
+    ? Number(
+        overview.queue_pending_count != null
+          ? overview.queue_pending_count
+          : (overview.queue_count != null ? overview.queue_count : 0)
+      ) || 0
+    : null;
+
+  const queueHistoricalCount = overview
+    ? Number(
+        overview.queue_historical_count != null
+          ? overview.queue_historical_count
+          : 0
+      ) || 0
+    : null;
+
+  const queueStatusCounts = overview && overview.queue_status_counts && typeof overview.queue_status_counts === 'object'
+    ? overview.queue_status_counts
+    : null;
+
   if(mail){
     statusText = (resolveMailLabel(mail) + (mail.version ? (' · v' + mail.version) : ''));
 
@@ -780,9 +809,35 @@
     } else {
       reasonText = mail.status_reason || mail.error || 'Sem motivo adicional.';
     }
+
+    if(overview){
+      const queueParts = [];
+
+      queueParts.push('Fila atual: ' + String(queuePendingCount));
+
+      if(queueHistoricalCount != null){
+        queueParts.push('Histórico: ' + String(queueHistoricalCount));
+      }
+
+      if(queueStatusCounts){
+        queueParts.push(
+          'Status — pending: ' + String(Number(queueStatusCounts.pending || 0)) +
+          ', processing: ' + String(Number(queueStatusCounts.processing || 0)) +
+          ', sent: ' + String(Number(queueStatusCounts.sent || 0)) +
+          ', error: ' + String(Number(queueStatusCounts.error || 0)) +
+          ', suppressed: ' + String(Number(queueStatusCounts.suppressed || 0)) +
+          ', skipped: ' + String(Number(queueStatusCounts.skipped || 0)) +
+          ', unknown: ' + String(Number(queueStatusCounts.unknown || 0))
+        );
+      }
+
+      if(queueParts.length){
+        reasonText += (reasonText ? ' · ' : '') + queueParts.join(' · ');
+      }
+    }
   }
 
-  $('#mail-queue-count').textContent = overview ? String(overview.queue_count || 0) : '—';
+  $('#mail-queue-count').textContent = overview ? String(queuePendingCount) : '—';
   $('#mail-states-count').textContent = overview ? String(overview.contact_state_count || 0) : '—';
   $('#mail-log-count').textContent = overview ? String(overview.log_count || 0) : '—';
   $('#mail-suppressions-count').textContent = overview ? String(overview.suppressions_count || 0) : '—';
@@ -791,7 +846,6 @@
   $('#mail-module-reason').textContent = reasonText;
   $('#mail-module-triggers').textContent = triggers ? ('Triggers ' + String(triggers.total || 0) + ' · ' + (triggerNames.length ? triggerNames.join(', ') : 'sem nomes')) : 'Triggers —';
 }
-
     function renderDiagnostics(){
       $('#diag-core').textContent = safeJson({ status: state.status, health: state.health, contract: state.contract });
       $('#diag-mail').textContent = safeJson({ mail_health: state.mail.health, mail_overview: state.mail.overview, mail_raw: state.mail.raw });
@@ -899,18 +953,64 @@
     }
 
     async function loadMail(){
-      const healthJson = await apiPost('admin_mail_health', {});
-      const overviewJson = await apiPost('admin_mail_overview', {});
+  const healthJson = await apiPost('admin_mail_health', {});
+  const overviewJson = await apiPost('admin_mail_overview', {});
 
-      state.mail.health = healthJson || null;
-      state.mail.overview = overviewJson || null;
-      state.mail.raw = {
-        health: healthJson || null,
-        overview: overviewJson || null
-      };
+  const normalizedHealth = healthJson || null;
+  const normalizedOverviewResponse = overviewJson || null;
+  const normalizedOverviewData =
+    normalizedOverviewResponse &&
+    normalizedOverviewResponse.data &&
+    typeof normalizedOverviewResponse.data === 'object'
+      ? normalizedOverviewResponse.data
+      : null;
 
-      renderAll();
+  if (normalizedOverviewResponse && !normalizedOverviewData) {
+    throw new Error('O mail overview não retornou o bloco data esperado.');
+  }
+
+  if (normalizedOverviewData) {
+    const queuePendingCount = Number(
+      normalizedOverviewData.queue_pending_count != null
+        ? normalizedOverviewData.queue_pending_count
+        : (normalizedOverviewData.queue_count != null ? normalizedOverviewData.queue_count : 0)
+    );
+
+    const queueHistoricalCount = Number(
+      normalizedOverviewData.queue_historical_count != null
+        ? normalizedOverviewData.queue_historical_count
+        : 0
+    );
+
+    if (!Number.isFinite(queuePendingCount) || queuePendingCount < 0) {
+      throw new Error('O mail overview retornou queue_pending_count inválido.');
     }
+
+    if (!Number.isFinite(queueHistoricalCount) || queueHistoricalCount < 0) {
+      throw new Error('O mail overview retornou queue_historical_count inválido.');
+    }
+
+    if (queuePendingCount > queueHistoricalCount && queueHistoricalCount !== 0) {
+      throw new Error('O mail overview retornou contagens inconsistentes entre fila atual e histórico.');
+    }
+
+    if (
+      normalizedOverviewData.queue_status_counts != null &&
+      typeof normalizedOverviewData.queue_status_counts !== 'object'
+    ) {
+      throw new Error('O mail overview retornou queue_status_counts em formato inválido.');
+    }
+  }
+
+  state.mail.health = normalizedHealth;
+  state.mail.overview = normalizedOverviewResponse;
+  state.mail.raw = {
+    health: normalizedHealth,
+    overview: normalizedOverviewResponse
+  };
+
+  renderAll();
+}
 
     async function refreshEverything(){
       clearBanner();
@@ -1049,119 +1149,291 @@
     }
 
     async function replySelectedTicket(){
-      if(!state.selectedTicketId) throw new Error('Nenhum ticket selecionado.');
+  if(!state.selectedTicketId) throw new Error('Nenhum ticket selecionado.');
 
-      const message = stringValue($('#reply-message').value);
-      const status = String($('#reply-status').value || 'ANSWERED').toUpperCase();
-      const selectedChannel = String($('#reply-channel').value || 'MANUAL').toUpperCase();
-      const sendEmail = selectedChannel === 'EMAIL';
+  const message = stringValue($('#reply-message').value);
+  const status = String($('#reply-status').value || 'ANSWERED').toUpperCase();
+  const selectedChannel = String($('#reply-channel').value || 'MANUAL').toUpperCase();
+  const manualSubject = state.selectedTicket && state.selectedTicket.item
+    ? ('PUB Editorial | ' + String(normalizeItemLabel(state.selectedTicket.item)))
+    : 'PUB Editorial | Atendimento';
 
-      if(!message) throw new Error('Escreva uma resposta antes de enviar.');
-      if(sendEmail && (!state.selectedTicket || !stringValue(state.selectedTicket.email))) {
-        throw new Error('Este ticket não possui email válido para envio.');
-      }
+  if(!message) throw new Error('Escreva uma resposta antes de enviar.');
 
-      try{
-        await apiPost('admin_care_reply_ticket', {
-          ticket_id: state.selectedTicketId,
-          message: message,
-          status: status,
-          channel: selectedChannel,
-          sent_by: 'admin',
-          send_email: sendEmail,
-          mail_subject: state.selectedTicket && state.selectedTicket.item
-            ? ('PUB Editorial | ' + String(normalizeItemLabel(state.selectedTicket.item)))
-            : 'PUB Editorial | Atendimento'
-        });
-
-        $('#reply-message').value = '';
-        await loadCare();
-        if(sendEmail) await loadMail();
-        setBanner('ok', sendEmail ? 'Resposta registrada e email preparado.' : 'Resposta registrada.');
-        return;
-      } catch(err){
-        if(isBusyError(err)){
-          setBanner('warn', 'O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.');
-          return;
-        }
-
-        if(!(isPubcareNotInstalledError(err) || isActionUnavailableError(err) || isSchemaError(err))) {
-          throw err;
-        }
-      }
-
+  if(selectedChannel === 'MANUAL'){
+    try{
       await apiPost('admin_reply_ticket', {
         ticket_id: state.selectedTicketId,
         message: message,
         status: status,
-        channel: selectedChannel,
+        channel: 'MANUAL',
         sent_by: 'admin'
       });
 
-      if(sendEmail){
-        await apiPost('admin_mail_send_manual', {
-          template_key: 'tmpl_manual_generic',
-          audience_mode: 'manual_emails',
-          emails: state.selectedTicket.email,
-          manual_subject: state.selectedTicket && state.selectedTicket.item
-            ? ('PUB Editorial | ' + String(normalizeItemLabel(state.selectedTicket.item)))
-            : 'PUB Editorial | Atendimento',
-          manual_message: message
-        });
+      $('#reply-message').value = '';
+      await loadCare();
+      setBanner('ok', 'Resposta manual registrada no ticket.');
+      return;
+    } catch(err){
+      if(isBusyError(err)){
+        setBanner('warn', 'O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.');
+        return;
       }
+      throw err;
+    }
+  }
+
+  if(selectedChannel !== 'EMAIL'){
+    throw new Error('Canal de resposta inválido.');
+  }
+
+  let emailContext = null;
+
+  try{
+    const workspaceJson = await apiPost('admin_care_get_ticket_workspace', {
+      ticket_id: state.selectedTicketId
+    });
+
+    emailContext = workspaceJson &&
+      workspaceJson.data &&
+      workspaceJson.data.email_context
+        ? workspaceJson.data.email_context
+        : null;
+  } catch(err){
+    if(!(isPubcareNotInstalledError(err) || isActionUnavailableError(err) || isSchemaError(err))) {
+      if(isBusyError(err)){
+        setBanner('warn', 'O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.');
+        return;
+      }
+      throw err;
+    }
+  }
+
+  const recipientEmail = emailContext && stringValue(emailContext.recipient_email)
+    ? stringValue(emailContext.recipient_email)
+    : (state.selectedTicket ? stringValue(state.selectedTicket.email) : '');
+
+  const canSendEmailByContext = emailContext
+    ? emailContext.can_send_email === true && recipientEmail !== ''
+    : recipientEmail !== '';
+
+  if(!canSendEmailByContext){
+    throw new Error('Este ticket não possui email válido para envio.');
+  }
+
+  const mailIntegrationAvailable = emailContext
+    ? emailContext.mail_integration_available === true
+    : true;
+
+  if(emailContext && emailContext.reply_requires_email !== true){
+    throw new Error('O contrato atual do atendimento não permite este fluxo de resposta por email.');
+  }
+
+  if(emailContext && mailIntegrationAvailable){
+    try{
+      await apiPost('admin_care_reply_ticket', {
+        ticket_id: state.selectedTicketId,
+        message: message,
+        status: status,
+        channel: 'EMAIL',
+        sent_by: 'admin',
+        send_email: true,
+        mail_subject: manualSubject
+      });
 
       $('#reply-message').value = '';
       await loadCare();
-      if(sendEmail) await loadMail();
-      setBanner('ok', sendEmail ? 'Resposta registrada e email preparado.' : 'Resposta registrada.');
+      await loadMail();
+      setBanner('ok', 'Resposta registrada e email enfileirado.');
+      return;
+    } catch(err){
+      if(isBusyError(err)){
+        setBanner('warn', 'O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.');
+        return;
+      }
+
+      if(!(isPubcareNotInstalledError(err) || isActionUnavailableError(err) || isSchemaError(err))) {
+        throw err;
+      }
+    }
+  }
+
+  try{
+    const mailResult = await apiPost('admin_mail_send_manual', {
+      template_key: 'tmpl_manual_generic',
+      audience_mode: 'manual_emails',
+      emails: recipientEmail,
+      manual_subject: manualSubject,
+      manual_message: message
+    });
+
+    const mailData = mailResult && mailResult.data ? mailResult.data : null;
+    const queued = mailData ? Number(mailData.queued || 0) : 0;
+
+    if(queued <= 0){
+      throw new Error('O email não entrou na fila. A resposta do ticket não foi registrada.');
     }
 
-    async function bootstrapMail(){
-      clearBanner();
-      const result = await apiPost('admin_mail_bootstrap', {});
-      await loadMail();
-      await runPublicMode('health');
-      await runPublicMode('status');
-      renderAll();
-      setBanner('ok', 'Módulo de email preparado.');
-      return result;
+    await apiPost('admin_reply_ticket', {
+      ticket_id: state.selectedTicketId,
+      message: message,
+      status: status,
+      channel: 'EMAIL',
+      sent_by: 'admin'
+    });
+
+    $('#reply-message').value = '';
+    await loadCare();
+    await loadMail();
+    setBanner('ok', 'Email enfileirado e resposta registrada no ticket.');
+  } catch(err){
+    if(isBusyError(err)){
+      setBanner('warn', 'O sistema está ocupado. Tente enviar a resposta novamente em alguns segundos.');
+      return;
     }
+    throw err;
+  }
+}
+    async function bootstrapMail(){
+  clearBanner();
+
+  const result = await apiPost('admin_mail_bootstrap', {});
+  const bootstrapData = result && result.data ? result.data : null;
+  const bootstrapHealth = bootstrapData && bootstrapData.health ? bootstrapData.health : null;
+  const bootstrapTriggers = bootstrapData && bootstrapData.triggers ? bootstrapData.triggers : null;
+
+  await loadMail();
+  await runPublicMode('health');
+  await runPublicMode('status');
+  renderAll();
+
+  if (!bootstrapData) {
+    throw new Error('A preparação do módulo de email não retornou dados.');
+  }
+
+  if (
+    !bootstrapHealth ||
+    bootstrapHealth.ok !== true ||
+    !bootstrapTriggers ||
+    bootstrapTriggers.ok !== true
+  ) {
+    throw new Error(
+      bootstrapHealth && bootstrapHealth.error
+        ? bootstrapHealth.error
+        : bootstrapHealth && bootstrapHealth.status_reason
+          ? bootstrapHealth.status_reason
+          : bootstrapTriggers && bootstrapTriggers.error
+            ? bootstrapTriggers.error
+            : 'O módulo de email foi preparado, mas não ficou pronto para uso.'
+    );
+  }
+
+  setBanner('ok', 'Módulo de email preparado.');
+  return result;
+}
 
     async function scanMail(){
-      clearBanner();
-      const result = await apiPost('admin_mail_scan', {});
-      await loadMail();
-      await runPublicMode('health');
-      await runPublicMode('status');
-      renderAll();
-      setBanner('ok', 'Scanner executado. Itens enfileirados: ' + String(result && result.data ? (result.data.queued_total || 0) : 0) + '.');
-    }
+  clearBanner();
+
+  const result = await apiPost('admin_mail_scan', {});
+  const scanData = result && result.data ? result.data : null;
+  const queuedTotal = scanData ? Number(scanData.queued_total || 0) : 0;
+
+  await loadMail();
+  await runPublicMode('health');
+  await runPublicMode('status');
+  renderAll();
+
+  if (!scanData) {
+    throw new Error('A execução do scanner de email não retornou dados.');
+  }
+
+  if (scanData.ok !== true) {
+    throw new Error(
+      scanData.error
+        ? scanData.error
+        : 'A execução do scanner de email não foi concluída com sucesso.'
+    );
+  }
+
+  setBanner('ok', 'Scanner executado. Itens enfileirados: ' + String(queuedTotal) + '.');
+}
 
     async function processMail(){
-      clearBanner();
-      const result = await apiPost('admin_mail_process_queue', {});
-      await loadMail();
-      await runPublicMode('health');
-      await runPublicMode('status');
-      renderAll();
-      setBanner('ok', 'Fila processada. Enviados: ' + String(result && result.data ? (result.data.sent || 0) : 0) + '.');
-    }
+  clearBanner();
 
-    async function sendManualMail(){
-      clearBanner();
-      await apiPost('admin_mail_send_manual', {
-        template_key: 'tmpl_manual_generic',
-        audience_mode: 'manual_emails',
-        emails: stringValue($('#send-manual-emails').value),
-        manual_subject: stringValue($('#send-manual-subject').value),
-        manual_message: stringValue($('#send-manual-message').value)
-      });
-      await loadMail();
-      await runPublicMode('health');
-      await runPublicMode('status');
-      renderAll();
-      setBanner('ok', 'Mensagem preparada na fila.');
-    }
+  const result = await apiPost('admin_mail_process_queue', {});
+  const processData = result && result.data ? result.data : null;
+
+  await loadMail();
+  await runPublicMode('health');
+  await runPublicMode('status');
+  renderAll();
+
+  if (!processData) {
+    throw new Error('O processamento da fila de email não retornou dados.');
+  }
+
+  if (processData.ok !== true) {
+    throw new Error(
+      processData.error
+        ? processData.error
+        : 'O processamento da fila de email não foi concluído com sucesso.'
+    );
+  }
+
+  setBanner(
+    'ok',
+    'Fila processada. Enviados: ' + String(processData.sent || 0) + '. Falhas: ' + String(processData.failed || 0) + '. Suprimidos: ' + String(processData.suppressed || 0) + '. Ignorados: ' + String(processData.skipped || 0) + '.'
+  );
+}
+
+  async function sendManualMail(){
+  clearBanner();
+
+  const result = await apiPost('admin_mail_send_manual', {
+    template_key: 'tmpl_manual_generic',
+    audience_mode: 'manual_emails',
+    emails: stringValue($('#send-manual-emails').value),
+    manual_subject: stringValue($('#send-manual-subject').value),
+    manual_message: stringValue($('#send-manual-message').value)
+  });
+
+  const data = result && result.data ? result.data : null;
+  const queued = data ? Number(data.queued || 0) : 0;
+  const suppressed = data ? Number(data.suppressed || 0) : 0;
+  const skipped = data ? Number(data.skipped || 0) : 0;
+
+  await loadMail();
+  await runPublicMode('health');
+  await runPublicMode('status');
+  renderAll();
+
+  if (!data) {
+    throw new Error('O envio manual não retornou dados.');
+  }
+
+  if (queued <= 0) {
+    throw new Error(
+      'Nenhuma mensagem entrou na fila. Suprimidos: ' +
+      String(suppressed) +
+      '. Ignorados: ' +
+      String(skipped) +
+      '.'
+    );
+  }
+
+  setBanner(
+    'ok',
+    'Mensagem preparada na fila. Enfileiradas: ' +
+    String(queued) +
+    '. Suprimidas: ' +
+    String(suppressed) +
+    '. Ignoradas: ' +
+    String(skipped) +
+    '.'
+  );
+}
 
     async function addSuppression(){
       clearBanner();
@@ -1257,20 +1529,18 @@
         });
       });
 
-     $('#btn-load-mail-overview').addEventListener('click', function(){
-  handleAction(async function(){
-    const json = await apiPost('admin_mail_overview', {});
-    state.mail.overview = json;
-    state.mail.raw = Object.assign({}, state.mail.raw || {}, { overview: json });
+      $('#btn-load-mail-overview').addEventListener('click', function(){
+        handleAction(async function(){
+          await loadMail();
 
-    try {
-      await runPublicMode('contract');
-    } catch (_) {}
+          try {
+            await runPublicMode('contract');
+          } catch (_) {}
 
-    renderAll();
-    setBanner('ok', 'Mail overview carregado.');
-  });
-});
+          renderAll();
+          setBanner('ok', 'Mail overview carregado.');
+        });
+      });
     }
 
     async function boot(){
