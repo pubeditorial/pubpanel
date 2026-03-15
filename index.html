@@ -455,48 +455,50 @@
     }
 
     async function applyToken(){
-      state.adminToken = stringValue($('#admin-token').value);
+  state.adminToken = stringValue($('#admin-token').value);
+  renderAll();
+
+  if(!state.adminToken){
+    clearAdminState();
+    renderAll();
+    setBanner('warn', 'Token vazio.');
+    return;
+  }
+
+  clearBanner();
+
+  try{
+    await loadPanelBoot({
+      includeContract: true,
+      includeDiagnostics: true,
+      relationshipLimit: 6,
+      ticketsLimit: 20
+    });
+    setBanner('ok', 'Token aplicado. Painel administrativo carregado.');
+  }catch(err){
+    if(isAdminAuthError(err)){
+      clearAdminState();
+      state.adminToken = '';
+      $('#admin-token').value = '';
       renderAll();
-
-      if(!state.adminToken){
-        clearAdminState();
-        renderAll();
-        setBanner('warn', 'Token vazio.');
-        return;
-      }
-
-      clearBanner();
-      const messages = [];
-
-      try{
-        await loadRelationship();
-        messages.push('relacionamento ok');
-      }catch(err){
-        if(isAdminAuthError(err)) throw err;
-        messages.push('relacionamento com falha');
-      }
-
-      try{
-        await loadCare();
-        messages.push('atendimento ok');
-      }catch(err){
-        if(isAdminAuthError(err)) throw err;
-        messages.push('atendimento indisponível');
-      }
-
-      try{
-        await loadMail();
-        await runPublicMode('health');
-        await runPublicMode('status');
-        messages.push('email ok');
-      }catch(err){
-        if(isAdminAuthError(err)) throw err;
-        messages.push('email com falha');
-      }
-
-      renderAll();
-      setBanner('ok', 'Token aplicado. ' + messages.join(' · '));
+      setBanner('warn', (err.message || 'Falha de autenticação administrativa.') + ' O token administrativo foi removido do estado atual.');
+      return;
     }
+    if(isBusyError(err)){
+      renderAll();
+      setBanner('warn', 'O sistema está ocupado no momento. Atualize novamente em alguns segundos.');
+      return;
+    }
+    if(isSchemaError(err)){
+      renderAll();
+      setBanner('warn', 'Parte administrativa ainda não está pronta nesta base.');
+      return;
+    }
+    clearAdminState();
+    renderAll();
+    setBanner('warn', err.message || 'Falha ao carregar dados administrativos.');
+  }
+}
 
     function clearToken(){
       state.adminToken = '';
@@ -952,7 +954,7 @@
       renderAll();
     }
 
-    async function loadMail(){
+   async function loadMail(){
   const healthJson = await apiPost('admin_mail_health', {});
   const overviewJson = await apiPost('admin_mail_overview', {});
 
@@ -964,6 +966,17 @@
     typeof normalizedOverviewResponse.data === 'object'
       ? normalizedOverviewResponse.data
       : null;
+
+  if (!normalizedHealth || typeof normalizedHealth !== 'object') {
+    throw new Error('O mail health não retornou dados válidos.');
+  }
+
+  if (
+    normalizedHealth.data != null &&
+    typeof normalizedHealth.data !== 'object'
+  ) {
+    throw new Error('O mail health retornou o bloco data em formato inválido.');
+  }
 
   if (normalizedOverviewResponse && !normalizedOverviewData) {
     throw new Error('O mail overview não retornou o bloco data esperado.');
@@ -982,12 +995,42 @@
         : 0
     );
 
+    const contactStateCount = Number(
+      normalizedOverviewData.contact_state_count != null
+        ? normalizedOverviewData.contact_state_count
+        : 0
+    );
+
+    const suppressionsCount = Number(
+      normalizedOverviewData.suppressions_count != null
+        ? normalizedOverviewData.suppressions_count
+        : 0
+    );
+
+    const logCount = Number(
+      normalizedOverviewData.log_count != null
+        ? normalizedOverviewData.log_count
+        : 0
+    );
+
     if (!Number.isFinite(queuePendingCount) || queuePendingCount < 0) {
       throw new Error('O mail overview retornou queue_pending_count inválido.');
     }
 
     if (!Number.isFinite(queueHistoricalCount) || queueHistoricalCount < 0) {
       throw new Error('O mail overview retornou queue_historical_count inválido.');
+    }
+
+    if (!Number.isFinite(contactStateCount) || contactStateCount < 0) {
+      throw new Error('O mail overview retornou contact_state_count inválido.');
+    }
+
+    if (!Number.isFinite(suppressionsCount) || suppressionsCount < 0) {
+      throw new Error('O mail overview retornou suppressions_count inválido.');
+    }
+
+    if (!Number.isFinite(logCount) || logCount < 0) {
+      throw new Error('O mail overview retornou log_count inválido.');
     }
 
     if (queuePendingCount > queueHistoricalCount && queueHistoricalCount !== 0) {
@@ -999,6 +1042,66 @@
       typeof normalizedOverviewData.queue_status_counts !== 'object'
     ) {
       throw new Error('O mail overview retornou queue_status_counts em formato inválido.');
+    }
+
+    if (normalizedOverviewData.queue_status_counts && typeof normalizedOverviewData.queue_status_counts === 'object') {
+      const queueStatusCounts = normalizedOverviewData.queue_status_counts;
+
+      const pending = Number(queueStatusCounts.pending || 0);
+      const processing = Number(queueStatusCounts.processing || 0);
+      const sent = Number(queueStatusCounts.sent || 0);
+      const error = Number(queueStatusCounts.error || 0);
+      const suppressed = Number(queueStatusCounts.suppressed || 0);
+      const skipped = Number(queueStatusCounts.skipped || 0);
+      const unknown = Number(queueStatusCounts.unknown || 0);
+
+      if (
+        !Number.isFinite(pending) || pending < 0 ||
+        !Number.isFinite(processing) || processing < 0 ||
+        !Number.isFinite(sent) || sent < 0 ||
+        !Number.isFinite(error) || error < 0 ||
+        !Number.isFinite(suppressed) || suppressed < 0 ||
+        !Number.isFinite(skipped) || skipped < 0 ||
+        !Number.isFinite(unknown) || unknown < 0
+      ) {
+        throw new Error('O mail overview retornou queue_status_counts com valores inválidos.');
+      }
+
+      const recomputedPendingCount = pending + processing;
+      const recomputedHistoricalCount = pending + processing + sent + error + suppressed + skipped + unknown;
+
+      if (recomputedPendingCount !== queuePendingCount) {
+        throw new Error('O mail overview retornou queue_pending_count inconsistente com queue_status_counts.');
+      }
+
+      if (queueHistoricalCount !== 0 && recomputedHistoricalCount !== queueHistoricalCount) {
+        throw new Error('O mail overview retornou queue_historical_count inconsistente com queue_status_counts.');
+      }
+    }
+
+    if (
+      normalizedOverviewData.health_ok != null &&
+      typeof normalizedOverviewData.health_ok !== 'boolean'
+    ) {
+      throw new Error('O mail overview retornou health_ok em formato inválido.');
+    }
+
+    if (
+      normalizedOverviewData.health_errors != null &&
+      Object.prototype.toString.call(normalizedOverviewData.health_errors) !== '[object Array]'
+    ) {
+      throw new Error('O mail overview retornou health_errors em formato inválido.');
+    }
+  }
+
+  if (
+    normalizedHealth.data &&
+    normalizedOverviewData &&
+    typeof normalizedHealth.data.ready === 'boolean' &&
+    typeof normalizedOverviewData.health_ok === 'boolean'
+  ) {
+    if (normalizedHealth.data.ready === true && normalizedOverviewData.health_ok === false) {
+      throw new Error('O mail health e o mail overview retornaram estados conflitantes.');
     }
   }
 
