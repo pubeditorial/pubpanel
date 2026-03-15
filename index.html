@@ -1148,14 +1148,18 @@
       return result;
     }
 
-    async function replySelectedTicket(){
+ async function replySelectedTicket(){
   if(!state.selectedTicketId) throw new Error('Nenhum ticket selecionado.');
 
   const message = stringValue($('#reply-message').value);
   const status = String($('#reply-status').value || 'ANSWERED').toUpperCase();
   const selectedChannel = String($('#reply-channel').value || 'MANUAL').toUpperCase();
-  const manualSubject = state.selectedTicket && state.selectedTicket.item
-    ? ('PUB Editorial | ' + String(normalizeItemLabel(state.selectedTicket.item)))
+  const selectedTicket = state.selectedTicket || null;
+  const recipientName = selectedTicket ? stringValue(selectedTicket.name) : '';
+  const recipientEmailFallback = selectedTicket ? stringValue(selectedTicket.email) : '';
+  const contactId = selectedTicket ? stringValue(selectedTicket.contact_id) : '';
+  const manualSubject = selectedTicket && selectedTicket.item
+    ? ('PUB Editorial | ' + String(normalizeItemLabel(selectedTicket.item)))
     : 'PUB Editorial | Atendimento';
 
   if(!message) throw new Error('Escreva uma resposta antes de enviar.');
@@ -1211,7 +1215,7 @@
 
   const recipientEmail = emailContext && stringValue(emailContext.recipient_email)
     ? stringValue(emailContext.recipient_email)
-    : (state.selectedTicket ? stringValue(state.selectedTicket.email) : '');
+    : recipientEmailFallback;
 
   const canSendEmailByContext = emailContext
     ? emailContext.can_send_email === true && recipientEmail !== ''
@@ -1263,8 +1267,14 @@
       template_key: 'tmpl_manual_generic',
       audience_mode: 'manual_emails',
       emails: recipientEmail,
+      name: recipientName || 'Cliente',
+      recipient_name: recipientName || 'Cliente',
+      contact_id: contactId,
       manual_subject: manualSubject,
-      manual_message: message
+      manual_message: message,
+      item: selectedTicket ? String(selectedTicket.item || '') : '',
+      source_type: 'ticket_manual',
+      source_id: state.selectedTicketId
     });
 
     const mailData = mailResult && mailResult.data ? mailResult.data : null;
